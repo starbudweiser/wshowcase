@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>wSHOWCASE : testez mes applications Mac avant de les télécharger</title>
+<meta name="description" content="Un Mac complet dans votre navigateur : essayez les applications de Starbudweiser en direct avant de les télécharger. / A full Mac in your browser: try Starbudweiser's Mac apps live before you download them.">
+<meta name="theme-color" content="#000000">
+<meta property="og:title" content="wSHOWCASE">
+<meta property="og:description" content="Try my Mac apps live, in a Mac, in your browser.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/site.css">
+<link rel="modulepreload" href="js/main.js">
+</head>
+<body>
+
+<main id="intro">
+  <header class="inav">
+    <a class="brand" href="./" aria-label="wSHOWCASE"><span class="ilogo" id="ilogo"></span><b><span class="lc">w</span>SHOWCASE</b></a>
+    <nav>
+      <a href="#skyrim" data-go="skyrim" data-i="l.nav1"></a>
+      <a href="#util" data-go="util" data-i="l.nav2"></a>
+      <a href="https://skyrimtools.com" target="_blank" rel="noopener">skyrimtools.com</a>
+    </nav>
+  </header>
+  <section class="hero">
+    <p class="eyebrow"></p>
+    <h1><span data-i="l.h1a"></span><br><span class="grad" data-i="l.h1b"></span></h1>
+    <p class="lead" data-i="l.lead"></p>
+    <div class="cta"><button id="cta" class="pill" type="button" data-i="l.cta"></button><a class="lnk" href="#skyrim" data-go="skyrim" data-i="l.skyrimlink"></a></div>
+    <p class="tip" data-i="l.tip"></p>
+  </section>
+  <section class="pvwrap"><div class="pvbezel"><div id="pvscreen" role="img" aria-label="Aperçu du Mac"></div></div></section>
+  <footer data-i="l.foot"></footer>
+  <p class="rotate" data-i="l.rotate"></p>
+</main>
+
+<div id="mac" hidden>
+  <div id="stage">
+    <div id="wp"><div class="wl"></div><div class="wl"></div></div>
+    <div id="sps"></div>
+    <div id="spacebar"></div>
+    <div id="menubar"></div>
+    <div id="dock"></div>
+    <div id="layer"></div>
+  </div>
+</div>
+
+<div id="boot" hidden>
+  <div class="blogo" aria-hidden="true"></div>
+  <div class="bbar"><i></i></div>
+  <p class="bskip" data-i="b.skip"></p>
+</div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

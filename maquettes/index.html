@@ -1,0 +1,282 @@
+<meta charset="utf-8">
+<title>Maquettes wSHOWCASE</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Concept : un Mac 16:9 dans le navigateur. Trois directions comparées dans une visionneuse neutre, façon galerie Apple. */
+:root{
+  --bg:#f5f5f7; --fg:#1d1d1f; --muted:#6e6e73; --line:#d2d2d7; --card:#ffffff; --accent:#0071e3; --on-accent:#fff;
+  --font:"Inter",-apple-system,BlinkMacSystemFont,"SF Pro Display",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0c0c0e;--fg:#f5f5f7;--muted:#98989d;--line:#2c2c2e;--card:#1c1c1e;--accent:#2997ff;--on-accent:#fff;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0c0c0e;--fg:#f5f5f7;--muted:#98989d;--line:#2c2c2e;--card:#1c1c1e;--accent:#2997ff;--on-accent:#fff;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);margin:0;padding-block:28px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));-webkit-font-smoothing:antialiased}
+.wrap{max-width:1280px;margin:0 auto}
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:20px}
+h1{font-size:28px;letter-spacing:-.02em;margin:0 0 4px;font-weight:700;text-wrap:balance}
+.sub{color:var(--muted);font-size:14px;margin:0;max-width:62ch;line-height:1.5}
+.tabs{display:inline-flex;background:color-mix(in srgb,var(--fg) 8%,transparent);border-radius:999px;padding:3px;gap:2px}
+.tabs button{font:600 13px var(--font);border:0;background:transparent;color:var(--muted);padding:8px 16px;border-radius:999px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--card);color:var(--fg);box-shadow:0 1px 3px rgba(0,0,0,.18)}
+.tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.stage{position:relative;width:100%;overflow:hidden;border-radius:14px;border:1px solid var(--line);background:#000}
+.scene{position:absolute;left:0;top:0;width:1600px;height:900px;transform-origin:0 0;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;margin-top:24px}
+.notes h2{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 8px;font-weight:600}
+.notes p,.notes li{font-size:14px;line-height:1.55;margin:0}
+.notes ul{margin:0;padding-left:18px;display:grid;gap:4px}
+.lc{color:var(--lc,#5aa9ff)}
+
+/* ============ Briques Mac communes ============ */
+.mac{position:absolute;inset:0;overflow:hidden}
+.mb{position:absolute;left:0;right:0;top:0;height:30px;display:flex;align-items:center;gap:22px;padding:0 18px;font-size:14px;font-weight:500;z-index:50;backdrop-filter:blur(30px) saturate(1.5)}
+.mac.light .mb{background:rgba(255,255,255,.18);color:#111}
+.mac.dark .mb{background:rgba(20,20,26,.18);color:#f2f2f5}
+.mb b{font-weight:700}.mb .r{margin-left:auto;display:flex;gap:18px;font-weight:500}
+.mb .logo{width:15px;height:15px;border-radius:5px;background:currentColor;opacity:.9}
+.dock{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;align-items:flex-end;gap:10px;padding:10px 12px;border-radius:36px;z-index:40;backdrop-filter:blur(36px) saturate(1.8)}
+.mac.light .dock{background:rgba(255,255,255,.32);border:1px solid rgba(255,255,255,.55)}
+.mac.dark .dock{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18)}
+.dock .ic{position:relative;width:68px;height:68px}.dock .ic img{width:100%;height:100%;display:block}
+.dock .ic.run::after{content:"";position:absolute;left:50%;bottom:-7px;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:currentColor;opacity:.7}
+.mac.light .dock{color:#222}.mac.dark .dock{color:#fff}
+.dock .sep{width:1px;align-self:stretch;margin:6px 3px;background:rgba(128,128,128,.4)}
+.dock .ic.big{transform:translateY(-14px) scale(1.34);transform-origin:50% 100%;margin:0 14px}
+.fold{width:68px;height:68px;display:block}
+.dfold{position:absolute;display:flex;flex-direction:column;align-items:center;gap:6px;width:110px;text-align:center;font-size:13px;font-weight:500;line-height:1.25}
+.mac.light .dfold{color:#16233a;text-shadow:0 1px 0 rgba(255,255,255,.45)}.mac.dark .dfold{color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.dfold svg{width:84px;height:68px}
+.win{position:absolute;border-radius:26px;overflow:hidden;box-shadow:0 0 0 .5px rgba(0,0,0,.35),0 28px 70px rgba(10,14,30,.38),0 6px 18px rgba(10,14,30,.22);display:flex;flex-direction:column}
+.tl{display:flex;gap:8px;align-items:center}.tl i{width:13px;height:13px;border-radius:50%;display:block}
+.tl i:nth-child(1){background:#ff5f57}.tl i:nth-child(2){background:#febc2e}.tl i:nth-child(3){background:#28c840}
+.wp-light{background:radial-gradient(60% 70% at 18% 12%,#c9defc 0%,transparent 60%),radial-gradient(55% 60% at 88% 20%,#f0cffa 0%,transparent 62%),radial-gradient(70% 70% at 70% 95%,#ffd9bf 0%,transparent 60%),radial-gradient(60% 60% at 8% 95%,#bfe7e0 0%,transparent 60%),#e9eefb}
+.wp-dark{background:radial-gradient(60% 70% at 20% 15%,#2b3a8a 0%,transparent 62%),radial-gradient(55% 60% at 90% 25%,#6a2a86 0%,transparent 62%),radial-gradient(70% 70% at 65% 100%,#163d5c 0%,transparent 62%),#0a0b18}
+.wp-warm{background:radial-gradient(60% 70% at 15% 10%,#ffe2c6 0%,transparent 60%),radial-gradient(55% 60% at 92% 18%,#ffc9d6 0%,transparent 62%),radial-gradient(70% 70% at 60% 100%,#c9d4ff 0%,transparent 60%),#fbeee5}
+
+/* Contenu d'appli : style Socle, plat et sombre */
+.sk{background:#16181c;color:#d7dbe0;font-size:13px;flex:1;display:grid;grid-template-columns:210px 1fr;min-height:0}
+.sk .bar{grid-column:1/-1;height:44px;background:#23272d;border-bottom:1px solid #2c3138;display:flex;align-items:center;gap:14px;padding:0 14px}
+.sk .bar .t{font-weight:700;letter-spacing:.025em;font-size:14px;color:#fff;margin-left:6px}
+.sk .btn{margin-left:auto;background:#f59e0b;color:#1b1303;font-weight:700;letter-spacing:.06em;font-size:12px;padding:8px 16px;border-radius:4px}
+.sk aside{background:#23272d;padding:12px;display:grid;gap:4px;align-content:start;border-right:1px solid #2c3138}
+.sk aside .h{font-size:10px;letter-spacing:.08em;color:#8b929b;margin:4px 6px 6px}
+.sk aside .it{padding:9px 10px;border-radius:4px;color:#aab0b8;font-family:ui-monospace,Menlo,monospace;font-size:11.5px}
+.sk aside .it.on{background:#2e343c;color:#fff}
+.sk main{padding:22px 24px;display:grid;gap:14px;align-content:start;overflow:hidden}
+.sk h3{margin:0;font-size:16px;color:#fff;letter-spacing:.025em}
+.sk .card{background:#1c1f24;border:1px solid #2c3138;border-radius:8px;padding:16px;display:grid;gap:8px}
+.sk .sub2{color:#6cb4ff}.sk .mut{color:#8b929b}
+.chip{display:inline-block;background:#2e343c;color:#6cb4ff;border-radius:4px;padding:3px 8px;font-size:11px;margin-right:6px}
+.sk .row{display:grid;grid-template-columns:90px 1fr 70px;gap:10px;font-family:ui-monospace,Menlo,monospace;font-size:11.5px;padding:6px 0;border-top:1px solid #2c3138}
+.ok{color:#4cc38a}.wn{color:#e5a23b}.dg{color:#ef6b6b}
+
+.spaces{position:absolute;left:50%;top:40px;transform:translateX(-50%);display:flex;gap:4px;padding:4px;border-radius:999px;background:rgba(255,255,255,.28);backdrop-filter:blur(30px) saturate(1.8);border:1px solid rgba(255,255,255,.5);z-index:45;font-size:13px;font-weight:600}
+.spaces span{display:flex;align-items:center;gap:8px;padding:6px 14px 6px 7px;border-radius:999px;color:#222}
+.mac.dark .spaces{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2)}.mac.dark .spaces span{color:#fff}
+.spaces span.on{background:rgba(255,255,255,.75)}.mac.dark .spaces span.on{background:rgba(255,255,255,.26)}
+.spaces i{width:30px;height:19px;border-radius:6px;display:block}
+.th1{background:linear-gradient(135deg,#f59e0b,#e0523a)}.th2{background:linear-gradient(135deg,#0a84ff,#7a5af8)}
+.di{position:absolute;width:104px;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12.5px;font-weight:500;text-align:center}
+.mac.light .di{color:#16233a;text-shadow:0 1px 0 rgba(255,255,255,.5)}.mac.dark .di{color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.di img{width:72px;height:72px;display:block}
+.A .ref{color:#0066cc;font-size:15px;margin-top:12px;display:block}
+/* ============ Scène A : page blanche + écran ============ */
+.A{background:#fbfbfd;color:#1d1d1f}
+.A nav{height:52px;display:flex;align-items:center;justify-content:center;gap:34px;font-size:13px;color:#424245;border-bottom:1px solid #e5e5ea;background:rgba(251,251,253,.8)}
+.A nav b{font-size:15px;color:#1d1d1f;margin-right:18px;letter-spacing:-.01em}
+.A .hero{text-align:center;padding-top:34px}
+.A .eyebrow{font-size:15px;font-weight:600;color:#bf4800;letter-spacing:.01em}
+.A h1{font-size:58px;line-height:1.05;letter-spacing:-.03em;margin:8px 0 12px;font-weight:700;color:#1d1d1f}
+.A h1 span{background:linear-gradient(90deg,#0071e3,#7a5af8);-webkit-background-clip:text;background-clip:text;color:transparent}
+.A .lead{font-size:20px;color:#6e6e73;margin:0 auto;max-width:640px;line-height:1.4}
+.A .cta{display:inline-flex;gap:14px;margin-top:20px;align-items:center}
+.A .pill{background:#0071e3;color:#fff;font-weight:500;font-size:16px;padding:11px 22px;border-radius:999px}
+.A .link{color:#0066cc;font-size:16px}
+.A .screen{position:absolute;left:280px;top:262px;width:1040px;height:585px;border-radius:16px;overflow:hidden;box-shadow:0 0 0 7px #1d1d1f,0 0 0 8px #3a3a3c,0 40px 80px rgba(0,0,0,.28)}
+.A .screen .mac{width:1600px;height:900px;transform:scale(.65);transform-origin:0 0;inset:auto;left:0;top:0}
+.A .tip{position:absolute;left:1340px;top:470px;width:210px;font-size:13px;color:#6e6e73;line-height:1.4}
+.A .tip:before{content:"";display:block;width:36px;height:1px;background:#a1a1a6;margin-bottom:10px}
+
+/* ============ Scène B : Launchpad plein écran ============ */
+.B .lp{position:absolute;inset:0;z-index:20;background:rgba(10,10,20,.35);backdrop-filter:blur(46px) saturate(1.4)}
+.B .search{position:absolute;left:50%;top:70px;transform:translateX(-50%);width:300px;height:36px;border-radius:10px;background:rgba(255,255,255,.14);color:rgba(255,255,255,.7);display:flex;align-items:center;gap:8px;padding:0 12px;font-size:15px}
+.B .grid{position:absolute;left:210px;right:210px;top:150px;display:grid;grid-template-columns:repeat(9,1fr);row-gap:34px}
+.B .app{display:flex;flex-direction:column;align-items:center;gap:10px;color:#fff;font-size:14px;font-weight:500;text-shadow:0 1px 3px rgba(0,0,0,.5);position:relative}
+.B .app img{width:102px;height:102px;display:block}
+.B .app.hov img{transform:scale(1.08)}
+.B .dots{position:absolute;left:50%;bottom:138px;transform:translateX(-50%);display:flex;gap:12px}
+.B .dots i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.35)}.B .dots i:first-child{background:#fff}
+.B .card{position:absolute;z-index:30;width:330px;border-radius:18px;padding:18px;color:#fff;background:rgba(40,40,52,.62);backdrop-filter:blur(40px) saturate(1.8);border:1px solid rgba(255,255,255,.18);box-shadow:0 24px 60px rgba(0,0,0,.4)}
+.B .card .hd{display:flex;gap:12px;align-items:center}.B .card .hd img{width:52px;height:52px}
+.B .card .hd b{font-size:17px;display:block}.B .card .hd span{font-size:12px;color:rgba(255,255,255,.65)}
+.B .card p{font-size:13.5px;line-height:1.45;color:rgba(255,255,255,.82);margin:12px 0 14px}
+.B .card .bt{display:flex;gap:8px}
+.B .card .bt div{flex:1;text-align:center;font-size:13.5px;font-weight:600;padding:9px 0;border-radius:999px;background:rgba(255,255,255,.16)}
+.B .card .bt div:first-child{background:#0a84ff}
+.B .live{position:absolute;z-index:60;right:18px;top:38px;font-size:12.5px;color:#fff;background:rgba(255,255,255,.16);backdrop-filter:blur(20px);border-radius:999px;padding:6px 12px;display:flex;gap:8px;align-items:center}
+.B .live i{width:7px;height:7px;border-radius:50%;background:#30d158}
+
+/* ============ Scène C : Finder en galerie ============ */
+.C .fw{left:170px;top:96px;width:1260px;height:680px;background:rgba(250,250,252,.62);backdrop-filter:blur(40px) saturate(1.6);display:grid;grid-template-columns:210px 1fr 290px;grid-template-rows:52px 1fr}
+.C .fw .tb{grid-column:1/-1;display:flex;align-items:center;gap:18px;padding:0 20px;color:#2a2a2e;font-size:14px;font-weight:600}
+.C .fw .tb .seg{display:flex;background:rgba(0,0,0,.06);border-radius:999px;padding:2px;gap:1px;margin-left:24px}
+.C .fw .tb .seg i{font-style:normal;font-weight:500;font-size:12px;padding:4px 12px;border-radius:999px;color:#555}.C .fw .tb .seg i.on{background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.15);color:#111}
+.C .fw .tb .q{margin-left:auto;width:200px;height:30px;background:rgba(0,0,0,.06);border-radius:999px;font-weight:400;color:#8a8a90;display:flex;align-items:center;padding:0 10px;font-size:13px}
+.C .side{background:rgba(255,255,255,.5);margin:0 0 10px 10px;border-radius:20px;padding:14px 10px;display:grid;align-content:start;gap:2px;font-size:13.5px;color:#2a2a2e}
+.C .side .h{font-size:11px;font-weight:600;color:#8a8a90;margin:12px 8px 4px}.C .side .it{padding:6px 8px;border-radius:6px;display:flex;gap:9px;align-items:center}
+.C .side .it.on{background:rgba(0,0,0,.09)}.C .side .it u{width:14px;height:14px;border-radius:4px;display:block;background:var(--c,#0a84ff)}
+.C .side .it span{margin-left:auto;color:#8a8a90;font-size:12px}
+.C .gal{display:grid;grid-template-rows:1fr 150px;min-width:0;min-height:0}
+.C .pv{display:flex;align-items:center;justify-content:center;padding:26px;min-height:0}
+.C .pv .win{position:relative;width:100%;max-width:700px;height:100%;max-height:420px}
+.C .strip{border-top:1px solid rgba(0,0,0,.08);display:flex;gap:14px;align-items:center;padding:0 22px;overflow:hidden;background:rgba(255,255,255,.4)}
+.C .strip .th{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px;color:#333;padding:8px 8px 6px;border-radius:10px;flex:none;width:96px}
+.C .strip .th img{width:68px;height:68px}.C .strip .th.on{background:rgba(10,132,255,.16);outline:2px solid #0a84ff;outline-offset:-2px}
+.C .insp{border-left:1px solid rgba(0,0,0,.08);padding:22px 20px;display:flex;flex-direction:column;gap:12px;color:#1d1d1f;background:rgba(255,255,255,.35)}
+.C .insp img{width:92px;height:92px}
+.C .insp h3{margin:0;font-size:22px;letter-spacing:-.01em}
+.C .insp .k{font-size:12.5px;color:#6e6e73}
+.C .insp p{font-size:14px;line-height:1.45;margin:0;color:#3a3a3c}
+.C .insp dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:13px;border-top:1px solid rgba(0,0,0,.09);padding-top:12px}
+.C .insp dt{color:#8a8a90}.C .insp dd{margin:0;text-align:right}
+.C .insp .b{margin-top:auto;display:grid;gap:8px}
+.C .insp .b div{text-align:center;padding:11px 0;border-radius:999px;font-weight:600;font-size:14.5px;background:rgba(0,0,0,.07);color:#1d1d1f}
+.C .insp .b div:first-child{background:#0a84ff;color:#fff}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>wSHOWCASE, trois directions</h1>
+      <p class="sub">Le visiteur arrive sur un Mac 16:9 dans son navigateur, avec deux bureaux virtuels : le Skyrim Mac Toolkit et les Utilitaires. Le style suit macOS Golden Gate (verre, grands arrondis). Les icônes sont les vôtres, les textes et fenêtres sont des exemples.</p>
+    </div>
+    <div class="tabs" role="tablist" aria-label="Direction">
+      <button role="tab" id="tA" aria-selected="true">A · Vitrine et écran</button>
+      <button role="tab" id="tB" aria-selected="false">B · Launchpad</button>
+      <button role="tab" id="tC" aria-selected="false">C · Finder galerie</button>
+    </div>
+  </header>
+
+  <div id="stA" class="stage"><div class="scene A" id="sA"></div></div>
+  <div id="stB" class="stage" hidden><div class="scene B" id="sB"></div></div>
+  <div id="stC" class="stage" hidden><div class="scene C" id="sC"></div></div>
+
+  <section class="notes" id="notes"></section>
+</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="fb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7cc4fb"/><stop offset="1" stop-color="#3b9bf0"/></linearGradient>
+  <linearGradient id="ff" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fd0fd"/><stop offset="1" stop-color="#4aa5f3"/></linearGradient>
+</defs></svg>
+
+<script>
+const APPS=[
+["sKYCRASH","Skyrim","Analyse vos crash logs Skyrim et désigne le coupable"],
+["eSLIFY","Skyrim","Passe les plugins en ESL après avoir vérifié que c’est sûr"],
+["fCLEANER","Skyrim","Nettoie les résidus d’une installation de mods aplatie"],
+["fOLDERFUSE","Skyrim","Fusionne un dossier dans un autre, comme sous Windows"],
+["fOMODSIM","Skyrim","Parcourt un installateur FOMOD sans gestionnaire de mods"],
+["kEYKODES","Skyrim","Codes de touches DirectInput et ImGui pour vos .ini"],
+["mABBAJACK","Skyrim","Installe des listes de mods sur Mac"],
+["mBAE","Skyrim","Ouvre et extrait les archives .bsa et .ba2"],
+["mO2FLATTENER","Skyrim","Transforme une instance MO2 en dossier prêt à jouer"],
+["mTRANSLATOR","Skyrim","Traduit les mods Bethesda, native sur macOS"],
+["nEXUSWATCH","Skyrim","Surveille vos pages Nexus Mods et ordonne les bugs"],
+["pLUGINSLENS","Skyrim","Éditeur de plugins .esp .esm .esl"],
+["mORTEX","Skyrim","Gestionnaire de mods pour Mac"],
+["hERALD","Skyrim","Prépare et suit vos campagnes de communication"],
+["csSETTINGS","Skyrim","Presets Community Shaders, appliqués et sauvegardés"],
+["mCLEAN","Système","La mémoire dans la barre des menus, libérée en un clic"],
+["hdCLEANER","Système","Repère et supprime les déchets du disque"],
+["mSILENCE","Système","Pare-feu par appli et moniteur réseau"],
+["mDESK","Système","Retient où vont vos icônes et vos fenêtres"],
+["mSPACES","Système","Sépare les icônes de la barre des menus en groupes"],
+["mLINKS","Système","Applis, dossiers et sites à portée d’un raccourci"],
+["ARCHiVES","Système","Extrait et compresse, intégré au Finder"],
+["mBACKUP","Système","Copies miroir planifiées de vos dossiers"],
+["qLOOKS","Système","Aperçus Coup d’œil pour les formats ignorés par macOS"],
+["wCLAUDE","Système","Un navigateur que l’IA pilote pour vous"],
+["MiCONE","Création","Transforme une image en icône macOS"],
+["iCONIQ","Création","Votre bibliothèque d’icônes personnelle"],
+["mSIZER","Création","Redimensionne et retouche des centaines de photos"],
+["kYNEDIT","Création","Explorateur média et transcodeur rapide"],
+["mSTAGRAM","Création","Instagram version téléphone, dans un iPhone"],
+["mSTICK","Quotidien","Vos pense-bêtes toujours sous les yeux"],
+["qNOTES","Quotidien","Notes riches, rapides, à portée de main"]
+];
+const LC={sKYCRASH:"#f59e0b",mORTEX:"#f59e0b",hERALD:"#f59e0b"};
+const brand=n=>n.replace(/[a-z]+/g,m=>`<span class="lc" style="--lc:${LC[n]||"#5aa9ff"}">${m}</span>`);
+const ico=n=>`<img src="icons/${n}.png" alt="${n}">`;
+const folder=(t,x,y)=>`<div class="dfold" style="left:${x}px;top:${y}px"><svg viewBox="0 0 120 96"><path d="M8 18a8 8 0 0 1 8-8h26l10 10h52a8 8 0 0 1 8 8v56a8 8 0 0 1-8 8H16a8 8 0 0 1-8-8z" fill="url(#fb)"/><path d="M8 34a8 8 0 0 1 8-8h88a8 8 0 0 1 8 8v48a8 8 0 0 1-8 8H16a8 8 0 0 1-8-8z" fill="url(#ff)"/></svg><span>${t}</span></div>`;
+const menubar=(app)=>`<div class="mb"><i class="logo"></i><b>${app}</b><span>Fichier</span><span>Édition</span><span>Présentation</span><span>Aller</span><span>Fenêtre</span><span>Aide</span><div class="r"><span>100 %</span><span>Lun. 9 nov.</span><span>23:18</span></div></div>`;
+const dock=(names,run=[],big)=>`<div class="dock">${names.map(n=>n==="|"?'<i class="sep"></i>':`<div class="ic ${run.includes(n)?"run":""} ${n===big?"big":""}">${ico(n)}</div>`).join("")}</div>`;
+const skyWin=(style,cls="")=>`<div class="win ${cls}" style="${style}"><div class="sk">
+<div class="bar"><div class="tl"><i></i><i></i><i></i></div><span class="t">${brand("sKYCRASH")}</span><span class="btn">ANALYSER</span></div>
+<aside><div class="h">JOURNAUX</div><div class="it on">crash-21-14-07.log</div><div class="it">crash-20-02-51.log</div><div class="it">crash-18-40-12.log</div><div class="it">crash-09-11-33.log</div></aside>
+<main><h3>crash-21-14-07.log</h3>
+<div class="card"><div class="sub2">Cause probable : conflit de textures</div><div><span class="chip">NVSE</span><span class="chip">BSA</span><span class="chip">2 plugins</span></div><div class="mut">Retirez un des deux mods de textures et relancez le jeu.</div></div>
+<div class="card" style="padding:6px 16px"><div class="row"><span class="mut">0x7FF6</span><span>SkyrimSE.exe+0xD4A2F0</span><span class="dg">Crash</span></div><div class="row"><span class="mut">0x7FFA</span><span>d3d11.dll+0x4C21</span><span class="wn">Suspect</span></div><div class="row"><span class="mut">0x7FF6</span><span>EngineFixes.dll+0x1B80</span><span class="ok">Sain</span></div></div>
+</main></div></div>`;
+
+const SK=APPS.filter(a=>a[1]==="Skyrim"),UT=APPS.filter(a=>a[1]!=="Skyrim");
+const spaces=on=>`<div class="spaces"><span class="${on===1?"on":""}"><i class="th1"></i>Skyrim Mac Toolkit</span><span class="${on===2?"on":""}"><i class="th2"></i>Utilitaires</span></div>`;
+const deskIcons=(names,x,y)=>names.map((n,i)=>`<div class="di" style="left:${x}px;top:${y+i*118}px">${ico(n)}<span>${n}</span></div>`).join("");
+
+/* ---------- A ---------- */
+const dockA=["sKYCRASH","eSLIFY","fCLEANER","fOMODSIM","mBAE","|","mTRANSLATOR","nEXUSWATCH","pLUGINSLENS","mO2FLATTENER","fOLDERFUSE"];
+document.getElementById("sA").innerHTML=`
+<nav><b>wSHOWCASE</b><span>Skyrim Mac Toolkit</span><span>Utilitaires</span><span>Tout télécharger</span></nav>
+<div class="hero"><div class="eyebrow">32 applications pour Mac</div>
+<h1>Essayez-les ici.<br><span>Installez-les ensuite.</span></h1>
+<p class="lead">Un Mac complet dans votre navigateur, avec deux bureaux. Ouvrez une appli, servez-vous-en, puis téléchargez-la si elle vous convient.</p>
+<div class="cta"><span class="pill">Allumer le Mac</span><span class="link">Venez de skyrimtools.com ? Bureau Skyrim ›</span></div></div>
+<div class="screen"><div class="mac light wp-light">
+${menubar("Finder")}${spaces(1)}
+${deskIcons(["mORTEX","mABBAJACK","hERALD","csSETTINGS","kEYKODES"],1466,92)}
+${skyWin("left:150px;top:110px;width:900px;height:560px")}
+<div class="win" style="left:1000px;top:400px;width:380px;border-radius:28px;background:rgba(255,255,255,.55);backdrop-filter:blur(30px) saturate(1.8);padding:22px;gap:10px;color:#1d1d1f;box-shadow:0 0 0 .5px rgba(0,0,0,.15),0 20px 50px rgba(10,14,30,.25)"><div style="font-size:12px;color:#6e6e73;font-weight:600;letter-spacing:.04em">DÉMO EN DIRECT</div><div style="font-size:21px;font-weight:700;letter-spacing:-.01em">${brand("sKYCRASH")} 1.3.1</div><div style="font-size:14px;line-height:1.4;color:#3a3a3c">Glissez un crash log ou essayez avec l’exemple fourni.</div><div style="display:flex;gap:8px;margin-top:6px"><span style="background:#0071e3;color:#fff;padding:9px 16px;border-radius:999px;font-weight:600;font-size:13.5px">Télécharger</span><span style="background:rgba(0,0,0,.07);padding:9px 16px;border-radius:999px;font-weight:600;font-size:13.5px">Fiche complète</span></div></div>
+${dock(dockA,["sKYCRASH"])}
+</div></div>
+<div class="tip">Au défilement, l’écran grandit jusqu’à remplir la fenêtre.<br><br>skyrimtools.com ouvre directement le Bureau Skyrim. Balayez ou faites ⌃→ pour passer aux Utilitaires.</div>`;
+
+/* ---------- B : Mission Control + Launchpad ---------- */
+const dockB=["sKYCRASH","mORTEX","nEXUSWATCH","mTRANSLATOR","hERALD","|","mCLEAN","mLINKS","wCLAUDE"];
+const thumb=(on,cls,t,dots)=>`<div style="text-align:center;color:#fff;font-size:14px;font-weight:600"><div style="width:250px;height:141px;border-radius:14px;position:relative;overflow:hidden;${on?"outline:3px solid #fff;outline-offset:2px;":"opacity:.8;"}${cls==="a"?"background:radial-gradient(60% 70% at 20% 15%,#7a3b1d 0%,transparent 62%),radial-gradient(60% 60% at 85% 90%,#2b3a8a 0%,transparent 62%),#14122a":"background:radial-gradient(60% 70% at 20% 15%,#2b5a9a 0%,transparent 62%),radial-gradient(55% 60% at 90% 25%,#6a2a86 0%,transparent 62%),#0a0b18"}">${dots.map(([x,y])=>`<i style="position:absolute;left:${x}px;top:${y}px;width:22px;height:22px;border-radius:6px;background:rgba(255,255,255,.55)"></i>`).join("")}</div><div style="margin-top:8px">${t}</div></div>`;
+document.getElementById("sB").innerHTML=`<div class="mac dark wp-dark">
+${menubar("Mission Control")}<div class="live"><i></i>Démo en direct · aucun téléchargement requis</div>
+<div class="lp">
+<div style="position:absolute;top:52px;left:0;right:0;display:flex;justify-content:center;gap:26px">${thumb(true,"a","Skyrim Mac Toolkit",[[20,20],[52,20],[84,20],[20,52],[52,52],[190,20],[190,52]])}${thumb(false,"b","Utilitaires",[[20,20],[52,20],[84,20],[20,52],[52,52],[84,52],[190,20],[190,52],[190,84]])}<div style="align-self:flex-start;width:250px;height:141px;border:2px dashed rgba(255,255,255,.28);border-radius:14px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.55);font-size:28px;opacity:0">+</div></div>
+<div class="grid" style="left:380px;right:380px;top:262px;grid-template-columns:repeat(5,1fr);row-gap:30px">${SK.map(a=>`<div class="app ${a[0]==="mTRANSLATOR"?"hov":""}"><img src="icons/${a[0]}.png" style="width:100px;height:100px" alt="${a[0]}"><span>${a[0]}</span></div>`).join("")}</div>
+<div class="dots"><i></i><i></i></div></div>
+<div class="card" style="left:1250px;top:350px"><div class="hd">${ico("mTRANSLATOR")}<div><b>${brand("mTRANSLATOR")}</b><span>Bureau Skyrim Mac Toolkit</span></div></div><p>Traduisez les mods Bethesda, native sur macOS. Essayez avec un mod d’exemple.</p><div class="bt"><div>Ouvrir la démo</div><div>Télécharger</div></div></div>
+${dock(dockB,[])}</div>`;
+
+/* ---------- C ---------- */
+const sideItems=[["Skyrim Mac Toolkit","#f59e0b",SK.length],["Utilitaires","#0a84ff",UT.length]];
+const strip=["sKYCRASH","eSLIFY","fCLEANER","fOLDERFUSE","fOMODSIM","kEYKODES","mABBAJACK","mBAE","mO2FLATTENER","mTRANSLATOR","nEXUSWATCH","pLUGINSLENS"];
+document.getElementById("sC").innerHTML=`<div class="mac light wp-warm">
+${menubar("Finder")}${spaces(1)}
+<div class="win fw">
+ <div class="tb"><div class="tl"><i></i><i></i><i></i></div><span style="margin-left:12px">Skyrim Mac Toolkit</span><div class="seg"><i>Icônes</i><i>Liste</i><i>Colonnes</i><i class="on">Galerie</i></div><div class="q">⌕ Rechercher</div></div>
+ <div class="side"><div class="h">Bureaux</div>${sideItems.map((s,i)=>`<div class="it ${i===0?"on":""}"><u style="--c:${s[1]}"></u>${s[0]}<span>${s[2]}</span></div>`).join("")}<div class="h">Étiquettes</div><div class="it"><u style="--c:#ff453a;border-radius:50%"></u>Nouveautés</div><div class="it"><u style="--c:#30d158;border-radius:50%"></u>Menu bar</div><div class="it"><u style="--c:#bf5af2;border-radius:50%"></u>Gratuites</div></div>
+ <div class="gal"><div class="pv">${skyWin("","")}</div><div class="strip">${strip.map(n=>`<div class="th ${n==="sKYCRASH"?"on":""}">${ico(n)}<span>${n}</span></div>`).join("")}</div></div>
+ <div class="insp">${ico("sKYCRASH")}<div><h3>${brand("sKYCRASH")}</h3><div class="k">Application · Skyrim Mac Toolkit</div></div><p>Analyseur de crash logs pour Skyrim Special Edition sur Mac (CrossOver).</p><dl><dt>Version</dt><dd>1.3.1</dd><dt>Langues</dt><dd>FR · EN · ES · IT</dd><dt>Système</dt><dd>macOS 13+</dd><dt>Notarisée</dt><dd>Oui</dd></dl><div class="b"><div>Ouvrir la démo</div><div>Télécharger</div></div></div>
+</div>
+${dock(["sKYCRASH","mORTEX","mTRANSLATOR","nEXUSWATCH","hERALD","|","mCLEAN","mLINKS","wCLAUDE"],["sKYCRASH"])}
+</div>`;
+
+/* ---------- Notes ---------- */
+const NOTES={
+A:[["L’idée","Une vraie page produit à la Apple : titre, un seul bouton, puis le Mac dans un cadre fin. Un clic sur « Allumer le Mac » l’agrandit en plein écran, sur le Bureau Skyrim."],["Pour",["Raconte l’histoire avant de montrer les 32 applis","Très épuré, le plus proche d’une page Apple","Un seul chemin clair : lire, allumer, essayer"]],["Contre",["Le Dock et le bureau n’affichent qu’une dizaine d’applis par bureau ; le reste passe par Launchpad ou le Finder","Deux écrans à concevoir : la page et le Mac"]]],
+B:[["L’idée","Le site est le Mac, dès la première seconde. Mission Control montre les deux bureaux, le Launchpad toutes les applis du bureau actif."],["Pour",["Effet « waouh » immédiat, aucun texte avant la démo","Toutes les applis d’un bureau visibles sans scroller","Les deux bureaux se comprennent d’un coup d’œil"]],["Contre",["Moins de place pour expliquer, rassurer et référencer le site","Le Finder reste à créer pour les fiches détaillées"]]],
+C:[["L’idée","Un Finder en vue Galerie : l’appli choisie s’affiche en grand, la bande d’icônes permet de feuilleter, le panneau d’informations porte les boutons. Chaque bureau est une collection de la barre latérale."],["Pour",["Le plus fidèle au geste d’un Mac","Chaque appli a sa fiche (version, langues, notarisation) sans quitter l’écran","Fait pour 32 applis et plus"]],["Contre",["Moins spectaculaire au premier coup d’œil","Demande une mini-démo animée par appli pour la zone d’aperçu"]]]
+};
+const COMMON=`<div><h2>Deux bureaux, deux liens</h2><ul><li><b>Bureau 1 · Skyrim Mac Toolkit</b> (15 applis) : <code>…/#skyrim</code>, le lien du bouton « Tester les applis » sur skyrimtools.com</li><li><b>Bureau 2 · Utilitaires</b> (17 applis) : <code>…/#utilitaires</code></li><li>Changement de bureau : pastilles en haut, ⌃← ⌃→, balayage sur mobile</li></ul></div>`;
+function notes(k){document.getElementById("notes").innerHTML=COMMON+NOTES[k].map(([t,b])=>`<div><h2>${t}</h2>${Array.isArray(b)?"<ul>"+b.map(x=>`<li>${x}</li>`).join("")+"</ul>":`<p>${b}</p>`}</div>`).join("")}
+function fit(){document.querySelectorAll(".stage").forEach(st=>{if(st.hidden)return;const s=st.clientWidth/1600;st.querySelector(".scene").style.transform=`scale(${s})`;st.style.height=(900*s)+"px"})}
+function pick(k){["A","B","C"].forEach(x=>{document.getElementById("st"+x).hidden=x!==k;document.getElementById("t"+x).setAttribute("aria-selected",x===k)});notes(k);fit();try{history.replaceState(null,"","#"+k.toLowerCase())}catch(e){}}
+["A","B","C"].forEach(k=>document.getElementById("t"+k).onclick=()=>pick(k));
+addEventListener("resize",fit);
+pick(({"#b":"B","#c":"C"})[location.hash]||"A");
+</script>

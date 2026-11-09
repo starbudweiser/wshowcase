@@ -1,0 +1,609 @@
+{
+ "owner": "starbudweiser",
+ "spaces": [
+  {
+   "id": "skyrim",
+   "name": {
+    "fr": "Skyrim Mac Toolkit",
+    "en": "Skyrim Mac Toolkit",
+    "es": "Skyrim Mac Toolkit",
+    "it": "Skyrim Mac Toolkit"
+   },
+   "tint": [
+    "#f59e0b",
+    "#e0523a"
+   ]
+  },
+  {
+   "id": "util",
+   "name": {
+    "fr": "Utilitaires",
+    "en": "Utilities",
+    "es": "Utilidades",
+    "it": "Utility"
+   },
+   "tint": [
+    "#0a84ff",
+    "#7a5af8"
+   ]
+  }
+ ],
+ "apps": [
+  {
+   "id": "sKYCRASH",
+   "space": "skyrim",
+   "repo": "sKYCRASH",
+   "accent": "#f59e0b",
+   "kind": "app",
+   "desk": false,
+   "demo": "sKYCRASH",
+   "shots": 3,
+   "download": true,
+   "version": "2.0.0",
+   "tag": {
+    "fr": "Analyse vos crash logs Skyrim et désigne le coupable.",
+    "en": "Reads your Skyrim crash logs and names the culprit.",
+    "es": "Analiza tus registros de fallos de Skyrim y señala al culpable.",
+    "it": "Analizza i crash log di Skyrim e individua il colpevole."
+   }
+  },
+  {
+   "id": "eSLIFY",
+   "space": "skyrim",
+   "repo": "eSLIFY",
+   "accent": "#cbd5e1",
+   "kind": "app",
+   "desk": false,
+   "demo": null,
+   "shots": 3,
+   "download": true,
+   "version": "2.0.0",
+   "tag": {
+    "fr": "Passe les plugins en ESL, seulement quand c'est sans risque.",
+    "en": "Flags plugins as ESL, only when it is safe.",
+    "es": "Marca los plugins como ESL, solo cuando es seguro.",
+    "it": "Segna i plugin come ESL, solo quando è sicuro."
+   }
+  },
+  {
+   "id": "fCLEANER",
+   "space": "skyrim",
+   "repo": "fCLEANER",
+   "accent": "#d4a373",
+   "kind": "app",
+   "desk": false,
+   "demo": null,
+   "shots": 3,
+   "download": true,
+   "version": "2.0.0",
+   "tag": {
+    "fr": "Nettoie les résidus d'une installation de mods aplatie.",
+    "en": "Cleans the leftovers of a flattened mod setup.",
+    "es": "Limpia los restos de una instalación de mods aplanada.",
+    "it": "Pulisce gli avanzi di un'installazione di mod appiattita."
+   }
+  },
+  {
+   "id": "fOLDERFUSE",
+   "space": "skyrim",
+   "repo": "fOLDERFUSE",
+   "accent": "#30d158",
+   "kind": "app",
+   "desk": false,
+   "demo": null,
+   "shots": 3,
+   "download": true,
+   "version": "2.0.0",
+   "tag": {
+    "fr": "Fusionne un dossier dans un autre, comme sous Windows.",
+    "en": "Merges one folder into another, the Windows way.",
+    "es": "Fusiona una carpeta en otra, como en Windows.",
+    "it": "Unisce una cartella in un'altra, come su Windows."
+   }
+  },
+  {
+   "id": "fOMODSIM",
+   "space": "skyrim",
+   "repo": "fOMOD_SIM",
+   "accent": "#0a84ff",
+   "kind": "app",
+   "desk": false,
+   "demo": null,
+   "shots": 3,
+   "download": true,
+   "version": "2.0.0",
+   "tag": {
+    "fr": "Parcourez un installateur FOMOD et prévisualisez le résultat.",
+    "en": "Walk through a FOMOD installer and preview the result.",
+    "es": "Recorre un instalador FOMOD y previsualiza el resultado.",
+    "it": "Percorri un installer FOMOD e visualizza il risultato."
+   }
+  },
+  {
+   "id": "kEYKODES",
+   "space": "skyrim",
+   "repo": "kEYKODES",
+   "accent": "#8e8e93",
+   "kind": "app",
+   "desk": true,
+   "demo": null,
+   "shots": 3,
+   "download": true,
+   "version": "2.0.0",
+   "tag": {
+    "fr": "Les codes de touches DirectInput et ImGui pour vos .ini.",
+    "en": "DirectInput and ImGui key codes for your .ini files.",
+    "es": "Los códigos de tecla DirectInput e ImGui para tus .ini.",
+    "it": "I codici tasto DirectInput e ImGui per i tuoi .ini."
+   }
+  },
+  {
+   "id": "mABBAJACK",
+   "space": "skyrim",
+   "repo": "mABBAJACK",
+   "accent": "#5aa9ff",
+   "kind": "app",
+   "desk": true,
+   "demo": null,
+   "shots": 3,
+   "download": true,
+   "version": "2.0.0",
+   "tag": {
+    "fr": "Installez des listes de mods Wabbajack sur Mac.",
+    "en": "Install Wabbajack mod lists on Mac.",
+    "es": "Instala listas de mods de Wabbajack en Mac.",
+    "it": "Installa le liste di mod Wabbajack su Mac."
+   }
+  },
+  {
+   "id": "mBAE",
+   "space": "skyrim",
+   "repo": "mBAE",
+   "accent": "#0a84ff",
+   "kind": "app",
+   "desk": false,
+   "demo": null,
+   "shots": 3,
+   "download": true,
+   "version": "2.0.0",
+   "tag": {
+    "fr": "Ouvre et extrait les archives .bsa et .ba2.",
+    "en": "Opens and extracts .bsa and .ba2 archives.",
+    "es": "Abre y extrae archivos .bsa y .ba2.",
+    "it": "Apre ed estrae archivi .bsa e .ba2."
+   }
+  },
+  {
+   "id": "mO2FLATTENER",
+   "space": "skyrim",
+   "repo": "mO2FLATTENER",
+   "accent": "#5ac8fa",
+   "kind": "app",
+   "desk": false,
+   "demo": null,
+   "shots": 3,
+   "download": true,
+   "version": "2.0.0",
+   "tag": {
+    "fr": "Transforme une instance Mod Organizer 2 en dossier prêt à jouer.",
+    "en": "Turns a Mod Organizer 2 instance into a ready-to-play folder.",
+    "es": "Convierte una instancia de Mod Organizer 2 en una carpeta lista para jugar.",
+    "it": "Trasforma un'istanza di Mod Organizer 2 in una cartella pronta all'uso."
+   }
+  },
+  {
+   "id": "mTRANSLATOR",
+   "space": "skyrim",
+   "repo": "mTRANSLATOR",
+   "accent": "#4285f4",
+   "kind": "app",
+   "desk": false,
+   "demo": "mTRANSLATOR",
+   "shots": 3,
+   "download": true,
+   "version": "2.0.0",
+   "tag": {
+    "fr": "Traduisez les mods Bethesda, natif sur macOS.",
+    "en": "Translate Bethesda mods, native on macOS.",
+    "es": "Traduce mods de Bethesda, nativo en macOS.",
+    "it": "Traduci i mod Bethesda, nativo su macOS."
+   }
+  },
+  {
+   "id": "nEXUSWATCH",
+   "space": "skyrim",
+   "repo": "nEXUSWATCH",
+   "accent": "#ffb340",
+   "kind": "app",
+   "desk": false,
+   "demo": null,
+   "shots": 3,
+   "download": true,
+   "version": "2.0.0",
+   "tag": {
+    "fr": "Surveille vos pages Nexus Mods et ordonne les bugs en plan de travail.",
+    "en": "Watches your Nexus Mods pages and turns bug reports into a plan.",
+    "es": "Vigila tus páginas de Nexus Mods y convierte los bugs en un plan.",
+    "it": "Sorveglia le tue pagine Nexus Mods e trasforma i bug in un piano."
+   }
+  },
+  {
+   "id": "pLUGINSLENS",
+   "space": "skyrim",
+   "repo": "pLUGINSLENS",
+   "accent": "#ffd60a",
+   "kind": "app",
+   "desk": false,
+   "demo": null,
+   "shots": 3,
+   "download": true,
+   "version": "2.0.0",
+   "tag": {
+    "fr": "Éditeur de plugins .esp, .esm et .esl : parcourir, comparer, modifier.",
+    "en": "Plugin editor for .esp, .esm and .esl: browse, compare, edit.",
+    "es": "Editor de plugins .esp, .esm y .esl: explorar, comparar, editar.",
+    "it": "Editor di plugin .esp, .esm e .esl: sfoglia, confronta, modifica."
+   }
+  },
+  {
+   "id": "mORTEX",
+   "space": "skyrim",
+   "repo": "mORTEX",
+   "accent": "#f59e0b",
+   "kind": "app",
+   "desk": true,
+   "demo": null,
+   "shots": 3,
+   "download": true,
+   "version": "2.0.0",
+   "tag": {
+    "fr": "Le gestionnaire de mods, version Mac.",
+    "en": "The mod manager, Mac edition.",
+    "es": "El gestor de mods, edición Mac.",
+    "it": "Il gestore di mod, edizione Mac."
+   }
+  },
+  {
+   "id": "hERALD",
+   "space": "skyrim",
+   "repo": "hERALD",
+   "accent": "#f59e0b",
+   "kind": "app",
+   "desk": true,
+   "demo": null,
+   "shots": 0,
+   "download": true,
+   "version": "1.0.0",
+   "tag": {
+    "fr": "Prépare et suit vos campagnes de communication, sans rien publier à votre place.",
+    "en": "Plans and tracks your communication campaigns, never posts for you.",
+    "es": "Prepara y sigue tus campañas de comunicación, sin publicar nada por ti.",
+    "it": "Prepara e segue le tue campagne di comunicazione, senza pubblicare nulla al posto tuo."
+   }
+  },
+  {
+   "id": "csSETTINGS",
+   "space": "skyrim",
+   "repo": "csSETTINGS",
+   "accent": "#38bdf8",
+   "kind": "app",
+   "desk": true,
+   "demo": null,
+   "shots": 3,
+   "download": false,
+   "version": "",
+   "tag": {
+    "fr": "Parcourez, appliquez, sauvegardez et restaurez vos presets Community Shaders.",
+    "en": "Browse, apply, back up and restore Community Shaders presets.",
+    "es": "Explora, aplica, guarda y restaura presets de Community Shaders.",
+    "it": "Sfoglia, applica, salva e ripristina i preset di Community Shaders."
+   }
+  },
+  {
+   "id": "mCLEAN",
+   "space": "util",
+   "repo": "mCLEAN",
+   "accent": "#30d158",
+   "kind": "menubar",
+   "desk": true,
+   "demo": "mCLEAN",
+   "shots": 0,
+   "download": true,
+   "version": "1.3.1",
+   "tag": {
+    "fr": "La mémoire dans la barre des menus, libérée en un clic.",
+    "en": "Your memory in the menu bar, freed in one click.",
+    "es": "Tu memoria en la barra de menús, liberada con un clic.",
+    "it": "La memoria nella barra dei menu, liberata con un clic."
+   }
+  },
+  {
+   "id": "hdCLEANER",
+   "space": "util",
+   "repo": "hdCLEANER",
+   "accent": "#30d158",
+   "kind": "app",
+   "desk": false,
+   "demo": null,
+   "shots": 0,
+   "download": true,
+   "version": "1.4.0",
+   "tag": {
+    "fr": "Repère les déchets du disque et supprime ce que vous cochez.",
+    "en": "Finds junk on your disk and removes what you tick.",
+    "es": "Encuentra la basura del disco y borra lo que marques.",
+    "it": "Trova i rifiuti sul disco e rimuove ciò che selezioni."
+   }
+  },
+  {
+   "id": "mSILENCE",
+   "space": "util",
+   "repo": "mSILENCE",
+   "accent": "#ffd60a",
+   "kind": "menubar",
+   "desk": false,
+   "demo": null,
+   "shots": 0,
+   "download": false,
+   "version": "",
+   "tag": {
+    "fr": "Pare-feu par appli et moniteur réseau.",
+    "en": "Per-app firewall and network monitor.",
+    "es": "Cortafuegos por app y monitor de red.",
+    "it": "Firewall per app e monitor di rete."
+   }
+  },
+  {
+   "id": "mDESK",
+   "space": "util",
+   "repo": "mDESK",
+   "accent": "#0a84ff",
+   "kind": "menubar",
+   "desk": false,
+   "demo": null,
+   "shots": 0,
+   "download": true,
+   "version": "1.0",
+   "tag": {
+    "fr": "Retient où se trouvent vos icônes et vos fenêtres, écran par écran.",
+    "en": "Remembers where your icons and windows sit, display by display.",
+    "es": "Recuerda dónde están tus iconos y ventanas, pantalla por pantalla.",
+    "it": "Ricorda dove stanno icone e finestre, schermo per schermo."
+   }
+  },
+  {
+   "id": "mSPACES",
+   "space": "util",
+   "repo": "mSPACES",
+   "accent": "#ff9f0a",
+   "kind": "menubar",
+   "desk": false,
+   "demo": null,
+   "shots": 0,
+   "download": true,
+   "version": "1.0.0",
+   "tag": {
+    "fr": "Sépare les icônes de la barre des menus en groupes.",
+    "en": "Splits your menu bar icons into groups.",
+    "es": "Separa los iconos de la barra de menús en grupos.",
+    "it": "Divide le icone della barra dei menu in gruppi."
+   }
+  },
+  {
+   "id": "mLINKS",
+   "space": "util",
+   "repo": "mLINKS",
+   "accent": "#32ade6",
+   "kind": "menubar",
+   "desk": true,
+   "demo": null,
+   "shots": 0,
+   "download": true,
+   "version": "1.1.1",
+   "tag": {
+    "fr": "Applis, dossiers, fichiers et sites à portée d'un raccourci.",
+    "en": "Apps, folders, files and web addresses one shortcut away.",
+    "es": "Apps, carpetas, archivos y sitios a un atajo de distancia.",
+    "it": "App, cartelle, file e siti a portata di scorciatoia."
+   }
+  },
+  {
+   "id": "ARCHiVES",
+   "space": "util",
+   "repo": "ARCHiVES",
+   "accent": "#0a84ff",
+   "kind": "app",
+   "desk": false,
+   "demo": null,
+   "shots": 0,
+   "download": false,
+   "version": "",
+   "tag": {
+    "fr": "Extrait et compresse les archives, intégré au Finder.",
+    "en": "Extracts and compresses archives, built into the Finder.",
+    "es": "Extrae y comprime archivos, integrado en el Finder.",
+    "it": "Estrae e comprime archivi, integrato nel Finder."
+   }
+  },
+  {
+   "id": "mBACKUP",
+   "space": "util",
+   "repo": "mBACKUP",
+   "accent": "#30d158",
+   "kind": "menubar",
+   "desk": false,
+   "demo": null,
+   "shots": 0,
+   "download": true,
+   "version": "1.0.2",
+   "tag": {
+    "fr": "Copies miroir planifiées de vos dossiers.",
+    "en": "Scheduled mirror copies of your folders.",
+    "es": "Copias espejo programadas de tus carpetas.",
+    "it": "Copie mirror pianificate delle tue cartelle."
+   }
+  },
+  {
+   "id": "qLOOKS",
+   "space": "util",
+   "repo": "qLOOKS",
+   "accent": "#bf5af2",
+   "kind": "app",
+   "desk": false,
+   "demo": null,
+   "shots": 0,
+   "download": false,
+   "version": "",
+   "tag": {
+    "fr": "Aperçus Coup d'œil pour les formats que macOS ignore.",
+    "en": "Quick Look previews for formats macOS ignores.",
+    "es": "Vistas previas Quick Look para formatos que macOS ignora.",
+    "it": "Anteprime Quick Look per i formati che macOS ignora."
+   }
+  },
+  {
+   "id": "wCLAUDE",
+   "space": "util",
+   "repo": "wCLAUDE",
+   "accent": "#ff9f0a",
+   "kind": "app",
+   "desk": true,
+   "demo": null,
+   "shots": 0,
+   "download": false,
+   "version": "",
+   "tag": {
+    "fr": "Un navigateur que l'IA pilote pour vous.",
+    "en": "A browser your AI agent can drive.",
+    "es": "Un navegador que tu agente de IA puede manejar.",
+    "it": "Un browser che il tuo agente IA può pilotare."
+   }
+  },
+  {
+   "id": "MiCONE",
+   "space": "util",
+   "repo": "MiCONE",
+   "accent": "#ff375f",
+   "kind": "app",
+   "desk": false,
+   "demo": null,
+   "shots": 0,
+   "download": true,
+   "version": "2.0.0",
+   "tag": {
+    "fr": "Transforme n'importe quelle image en icône macOS.",
+    "en": "Turns any image into a macOS icon.",
+    "es": "Convierte cualquier imagen en un icono de macOS.",
+    "it": "Trasforma qualsiasi immagine in un'icona macOS."
+   }
+  },
+  {
+   "id": "iCONIQ",
+   "space": "util",
+   "repo": "iCONIQ",
+   "accent": "#bf5af2",
+   "kind": "app",
+   "desk": false,
+   "demo": null,
+   "shots": 0,
+   "download": true,
+   "version": "1.0.2",
+   "tag": {
+    "fr": "Votre bibliothèque d'icônes personnelle.",
+    "en": "Your personal icon library.",
+    "es": "Tu biblioteca personal de iconos.",
+    "it": "La tua libreria personale di icone."
+   }
+  },
+  {
+   "id": "mSIZER",
+   "space": "util",
+   "repo": "mSIZER",
+   "accent": "#ff375f",
+   "kind": "app",
+   "desk": false,
+   "demo": null,
+   "shots": 0,
+   "download": true,
+   "version": "1.2.0",
+   "tag": {
+    "fr": "Redimensionne, recadre et retouche des centaines de photos d'un coup.",
+    "en": "Resize, crop and retouch hundreds of photos at once.",
+    "es": "Redimensiona, recorta y retoca cientos de fotos a la vez.",
+    "it": "Ridimensiona, ritaglia e ritocca centinaia di foto in un colpo."
+   }
+  },
+  {
+   "id": "kYNEDIT",
+   "space": "util",
+   "repo": "kynedit",
+   "accent": "#ff9f0a",
+   "kind": "app",
+   "desk": false,
+   "demo": null,
+   "shots": 0,
+   "download": false,
+   "version": "",
+   "tag": {
+    "fr": "Explorateur média et transcodeur rapide, export vers DaVinci Resolve.",
+    "en": "Fast media browser and transcoder, export to DaVinci Resolve.",
+    "es": "Explorador multimedia y transcodificador rápido, con exportación a DaVinci Resolve.",
+    "it": "Browser multimediale e transcoder veloce, con export verso DaVinci Resolve."
+   }
+  },
+  {
+   "id": "mSTAGRAM",
+   "space": "util",
+   "repo": "mSTAGRAM",
+   "accent": "#ff375f",
+   "kind": "app",
+   "desk": false,
+   "demo": null,
+   "shots": 0,
+   "download": false,
+   "version": "",
+   "tag": {
+    "fr": "Instagram en version téléphone, dans un iPhone sur votre Mac.",
+    "en": "Instagram's phone version, in an iPhone window on your Mac.",
+    "es": "Instagram en versión móvil, dentro de un iPhone en tu Mac.",
+    "it": "Instagram in versione telefono, in un iPhone sul tuo Mac."
+   }
+  },
+  {
+   "id": "mSTICK",
+   "space": "util",
+   "repo": "mSTICK",
+   "accent": "#ffd60a",
+   "kind": "app",
+   "desk": true,
+   "demo": "mSTICK",
+   "shots": 0,
+   "download": false,
+   "version": "",
+   "tag": {
+    "fr": "Vos pense-bêtes toujours sous les yeux.",
+    "en": "Your sticky notes, always in sight.",
+    "es": "Tus notas adhesivas, siempre a la vista.",
+    "it": "I tuoi promemoria, sempre sotto gli occhi."
+   }
+  },
+  {
+   "id": "qNOTES",
+   "space": "util",
+   "repo": "qNOTES",
+   "accent": "#bf5af2",
+   "kind": "app",
+   "desk": true,
+   "demo": null,
+   "shots": 0,
+   "download": false,
+   "version": "",
+   "tag": {
+    "fr": "Notes riches, rapides, toujours à portée de main.",
+    "en": "Rich notes, quick and always at hand.",
+    "es": "Notas ricas, rápidas y siempre a mano.",
+    "it": "Note ricche, veloci e sempre a portata di mano."
+   }
+  }
+ ]
+}

@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>wSHOWCASE : trace de conception</title>
+<style>
+@page{size:A4 landscape;margin:0}
+*{box-sizing:border-box}
+body{margin:0;font:11pt/1.5 "Helvetica Neue",Helvetica,Arial,sans-serif;color:#1d1d1f;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.p{width:297mm;height:210mm;padding:16mm 18mm 14mm;page-break-after:always;position:relative;overflow:hidden;background:#fff}
+.p:last-child{page-break-after:auto}
+.k{font-size:9pt;letter-spacing:.08em;text-transform:uppercase;color:#6e6e73;font-weight:600}
+h1{font-size:30pt;letter-spacing:-.02em;margin:6mm 0 3mm;line-height:1.08}
+h2{font-size:19pt;letter-spacing:-.01em;margin:0 0 2mm}
+h3{font-size:9.5pt;letter-spacing:.07em;text-transform:uppercase;color:#6e6e73;margin:5mm 0 1.5mm}
+p{margin:0 0 2.5mm}ul{margin:0;padding-left:5mm}li{margin-bottom:1.2mm}
+.f{position:absolute;left:18mm;right:18mm;bottom:8mm;display:flex;justify-content:space-between;font-size:8pt;color:#8e8e93}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12mm}
+.shot{align-self:start;border:.3mm solid #d2d2d7;border-radius:3mm;overflow:hidden;line-height:0}.shot img{width:100%}
+.row{display:grid;grid-template-columns:172mm 1fr;gap:9mm;margin-top:3mm}
+.tag{display:inline-block;background:#e8f1fd;color:#0a58b8;border-radius:99px;padding:.6mm 3mm;font-size:8.5pt;font-weight:600;margin-right:1.5mm}
+table{border-collapse:collapse;width:100%;font-size:10pt}td,th{border-top:.2mm solid #d2d2d7;padding:2mm 3mm 2mm 0;text-align:left;vertical-align:top}th{font-size:8.5pt;text-transform:uppercase;letter-spacing:.06em;color:#6e6e73}
+.ok{color:#1a7f37;font-weight:600}.no{color:#b3261e;font-weight:600}
+</style></head><body>
+
+<section class="p">
+  <div class="k">wSHOWCASE · trace de conception · 9 novembre 2026</div>
+  <h1>Tester vos applications Mac<br>dans un faux Mac, avant de les télécharger</h1>
+  <p style="max-width:190mm;font-size:12.5pt;color:#424245">Un site hébergé sur GitHub Pages où l'internaute arrive devant un Mac 16:9 dans son navigateur, y lance vos applications comme chez lui et ne télécharge qu'ensuite. Ce document garde les trois propositions de maquette, les commentaires de chaque approche et les décisions prises avec Stéphan.</p>
+  <div class="two" style="margin-top:9mm">
+    <div>
+      <h3>Cahier des charges de départ</h3>
+      <ul>
+        <li>Finder personnalisé au format 16:9, applications rangées dans le Dock et sur le Bureau, prêtes à être lancées.</li>
+        <li>Test en direct de chaque application avant téléchargement.</li>
+        <li>Réalisation professionnelle, fluide, performante, style épuré Apple.</li>
+        <li>Maquettes à choisir avant d'écrire le code.</li>
+      </ul>
+      <h3>Matière utilisée</h3>
+      <ul>
+        <li>Vos vraies icônes, 32 applications au total.</li>
+        <li>Les captures déjà réalisées pour skyrimtools.com.</li>
+        <li>Les dépôts GitHub starbudweiser/* pour les téléchargements.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Évolution entre la v1 et la v2 des maquettes</h3>
+      <table>
+        <tr><th>Retour de Stéphan</th><th>Effet sur les maquettes</th></tr>
+        <tr><td>Intégrer hERALD et kYNEDIT, retirer CAREERDeSK et HORIZONs</td><td>34 applis réduites à 32</td></tr>
+        <tr><td>Deux espaces virtuels : utilitaires et applis du Skyrim Mac Toolkit</td><td>Bureau 1 Skyrim (15 applis), Bureau 2 Utilitaires (17), pastilles de bascule, liens <code>#skyrim</code> et <code>#utilitaires</code> depuis skyrimtools.com</td></tr>
+        <tr><td>Finder inspiré de macOS « Golden Gate »</td><td>Style verre translucide, grands arrondis, barre des menus transparente, boutons en pastille</td></tr>
+      </table>
+      <p style="margin-top:3mm;font-size:9.5pt;color:#6e6e73">Aucune référence officielle trouvée pour « Golden Gate » : l'interprétation est à confirmer, idéalement avec une capture.</p>
+    </div>
+  </div>
+  <div class="f"><span>wSHOWCASE · trace de conception</span><span>1 / 5</span></div>
+</section>
+
+<section class="p">
+  <div class="k">Proposition A</div><h2>Vitrine et écran</h2>
+  <div class="row"><div class="shot"><img src="_trace/A.png"></div>
+  <div>
+    <p><span class="tag">Retenue pour l'entrée</span></p>
+    <h3>L'idée</h3><p>Une page produit à la Apple : titre, un seul bouton, puis le Mac dans un cadre fin. Un clic sur « Allumer le Mac » l'agrandit en plein écran, sur le bureau Skyrim.</p>
+    <h3>Pour</h3><ul><li>Raconte l'histoire avant de montrer les 32 applis</li><li>Le plus proche d'une page Apple</li><li>Un seul chemin clair : lire, allumer, essayer</li></ul>
+    <h3>Contre</h3><ul><li>Dock et bureau n'affichent qu'une dizaine d'applis par bureau</li><li>Deux écrans à concevoir : la page et le Mac</li></ul>
+  </div></div>
+  <h3>Commentaire de l'approche</h3>
+  <p style="max-width:250mm">Fond blanc, titre à dégradé bleu-violet sur la seule seconde ligne, un bouton plein bleu : tout le poids visuel va à l'écran du Mac, qui est le produit. Le cadre noir fin évoque un écran Apple sans imiter un modèle précis. C'est la meilleure porte d'entrée, mais elle ne suffit pas à explorer 32 applis : d'où l'association avec C.</p>
+  <div class="f"><span>wSHOWCASE · trace de conception</span><span>2 / 5</span></div>
+</section>
+
+<section class="p">
+  <div class="k">Proposition B</div><h2>Launchpad et Mission Control</h2>
+  <div class="row"><div class="shot"><img src="_trace/B.png"></div>
+  <div>
+    <p><span class="tag" style="background:#f1f1f3;color:#555">Non retenue seule</span></p>
+    <h3>L'idée</h3><p>Le site est le Mac dès la première seconde. Mission Control montre les deux bureaux, le Launchpad toutes les applis du bureau actif.</p>
+    <h3>Pour</h3><ul><li>Effet « waouh » immédiat, aucun texte avant la démo</li><li>Toutes les applis d'un bureau visibles sans défiler</li><li>Les deux bureaux se comprennent d'un coup d'œil</li></ul>
+    <h3>Contre</h3><ul><li>Peu de place pour expliquer, rassurer et référencer le site</li><li>Le Finder reste à créer pour les fiches détaillées</li></ul>
+  </div></div>
+  <h3>Commentaire de l'approche</h3>
+  <p style="max-width:250mm">Thème sombre, verre givré et icônes agrandies : c'est la version la plus spectaculaire. Elle sert de modèle pour deux éléments conservés dans le site final : la bascule entre bureaux et la recherche rapide (Spotlight) pour retrouver une application parmi 32.</p>
+  <div class="f"><span>wSHOWCASE · trace de conception</span><span>3 / 5</span></div>
+</section>
+
+<section class="p">
+  <div class="k">Proposition C</div><h2>Finder en vue Galerie</h2>
+  <div class="row"><div class="shot"><img src="_trace/C.png"></div>
+  <div>
+    <p><span class="tag">Retenue pour le Mac allumé</span></p>
+    <h3>L'idée</h3><p>Un Finder en vue Galerie : l'application choisie s'affiche en grand, la bande d'icônes permet de feuilleter, le panneau d'informations porte les boutons « Ouvrir la démo » et « Télécharger ». Chaque bureau est une collection de la barre latérale.</p>
+    <h3>Pour</h3><ul><li>Le plus fidèle au geste d'un Mac</li><li>Une fiche par application sans quitter l'écran</li><li>Prévu pour 32 applis et plus</li></ul>
+    <h3>Contre</h3><ul><li>Moins spectaculaire au premier regard</li><li>Demande une zone d'aperçu soignée pour chaque appli</li></ul>
+  </div></div>
+  <h3>Commentaire de l'approche</h3>
+  <p style="max-width:250mm">C'est l'écran où le visiteur passe le plus de temps. L'aperçu central affiche l'application en action, la bande du bas sert de navigation, et le panneau de droite concentre les deux actions qui comptent. Les captures réelles des applis et les démos interactives viendront remplir la zone d'aperçu.</p>
+  <div class="f"><span>wSHOWCASE · trace de conception</span><span>4 / 5</span></div>
+</section>
+
+<section class="p">
+  <div class="k">Décisions et suite</div><h2>Ce qui a été choisi le 9 novembre 2026</h2>
+  <div class="two" style="margin-top:4mm">
+    <div>
+      <h3>Réponses de Stéphan</h3>
+      <table>
+        <tr><th>Question</th><th>Réponse</th></tr>
+        <tr><td>Direction</td><td>A pour l'entrée, C pour le Mac allumé</td></tr>
+        <tr><td>Démos</td><td>Répliques interactives pour les applis phares (dont mTRANSLATOR), parcours guidé pour les autres</td></tr>
+        <tr><td>Adresse</td><td>GitHub Pages, adresse github.io</td></tr>
+      </table>
+      <h3>Exigences ajoutées</h3>
+      <ul>
+        <li>Thèmes clair et sombre.</li>
+        <li>Choix du fond d'écran, une dizaine à créer.</li>
+        <li>Sons d'interface.</li>
+        <li>Ajouter ou retirer une application côté auteur, pas côté internaute.</li>
+        <li>« À propos » dans le menu pomme.</li>
+        <li>Effet « waouh » entretenu à chaque étape.</li>
+        <li>À l'entrée, simulation d'un démarrage de Mac avec le son de démarrage.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Choix techniques arrêtés</h3>
+      <ul>
+        <li>Site statique (HTML, CSS, JavaScript natifs) servi par GitHub Pages, sans étape de compilation.</li>
+        <li>Liste des applis dans un fichier de données unique, avec un outil en ligne de commande pour ajouter ou retirer une appli.</li>
+        <li>Bureau 16:9 mis à l'échelle de la fenêtre, quatre langues (français, anglais, espagnol, italien).</li>
+        <li>Fonds d'écran générés en local avec FLUX 3 Klein (10 images).</li>
+        <li>Sons de l'interface et son de démarrage synthétisés dans le navigateur (aucun fichier audio tiers, aucune copie du son Apple).</li>
+        <li>Version des applis lue en direct sur GitHub Releases ; « Bientôt disponible » quand l'appli n'a pas de version publique.</li>
+      </ul>
+      <h3>Prochaines étapes</h3>
+      <ul>
+        <li>Noyau : démarrage, Dock, fenêtres, deux bureaux.</li>
+        <li>Finder galerie, Spotlight, menus, « À propos ».</li>
+        <li>Démos phares : sKYCRASH, mTRANSLATOR, mCLEAN, mSTICK ; parcours guidé pour les autres.</li>
+        <li>Essais dans le navigateur, puis publication sur GitHub Pages après validation de Stéphan.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="f"><span>wSHOWCASE · trace de conception</span><span>5 / 5</span></div>
+</section>
+</body></html>
