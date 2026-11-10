@@ -416,8 +416,8 @@
    "desk": false,
    "demo": "ARCHiVES",
    "shots": 0,
-   "download": false,
-   "version": "",
+   "download": true,
+   "version": "1.0.0",
    "tag": {
     "fr": "Extrait et compresse les archives, intégré au Finder.",
     "en": "Extracts and compresses archives, built into the Finder.",
