@@ -273,7 +273,7 @@
    "demo": "hERALD",
    "shots": 0,
    "download": true,
-   "version": "1.0.0",
+   "version": "1.3.1",
    "tag": {
     "fr": "Prépare et suit vos campagnes de communication, sans rien publier à votre place.",
     "en": "Plans and tracks your communication campaigns, never posts for you.",
@@ -290,8 +290,8 @@
    "desk": false,
    "demo": "csSETTINGS",
    "shots": 3,
-   "download": false,
-   "version": "",
+   "download": true,
+   "version": "2.0.0",
    "tag": {
     "fr": "Parcourez, appliquez, sauvegardez et restaurez vos presets Community Shaders.",
     "en": "Browse, apply, back up and restore Community Shaders presets.",
@@ -452,8 +452,8 @@
    "desk": false,
    "demo": "qLOOKS",
    "shots": 0,
-   "download": false,
-   "version": "",
+   "download": true,
+   "version": "1.1.0",
    "tag": {
     "fr": "Aperçus Coup d'œil pour les formats que macOS ignore.",
     "en": "Quick Look previews for formats macOS ignores.",
