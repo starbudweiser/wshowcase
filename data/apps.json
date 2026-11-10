@@ -596,8 +596,8 @@
    "desk": true,
    "demo": "qNOTES",
    "shots": 0,
-   "download": false,
-   "version": "",
+   "download": true,
+   "version": "1.0.0",
    "tag": {
     "fr": "Notes riches, rapides, toujours à portée de main.",
     "en": "Rich notes, quick and always at hand.",
