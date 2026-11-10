@@ -50,11 +50,11 @@ const sameDay = (a, b) => sod(a) === sod(b);
 const fday = t => new Date(t).toLocaleDateString(LG(), { day: 'numeric', month: 'short', year: 'numeric' });
 const fdm = t => new Date(t).toLocaleDateString(LG(), { day: 'numeric', month: 'short' });
 const fshort = t => new Date(t).toLocaleDateString(LG(), { day: '2-digit', month: '2-digit' });
-const fstamp = t => new Date(t).toLocaleString(LG(), { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+const fstamp = t => new Date(t).toLocaleString(LG(), { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false });
 const iso = t => { const d = new Date(t); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
 const fromIso = s => { const [y, m, d] = s.split('-').map(Number); return y ? new Date(y, m - 1, d, 12).getTime() : null; };
 const daysTo = t => Math.round((sod(t) - sod(Date.now())) / 864e5);
-const nf = n => (n == null ? '—' : n.toLocaleString(LG()));
+const nf = n => (n == null ? '—' : T(n.toLocaleString('en-US').replace(/,/g, '\u00a0'), n.toLocaleString('en-US')));
 const nr = n => T(`${n} nouvelle${n > 1 ? 's' : ''} réponse${n > 1 ? 's' : ''}`, `${n} new repl${n > 1 ? 'ies' : 'y'}`);
 const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 
@@ -146,7 +146,7 @@ function brandHL(root, name, key) {
   if (!window.CSS || !CSS.highlights || typeof Highlight === 'undefined') return () => {};
   const k = [...name].findIndex(c => c >= 'a' && c <= 'z'); let raf = 0;
   const run = () => {
-    raf = 0; const rs = [], tw = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: n => (n.nodeValue.includes(name) && !n.parentElement.closest('.lc,.hd-pop,option,textarea,script,style') ? 1 : 3) });
+    raf = 0; const rs = [], tw = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: n => (n.nodeValue.includes(name) && !n.parentElement.closest('.lc,.hd-pop,.mono,option,textarea,script,style') ? 1 : 3) });
     for (let n; (n = tw.nextNode());) { let i = -1; while ((i = n.nodeValue.indexOf(name, i + 1)) >= 0) { const r = new Range(); r.setStart(n, i + k); r.setEnd(n, i + k + 1); rs.push(r); } }
     CSS.highlights.set(key, new Highlight(...rs));
   };
@@ -172,7 +172,7 @@ function build(w, app) {
   PLAT = mkPlat();
   const alive = () => !w.dead, D = makeData(), timers = new Set();
   const later = (fn, ms) => { const t = setTimeout(() => { timers.delete(t); if (alive()) fn(); }, ms); timers.add(t); return t; };
-  const st = { tab: 'today', ci: 0, q: '', selTodo: null, selPost: D.camps[0].posts[7].id, selContact: null, selFb: null, selWatch: null, selChan: null, month: new Date(new Date().getFullYear(), new Date().getMonth(), 1).getTime(),
+  const st = { tab: 'today', ci: 0, q: '', selTodo: null, selPost: D.camps[0].posts[7].id, selContact: D.camps[0].contacts[0].id, selFb: null, selWatch: null, selChan: null, month: new Date(new Date().getFullYear(), new Date().getMonth(), 1).getTime(),
     pFilter: null, pChan: null, cFilter: 'all', period: 'campaign', itab: 'text', lang: T('fr', 'en'), agentOn: true, agentOpen: false, scopeTask: false, mail: 'mail', icon: 'dock', inbox: 0, inboxLog: [], backup: null, statsChecked: Date.now() - 36e5 * 3, watchChecked: false, busy: false };
   const C = () => D.camps[st.ci] || null, posts = () => (C() ? C().posts : []), contacts = () => (C() ? C().contacts : []);
   const post = id => posts().find(p => p.id === id), contact = id => contacts().find(c => c.id === id), chan = id => D.chans.find(c => c.id === id);
@@ -223,7 +223,7 @@ function build(w, app) {
     const close = () => { const i = layers.indexOf(scrim); if (i >= 0) { layers.splice(i, 1); scrim.remove(); } };
     const f = scrim.querySelector('.hd-shfoot .hd-b.pri') || scrim.querySelector('input,textarea,select'); f && f.focus({ preventScroll: true }); return close;
   };
-  const confirmBox = (title, msg, label, fn, danger) => { const close = sheet(title, msg ? h('p', { class: 'hd-p' }, msg) : null, [btn(T('ANNULER', 'CANCEL'), '', close), btn(label, danger ? 'dg' : 'pri', () => { close(); fn(); })], 440); };
+  const confirmBox = (title, msg, label, fn, danger) => { const close = sheet(title, msg ? h('p', { class: 'hd-p' }, msg) : null, [btn(T('ANNULER', 'CANCEL'), '', () => close()), btn(label, danger ? 'dg' : 'pri', () => { close(); fn(); })], 440); };
   w.away = e => { if (!pop.hidden && !pop.contains(e.target)) hidePop(); }; addEventListener('pointerdown', w.away, true);
 
   /* ---------- calculs ---------- */
@@ -259,7 +259,7 @@ function build(w, app) {
   const cdChip = c => { const d = daysTo(c.event); return sp('hd-cd ' + (d === 0 ? 'ok' : d < 0 ? '' : d <= 7 ? 'wn' : 'ac'), d > 0 ? T('J-', 'D-') + d : d === 0 ? T('Jour J', 'D-day') : T('J+', 'D+') + -d); };
   function drawSide() {
     const c = C(), N = TN(), ord = order();
-    const row = (k) => { const n = count(k); const act = k === 'agent' ? st.agentOpen : st.tab === k;
+    const row = (k) => { const n = count(k); const act = k === 'agent' ? st.agentOpen : st.tab === k && !(st.agentOpen && st.agentOn);
       return h('button', { class: 'hd-sr' + (act ? ' on' : ''), title: N[k], 'aria-label': N[k], 'aria-current': act ? 'page' : null, disabled: k === 'agent' && !c, onclick: () => (k === 'agent' ? toggleAgent() : go(k)) }, ic(TI[k], 15), sp('t', N[k]), n ? sp('hd-n', n) : null); };
     const grp = (t, ks) => dv('hd-grp', dv('hd-gt', t), ks.map(row));
     const done = posts().filter(p => p.status === 'published').length, tot = posts().length, pct = tot ? Math.round(done / tot * 100) : 0;
@@ -268,7 +268,7 @@ function build(w, app) {
       dv('hd-sscroll hd-scroll', grp(T('Campagne', 'Campaign'), ['today', 'calendar', 'posts']), grp(T('Démarchage', 'Outreach'), ['contacts']), grp(T('Résultats', 'Results'), ['stats', 'feedback', 'watch']), grp(T('Outils', 'Tools'), ['channels', ...(st.agentOn ? ['agent'] : []), 'browser'])),
       dv('hd-sfoot', row0('gear', T('Réglages', 'Settings'), settingsSheet), row0('info', T('À propos de hERALD', 'About hERALD'), aboutSheet), h('hr'),
         dv('hd-prog t', dv('hd-pr', sp('', T(`${done} / ${tot} publiées`, `${done} / ${tot} published`)), sp('fl'), sp('hd-ts', tot ? pct + ' %' : '—')), dv('hd-bar', h('i', { style: { width: pct + '%' } }))),
-        h('button', { class: 'hd-inb t' + (st.inbox ? ' wn' : ''), title: T('Boîte de dépôt', 'Drop box'), onclick: () => { if (st.inbox) { st.inbox = 0; drawSide(); settingsSheet(); } else demo(T('Ouvrirait le dossier de dépôt dans le Finder.', 'Would open the drop-box folder in the Finder.')); } }, sp('dot'), sp('', st.inbox ? T(`${st.inbox} fichier(s) traité(s)`, `${st.inbox} file(s) processed`) : T('Boîte de dépôt à jour', 'Drop box up to date')))));
+        h('button', { class: 'hd-inb t' + (st.inbox ? ' wn' : ''), title: T('Boîte de dépôt', 'Drop box'), onclick: () => { if (st.inbox) { st.inbox = 0; drawSide(); settingsSheet(); } else demo(T('Ouvrirait le dossier de dépôt dans le Finder.', 'Would open the drop-box folder in the Finder.')); } }, sp('dot'), sp('', st.inbox ? T(`${st.inbox} fichier${st.inbox > 1 ? 's' : ''} traité${st.inbox > 1 ? 's' : ''}`, `${st.inbox} file${st.inbox > 1 ? 's' : ''} processed`) : T('Boîte de dépôt à jour', 'Drop box up to date')))));
     function row0(k, label, fn) { return h('button', { class: 'hd-sr', title: label, 'aria-label': label, onclick: fn }, ic(k, 15), sp('t', label)); }
   }
   const campMenu = at => {
@@ -281,7 +281,7 @@ function build(w, app) {
   function campaignSheet() {
     const c = C(); if (!c) return; const e = { name: c.name, ev: iso(c.event), notes: c.notes };
     const close = sheet(T('Modifier la campagne', 'Edit campaign'), dv('hd-form', lbl(T('Nom', 'Name'), inp(e.name, v => (e.name = v))), lbl(T('Date de l’événement', 'Event date'), h('input', { class: 'hd-in', type: 'date', value: e.ev, onchange: ev => (e.ev = ev.target.value) })), lbl(T('Message central et notes', 'Core message and notes'), area(e.notes, v => (e.notes = v), { rows: 5 }))),
-      [btn(T('ANNULER', 'CANCEL'), '', close), btn(T('ENREGISTRER', 'SAVE'), 'pri', () => { c.name = e.name.trim() || c.name; c.event = fromIso(e.ev) || c.event; c.notes = e.notes; close(); go(st.tab, true); })], 520);
+      [btn(T('ANNULER', 'CANCEL'), '', () => close()), btn(T('ENREGISTRER', 'SAVE'), 'pri', () => { c.name = e.name.trim() || c.name; c.event = fromIso(e.ev) || c.event; c.notes = e.notes; close(); go(st.tab, true); })], 520);
   }
 
   /* ---------- en-tête, barre d'état ---------- */
@@ -293,9 +293,10 @@ function build(w, app) {
     w.search = si;
     fill(eHead, dv('hd-ht', h('h1', {}, N[t]), h('p', {}, HEAD()[t])), searchable ? dv('hd-search', ic('search', 13, 'sub'), si, clr) : null, prim && has ? btn(prim[0], 'pri', prim[1]) : null);
   }
+  const fitStatus = () => { eStatus.classList.remove('tight'); if ([...eStatus.children].some(c => c.scrollWidth > c.clientWidth + 1)) eStatus.classList.add('tight'); };
   function drawStatus() {
     const next = Math.max(st.statsChecked + 36e5, Date.now()), c = C();
-    fill(eStatus, st.busy ? spin() : null, sp('', st.statsChecked ? T(`Relevé : ${fstamp(st.statsChecked)} · prochain : ${fstamp(next)}`, `Last check: ${fstamp(st.statsChecked)} · next: ${fstamp(next)}`) : T('Aucun relevé pour l’instant', 'No statistics check yet')), sp('sepd', '·'), sp('', T(`Veille : ${D.watch.length} produit(s)`, `Monitoring: ${D.watch.length} product(s)`)), sp('fl'), sp('hd-rule', RULE()));
+    fill(eStatus, st.busy ? spin() : null, sp('hd-stc', st.statsChecked ? T(`Relevé : ${fstamp(st.statsChecked)} · prochain : ${fstamp(next)}`, `Last check: ${fstamp(st.statsChecked)} · next: ${fstamp(next)}`) : T('Aucun relevé pour l’instant', 'No statistics check yet')), sp('sepd', '·'), sp('hd-stw', T(`Veille : ${D.watch.length} produit${D.watch.length > 1 ? 's' : ''}`, `Monitoring: ${D.watch.length} product${D.watch.length > 1 ? 's' : ''}`)), sp('fl'), sp('hd-rule', RULE())); fitStatus();
   }
 
   /* ---------- navigation ---------- */
@@ -366,9 +367,9 @@ function build(w, app) {
     const lateP = p => p.status !== 'published' && sod(p.t) < sod(Date.now());
     const v = split({
       list: () => { const rows = posts().filter(p => (!st.pFilter || p.status === st.pFilter) && (!st.pChan || p.ch === st.pChan) && match(p.title, chan(p.ch)?.name, p.notes));
-        const fb = seg([[null, T(`Toutes (${posts().length})`, `All (${posts().length})`)], ...STS()].map(([k, l]) => [k || '', l]), st.pFilter || '', k => { st.pFilter = k || null; v.list(); }, 'sm');
+        const opts = [['', T(`Toutes (${posts().length})`, `All (${posts().length})`)], ...STS()], fb = seg(opts, st.pFilter || '', k => { st.pFilter = k || null; v.list(); }, 'hsm hd-fseg'), fs = sel(opts, st.pFilter || '', k => { st.pFilter = k || null; v.list(); }, 'hd-fsel'); fs.setAttribute('aria-label', T('Statut', 'Status'));
         const chb = h('button', { class: 'hd-ib' + (st.pChan ? ' on' : ''), title: T('Canal', 'Channel'), 'aria-label': T('Canal', 'Channel'), onclick: e => showPop([[T('Tous les canaux', 'All channels'), () => { st.pChan = null; v.list(); }, { on: !st.pChan }], '-', ...D.chans.map(c => [c.name, () => { st.pChan = c.id; v.list(); }, { on: st.pChan === c.id }])], e.currentTarget) }, ic('chud', 13));
-        return [dv('hd-lf', fb, sp('fl'), chb), rows.length ? null : dv('hd-pad', meta(T('Aucune publication.', 'No post.'))),
+        return [dv('hd-lf', fb, fs, sp('fl'), chb), rows.length ? null : dv('hd-pad', meta(T('Aucune publication.', 'No post.'))),
           rows.map(p => row({ on: p.id === st.selPost, dim: p.status === 'published' && p.id !== st.selPost, ic: CHI[chan(p.ch)?.kind] || 'mega', title: p.title, meta: fdm(p.t), mc: lateP(p) ? 'dg' : '', trail: stBadge(p.status), fn: () => { st.selPost = p.id; v.list(); v.detail(); } }))]; },
       detail: () => { if (st.selPost && post(st.selPost)) { const host = dv('hd-fill'); mountInspector(host, st.selPost); return host; } return empty(T('Choisissez une publication.', 'Choose a post.')); } });
     return v;
@@ -379,28 +380,28 @@ function build(w, app) {
     const upd = () => { cnt.textContent = T(`${(p.drafts[st.lang] || '').length} caractères`, `${(p.drafts[st.lang] || '').length} characters`); };
     const rebuild = () => mountInspector(host, id);
     const changed = () => { refreshLite(); };
-    const statusMenu = e => showPop(STS().map(([k, l]) => [l, () => { p.status = k; sfx.tick(); changed(); rebuild(); }, { on: p.status === k }]), e.currentTarget, { min: 150 });
+    const statusMenu = e => showPop(STS().map(([k, l]) => [l, () => { p.status = k; st.pubFlash = null; sfx.tick(); changed(); rebuild(); }, { on: p.status === k }]), e.currentTarget, { min: 150 });
     const header = dv('hd-ihead', h('input', { class: 'hd-in hd-tt', value: p.title, 'aria-label': T('Titre', 'Title'), oninput: e => { p.title = e.target.value; refreshLite(); } }),
-      dv('hd-r2 one', h('input', { class: 'hd-in dt', type: 'date', value: iso(p.t), 'aria-label': 'Date', onchange: e => { p.t = fromIso(e.target.value) || p.t; changed(); } }), sel([['', '—'], ...D.chans.map(c => [c.id, c.name])], p.ch || '', v => { p.ch = v || null; changed(); }, 'ch'), sp('fl'), h('button', { class: 'hd-stb', title: T('« Publié » se coche à la main, une fois que vous avez publié vous-même.', '“Published” is set by hand, once you have posted it yourself.'), onclick: statusMenu }, stBadge(p.status), ic('chd', 10, 'sub'))));
+      dv('hd-r2', h('input', { class: 'hd-in dt', type: 'date', value: iso(p.t), 'aria-label': 'Date', onchange: e => { p.t = fromIso(e.target.value) || p.t; changed(); } }), sel([['', '—'], ...D.chans.map(c => [c.id, c.name])], p.ch || '', v => { p.ch = v || null; changed(); }, 'ch'), h('button', { class: 'hd-stb', title: T('« Publié » se coche à la main, une fois que vous avez publié vous-même.', '“Published” is set by hand, once you have posted it yourself.'), onclick: statusMenu }, stBadge(p.status), ic('chd', 10, 'sub'))));
     const tabs = seg([['text', T('Texte', 'Text')], ['numbers', T('Chiffres', 'Numbers')], ['feedback', T('Retours', 'Feedback')], ['notes', 'Notes']], st.itab, k => { st.itab = k; drawTab(); });
     const drawTab = () => {
       if (st.itab === 'text') { const ta = area(p.drafts[st.lang] || '', v => { p.drafts[st.lang] = v; upd(); }, { class: 'hd-in ta big', 'aria-label': T('Texte', 'Text') }); ta.className = 'hd-in ta big'; const cn = chan(p.ch)?.notes;
         fill(body, dv('hd-r2 one', seg(LANGS, st.lang, k => { st.lang = k; ta.value = p.drafts[k] || ''; upd(); }), sp('fl'), cnt), cn ? dv('hd-note', cn) : null, ta); upd(); }
-      else if (st.itab === 'numbers') { const s = p.stat; fill(body, s ? [dv('hd-tiles3', [[T('Vues', 'Views'), s.v], [T('Interactions', 'Interactions'), s.l == null && s.c == null && s.s == null ? null : (s.l || 0) + (s.c || 0) + (s.s || 0)], [T('Téléchargements', 'Downloads'), s.d]].map(([l, x]) => dv('hd-tile', dv('hd-meta', l), dv('hd-val sm', nf(x))))), meta(T('Relevé le ', 'Checked ') + fstamp(s.t))] : meta(T('Aucun relevé pour cette publication.', 'No statistics for this post yet.')), btn(T('Saisir des chiffres', 'Enter numbers'), '', () => manualSheet(p, () => { drawTab(); refreshLite(); }), { style: { alignSelf: 'flex-start' } })); }
+      else if (st.itab === 'numbers') { const s = p.stat; fill(body, s ? [dv('hd-tiles3', [[T('Vues', 'Views'), s.v], [T('Interactions', 'Interactions'), s.l == null && s.c == null && s.s == null ? null : (s.l || 0) + (s.c || 0) + (s.s || 0)], [T('Téléchargements', 'Downloads'), s.d]].map(([l, x]) => dv('hd-tile', dv('hd-meta', l), dv('hd-val hsm', nf(x))))), meta(T('Relevé le ', 'Checked ') + fstamp(s.t))] : meta(T('Aucun relevé pour cette publication.', 'No statistics for this post yet.')), btn(T('Saisir des chiffres', 'Enter numbers'), '', () => manualSheet(p, () => { drawTab(); refreshLite(); }), { style: { alignSelf: 'flex-start' } })); }
       else if (st.itab === 'feedback') { const it = p.fb.slice().sort((a, b) => b.t - a.t); fill(body, dv('hd-r2 one', meta(it.length ? String(it.length) : T('Aucun retour noté', 'No feedback recorded')), sp('fl'), btn(T('Ouvrir dans Retours', 'Open in Feedback'), '', () => { st.selFb = id; go('feedback'); openFb(id); })), dv('hd-fbl hd-scroll', it.map(f => dv('hd-fbr', sp('hd-meta d', fday(f.t)), h('b', {}, f.author ? 'u/' + f.author : `${FBK().find(x => x[0] === f.kind)[1]} ${nf(f.value)}`), sp('tx', f.text))))); }
-      else fill(body, dv('hd-scroll hd-notes', lbl(T('Jalon', 'Milestone'), sel([['', '—'], ...C().ms.map(m => [m.id, `${fday(m.t)} · ${m.title}`])], p.ms || '', v => (p.ms = v || null))), lbl('Notes', area(p.notes, v => (p.notes = v), { style: { height: '140px' } })),
+      else fill(body, dv('hd-notes', lbl(T('Jalon', 'Milestone'), sel([['', '—'], ...C().ms.map(m => [m.id, `${fday(m.t)} · ${m.title}`])], p.ms || '', v => (p.ms = v || null))), dv('hd-fld grow', dv('hd-lbl', 'Notes'), area(p.notes, v => (p.notes = v))),
         dv('hd-r2 one', st.agentOn ? btn(T('Discuter avec l’agent', 'Chat with the agent'), '', () => { st.scopeTask = true; st.agentOpen = true; applyAgent(); }) : null, sp('fl'), btn(T('Supprimer la publication', 'Delete post'), 'ter', () => confirmBox(T('Supprimer la publication', 'Delete post'), T(`Supprimer « ${p.title} » ?`, `Delete “${p.title}”?`), T('Supprimer la publication', 'Delete post'), () => { C().posts = posts().filter(x => x.id !== id); st.selPost = null; go(st.tab, true); }, true)))));
     };
-    const hint = dv('hd-meta hd-hint'), showHint = () => { hint.textContent = p.status === 'published' ? (p.link.trim() ? '' : T('Ajoutez le lien de la publication pour la suivre.', 'Add the post’s link to track it.')) : T('Copiez le texte puis publiez-le vous-même sur le canal.', 'Copy the text, then post it yourself on the channel.'); };
+    const hint = dv('hd-meta hd-hint'), showHint = () => { hint.textContent = st.pubFlash === id ? T('Bien joué : hERALD n’a rien publié, c’est vous qui l’avez fait.', 'Well done: hERALD published nothing, you did.') : p.status === 'published' ? (p.link.trim() ? '' : T('Ajoutez le lien de la publication pour la suivre.', 'Add the post’s link to track it.')) : T('Copiez le texte puis publiez-le vous-même sur le canal.', 'Copy the text, then post it yourself on the channel.'); };
     showHint();
-    const mark = btn(p.status === 'published' ? T('Publié ✓', 'Published ✓') : T('Marquer publié', 'Mark published'), 'pri lg', () => { p.status = 'published'; sfx.done(); changed(); rebuild(); const b = host.querySelector('.hd-stb .hd-badge'); b && !reduced() && b.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.5)' }, { transform: 'scale(1)' }], { duration: 480, easing: 'cubic-bezier(.3,1.6,.5,1)' }); hint.textContent = T('Bien joué : hERALD n’a rien publié, c’est vous qui l’avez fait.', 'Well done: hERALD published nothing, you did.'); }, { disabled: p.status === 'published' });
-    const foot = dv('hd-ifoot', inp(p.link, v => { p.link = v; showHint(); }, { placeholder: T('Lien après publication', 'Link after publishing'), 'aria-label': T('Lien après publication', 'Link after publishing') }), dv('hd-r2 one', copyBtn(T('COPIER', 'COPY'), () => p.drafts[st.lang] || ''), sp('fl'), mark));
+    const mark = btn(p.status === 'published' ? T('Publié ✓', 'Published ✓') : T('Marquer publié', 'Mark published'), 'pri hlg', () => { p.status = 'published'; st.pubFlash = id; sfx.done(); changed(); rebuild(); const b = host.querySelector('.hd-stb .hd-badge'); b && !reduced() && b.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.5)' }, { transform: 'scale(1)' }], { duration: 480, easing: 'cubic-bezier(.3,1.6,.5,1)' }); }, { disabled: p.status === 'published' });
+    const foot = dv('hd-ifoot', inp(p.link, v => { p.link = v; st.pubFlash = null; showHint(); }, { placeholder: T('Lien après publication', 'Link after publishing'), 'aria-label': T('Lien après publication', 'Link after publishing') }), dv('hd-r2 one', copyBtn(T('COPIER', 'COPY'), () => p.drafts[st.lang] || ''), sp('fl'), mark));
     fill(host, dv('hd-insp', header, tabs, body, hint, foot)); drawTab();
   }
   function manualSheet(p, done) {
     const s = p.stat || { v: null, l: null, c: null, s: null, d: null }, e = { ...s }, f = (k, l) => lbl(l, h('input', { class: 'hd-in', type: 'number', min: '0', value: e[k] ?? '', oninput: ev => (e[k] = ev.target.value === '' ? null : Math.max(0, +ev.target.value)) }));
     const close = sheet(T('Saisir des chiffres', 'Enter numbers'), dv('hd-form', h('p', { class: 'hd-p mut' }, T('Pour Instagram, Facebook, Discord ou X : recopiez les compteurs affichés sous la publication. Laissez vide ce que vous ne connaissez pas.', 'For Instagram, Facebook, Discord or X: copy the counters shown under the post. Leave blank what you don’t know.')), dv('hd-two5', f('v', T('Vues', 'Views')), f('l', T('J’aime', 'Likes')), f('c', T('Comm.', 'Comm.')), f('s', T('Partages', 'Shares')), f('d', T('Téléch.', 'Downl.')))),
-      [btn(T('ANNULER', 'CANCEL'), '', close), btn(T('ENREGISTRER', 'SAVE'), 'pri', () => { p.stat = { ...e, p1: p.stat?.p1 || { v: 0, l: 0, c: 0, s: 0, d: 0 }, p7: p.stat?.p7 || { v: 0, l: 0, c: 0, s: 0, d: 0 }, auto: false, t: Date.now() }; close(); done?.(); })], 560);
+      [btn(T('ANNULER', 'CANCEL'), '', () => close()), btn(T('ENREGISTRER', 'SAVE'), 'pri', () => { p.stat = { ...e, p1: p.stat?.p1 || { v: 0, l: 0, c: 0, s: 0, d: 0 }, p7: p.stat?.p7 || { v: 0, l: 0, c: 0, s: 0, d: 0 }, auto: false, t: Date.now() }; close(); done?.(); })], 560);
   }
 
   /* ---------- Contacts ---------- */
@@ -410,7 +411,7 @@ function build(w, app) {
     const v = split({
       list: () => { const rows = contacts().filter(k => (st.cFilter === 'all' || (st.cFilter === 'youtubers' ? k.kind === 'youtuber' : st.cFilter === 'press' ? k.kind === 'press' : k.kind !== 'youtuber' && k.kind !== 'press')) && match(k.name, k.email, k.url, k.notes));
         const can = contacts().some(k => k.email);
-        return [dv('hd-lf', seg([['all', T('Tous', 'All')], ['youtubers', T('Youtubeurs', 'YouTubers')], ['press', T('Presse', 'Press')], ['others', T('Autres', 'Others')]], st.cFilter, k => { st.cFilter = k; v.list(); }, 'sm'), sp('fl'), btn(T('Relever les réponses', 'Check replies'), '', scan, { disabled: !can || st.mail !== 'mail', title: st.mail === 'mail' ? '' : T('La lecture des réponses demande l’app Mail (Réglages).', 'Reading replies needs the Mail app (Settings).') })),
+        return [dv('hd-lf', seg([['all', T('Tous', 'All')], ['youtubers', T('Youtubeurs', 'YouTubers')], ['press', T('Presse', 'Press')], ['others', T('Autres', 'Others')]], st.cFilter, k => { st.cFilter = k; v.list(); }, 'hsm'), sp('fl'), btn(T('Relever les réponses', 'Check replies'), '', scan, { disabled: !can || st.mail !== 'mail', title: st.mail === 'mail' ? '' : T('La lecture des réponses demande l’app Mail (Réglages).', 'Reading replies needs the Mail app (Settings).') })),
           note ? dv('hd-lnote ' + note[1], note[0]) : null, rows.length ? null : dv('hd-pad', meta(T('Aucun contact.', 'No contact.'))),
           rows.map(k => { const due = dueC(k); return row({ on: k.id === st.selContact, ic: CTI[k.kind], tint: due ? 'wn' : '', title: k.name, meta: WAITING(k.status) && k.next != null ? T('relance le ', 'follow-up on ') + fshort(k.next) : '', mc: due ? 'wn' : '', trail: badge(stLabelC(k.status), CSK[k.status]), fn: () => { st.selContact = k.id; v.list(); v.detail(); } }); })]; },
       detail: () => (st.selContact && contact(st.selContact) ? contactDetail(st.selContact) : empty(T('Choisissez un contact.', 'Choose a contact.'))) });
@@ -447,8 +448,8 @@ function build(w, app) {
         expanded === m.id ? dv('hd-mb', dv('tx', m.body), m.mail ? dv('hd-r2 end', btn(T('Mettre à la corbeille de Mail', 'Move to the Mail trash'), 'ter', () => { m.mail = false; sfx.click(); drawThread(); })) : null) : null]));
     };
     const toI = inp(E.to, v => (E.to = v)), subI = inp(E.subject, v => (E.subject = v)), bodyA = area(E.body, v => (E.body = v), { style: { height: '176px' } });
-    const noteEl = dv(''), sendB = btn(T('Envoyer', 'Send'), 'pri lg', () => confirmBox(T(`Envoyer à ${E.to} ?`, `Send to ${E.to}?`), T('Le message part par votre app Mail. (Démo : rien ne part vraiment.)', 'The message is sent through your Mail app. (Demo: nothing really leaves.)'), T('Envoyer', 'Send'), send));
-    const saveB = btn(T('Enregistrer le brouillon', 'Save draft'), 'lg', saveDraft);
+    const noteEl = dv(''), sendB = btn(T('Envoyer', 'Send'), 'pri hlg', () => confirmBox(T(`Envoyer à ${E.to} ?`, `Send to ${E.to}?`), T('Le message part par votre app Mail. (Démo : rien ne part vraiment.)', 'The message is sent through your Mail app. (Demo: nothing really leaves.)'), T('Envoyer', 'Send'), send));
+    const saveB = btn(T('Enregistrer le brouillon', 'Save draft'), 'hlg', saveDraft);
     const refreshBtns = () => { sendB.disabled = !(E.to.trim() && E.subject && E.body); saveB.disabled = !(E.subject || E.body); };
     [toI, subI, bodyA].forEach(x => x.addEventListener('input', refreshBtns));
     const drawNote = () => fill(noteEl, note ? callout('in', note) : null);
@@ -460,6 +461,7 @@ function build(w, app) {
       k.messages = k.messages.filter(m => m.id !== E.draft); k.messages.push({ id: D.id('m'), t: Date.now(), kind: E.kind, dir: 'sent', subject: E.subject, body: E.body, to: E.to, mail: false });
       if (!k.email) k.email = E.to; k.status = E.kind === 'first' ? 'contacted' : 'followedUp'; k.next = day(8); sfx.pop();
       st.flash = { id, note: T('Envoyé (démo : aucun e-mail ne part vraiment). Relance programmée dans 8 jours.', 'Sent (demo: no email really leaves). Follow-up set in 8 days.') };
+      demo(T(`Message envoyé à ${E.to} (démo : rien ne part vraiment).`, `Message sent to ${E.to} (demo: nothing really leaves).`));
       refreshAll(); const dp = view?.el?.querySelector('.hd-detp'); if (dp && !reduced()) { const pl = ic('plane', 26, 'fly'); dp.append(pl); later(() => pl.remove(), 1300); }
     }
     fill(host, head, fiche, thread, editor); drawThread(); drawNote(); refreshBtns(); return host;
@@ -472,8 +474,8 @@ function build(w, app) {
       const s = summary(st.period), c = C(), miss = posts().filter(p => p.status === 'published' && !p.link.trim()), wait_ = posts().filter(p => p.link && !p.stat), kk = (l, v, sub) => { const val = sp('hd-val'); anim ? countUp(val, v) : (val.textContent = nf(v)); return dv('hd-kpi', dv('hd-eyebrow', l), val, dv('hd-meta', sub)); };
       const tbl = dv('hd-stab', dv('hd-str hd', sp('', T('Publication', 'Post')), ...[T('Vues', 'Views'), T('J’aime', 'Likes'), T('Comm.', 'Comm.'), T('Partages', 'Shares'), T('Téléch.', 'Downl.'), '24 h'].map(x => sp('n', x)), sp('src', T('Relevé', 'Reading'))), s.rows.length ? null : dv('hd-str', empty(T('Aucun relevé : ajoutez le lien de vos publications, puis Actualiser.', 'No statistics: add your posts’ links, then Refresh.'))),
         s.rows.map(r => { const [nm, col, icn] = PLAT[r.plat]; return h('div', { class: 'hd-str', title: r.p.link, ondblclick: () => openUrl(r.p.link) }, dv('pc', ic(icn, 14, ''), dv('', h('b', {}, r.p.title), h('small', {}, `${nm} · ${fday(r.p.t)}`))), ...[r.d.v, r.d.l, r.d.c, r.d.s, r.d.d].map(x => sp('n', nf(x))), sp('n ' + (r.g > 0 ? 'ok' : ''), r.g > 0 ? '+' + nf(r.g) : '—'), dv('src', badge(r.s.auto ? 'auto' : T('saisi', 'entered'), r.s.auto ? 'ok' : 'wn'), h('small', {}, fstamp(r.s.t).split(',')[0]))); }),
-        wait_.map(p => dv('hd-str wt', dv('pc', ic(PLAT[platOfPost(p)][2], 14), h('b', {}, p.title)), sp('hd-meta wtm', PLAT[platOfPost(p)][3] ? T('en attente du premier relevé', 'waiting for the first reading') : T('à saisir à la main', 'to enter by hand')), PLAT[platOfPost(p)][3] ? null : btn(T('Saisir des chiffres', 'Enter numbers'), 'sm', () => manualSheet(p, () => draw())))));
-      fill(el, dv('hd-pad wide', dv('hd-r2 one', seg([['campaign', T('Toute la campagne', 'Whole campaign')], ['day', '24 h'], ['week', T('7 jours', '7 days')]], st.period, k => { st.period = k; draw(true); }), sp('fl'), busy ? spin() : null,
+        wait_.map(p => dv('hd-str hwt', dv('pc', ic(PLAT[platOfPost(p)][2], 14), h('b', {}, p.title)), sp('hd-meta wtm', PLAT[platOfPost(p)][3] ? T('en attente du premier relevé', 'waiting for the first reading') : T('à saisir à la main', 'to enter by hand')), PLAT[platOfPost(p)][3] ? null : btn(T('Saisir des chiffres', 'Enter numbers'), 'hsm', () => manualSheet(p, () => draw())))));
+      fill(el, dv('hd-pad wide', dv('hd-r2', seg([['campaign', T('Toute la campagne', 'Whole campaign')], ['day', '24 h'], ['week', T('7 jours', '7 days')]], st.period, k => { st.period = k; draw(true); }), sp('fl'), busy ? spin() : null,
         btn(T('Saisir des chiffres', 'Enter numbers'), '', () => { const p = posts().find(x => !PLAT[platOfPost(x)][3]) || posts()[0]; p && manualSheet(p, () => draw()); }), copyBtn(T('COPIER LE RAPPORT', 'COPY REPORT'), () => report(s)), btn(T('ACTUALISER', 'REFRESH'), 'pri', refresh, { disabled: busy })),
         miss.length ? dv('hd-miss', dv('hd-eyebrow wn', T('Publiées sans lien', 'Published without a link')), meta(T('Collez le lien de chaque publication pour que hERALD relève ses chiffres.', 'Paste each post’s link so hERALD can read its numbers.')), miss.map(p => dv('hd-r2 one', ic(PLAT[platOfPost(p)][2], 14), sp('mt', `${fday(p.t)} · ${p.title}`), inp(pend[p.id] || '', v => (pend[p.id] = v), { placeholder: 'https://…' }), btn(T('Ajouter', 'Add'), '', () => { p.link = (pend[p.id] || '').trim(); if (p.link) { sfx.pop(); refreshAll(); draw(); refresh(); } })))) : null,
         dv('hd-kpis', kk(T('Vues', 'Views'), s.views, T('toutes plateformes', 'all platforms')), kk(T('Interactions', 'Interactions'), s.inter, T('j’aime, commentaires, partages', 'likes, comments, shares')), kk(T('Téléchargements', 'Downloads'), s.dl, T('GitHub et Nexus', 'GitHub and Nexus')), kk(T('Visites du site', 'Site visits'), s.site, SITE)),
@@ -482,7 +484,7 @@ function build(w, app) {
         tbl, meta(T('Lecture seule : hERALD lit des compteurs publics (YouTube, Reddit, Bluesky, GitHub, Nexus, GoatCounter) et ne publie jamais rien. Double-clic sur une ligne : ouvrir la publication.', 'Read only: hERALD reads public counters (YouTube, Reddit, Bluesky, GitHub, Nexus, GoatCounter) and never publishes anything. Double-click a row to open the post.'))));
     };
     const report = s => `# ${T('Statistiques', 'Statistics')} · ${C().name}\n\n${T('Relevé du', 'Checked')} ${fstamp(st.statsChecked)}\n\n| ${T('Publication', 'Post')} | ${T('Vues', 'Views')} | ${T('J’aime', 'Likes')} | ${T('Comm.', 'Comm.')} |\n|---|---:|---:|---:|\n${s.rows.map(r => `| ${r.p.title} | ${nf(r.d.v)} | ${nf(r.d.l)} | ${nf(r.d.c)} |`).join('\n')}\n`;
-    const chartBox = () => { const rows = summary('campaign').rows.filter(r => r.s.v != null), days = 13, t0 = sod(day(-days)), W = 640, Hh = 190, pl = 44, pb = 24, pt = 20, xs = i => pl + (W - pl - 12) * (i / days); const plats = [...new Set(rows.map(r => r.plat))];
+    const chartBox = () => { const rows = summary('campaign').rows.filter(r => r.s.v != null), days = 13, t0 = sod(day(-days)), W = 640, Hh = 160, pl = 44, pb = 24, pt = 20, xs = i => pl + (W - pl - 12) * (i / days); const plats = [...new Set(rows.map(r => r.plat))];
       const ser = k => Array.from({ length: days + 1 }, (_, i) => rows.filter(r => r.plat === k).reduce((a, r) => { const x = (sod(day(-days + i)) - sod(r.p.t)) / (sod(Date.now()) - sod(r.p.t) || 1); return a + (x < 0 ? 0 : r.s.v * (1 - Math.pow(1 - clamp(x, 0, 1), 2.4))); }, 0));
       const S_ = plats.map(k => [k, ser(k)]), mx = Math.max(1, ...S_.flatMap(x => x[1])), nice = Math.ceil(mx / 1000) * 1000, ys = v => Hh - pb - (Hh - pb - pt) * (v / nice);
       const g = [0, .25, .5, .75, 1].map(f => `<line class="g" x1="${pl}" x2="${W - 12}" y1="${ys(nice * f)}" y2="${ys(nice * f)}"/><text class="t" x="${pl - 6}" y="${ys(nice * f) + 3}" text-anchor="end">${nf(Math.round(nice * f))}</text>`).join('');
@@ -510,10 +512,10 @@ function build(w, app) {
         const lst = dv('hd-fbl hd-scroll'), drawL = () => fill(lst, p.fb.length ? p.fb.slice().sort((a, b) => b.t - a.t).map(f => dv('hd-fb', sp('hd-meta d', fday(f.t)), badge(FBK().find(x => x[0] === f.kind)[1], f.kind === 'comment' ? 'ac' : ''), f.author ? dv('who', dv('', h('b', {}, 'u/' + f.author), fresh.has(f.id) ? badge(T('Nouveau', 'New'), 'ok') : null), dv('tx', f.text)) : [h('b', { class: 'v' }, nf(f.value)), sp('tx', f.text)], sp('fl'), f.url ? h('button', { class: 'hd-ib', title: T('Ouvrir la réponse sur Reddit', 'Open the reply on Reddit'), 'aria-label': T('Ouvrir la réponse sur Reddit', 'Open the reply on Reddit'), onclick: () => openUrl(f.url) }, ic('ext', 14)) : null, h('button', { class: 'hd-ib', 'aria-label': T('Supprimer', 'Delete'), onclick: () => { p.fb = p.fb.filter(x => x !== f); sfx.click(); drawL(); v.list(); } }, ic('trash', 14)))) : empty(T('Aucun retour noté', 'No feedback recorded')));
         const note = dv('hd-meta ok'); note.textContent = msg; drawL();
         return dv('hd-pad full', dv('hd-r2 one', h('h2', { class: 'hd-bh' }, p.title), sp('fl'), p.link ? btn(T('Ouvrir', 'Open'), '', () => openUrl(p.link)) : null),
-          dv('hd-tiles', FBK().filter(k => k[0] !== 'other').map(([k, l]) => dv('hd-tile row', sp('hd-meta', l), h('b', {}, nf(total(p, k)))))),
+          dv('hd-tiles', FBK().filter(k => k[0] !== 'other').map(([k, l]) => dv('hd-tile hrow', sp('hd-meta', l), h('b', {}, nf(total(p, k)))))),
           dv('hd-add', lbl(T('Type', 'Type'), sel(FBK(), F.kind, x => (F.kind = x))), lbl(T('Valeur', 'Value'), h('input', { class: 'hd-in', type: 'number', min: '0', value: F.value, oninput: e => (F.value = +e.target.value || 0) })), lbl('Date', h('input', { class: 'hd-in dt', type: 'date', value: F.date, onchange: e => (F.date = e.target.value) }))),
-          dv('hd-r2 one end', lbl(T('Commentaire ou note', 'Comment or note'), inp('', x => (F.text = x), { 'aria-label': T('Commentaire ou note', 'Comment or note') })), btn(T('Ajouter', 'Add'), 'pri lg', () => { p.fb.push({ id: D.id('f'), t: fromIso(F.date) || Date.now(), kind: F.kind, value: F.value, text: F.text.trim() }); F.text = ''; F.value = 1; sfx.pop(); v.detail(); v.list(); })),
-          dv('hd-r2 one', note, sp('fl'), btn(T('Importer un CSV…', 'Import CSV…'), '', () => { p.fb.push({ id: D.id('f'), t: day(0), kind: 'stars', value: 4, text: T('Note moyenne importée', 'Imported average rating') }, { id: D.id('f'), t: day(-1), kind: 'endorsements', value: 12, text: '' }); msg = T('2 retour(s) importé(s).', '2 feedback item(s) imported.'); sfx.pop(); v.detail(); v.list(); })), h('hr', { class: 'hd-hr' }), lst); } });
+          dv('hd-r2 one end', lbl(T('Commentaire ou note', 'Comment or note'), inp('', x => (F.text = x), { 'aria-label': T('Commentaire ou note', 'Comment or note') })), btn(T('Ajouter', 'Add'), 'pri hlg', () => { p.fb.push({ id: D.id('f'), t: fromIso(F.date) || Date.now(), kind: F.kind, value: F.value, text: F.text.trim() }); F.text = ''; F.value = 1; sfx.pop(); v.detail(); v.list(); })),
+          dv('hd-r2 one', note, sp('fl'), btn(T('Importer un CSV…', 'Import CSV…'), '', () => { p.fb.push({ id: D.id('f'), t: day(0), kind: 'stars', value: 4, text: T('Note moyenne importée', 'Imported average rating') }, { id: D.id('f'), t: day(-1), kind: 'endorsements', value: 12, text: '' }); msg = T('2 retours importés.', '2 feedback items imported.'); sfx.pop(); v.detail(); v.list(); })), h('hr', { class: 'hd-hr' }), lst); } });
     return v;
   };
 
@@ -521,12 +523,7 @@ function build(w, app) {
   V.watch = () => {
     const F = { ref: '', name: '' }; let err = '', checking = false;
     const rel = () => D.watch.filter(x => x.hist.length && Date.now() - x.hist[x.hist.length - 1].pub < 7 * 864e5 && (x.hist.length < 2 || x.hist[x.hist.length - 1].v !== x.hist[x.hist.length - 2].v));
-    const v = split({
-      list: () => [row({ on: st.selWatch == null, ic: 'doc', title: T('Rapport de la semaine', 'Weekly report'), meta: `${fshort(day(-6))} – ${fshort(day(0))}`, fn: () => { st.selWatch = null; v.list(); v.detail(); } }),
-        sectionBar(T('Produits surveillés', 'Watched products'), checking ? spin() : null, btn(T('VÉRIFIER', 'CHECK'), 'pri sm', check, { disabled: checking || !D.watch.length })),
-        dv('hd-wadd', inp(F.ref, x => (F.ref = x), { placeholder: T('URL GitHub ou Nexus (ou propriétaire/dépôt)', 'GitHub or Nexus URL (or owner/repo)'), 'aria-label': 'URL' }), dv('hd-r2 one', inp(F.name, x => (F.name = x), { placeholder: T('Nom (facultatif)', 'Name (optional)') }), btn(T('Ajouter', 'Add'), '', add)), err ? dv('hd-meta dg', err) : null),
-        D.watch.filter(x => match(x.name, x.ref, x.notes)).map(x => row({ on: x.id === st.selWatch, ic: 'box', title: x.name, meta: x.hist.length ? x.hist[x.hist.length - 1].v : T('Pas encore vérifié', 'Not checked yet'), mc: 'ac', trail: badge(x.kind === 'github' ? 'GitHub' : 'Nexus'), fn: () => { st.selWatch = x.id; v.list(); v.detail(); } }))],
-      detail: () => { const x = D.watch.find(y => y.id === st.selWatch); return x ? watchDetail(x) : report(); } });
+    let v;
     function add() { const t = F.ref.trim(); const gh = t.match(/github\.com\/([\w.-]+\/[\w.-]+)/i) || t.match(/^([\w.-]+\/[\w.-]+)$/), nx = t.match(/nexusmods\.com\/(\w+)\/mods\/(\d+)/i);
       if (!gh && !nx) { err = T('Adresse non reconnue : dépôt GitHub ou page de mod Nexus.', 'Address not recognised: GitHub repository or Nexus mod page.'); v.list(); return; }
       const ref = nx ? nx[1] + '/' + nx[2] : gh[1]; if (D.watch.some(x => x.ref === ref)) { err = T('Déjà dans la liste.', 'Already in the list.'); v.list(); return; }
@@ -546,17 +543,24 @@ function build(w, app) {
         [T('À publier dans les 7 jours', 'To post within 7 days'), up.length ? up.map(p => `${fday(p.t)} · ${chan(p.ch)?.name || '—'} · ${p.title} (${stLabel(p.status)})`) : [T('Rien à signaler.', 'Nothing to report.')]]];
       const md = () => `# ${T('Rapport de la semaine', 'Weekly report')}\n\n` + secs.map(([t, l]) => `## ${t}\n${l.map(x => '- ' + x).join('\n')}`).join('\n\n');
       return dv('hd-pad full hd-scroll', dv('hd-r2 one', dv('hd-col2', h('h2', { class: 'hd-bh big' }, T('Rapport de la semaine', 'Weekly report')), meta(T(`Du ${fday(day(-6))} au ${fday(day(0))}`, `${fday(day(-6))} to ${fday(day(0))}`))), sp('fl'), copyBtn(T('Copier en Markdown', 'Copy as Markdown'), md)), secs.map(([t, l]) => sec(t, l)), meta(T('Rapport calculé à partir des relevés de la veille et de vos retours notés.', 'Report built from the monitoring readings and your recorded feedback.'))); };
+
+    v = split({
+      list: () => [row({ on: st.selWatch == null, ic: 'doc', title: T('Rapport de la semaine', 'Weekly report'), meta: `${fshort(day(-6))} – ${fshort(day(0))}`, fn: () => { st.selWatch = null; v.list(); v.detail(); } }),
+        sectionBar(T('Produits surveillés', 'Watched products'), checking ? spin() : null, btn(T('VÉRIFIER', 'CHECK'), 'pri hsm', check, { disabled: checking || !D.watch.length })),
+        dv('hd-wadd', inp(F.ref, x => (F.ref = x), { placeholder: T('URL GitHub ou Nexus (ou propriétaire/dépôt)', 'GitHub or Nexus URL (or owner/repo)'), 'aria-label': 'URL' }), dv('hd-r2 one', inp(F.name, x => (F.name = x), { placeholder: T('Nom (facultatif)', 'Name (optional)') }), btn(T('Ajouter', 'Add'), '', add)), err ? dv('hd-meta dg', err) : null),
+        D.watch.filter(x => match(x.name, x.ref, x.notes)).map(x => row({ on: x.id === st.selWatch, ic: 'box', title: x.name, meta: x.hist.length ? x.hist[x.hist.length - 1].v : T('Pas encore vérifié', 'Not checked yet'), mc: 'ac', trail: badge(x.kind === 'github' ? 'GitHub' : 'Nexus'), fn: () => { st.selWatch = x.id; v.list(); v.detail(); } }))],
+      detail: () => { const x = D.watch.find(y => y.id === st.selWatch); return x ? watchDetail(x) : report(); } });
     return v;
   };
 
   /* ---------- Canaux ---------- */
   V.channels = () => {
     const v = split({
-      list: () => [sectionBar(T('Canaux', 'Channels'), btn(T('Ajouter', 'Add'), 'sm', () => { const c = { id: D.id('c'), name: T('Nouveau canal', 'New channel'), kind: 'other', url: '', notes: '' }; D.chans.push(c); st.selChan = c.id; sfx.pop(); v.list(); v.detail(); })),
-        D.chans.filter(c => match(c.name, c.url, c.notes)).map(c => row({ on: c.id === st.selChan, ic: CHI[c.kind], title: c.name, meta: T(`${D.camps.flatMap(x => x.posts).filter(p => p.ch === c.id).length} publication(s)`, `${D.camps.flatMap(x => x.posts).filter(p => p.ch === c.id).length} post(s)`), fn: () => { st.selChan = c.id; v.list(); v.detail(); } }))],
+      list: () => [sectionBar(T('Canaux', 'Channels'), btn(T('Ajouter', 'Add'), 'hsm', () => { const c = { id: D.id('c'), name: T('Nouveau canal', 'New channel'), kind: 'other', url: '', notes: '' }; D.chans.push(c); st.selChan = c.id; sfx.pop(); v.list(); v.detail(); })),
+        D.chans.filter(c => match(c.name, c.url, c.notes)).map(c => row({ on: c.id === st.selChan, ic: CHI[c.kind], title: c.name, meta: (n => T(`${n} publication${n > 1 ? 's' : ''}`, `${n} post${n > 1 ? 's' : ''}`))(D.camps.flatMap(x => x.posts).filter(p => p.ch === c.id).length), fn: () => { st.selChan = c.id; v.list(); v.detail(); } }))],
       detail: () => { const c = chan(st.selChan); if (!c) return empty(T('Choisissez un canal.', 'Choose a channel.'));
         return dv('hd-pad full', dv('hd-r2 top', lbl(T('Nom', 'Name'), inp(c.name, x => { c.name = x; v.list(); })), lbl('Type', sel(CHK(), c.kind, x => { c.kind = x; v.list(); }, 'w160'))), lbl(T('Adresse', 'Address'), dv('hd-r2 one', inp(c.url, x => (c.url = x), { placeholder: 'https://…' }), btn(T('Ouvrir', 'Open'), '', () => openUrl(c.url)))),
-          lbl(T('Règles et notes (auto-promotion, salons autorisés…)', 'Rules and notes (self-promotion, allowed channels…)'), area(c.notes, x => (c.notes = x), { style: { height: '120px' } })), dv('hd-r2 one end', btn(T('Supprimer', 'Delete'), 'ter', () => { D.chans = D.chans.filter(x => x !== c); st.selChan = null; v.list(); v.detail(); }))); } });
+          dv('hd-fld grow', dv('hd-lbl', T('Règles et notes (auto-promotion, salons autorisés…)', 'Rules and notes (self-promotion, allowed channels…)')), area(c.notes, x => (c.notes = x))), dv('hd-r2 one end', btn(T('Supprimer', 'Delete'), 'ter', () => { D.chans = D.chans.filter(x => x !== c); st.selChan = null; v.list(); v.detail(); }))); } });
     return v;
   };
 
@@ -578,19 +582,25 @@ function build(w, app) {
     const drawPage = async reload => { const t = B.cur(); if (!t.url) { fill(pg, empty(T('Les liens des publications, contacts et canaux s’ouvrent ici. ⌥-clic : navigateur du Mac.', 'Links from posts, contacts and channels open here. ⌥-click: the Mac’s browser.'))); return; }
       let host = ''; try { host = new URL(t.url).hostname.replace(/^www\./, ''); } catch {}
       const key = Object.keys(SITES).find(k => host.includes(k)) || 'other', [nm, col] = SITES[key], path = t.url.replace(/^https?:\/\/[^/]+/, '') || '/';
-      const pageEl = dv('hd-wp', h('div', { class: 'hd-wph', style: { '--wc': col } }, sp('lg', nm), sp('fl'), sp('lk', T('Se connecter', 'Log in'))), dv('hd-wpb', h('h2', {}, pageTitle(key, path, host)), dv('hd-wpc', dv('hd-wpi'), dv('', h('p', {}, T('Page de démonstration : aucune connexion réseau n’est établie, le contenu ci-dessous est fictif.', 'Demo page: no network connection is made, the content below is fictional.')), h('p', { class: 'mut' }, t.url))), dv('hd-wpl', [1, 2, 3, 4].map(i => h('div', { class: 'ln', style: { width: (96 - i * 11) + '%' } })))));
+      const pageEl = dv('hd-wp', h('div', { class: 'hd-wph', style: { '--wc': col } }, sp('hlg', nm), sp('fl'), sp('hlk', T('Se connecter', 'Log in'))), dv('hd-wpb', h('h2', {}, pageTitle(key, path, host)), dv('hd-wpc', dv('hd-wpi'), dv('', h('p', {}, T('Page de démonstration : aucune connexion réseau n’est établie, le contenu ci-dessous est fictif.', 'Demo page: no network connection is made, the content below is fictional.')), h('p', { class: 'mut' }, t.url))), dv('hd-wpl', [1, 2, 3, 4].map(i => h('div', { class: 'ln', style: { width: (96 - i * 11) + '%' } })))));
       if (reload && !reduced()) { fill(pg, dv('hd-empty', spin())); await wait(500); if (!alive()) return; } fill(pg, pageEl); };
     draw(); return { el, refresh() {}, dispose() {} };
   };
   const SITES = { nexusmods: ['NEXUS MODS', '#d98f40'], reddit: ['reddit', '#ff4500'], youtube: ['YouTube', '#e53935'], github: ['GitHub', '#24292f'], bsky: ['Bluesky', '#1185fe'], discord: ['Discord', '#5865f2'], instagram: ['Instagram', '#d4537d'], ancientrealms: [T('Ancient Realms', 'Ancient Realms'), '#6b8e4e'], other: ['Web', '#667085'] };
-  const pageTitle = (k, path, host) => { const p = posts().find(x => x.link && x.link.includes(path.split('?')[0]) && path.length > 2); const c = contacts().find(x => (x.url && x.url.includes(host)) || x.coverage?.includes(path)); return p ? p.title : c ? c.name : ({ nexusmods: 'Ancient Realms HD — 4K Landscapes', reddit: T('Annonce de sortie', 'Release announcement'), youtube: T('Vidéo de démonstration', 'Demo video'), github: 'ghostdev / skybloom-shaders', discord: T('Serveur de la communauté', 'Community server') }[k] || host); };
+  const pageTitle = (k, path, host) => { const p = posts().find(x => x.link && x.link.includes(path.split('?')[0]) && path.length > 2); const c = contacts().find(x => (x.url && x.url.includes(host)) || (path.length > 1 && x.coverage?.includes(path))); return p ? p.title : c ? c.name : ({ nexusmods: 'Ancient Realms HD — 4K Landscapes', reddit: T('Annonce de sortie', 'Release announcement'), youtube: T('Vidéo de démonstration', 'Demo video'), github: 'ghostdev / skybloom-shaders', discord: T('Serveur de la communauté', 'Community server') }[k] || host); };
 
   /* ---------- Agent IA (réponses écrites d'avance, aucune requête) ---------- */
   const A = { threads: new Map(), busy: null, session: '', subs: [], cancel: 0, n: 0, usage: 0, tick: 0, val: '' };
   const tgt = () => (st.scopeTask ? (st.selPost && post(st.selPost) ? 'p:' + st.selPost : null) : 'c');
   const thread = k => { if (!A.threads.has(k)) A.threads.set(k, { messages: [], tokens: 0 }); return A.threads.get(k); };
   function toggleAgent() { st.agentOpen = !st.agentOpen; if (st.agentOpen) st.scopeTask = false; sfx.click(); applyAgent(); }
-  function applyAgent() { root.classList.toggle('ag', st.agentOpen && st.agentOn); agentEl.hidden = !(st.agentOpen && st.agentOn); drawSide(); if (!agentEl.hidden) drawAgent(); }
+  function applyAgent() {
+    const on = st.agentOpen && st.agentOn; root.classList.toggle('ag', on); agentEl.hidden = !on;
+    /* comme dans l'appli, la fenêtre s'élargit pour le volet (puis revient à sa largeur) ; sa largeur minimale suit */
+    if (on) { w.o.minw = 1060; if (!w.max && w.w < 1060) { st.prevW = w.w; w.w = Math.min(1100, 1600 - w.x); w.el.style.width = w.w + 'px'; } }
+    else { w.o.minw = 900; if (st.prevW && !w.max) { w.w = Math.max(900, st.prevW); w.el.style.width = w.w + 'px'; } st.prevW = null; }
+    drawSide(); if (on) drawAgent();
+  }
   const syncAgent = () => { if (!agentEl.hidden && st.scopeTask) drawAgent(); };
   const QUICK = () => [[T('Rédiger le brouillon', 'Write the draft'), 'draft'], [T('Améliorer l’accroche', 'Improve the hook'), 'hook'], [T('Traduire', 'Translate'), 'translate'], [T('Vérifier avant publication', 'Check before publishing'), 'check'], [T('Et ensuite ?', 'What next?'), 'next']];
   /* mini-Markdown : **gras**, `code`, listes */
@@ -631,8 +641,8 @@ function build(w, app) {
   const sendNow = () => { const q = AG.ta.value.trim(), tg = tgt(); if (q && !A.busy && tg) ask(tg, q); };
   AG.head = dv('hd-ahead'); AG.conv = dv('hd-conv hd-scroll');
   AG.ta = h('textarea', { class: 'hd-in ta', placeholder: T('Votre demande… (Entrée pour envoyer, ⇧Entrée pour un retour à la ligne)', 'Your request… (Return to send, ⇧Return for a new line)'), 'aria-label': T('Votre demande', 'Your request'), rows: 3, spellcheck: 'false', oninput: updSend, onkeydown: e => { if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); sendNow(); } } });
-  AG.send = btn(T('ENVOYER', 'SEND'), 'pri sm', sendNow, { disabled: true });
-  AG.quick = btn(T('Actions rapides', 'Quick actions'), 'ter sm', e => showPop(QUICK().map(([l, k]) => [l, () => ask(tgt(), l, k)]), e.currentTarget, { min: 210, up: true }), { 'aria-haspopup': 'menu' });
+  AG.send = btn(T('ENVOYER', 'SEND'), 'pri hsm', sendNow, { disabled: true });
+  AG.quick = btn(T('Actions rapides', 'Quick actions'), 'ter hsm', e => showPop(QUICK().map(([l, k]) => [l, () => ask(tgt(), l, k)]), e.currentTarget, { min: 210, up: true }), { 'aria-haspopup': 'menu' });
   fill(agentEl, AG.head, AG.conv, dv('hd-comp', AG.ta, dv('hd-r2 one', AG.quick, sp('fl'), AG.send), dv('hd-meta', T('L’agent lit et conseille, il ne publie jamais. Ses propositions de modifications (notes, brouillons, statut) ne s’appliquent que d’un clic de votre part, et s’annulent.', 'The agent reads and advises, it never publishes. Its proposed changes (notes, drafts, status) apply only when you click, and can be undone.'))));
   async function ask(target, text, kind) {
     if (A.busy || !target) return; const th = thread(target), my = ++A.cancel, r = reply(target, text, kind);
@@ -652,12 +662,12 @@ function build(w, app) {
     const tg = tgt(), th = tg ? thread(tg) : null, p = tg && tg.startsWith('p:') ? post(tg.slice(2)) : null, title = tg === 'c' ? C().name : p ? p.title : '', ib = (k, l, fn, dis) => h('button', { class: 'hd-ib', title: l, 'aria-label': l, disabled: dis, onclick: fn }, ic(k, 14));
     fill(AG.head, dv('hd-ah', sp('hd-eyebrow', T('Agent IA', 'AI agent')), sp('fl'), ib('trash', T('Effacer', 'Clear'), () => { th.messages.length = 0; drawAgent(); }, !th || !th.messages.length), ib('gear', T('Configurer l’agent…', 'Set up the agent…'), agentSheet), ib('x', T('Fermer le volet', 'Close the panel'), toggleAgent)),
       seg([['c', T('Campagne', 'Campaign')], ['t', T('Tâche sélectionnée', 'Selected task')]], st.scopeTask ? 't' : 'c', k => { st.scopeTask = k === 't'; drawAgent(); }), title ? dv('hd-at', title) : null,
-      tg ? dv('hd-r2 one', badge('hERALD', 'ac'), sp('mono sub nm', A.session ? A.session + '…' : T('session créée au premier message', 'session created with the first message')), sp('fl'), A.session ? copyBtn(T('Copier la commande de reprise', 'Copy the resume command'), () => `cd "~/Documents/hERALD" && claude --resume ${A.session}`, 'sm') : null) : null,
-      A.subs.length ? dv('hd-r2', sp('hd-eyebrow', T('Sous-sessions', 'Sub-sessions')), A.subs.map(s => copyBtn(s, () => `claude --resume ${A.session}`, 'sm'))) : null,
+      tg ? dv('hd-r2 one', badge('hERALD', 'ac'), sp('mono sub nm', A.session ? A.session + '…' : T('session créée au premier message', 'session created with the first message'))) : null, tg && A.session ? dv('hd-r2', copyBtn(T('Copier la commande de reprise', 'Copy the resume command'), () => `cd "~/Documents/hERALD" && claude --resume ${A.session}`, 'hsm')) : null,
+      A.subs.length ? dv('hd-r2', sp('hd-eyebrow', T('Sous-sessions', 'Sub-sessions')), A.subs.map(s => copyBtn(s, () => `claude --resume ${A.session}`, 'hsm'))) : null,
       A.usage ? dv('hd-meta', T(`Consommation · discussion : ${nf(th?.tokens || 0)} jetons · campagne : ${nf(A.usage)} jetons (${cost(A.usage)})`, `Usage · chat: ${nf(th?.tokens || 0)} tokens · campaign: ${nf(A.usage)} tokens (${cost(A.usage)})`)) : null);
     fill(AG.conv, th ? [th.messages.length ? null : empty(T('Posez une question ou demandez un travail : rédiger, traduire, vérifier, préparer la suite.', 'Ask a question or request a job: write, translate, check, prepare what comes next.')), th.messages.map(bubble),
-      A.busy && A.busy.target === tg && !A.busy.streaming ? dv('hd-busy', spin(), dv('bt', sp('bs', A.busy.status), dv('hd-meta el', T('depuis 0 s', 'for 0 s'))), btn(T('Arrêter', 'Stop'), 'sm', () => { A.cancel++; A.busy = null; drawAgent(); })) : null] : empty(T('Sélectionnez une tâche dans les publications pour en discuter avec l’agent.', 'Select a task in Posts to talk about it with the agent.')));
-    AG.conv.scrollTop = AG.conv.scrollHeight; updSend(); clearInterval(A.tick);
+      A.busy && A.busy.target === tg && !A.busy.streaming ? dv('hd-busy', spin(), dv('hbt', sp('bs', A.busy.status), dv('hd-meta el', T('depuis 0 s', 'for 0 s'))), btn(T('Arrêter', 'Stop'), 'hsm', () => { A.cancel++; A.busy = null; drawAgent(); })) : null] : empty(T('Sélectionnez une tâche dans les publications pour en discuter avec l’agent.', 'Select a task in Posts to talk about it with the agent.')));
+    { const bs = AG.conv.querySelectorAll('.hd-bub'), lb = bs[bs.length - 1]; AG.conv.scrollTop = lb && lb.classList.contains('ag') && lb.offsetHeight > AG.conv.clientHeight - 24 ? lb.offsetTop - AG.conv.offsetTop - 4 : AG.conv.scrollHeight; } updSend(); clearInterval(A.tick);
     const el = AG.conv.querySelector('.hd-busy .el'); if (el) { A.tick = setInterval(() => { if (!alive() || !el.isConnected || !A.busy) return clearInterval(A.tick); const n = Math.round((Date.now() - A.busy.t0) / 1000); el.textContent = T(`depuis ${n} s`, `for ${n} s`); }, 500); timers.add(A.tick); }
   }
   function bubble(m) {
@@ -668,11 +678,11 @@ function build(w, app) {
   function proposal(m) {
     const chosen = m.picked || (m.picked = new Set(m.items.map(i => i.id))), card = dv('hd-prop'), paint = () => {
       fill(card, eyebrow(T('Proposition de l’agent', 'Agent’s proposal')),
-        m.applied ? dv('hd-meta', T(`${m.undo.length} champ(s) modifié(s).`, `${m.undo.length} field(s) changed.`) + (m.ign ? ' ' + T('« Publié » se coche à la main : statut ignoré.', '“Published” is ticked by hand: status ignored.') : '')) : null,
+        m.applied ? dv('hd-meta', T(`${m.undo.length} champ${m.undo.length > 1 ? 's' : ''} modifié${m.undo.length > 1 ? 's' : ''}.`, `${m.undo.length} field${m.undo.length > 1 ? 's' : ''} changed.`) + (m.ign ? ' ' + T('« Publié » se coche à la main : statut ignoré.', '“Published” is ticked by hand: status ignored.') : '')) : null,
         m.applied || m.dismissed ? null : m.items.map(i => dv('hd-diff', h('label', { class: 'hd-chk' }, h('input', { type: 'checkbox', checked: chosen.has(i.id), onchange: e => { e.target.checked ? chosen.add(i.id) : chosen.delete(i.id); paint(); } }), h('i', {}), dv('', h('b', {}, i.label), h('small', {}, i.ptitle))), dv('hd-cmp', dv('', h('small', {}, T('Avant', 'Before')), h('pre', {}, i.old || T('(vide)', '(empty)'))), dv('', h('small', {}, T('Après', 'After')), h('pre', { class: 'new' }, i.new))))),
-        dv('hd-r2 one', m.applied ? [badge(T('Appliquée le ', 'Applied ') + fstamp(m.applied), 'ok'), btn(T('Annuler', 'Undo'), 'sm', () => { undoItems(m.undo); m.applied = null; m.ign = 0; sfx.click(); refreshAll(); paint(); })]
+        dv('hd-r2 one', m.applied ? [badge(T('Appliquée le ', 'Applied ') + fstamp(m.applied), 'ok'), btn(T('Annuler', 'Undo'), 'hsm', () => { undoItems(m.undo); m.applied = null; m.ign = 0; sfx.click(); refreshAll(); paint(); })]
           : m.dismissed ? badge(T('Ignorée', 'Dismissed'))
-          : [btn(chosen.size === m.items.length ? T('Appliquer', 'Apply') : T(`Appliquer la sélection (${chosen.size})`, `Apply selection (${chosen.size})`), 'pri sm', () => { const r = applyItems(m.items.filter(i => chosen.has(i.id))); m.undo = r.undo; m.ign = r.ign; m.applied = Date.now(); sfx.pop(); refreshAll(); paint(); }, { disabled: !chosen.size }), btn(T('Ignorer', 'Dismiss'), 'ter sm', () => { m.dismissed = true; paint(); })]));
+          : [btn(chosen.size === m.items.length ? T('Appliquer', 'Apply') : T(`Appliquer la sélection (${chosen.size})`, `Apply selection (${chosen.size})`), 'pri hsm', () => { const r = applyItems(m.items.filter(i => chosen.has(i.id))); m.undo = r.undo; m.ign = r.ign; m.applied = Date.now(); sfx.pop(); refreshAll(); paint(); }, { disabled: !chosen.size }), btn(T('Ignorer', 'Dismiss'), 'ter hsm', () => { m.dismissed = true; paint(); })]));
     }; paint(); return card;
   }
   function agentSheet() {
@@ -690,16 +700,16 @@ function build(w, app) {
     const secret = (ph) => h('input', { class: 'hd-in', type: 'password', placeholder: ph || '', autocomplete: 'off', 'aria-label': ph || '' });
     const body = dv('hd-form',
       lbl(T('Clé API Nexus (facultative)', 'Nexus API key (optional)'), secret(), meta(T('Sert seulement à lire les pages de mods Nexus surveillées. Gardée dans le trousseau macOS, jamais dans le plan ni l’export. (Démo : rien n’est enregistré.)', 'Only used to read the watched Nexus mod pages. Stored in the macOS keychain, never in the plan or the export. (Demo: nothing is stored.)'))),
-      lbl(T('Clé API YouTube (statistiques des vidéos)', 'YouTube API key (video statistics)'), secret(), dv('hd-r2 one', meta(T('Gratuite : Google Cloud > YouTube Data API v3 > Identifiants > Clé API.', 'Free: Google Cloud > YouTube Data API v3 > Credentials > API key.')), sp('fl'), btn(T('Ouvrir Google Cloud', 'Open Google Cloud'), 'ter sm', () => openUrlClose('https://console.cloud.google.com')))),
-      lbl(T('Reddit (appli de type script, lecture seule)', 'Reddit (script app, read only)'), dv('hd-r2 one', inp('', () => {}, { placeholder: T('Identifiant de l’appli (client ID)', 'App ID (client ID)') }), secret(T('Secret', 'Secret'))), dv('hd-r2 one', meta(T('Reddit refuse les lectures anonymes : créez une appli « script » gratuite.', 'Reddit refuses anonymous reads: create a free “script” app.')), sp('fl'), btn(T('Ouvrir Reddit', 'Open Reddit'), 'ter sm', () => openUrlClose('https://www.reddit.com/prefs/apps')))),
+      lbl(T('Clé API YouTube (statistiques des vidéos)', 'YouTube API key (video statistics)'), secret(), dv('hd-r2 one', meta(T('Gratuite : Google Cloud > YouTube Data API v3 > Identifiants > Clé API.', 'Free: Google Cloud > YouTube Data API v3 > Credentials > API key.')), sp('fl'), btn(T('Ouvrir Google Cloud', 'Open Google Cloud'), 'ter hsm', () => openUrlClose('https://console.cloud.google.com')))),
+      lbl(T('Reddit (appli de type script, lecture seule)', 'Reddit (script app, read only)'), dv('hd-r2 one', inp('', () => {}, { placeholder: T('Identifiant de l’appli (client ID)', 'App ID (client ID)') }), secret(T('Secret', 'Secret'))), dv('hd-r2 one', meta(T('Reddit refuse les lectures anonymes : créez une appli « script » gratuite.', 'Reddit refuses anonymous reads: create a free “script” app.')), sp('fl'), btn(T('Ouvrir Reddit', 'Open Reddit'), 'ter hsm', () => openUrlClose('https://www.reddit.com/prefs/apps')))),
       dv('hd-r2 top', lbl(T('Site web', 'Website'), inp(SITE, () => {})), lbl('GoatCounter', inp('ancientrealms', () => {}))), meta(T('Compteur de visites gratuit, sans cookies.', 'Free visit counter, no cookies.')),
       lbl(T('Mises à jour', 'Updates'), chk(T('Installer automatiquement les mises à jour', 'Install updates automatically'), true, () => {}), dv('hd-r2 one', btn(T('Rechercher une mise à jour', 'Check for updates'), '', async ev => { const b = ev.currentTarget; b.disabled = true; upd.textContent = T('Recherche en cours…', 'Checking…'); await wait(reduced() ? 0 : 1000); if (!alive()) return; b.disabled = false; upd.textContent = T(`hERALD est à jour (version ${VERSION}).`, `hERALD is up to date (version ${VERSION}).`); sfx.done(); }), upd)),
       lbl(T('Sauvegarde iCloud des plans', 'iCloud backup of your plans'), chk(T('Sauvegarder les plans dans iCloud Drive', 'Back up plans to iCloud Drive'), true, () => {}), dv('hd-r2', btn(T('Sauvegarder maintenant', 'Back up now'), '', () => { st.backup = Date.now(); bk.textContent = T('Dernière sauvegarde : ', 'Last backup: ') + fstamp(st.backup); sfx.done(); }), btn(T('Restaurer…', 'Restore…'), '', () => demo(T('Ouvrirait le sélecteur de fichiers de macOS.', 'Would open the macOS file picker.'))), btn(T('Afficher dans le Finder', 'Show in Finder'), 'ter', () => demo(T('Ouvrirait iCloud Drive › hERALD › Sauvegardes.', 'Would open iCloud Drive › hERALD › Backups.')))), bk, meta(T('Un instantané par jour (30 gardés), 20 s après chaque modification. Un plan vide n’est jamais sauvegardé.', 'One snapshot per day (30 kept), 20 s after each change. An empty plan is never backed up.'))),
       lbl(T('Client de messagerie', 'Mail client'), seg([['mail', 'Mail'], ['other', T('Autre client', 'Other client')]], e.mail, k => (e.mail = k)), meta(T('Aucun mot de passe n’est demandé : hERALD passe par l’app Mail déjà connectée à vos comptes. macOS demande une autorisation à la première utilisation.', 'No password is asked: hERALD uses the Mail app already signed in to your accounts. macOS asks for permission on first use.'))),
       lbl(T('Icône de l’appli', 'App icon'), seg([['dock', 'Dock'], ['menubar', T('Barre de menus', 'Menu bar')], ['both', T('Les deux', 'Both')]], e.icon, k => (e.icon = k))),
       lbl(T('Agent IA (facultatif)', 'AI agent (optional)'), dv('hd-r2 one', chk(T('Discuter avec un agent IA depuis hERALD', 'Chat with an AI agent from hERALD'), e.agent, v => (e.agent = v)), sp('fl'), btn(T('Configurer l’agent…', 'Set up the agent…'), '', () => { agentSheetFromSettings(); })), meta(T('Désactivé par défaut : hERALD fonctionne très bien sans agent. Activé, chaque tâche et la campagne ont une discussion avec l’agent de votre choix (Claude Code, Codex, ChatGPT…).', 'Off by default: hERALD works perfectly without an agent. When on, every task and the campaign get a chat with the agent of your choice (Claude Code, Codex, ChatGPT…).'))),
-      lbl(T('Données', 'Data'), dv('hd-r2 one', sp('mono sub nm', '~/Library/Application Support/hERALD/plan.json'), sp('fl'), btn(T('Afficher dans le Finder', 'Show in Finder'), 'ter sm', () => demo(T('Ouvrirait le dossier des données.', 'Would open the data folder.'))))),
-      lbl(T('Boîte de dépôt', 'Drop box'), dv('hd-r2 one', sp('mono sub nm', '~/Library/Application Support/hERALD/Inbox'), sp('fl'), btn(T('Afficher dans le Finder', 'Show in Finder'), 'ter sm', () => demo(T('Ouvrirait le dossier de dépôt.', 'Would open the drop-box folder.')))), meta(T('Déposez ici des fichiers JSON de changements (ou un plan .herald) : hERALD les fusionne aussitôt dans le plan, sans écraser vos saisies. Le script herald_add les écrit pour vous. Rien n’est jamais publié.', 'Drop JSON change files (or a .herald plan) here: hERALD merges them into the plan right away, without overwriting what you typed. The herald_add script writes them for you. Nothing is ever published.')), dv('hd-log mono', st.inboxLog.length ? st.inboxLog.slice().reverse().join('\n') : T('Aucun fichier traité pour l’instant.', 'No file processed yet.'))),
+      lbl(T('Données', 'Data'), dv('hd-r2 one', sp('mono sub nm', '~/Library/Application Support/hERALD/plan.json'), sp('fl'), btn(T('Afficher dans le Finder', 'Show in Finder'), 'ter hsm', () => demo(T('Ouvrirait le dossier des données.', 'Would open the data folder.'))))),
+      lbl(T('Boîte de dépôt', 'Drop box'), dv('hd-r2 one', sp('mono sub nm', '~/Library/Application Support/hERALD/Inbox'), sp('fl'), btn(T('Afficher dans le Finder', 'Show in Finder'), 'ter hsm', () => demo(T('Ouvrirait le dossier de dépôt.', 'Would open the drop-box folder.')))), meta(T('Déposez ici des fichiers JSON de changements (ou un plan .herald) : hERALD les fusionne aussitôt dans le plan, sans écraser vos saisies. Le script herald_add les écrit pour vous. Rien n’est jamais publié.', 'Drop JSON change files (or a .herald plan) here: hERALD merges them into the plan right away, without overwriting what you typed. The herald_add script writes them for you. Nothing is ever published.')), dv('hd-log mono', st.inboxLog.length ? st.inboxLog.slice().reverse().join('\n') : T('Aucun fichier traité pour l’instant.', 'No file processed yet.'))),
       callout('in', RULE_LONG()));
     const close = sheet(T('Réglages', 'Settings'), body, [btn(T('ANNULER', 'CANCEL'), '', close_), btn(T('ENREGISTRER', 'SAVE'), 'pri', () => { st.mail = e.mail; st.icon = e.icon; const was = st.agentOn; st.agentOn = e.agent; if (!st.agentOn) { st.agentOpen = false; applyAgent(); } else if (!was) sfx.pop(); close_(); drawSide(); view?.refresh?.(); })], 620);
     function close_() { closeModal(); }
@@ -720,7 +730,8 @@ function build(w, app) {
   addEventListener('keydown', w.key, true);
   /* un script (herald_add) dépose un fichier dans la boîte de dépôt : la publication apparaît toute seule */
   later(() => { if (!C() || st.ci !== 0) return; const p = { id: D.id('p'), title: T('Remercier les premiers testeurs', 'Thank the first testers'), t: day(2), ch: D.chans[2].id, ms: 'm_follow', status: 'idea', drafts: {}, link: '', notes: T('Ajouté par la boîte de dépôt.', 'Added through the drop box.'), stat: null, fb: [] }; C().posts.push(p); st.inbox = 1; st.inboxLog.push(`${new Date().toISOString().slice(0, 19)}Z  ${T('ajout-testeurs.json : 1 ajout(s), 0 mise(s) à jour', 'add-testers.json: 1 addition(s), 0 update(s)')}`); sfx.notif(); drawSide(); view?.refresh?.(); }, 40000);
-  w.cleanup = () => { timers.forEach(t => (clearTimeout(t), clearInterval(t))); removeEventListener('keydown', w.key, true); removeEventListener('pointerdown', w.away, true); clearInterval(A.tick); A.cancel++; w.unbrand && w.unbrand(); };
+  const ro = new ResizeObserver(() => fitStatus()); ro.observe(eStatus);
+  w.cleanup = () => { ro.disconnect(); timers.forEach(t => (clearTimeout(t), clearInterval(t))); removeEventListener('keydown', w.key, true); removeEventListener('pointerdown', w.away, true); clearInterval(A.tick); A.cancel++; w.unbrand && w.unbrand(); };
   go('today', true);
   return root;
 }
