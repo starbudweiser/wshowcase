@@ -69,18 +69,17 @@ function layout(spaceId, reset) {
 }
 const savePos = (id, p) => { const d = store.get('desk', {}); d[id] = p; store.set('desk', d); };
 let suppress = false;
-const EXTRA = { id: 'Aetherius', space: 'skyrim', desk: true, fx: true, src: 'assets/fx/seal.png' };
-const deskList = sp => [...S.apps.filter(a => a.space === sp && a.desk), ...(sp === EXTRA.space ? [EXTRA] : [])];
-const run = (a, d) => { if (a.fx) { const r = d.getBoundingClientRect(); import('./fx/scene.js').then(m => m.enter(r.left + r.width / 2, r.top + r.height / 2)); } else launch(a.id); };
+const deskList = sp => S.apps.filter(a => a.space === sp && a.desk);
+const run = a => launch(a.id);
 export function renderDesk(reset) {
-  if (reset) { const d = store.get('desk', {}); S.apps.forEach(a => delete d[a.id]); delete d[EXTRA.id]; store.set('desk', d); }
+  if (reset) { const d = store.get('desk', {}); S.apps.forEach(a => delete d[a.id]); store.set('desk', d); }
   S.spaces.forEach(sp => {
     const el = $('#sp-' + sp.id); if (!el) return;
     all(el, '.di').forEach(x => x.remove());
     const coarse = matchMedia('(pointer:coarse)').matches, pos = layout(sp.id);
     deskList(sp.id).forEach(a => {
       const d = h('button', { class: 'di' + (reset ? ' snap' : ''), 'aria-label': a.id, style: cell(...pos[a.id]) },
-        h('img', { src: a.src || icon(a.id), alt: '', draggable: 'false' }), a.fx ? h('span', {}, a.id) : h('span', { html: brand(a.id, a.accent) }));
+        h('img', { src: a.src || icon(a.id), alt: '', draggable: 'false' }), h('span', { html: brand(a.id, a.accent) }));
       d.style.left = cell(...pos[a.id]).left + 'px'; d.style.top = cell(...pos[a.id]).top + 'px';
       d.addEventListener('click', e => {
         e.stopPropagation(); if (suppress) return;
