@@ -6,7 +6,7 @@ export function h(tag, attrs = {}, ...kids) {
     if (v === false || v == null) continue;
     if (k === 'class') e.className = v;
     else if (k === 'html') e.innerHTML = v;
-    else if (k === 'style' && typeof v === 'object') Object.assign(e.style, v);
+    else if (k === 'style' && typeof v === 'object') for (const [a, b] of Object.entries(v)) a.startsWith('--') ? e.style.setProperty(a, b) : (e.style[a] = b);
     else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
     else e.setAttribute(k, v === true ? '' : v);
   }

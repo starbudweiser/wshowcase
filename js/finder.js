@@ -5,6 +5,7 @@ import { t, lang, tag, sname } from './i18n.js';
 import { sfx } from './audio.js';
 import * as wm from './wm.js';
 import { launch, download, repoUrl } from './apps.js';
+import * as tour from './tour.js';
 
 let VIEW = store.get('fview', 'gallery');
 const finders = new Set();
@@ -107,7 +108,7 @@ function renderPreview(pv, app, w) {
   if (app.shots) {
     const set = lang() === 'fr' ? 'fr' : 'en';
     const box = h('div', { class: 'shots' });
-    for (let i = 1; i <= app.shots; i++) box.append(h('img', { class: i === 1 ? 'on' : '', src: `assets/shots/${set}/${app.id}_${i}.jpg`, alt: `${app.id} ${i}`, draggable: 'false', loading: i === 1 ? 'eager' : 'lazy' }));
+    for (let i = 1; i <= app.shots; i++) box.append(h('img', { class: i === 1 ? 'on' : '', src: `assets/shots/${set}/${app.id}_${i}.webp`, alt: `${app.id} ${i}`, draggable: 'false', loading: i === 1 ? 'eager' : 'lazy' }));
     pv.append(box, badge);
     if (!reduced() && app.shots > 1) {
       let k = 0; w.timer = setInterval(() => { const im = box.children; if (!im.length) return; im[k].classList.remove('on'); k = (k + 1) % im.length; im[k].classList.add('on'); }, 3600);
@@ -130,6 +131,7 @@ function renderInsp(app, launchSel) {
       h('dt', {}, t('f.source')), h('dd', {}, h('a', { href: repoUrl(app), target: '_blank', rel: 'noopener' }, 'GitHub ›'))),
     h('div', { class: 'acts' },
       h('button', { class: 'btn pri', onclick: launchSel }, t('f.try')),
+      app.shots ? h('button', { class: 'btn', onclick: () => tour.open(app) }, t('f.shots')) : null,
       app.download ? h('button', { class: 'btn', onclick: () => download(app) }, t('f.download'))
         : h('button', { class: 'btn', disabled: true }, t('f.soon'))));
   return el;

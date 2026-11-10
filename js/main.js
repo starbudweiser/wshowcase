@@ -35,7 +35,7 @@ function buildIntro() {
   const pv = $('#pvscreen'); pv.innerHTML = '';
   const dk = S.apps.filter(a => a.space === 'skyrim').slice(0, 11);
   pv.append(h('div', { class: 'pvwp' }), h('div', { class: 'pvmb' }, h('i', { html: APPLE }), h('b', {}, 'Finder'), h('span', {}, '9:41')),
-    h('div', { class: 'pvwin' }, h('img', { src: 'assets/shots/fr/sKYCRASH_1.jpg', alt: '', draggable: 'false' })),
+    h('div', { class: 'pvwin' }, h('img', { src: 'assets/shots/fr/sKYCRASH_1.webp', alt: '', draggable: 'false' })),
     h('div', { class: 'pvdock' }, dk.map(a => h('img', { src: `assets/icons/${a.id}.png`, alt: '', draggable: 'false' }))));
   $('#intro .eyebrow').textContent = t('l.eyebrow', { n: S.apps.length });
 }

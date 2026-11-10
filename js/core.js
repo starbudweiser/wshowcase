@@ -7,16 +7,26 @@ export const appById = id => S.apps.find(a => a.id === id);
 export const spaceById = id => S.spaces.find(s => s.id === id);
 export const icon = id => `assets/icons/${id}.png`;
 export const WALLS = [
-  { id: 'aurore', tone: 'light', n: { fr: 'Aurore', en: 'Aurora', es: 'Aurora', it: 'Aurora' } },
-  { id: 'dune', tone: 'light', n: { fr: 'Dune', en: 'Dune', es: 'Duna', it: 'Duna' } },
-  { id: 'brume', tone: 'light', n: { fr: 'Brume', en: 'Mist', es: 'Bruma', it: 'Foschia' } },
-  { id: 'ocean', tone: 'light', n: { fr: 'Océan', en: 'Ocean', es: 'Océano', it: 'Oceano' } },
-  { id: 'prairie', tone: 'light', n: { fr: 'Prairie', en: 'Meadow', es: 'Pradera', it: 'Prateria' } },
-  { id: 'nuit', tone: 'dark', n: { fr: 'Nuit', en: 'Night', es: 'Noche', it: 'Notte' } },
-  { id: 'nordique', tone: 'dark', n: { fr: 'Nordique', en: 'Nordic', es: 'Nórdico', it: 'Nordico' } },
-  { id: 'braises', tone: 'dark', n: { fr: 'Braises', en: 'Embers', es: 'Brasas', it: 'Braci' } },
-  { id: 'verre', tone: 'dark', n: { fr: 'Verre', en: 'Glass', es: 'Cristal', it: 'Vetro' } },
-  { id: 'dragon', tone: 'dark', n: { fr: 'Dragon', en: 'Dragon', es: 'Dragón', it: 'Drago' } }
+  { id: 'tes_whiterun', cat: 'tes', n: { fr: 'Blancherive', en: 'Whiterun' } },
+  { id: 'tes_hrothgar', cat: 'tes', n: { fr: 'Haut-Hrothgar', en: 'High Hrothgar' } },
+  { id: 'tes_rift', cat: 'tes', n: { fr: 'Le Rift', en: 'The Rift' } },
+  { id: 'tes_winterhold', cat: 'tes', n: { fr: 'Winterhold', en: 'Winterhold' } },
+  { id: 'tes_solitude', cat: 'tes', n: { fr: 'Solitude', en: 'Solitude' } },
+  { id: 'tes_markarth', cat: 'tes', n: { fr: 'Markarth', en: 'Markarth' } },
+  { id: 'tes_dwemer', cat: 'tes', n: { fr: 'Ruines dwemer', en: 'Dwemer ruins' } },
+  { id: 'tes_moons', cat: 'tes', n: { fr: 'Masser et Secunda', en: 'Masser and Secunda' } },
+  { id: 'tes_oblivion', cat: 'tes', n: { fr: 'Porte d’Oblivion', en: 'Oblivion Gate' } },
+  { id: 'tes_sovngarde', cat: 'tes', n: { fr: 'Sovngarde', en: 'Sovngarde' } },
+  { id: 'aurore', cat: 'gen', n: { fr: 'Aurore', en: 'Aurora' } },
+  { id: 'dune', cat: 'gen', n: { fr: 'Dune', en: 'Dune' } },
+  { id: 'brume', cat: 'gen', n: { fr: 'Brume', en: 'Mist' } },
+  { id: 'ocean', cat: 'gen', n: { fr: 'Océan', en: 'Ocean' } },
+  { id: 'prairie', cat: 'gen', n: { fr: 'Prairie', en: 'Meadow' } },
+  { id: 'nuit', cat: 'gen', n: { fr: 'Nuit', en: 'Night' } },
+  { id: 'nordique', cat: 'gen', n: { fr: 'Nordique', en: 'Nordic' } },
+  { id: 'braises', cat: 'gen', n: { fr: 'Braises', en: 'Embers' } },
+  { id: 'verre', cat: 'gen', n: { fr: 'Verre', en: 'Glass' } },
+  { id: 'dragon', cat: 'gen', n: { fr: 'Dragon', en: 'Dragon' } }
 ];
 export async function loadData() {
   const d = await (await fetch('data/apps.json')).json();

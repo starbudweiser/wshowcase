@@ -15,7 +15,7 @@ export function open(app) {
       const stage = h('div', { class: 'tstage' });
       const set = lang() === 'fr' ? 'fr' : 'en', n = app.shots || 0;
       const imgs = [];
-      for (let i = 1; i <= n; i++) { const im = h('img', { src: `assets/shots/${set}/${app.id}_${i}.jpg`, alt: `${app.id} ${i}`, draggable: 'false' }); imgs.push(im); stage.append(im); }
+      for (let i = 1; i <= n; i++) { const im = h('img', { src: `assets/shots/${set}/${app.id}_${i}.webp`, alt: `${app.id} ${i}`, draggable: 'false' }); imgs.push(im); stage.append(im); }
       if (!n) stage.append(h('div', { class: 'art', style: { '--c': app.accent } }, h('img', { src: icon(app.id), alt: '' }), h('div', { class: 'at', html: brand(app.id, app.accent) }), h('p', {}, tag(app)), h('small', {}, t('t.noshots'))));
       const dots = h('div', { class: 'tdots' });
       const prev = h('button', { class: 'btn', 'aria-label': t('t.prev'), onclick: () => go(k - 1, true) }, '‹'), next = h('button', { class: 'btn', 'aria-label': t('t.next'), onclick: () => go(k + 1, true) }, '›');
