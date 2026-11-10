@@ -51,7 +51,7 @@ function openSpot() {
     else if (e.key === 'ArrowUp') { e.preventDefault(); sel = Math.max(0, sel - 1); mark(); }
     else if (e.key === 'Enter') go_(rows[sel]);
   });
-  $('#layer').append(box); draw(); input.focus();
+  $('#layer').append(box); draw(); input.focus({ preventScroll: true });
   box.firstChild.animate([{ opacity: 0, transform: 'scale(.96) translateY(-8px)' }, { opacity: 1, transform: 'none' }], { duration: 200, easing: 'cubic-bezier(.2,.8,.3,1)' });
 }
 addEventListener('keydown', e => {

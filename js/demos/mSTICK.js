@@ -44,6 +44,6 @@ function draw(intro, focusId) {
     });
     layer.append(el);
     if (intro) el.animate([{ opacity: 0, transform: `translateY(-60px) rotate(${n.r - 14}deg) scale(1.2)` }, { opacity: 1, transform: `rotate(${n.r}deg)` }], { duration: 520, delay: 160 + i * 140, fill: 'backwards', easing: 'cubic-bezier(.2,.9,.3,1.2)' });
-    if (focusId === n.id) setTimeout(() => ta.focus(), 50);
+    if (focusId === n.id) setTimeout(() => ta.focus({ preventScroll: true }), 50);
   });
 }

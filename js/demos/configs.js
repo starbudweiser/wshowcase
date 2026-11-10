@@ -42,12 +42,6 @@ export const CONFIG = {
     log: [T('Lecture de la liste de mods…', 'Reading the mod list…'), T('Résolution des conflits (priorité)…', 'Resolving conflicts (priority)…'), T('Copie de 21 834 fichiers…', 'Copying 21,834 files…'), T('Génération du plugins.txt…', 'Writing plugins.txt…'), T('Vérification…', 'Verifying…')],
     stats: [[T('Mods', 'Mods'), '412'], [T('Fichiers', 'Files'), '21 834'], [T('Conflits', 'Conflicts'), '1 207']] }),
   mTRANSLATOR: () => null, sKYCRASH: () => null,
-  nEXUSWATCH: () => ({ type: 'browse', w: 1040, h: 640, stats: [[T('Téléchargements', 'Downloads'), num(12480), '+84'], ['Endorsements', num(1906), '+12'], [T('Téléch. uniques', 'Unique DLs'), num(5233), '+31'], [T('Rapports de bugs', 'Bug reports'), '7', '+2']], states: STA(), state0: 'new', bodyLabel: T('Message du joueur', 'Player message'),
-    items: [
-      { n: T('Plantage au chargement de Blancherive', 'Crash when loading Whiterun'), sub: '#4 · 2 d', state: 'open', fields: [['Version', '1.3.2'], [T('Priorité', 'Priority'), T('Critique', 'Critical')], ['Posts', '12']], body: T('Le jeu plante en entrant en ville depuis la porte nord. Journal joint.', 'The game crashes when I enter the city from the north gate. Log attached.') },
-      { n: T('Texture violette sur les armures', 'Purple texture on armors'), sub: '#3 · 3 d', state: 'new', fields: [['Version', '1.3.2'], [T('Priorité', 'Priority'), T('Moyenne', 'Medium')], ['Posts', '4']], body: T('Les armures lourdes apparaissent violettes après la mise à jour.', 'Heavy armors appear purple after the update.') },
-      { n: T('Option manquante dans le MCM', 'Missing MCM option'), sub: '#2 · 5 d', state: 'planned', fields: [['Version', '1.3.1'], [T('Priorité', 'Priority'), T('Basse', 'Low')], ['Posts', '2']], body: T('Je ne trouve pas le réglage du rayon d’effet.', 'I cannot find the effect radius setting.') }],
-    actions: [{ label: T('Ajouter au plan', 'Add to plan'), set: 'planned', pri: true, toast: T('Ajouté au plan de développement.', 'Added to the development plan.') }, { label: T('Marquer résolu', 'Mark fixed'), set: 'fixed' }] }),
   pLUGINSLENS: () => ({ type: 'browse', w: 1000, h: 620, editable: true, dirty: 'modified', states: STA(), state0: 'saved', topAction: { label: T('ENREGISTRER', 'SAVE'), fn: (items, draw) => { items.forEach(x => { if (x.state === 'modified') x.state = 'saved'; }); sfx.done(); draw(); } },
     items: [
       { n: 'WEAP · IronSword', sub: '000012EB', fields: [['Editor ID', 'IronSword'], [T('Nom', 'Name'), 'Iron Sword'], [T('Dégâts', 'Damage'), '7'], [T('Poids', 'Weight'), '9.0'], [T('Valeur', 'Value'), '25']] },
@@ -100,7 +94,7 @@ export const CONFIG = {
     const go = x => { ctx.close(); if (x.k === 'app') launch(x.id); else if (x.k === 'site') window.open(x.u, '_blank', 'noopener'); else ctx.toast(T('Ouverture de ', 'Opening ') + x.n); };
     const draw = () => { box.innerHTML = ''; list.filter(x => x.n.toLowerCase().includes(inp.value.toLowerCase())).forEach(x => box.append(h('button', { class: 'xrow', onclick: () => go(x) }, x.k === 'app' ? h('img', { src: icon(x.id), alt: '' }) : h('i', { class: 'kind ' + x.k }, x.k === 'folder' ? '▭' : '↗'), h('b', {}, x.n), h('small', { class: 'mut' }, x.k === 'app' ? T('Application', 'App') : x.k === 'folder' ? T('Dossier', 'Folder') : T('Site web', 'Web address'))))); };
     inp.oninput = draw; inp.onkeydown = e => { if (e.key === 'Enter') { const f = list.find(x => x.n.toLowerCase().includes(inp.value.toLowerCase())); f && go(f); } };
-    body.append(inp, box); draw(); setTimeout(() => inp.focus(), 50); } }),
+    body.append(inp, box); draw(); setTimeout(() => inp.focus({ preventScroll: true }), 50); } }),
   mSILENCE: () => ({ type: 'menu', sub: T('Pare-feu par appli', 'Per-app firewall'), view: (body, ctx) => {
     const procs = [['Safari', 180], ['Mail', 20], ['Dropbox', 90], ['Steam', 420], ['Skyrim (CrossOver)', 35], ['Telemetry Helper', 12]].map(([n, r]) => ({ n, r, blocked: n === 'Telemetry Helper' }));
     const tot = h('b', { class: 'num' }), box = h('div', { class: 'xlist' });

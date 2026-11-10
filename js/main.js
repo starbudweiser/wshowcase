@@ -113,6 +113,7 @@ on('lang', async () => {
   initLang(); applyTheme(store.get('theme', 'auto'));
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if (document.documentElement.dataset.mode === 'auto') applyTheme('auto'); });
   await loadData(); applyStatic(); buildIntro(); fit(); addEventListener('resize', fit);
+  ['#mac', '#stage', '#sps'].forEach(q => $(q).addEventListener('scroll', e => { e.target.scrollLeft = 0; e.target.scrollTop = 0; })); /* garde-fou */
   $('#cta').addEventListener('click', () => powerOn());
   $('#ilogo').innerHTML = logoSvg(); $('#boot .blogo').innerHTML = APPLE;
   document.querySelectorAll('#intro [data-go]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); powerOn(a.dataset.go); }));

@@ -43,7 +43,7 @@ export function open(o = {}) {
         return l;
       };
       const title = () => st.src.startsWith('tag:') ? t('f.tag.' + st.src.slice(4)) : sname(spaceById(st.src));
-      const select = (id2, { scroll = true } = {}) => { st.sel = id2; sfx.tick(); w.render(true); if (scroll) { const b = root.querySelector('.th.on,.ic.on,.lr.on'); b && b.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); } };
+      const select = (id2, { scroll = true } = {}) => { st.sel = id2; sfx.tick(); w.render(true); if (scroll) reveal(root); };
       const launchSel = () => st.sel && launch(st.sel);
 
       w.render = (soft) => {
@@ -87,12 +87,12 @@ export function open(o = {}) {
         }
         root.append(main);
         root.append(renderInsp(app, launchSel));
-        if (hadFocus) { const i = root.querySelector('.fsearch input'); i.focus(); i.setSelectionRange(i.value.length, i.value.length); }
+        if (hadFocus) { const i = root.querySelector('.fsearch input'); i.focus({ preventScroll: true }); i.setSelectionRange(i.value.length, i.value.length); }
       };
       root.addEventListener('keydown', e => {
         if (e.target.tagName === 'INPUT') return;
         const list = items(), i = list.findIndex(a => a.id === st.sel);
-        const next = d => { const n = list[Math.max(0, Math.min(list.length - 1, i + d))]; if (n) { e.preventDefault(); select(n.id); root.focus(); } };
+        const next = d => { const n = list[Math.max(0, Math.min(list.length - 1, i + d))]; if (n) { e.preventDefault(); select(n.id); root.focus({ preventScroll: true }); } };
         if (e.key === 'ArrowRight') next(1); else if (e.key === 'ArrowLeft') next(-1);
         else if (e.key === 'ArrowDown') next(VIEW === 'icons' ? 6 : 1); else if (e.key === 'ArrowUp') next(VIEW === 'icons' ? -6 : -1);
         else if (e.key === 'Enter') launchSel();
@@ -100,6 +100,13 @@ export function open(o = {}) {
       finders.add(w); w.render();
       return root;
     } });
+}
+
+/* Fait défiler seulement la liste de l'élément choisi : scrollIntoView ferait aussi glisser les bureaux voisins. */
+function reveal(root) {
+  const b = root.querySelector('.th.on,.ic.on,.lr.on'); if (!b) return; const c = b.parentElement;
+  if (b.classList.contains('th')) c.scrollTo({ left: b.offsetLeft - c.clientWidth / 2 + b.offsetWidth / 2, behavior: 'smooth' });
+  else { const top = b.offsetTop, bot = top + b.offsetHeight; if (top < c.scrollTop) c.scrollTo({ top: top - 8, behavior: 'smooth' }); else if (bot > c.scrollTop + c.clientHeight) c.scrollTo({ top: bot - c.clientHeight + 8, behavior: 'smooth' }); }
 }
 
 function renderPreview(pv, app, w) {

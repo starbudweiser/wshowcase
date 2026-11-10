@@ -4,6 +4,7 @@ import { t } from '../i18n.js';
 import { sfx } from '../audio.js';
 import * as wm from '../wm.js';
 import { download } from '../apps.js';
+import { stream, aiBadge } from './ai.js';
 
 const LOGS = [
   { f: 'crash-2026-11-08-21-14-07.log', k: 1, sev: 'dg', culprit: 4, raw: [
@@ -22,9 +23,9 @@ const LOGS = [
 const FR = { dg: 'sk.crash', wn: 'sk.suspect', ok: 'sk.sound' };
 
 export function open(app) {
-  return wm.open({ id: 'app:' + app.id, appId: app.id, title: app.id, w: 980, h: 620, minw: 760, minh: 480, bare: true, cls: 'socle sk',
+  return wm.open({ id: 'app:' + app.id, appId: app.id, title: app.id, w: 980, h: 620, minw: 760, minh: 480, bare: true, cls: 'socle sk', onclose: w => { w.dead = true; },
     build: w => {
-      let cur = 0, busy = false, done = {};
+      const wcur = w; let cur = 0, busy = false, done = {};
       const root = h('div', { class: 'skw' });
       const bar = h('div', { class: 'sbar', 'data-drag': '' }, wm.lights(w), h('b', { html: brand('sKYCRASH', app.accent) }),
         h('button', { class: 'sbtn act', onclick: () => analyze() }, t('sk.analyze')));
@@ -65,7 +66,9 @@ export function open(app) {
           h('p', { class: 'acc' }, t('sk.cause')), h('p', {}, t(`sk.v${l.k}.d`)), h('div', { class: 'chips' }, l.chips.map(c => h('span', { class: 'chip' }, c))),
           h('p', { class: 'mut adv' }, t(`sk.v${l.k}.a`)));
         const fr = h('div', { class: 'scard tight' }, h('div', { class: 'sh' }, t('sk.frames')), l.frames.map(([n, s]) => h('div', { class: 'frow' }, h('span', { class: 'mono' }, n), h('span', { class: s }, t(FR[s])))));
-        res.append(verdict, fr, h('div', { class: 'sact' }, h('button', { class: 'sbtn', onclick: () => download(app), disabled: !app.download }, t('f.download'))));
+        const aiCard = h('div', { class: 'aicard hid' }, h('div', { class: 'aihd' }, aiBadge(t('sk.aiTitle')), h('span', { class: 'mut' }, 'Claude')), h('p', {}));
+        const aiBtn = h('button', { class: 'sbtn acc', onclick: async () => { aiBtn.disabled = true; sfx.click(); aiCard.classList.remove('hid'); await stream(aiCard.querySelector('p'), t('sk.ai' + l.k), { alive: () => !wcur.dead }); aiBtn.disabled = false; sfx.done(); } }, t('sk.aiBtn'));
+        res.append(verdict, fr, aiCard, h('div', { class: 'sact' }, aiBtn, h('button', { class: 'sbtn', onclick: () => download(app), disabled: !app.download }, t('f.download'))));
         if (!instant) [verdict, fr].forEach((e, n) => e.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 360, delay: n * 110, fill: 'backwards', easing: 'ease-out' }));
       }
       pick(0); return root;

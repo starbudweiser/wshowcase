@@ -10,10 +10,10 @@ import { toast } from '../system.js';
 import { CONFIG } from './configs.js';
 import * as tour from '../tour.js';
 
-const fmt = mb => (mb >= 1024 ? (mb / 1024).toFixed(1) + ' ' + t('mc.gb') : Math.round(mb * 10) / 10 + ' ' + t('u.mb'));
-const winOf = (app, c, build) => wm.open({ id: 'app:' + app.id, appId: app.id, title: app.id, w: c.w || 940, h: c.h || 600, minw: 640, minh: 440, bare: true, cls: 'socle', build });
-const titleOf = (app, w, extra) => h('div', { class: 'sbar', 'data-drag': '' }, wm.lights(w), h('b', { html: brand(app.id, app.accent) }), extra);
-const dlBtn = app => h('button', { class: 'sbtn', onclick: () => download(app), disabled: !app.download }, t('f.download'));
+export const fmt = mb => (mb >= 1024 ? (mb / 1024).toFixed(1) + ' ' + t('mc.gb') : Math.round(mb * 10) / 10 + ' ' + t('u.mb'));
+export const winOf = (app, c, build) => wm.open({ id: 'app:' + app.id, appId: app.id, title: app.id, w: c.w || 940, h: c.h || 600, minw: 640, minh: 440, bare: true, cls: 'socle', build });
+export const titleOf = (app, w, extra) => h('div', { class: 'sbar', 'data-drag': '' }, wm.lights(w), h('b', { html: brand(app.id, app.accent) }), extra);
+export const dlBtn = app => h('button', { class: 'sbtn', onclick: () => download(app), disabled: !app.download }, t('f.download'));
 
 export function open(app) {
   const make = CONFIG[app.id];
@@ -95,7 +95,7 @@ function browse(app, c) {
   return winOf(app, c, w => {
     const items = c.items.map(x => ({ ...x, state: x.state || c.state0, fields: (x.fields || []).map(f => [...f]) }));
     let sel = items[0], q = '';
-    const root = h('div', { class: 'skw' + (c.grid ? ' grid' : '') + (c.stats ? ' stats' : '') }), side = h('aside', { class: 'sside' }), main = h('main', { class: 'smain' });
+    const root = h('div', { class: 'skw' + (c.grid ? ' grid' : '') + (c.stats ? ' withstats' : '') }), side = h('aside', { class: 'sside' }), main = h('main', { class: 'smain' });
     root.append(titleOf(app, w, c.topAction ? h('button', { class: 'sbtn act', onclick: c.topAction.fn && (() => c.topAction.fn(items, draw)) }, c.topAction.label) : null), side, main);
     const stLabel = s => (c.states && c.states[s] ? c.states[s][0] : s), stCls = s => (c.states && c.states[s] ? c.states[s][1] : '');
     const thumb = x => x.img ? h('img', { src: icon(x.img), alt: '' }) : x.grad ? h('i', { class: 'vthumb', style: { background: `linear-gradient(135deg,${x.grad[0]},${x.grad[1]})` } }, h('b', {}, '▶')) : null;
@@ -131,7 +131,7 @@ function browse(app, c) {
 }
 
 /* ===================== BARRE DES MENUS (mLINKS, mSILENCE, mDESK, mSPACES, mBACKUP) ===================== */
-function menu(app, c) {
+export function menu(app, c) {
   if (S.extras.has(app.id)) { const e = S.extras.get(app.id); e.el.click(); return; }
   let panel = null, timer = 0;
   const el = h('button', { class: 'mb extra', 'aria-label': app.id }, h('img', { class: 'xicon', src: icon(app.id), alt: '' }));
