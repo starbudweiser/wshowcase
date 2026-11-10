@@ -14,7 +14,9 @@ const IC = {
   x: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>', plus: '<path d="M5 12h14"/><path d="M12 5v14"/>', globe: '<circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>',
   sparkles: '<path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/>',
   phone: '<rect width="14" height="20" x="5" y="2" rx="2"/><path d="M12 18h.01"/>', key: '<path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"/><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/>',
-  down: '<path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/>'
+  down: '<path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/>',
+  eye: '<path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/>',
+  hand: '<path d="M18 11V6a2 2 0 0 0-4 0v5"/><path d="M14 10V4a2 2 0 0 0-4 0v2"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>'
 };
 const svg = k => { const t = document.createElement('template'); t.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${IC[k]}</svg>`; return t.content.firstChild; };
 
@@ -24,7 +26,20 @@ const PROD = [
   { id: 'gamer', n: 'Gamer RGB 104', p: 119, mech: true, s: ['100 %', 'RGB', ['Switches clic', 'Clicky switches']] }, { id: 'tkl', n: 'Keyboard TKL Wireless', p: 129, mech: true, s: ['TKL', 'Bluetooth', ['Switches linéaires', 'Linear switches']] },
   { id: 'slim', n: 'Slim Office 100', p: 39, mech: false, s: ['100 %', 'Membrane', 'USB'] }
 ];
-const HOST = u => u.split('/')[0];
+const HOST = u => (u.startsWith('wclaude://') ? '' : u.split('/')[0]);
+/* Veille : sources et nouveautés d'exemple (onglet épinglé, toujours le premier, jamais fermable) */
+const WSRC = [
+  { id: 'cx', n: 'CrossOver, blog', g: ['CrossOver et Wine', 'CrossOver and Wine'], k: ['Flux', 'Feed'], st: 'new', note: ['ce qui touche DXMT, D3DMetal, Wine, ARM64.', 'anything about DXMT, D3DMetal, Wine, ARM64.'] },
+  { id: 'gp', n: 'GPTK, Apple', g: ['CrossOver et Wine', 'CrossOver and Wine'], k: ['Page', 'Page'], st: 'needs' },
+  { id: 'cs', n: 'Community Shaders', g: ['Rendu', 'Rendering'], k: ['GitHub', 'GitHub'], st: 'new' },
+  { id: 'enb', n: 'ENB Series', g: ['Rendu', 'Rendering'], k: ['Version', 'Version'], st: 'new' },
+  { id: 'vx', n: 'Vortex', g: ['Gestionnaires de mods', 'Mod managers'], k: ['GitHub', 'GitHub'], st: 'ok' }
+];
+const WITEMS = () => [
+  { id: 14, s: 'cx', at: '09:14', title: T('CrossOver 27 Preview 1 est disponible', 'CrossOver 27 Preview 1 is available'), lines: [T('CrossOver 27 Preview 1 est disponible', 'CrossOver 27 Preview 1 is available'), T('Build ARM64 pour macOS, sans Rosetta 2', 'ARM64 build for macOS, no Rosetta 2')], read: false },
+  { id: 15, s: 'cs', at: '11:40', title: 'v1.4.2 → v1.4.3', lines: [T('Correctif des ombres de l’eau', 'Water shadows fix')], read: false },
+  { id: 16, s: 'enb', at: '12:05', title: 'v0.505 → v0.506', lines: ['v0.506'], read: false }
+];
 const SITES = { 'clavier.example': ['C', '#d97757'], 'partage.example': ['P', '#4a8ad8'], 'reseau.example': ['R', '#b5527f'] };
 function parse(raw) {
   let u = raw.trim().replace(/^https?:\/\//i, '').replace(/\/+$/, '');
@@ -38,6 +53,7 @@ function parse(raw) {
     if (path.startsWith('compte')) return { url: u, page: 'login', title: T('Connexion', 'Sign in') + ' · Clavier&Co', st: { step: 'form' } };
     if (path.startsWith('commandes')) return { url: u, page: 'orders', title: T('Mes commandes', 'My orders'), st: {} };
   }
+  if (/^wclaude:\/\/(veille|watch)/i.test(raw.trim())) return null;
   if (host === 'partage.example') return { url: u, page: 'upload', title: T('Partage de fichiers', 'File sharing'), st: { file: null, prog: 0, sent: false } };
   if (host === 'reseau.example') return { url: 'reseau.example/@stephan', page: 'profile', title: '@stephan', st: {} };
   return { url: u, page: 'nf', title: T('Page introuvable', 'Page not found'), st: {} };
@@ -55,11 +71,13 @@ function make(app, w) {
   w.stop = () => { life.dead = true; clearTimeout(bubbleTimer); timers.forEach(clearTimeout); A.cancel = true; if (B.handoff) B.handoff.resolve('cancel'); };
   const alive = () => !life.dead && !w.dead;
   const after = (fn, ms) => { const t = setTimeout(() => { timers.delete(t); if (alive()) fn(); }, ms); timers.add(t); return t; };
-  const B = { tabs: [], active: 0, next: 1, mobile: new Set(), downloads: [], logged: false, agent: null, handoff: null, pop: null, editing: false };
+  const B = { witems: WITEMS(), wsel: 'all', wopen: 14, tabs: [], active: 0, next: 1, mobile: new Set(), downloads: [], logged: false, agent: null, handoff: null, pop: null, editing: false };
   const A = { run: false, cancel: false, task: 'a', n: 0, total: 1, tabId: 0 };
   const root = h('div', { class: 'wc-root' });
   const mkTab = (raw) => { const e = raw ? parse(raw) : { url: '', page: 'new', title: '', st: {} }; return { id: B.next++, hist: [e], i: 0, loading: false }; };
-  B.tabs.push(mkTab()); B.active = B.tabs[0].id;
+  B.tabs.push({ id: B.next++, pin: true, hist: [{ url: 'wclaude://veille', page: 'watch', title: T('Veille', 'Watch'), st: {} }], i: 0, loading: false });
+  B.tabs.push(mkTab()); B.active = B.tabs[1].id;
+  const unread = () => B.witems.filter(x => !x.read).length;
   const tab = () => B.tabs.find(t => t.id === B.active) || B.tabs[0];
   const entry = () => tab().hist[tab().i];
   const siteOf = e => HOST(e.url || '');
@@ -76,9 +94,10 @@ function make(app, w) {
     onkeydown: e => { if (e.key === 'Enter') { const v = addr.value; B.editing = false; addr.blur(); if (v.trim()) go(v); } else if (e.key === 'Escape') { B.editing = false; drawNav(); addr.blur(); } } });
   const mobB = h('button', { class: 'wc-nb', onclick: () => toggleMobile() }, svg('phone'), h('span', { class: 'lb' }, T('iPhone', 'iPhone')));
   const kcB = h('button', { class: 'wc-nb', title: T('Remplir l’identifiant de ce site depuis le Trousseau', 'Fill in this site’s sign-in from the Keychain'), onclick: () => userKeychain() }, svg('key'), h('span', { class: 'lb' }, T('Trousseau', 'Keychain')));
+  const wB = h('button', { class: 'wc-nb', title: T('Ouvrir la veille', 'Open the watch'), onclick: () => { B.active = B.tabs[0].id; sfx.tick(); drawAll(true); } }, svg('eye'), h('span', { class: 'lb' }, T('Veille', 'Watch')), h('span', { class: 'ct' }));
   const dlB = h('button', { class: 'wc-nb', onclick: () => { B.pop = B.pop === 'dl' ? null : 'dl'; sfx.tick(); drawPop(); } }, svg('down'), h('span', { class: 'lb' }, T('Téléchargements', 'Downloads')), h('span', { class: 'ct' }));
   const load = h('i', { class: 'wc-load' });
-  const nav = h('div', { class: 'wc-nav' }, back, fwd, reload, addr, mobB, kcB, dlB, load);
+  const nav = h('div', { class: 'wc-nav' }, back, fwd, reload, addr, mobB, kcB, dlB, wB, load);
   const hand = h('section', { class: 'wc-hand', hidden: true });
   const view = h('div', { class: 'wc-view' }), gut = h('aside', { class: 'wc-gut' }, h('b', {}, T('Version iPhone', 'iPhone version')), h('span', {})), cur = h('i', { class: 'wc-cur' }); let page = h('div', { class: 'wc-page' });
   view.append(gut, page, cur);
@@ -88,14 +107,16 @@ function make(app, w) {
   function drawTabs() {
     const agTab = B.agent && Date.now() - B.agent.at < 5000 ? B.agent.tab : null;
     tl.replaceChildren(...B.tabs.map(t => { const e = t.hist[t.i], site = SITES[HOST(e.url || '')];
+      if (t.pin) return h('div', { class: 'wc-tab pin' + (t.id === B.active ? ' on' : ''), 'data-nodrag': '', role: 'tab', 'aria-selected': t.id === B.active, tabindex: '0', title: T('Veille', 'Watch'),
+        onclick: () => { B.active = t.id; sfx.tick(); drawAll(); }, onkeydown: ev => { if (ev.key === 'Enter') { B.active = t.id; drawAll(); } } }, h('i', { class: 'fv' }, svg('eye')), h('span', { class: 'tt' }, T('Veille', 'Watch')));
       return h('div', { class: 'wc-tab' + (t.id === B.active ? ' on' : '') + (t.id === agTab ? ' ag' : ''), 'data-nodrag': '', role: 'tab', 'aria-selected': t.id === B.active, tabindex: '0', title: e.title || T('Nouvel onglet', 'New tab'),
         onclick: ev => { if (ev.target.closest('.x')) return; B.active = t.id; sfx.tick(); drawAll(); }, onkeydown: ev => { if (ev.key === 'Enter') { B.active = t.id; drawAll(); } } },
       h('i', { class: 'fv', style: site && t.id !== agTab ? { background: site[1] } : {} }, t.id === agTab ? svg('sparkles') : site ? site[0] : svg('globe')), h('span', { class: 'tt' }, t.loading && !e.title ? T('Chargement…', 'Loading…') : e.title || T('Nouvel onglet', 'New tab')),
       h('button', { class: 'x', 'aria-label': T('Fermer l’onglet', 'Close tab'), title: T('Fermer l’onglet', 'Close tab'), onclick: () => closeTab(t.id) }, svg('x'))); }));
-    newB.disabled = B.tabs.length >= 6;
+    newB.disabled = B.tabs.length >= 7;
   }
   const ACT = { navigate: ['navigation', 'navigation'], read: ['lecture de la page', 'reading the page'], click: ['clic', 'click'], tap: ['appui tactile', 'touch tap'], type: ['saisie', 'typing'], upload: ['envoi de fichiers', 'file upload'], wait: ['attente', 'waiting'], downloads: ['téléchargements', 'downloads'], mobile: ['version iPhone', 'iPhone version'],
-    keychain: ['identifiant du Trousseau', 'Keychain sign-in'], tabs: ['onglets', 'tabs'], handoff: ['attente de votre action', 'waiting for you'], screenshot: ['capture d’écran', 'screenshot'] };
+    keychain: ['identifiant du Trousseau', 'Keychain sign-in'], watch: ['lecture de la veille', 'reading the watch'], tabs: ['onglets', 'tabs'], handoff: ['attente de votre action', 'waiting for you'], screenshot: ['capture d’écran', 'screenshot'] };
   function drawBubble() {
     clearTimeout(bubbleTimer); const a = B.agent, left = a ? 5000 - (Date.now() - a.at) : 0;
     if (left <= 0) { bubSlot.replaceChildren(); return; }
@@ -106,7 +127,8 @@ function make(app, w) {
     const t = tab(), e = entry();
     back.disabled = t.i < 1; fwd.disabled = t.i >= t.hist.length - 1;
     reload.replaceChildren(svg(t.loading ? 'x' : 'reload')); reload.title = t.loading ? T('Arrêter le chargement', 'Stop loading') : T('Recharger la page', 'Reload page'); reload.setAttribute('aria-label', reload.title);
-    if (!B.editing) addr.value = e.url ? 'https://' + e.url : '';
+    if (!B.editing) addr.value = e.page === 'watch' ? e.url : e.url ? 'https://' + e.url : '';
+    wB.querySelector('.ct').textContent = unread() || ''; wB.classList.toggle('cur', !!tab().pin);
     const site = siteOf(e); mobB.classList.toggle('on', isMobile()); mobB.setAttribute('aria-pressed', isMobile()); mobB.disabled = !site;
     mobB.title = site ? (isMobile() ? T(`Revenir à la version ordinateur pour ${site}`, `Back to the desktop version for ${site}`) : T(`Afficher ${site} en version iPhone`, `Show ${site} as the iPhone version`)) : T('Ouvrez d’abord un site.', 'Open a site first.');
     const act = B.downloads.filter(d => d.pct < 100).length; dlB.querySelector('.ct').textContent = B.downloads.length ? (act || B.downloads.length) : ''; dlB.style.color = act ? 'var(--s-ok)' : '';
@@ -130,6 +152,7 @@ function make(app, w) {
 
   /* ---------- navigation ---------- */
   async function go(raw, o = {}) {
+    if (/^wclaude:\/\/(veille|watch)/i.test(String(raw).trim())) { B.active = B.tabs[0].id; drawAll(true); return; }
     const t = tab(), e = parse(raw); if (!e) return;
     if (e.page === 'orders' && !B.logged) { e.page = 'login'; e.url = 'clavier.example/compte'; e.title = T('Connexion', 'Sign in') + ' · Clavier&Co'; e.st = { step: 'form' }; }
     t.loading = true; drawNav(); drawTabs(); sfx.tick(); await wait(reduced() ? 0 : 380); if (!alive() || !t.loading) return;
@@ -137,8 +160,8 @@ function make(app, w) {
     drawAll(true);
   }
   function hist(d) { const t = tab(), i = t.i + d; if (i < 0 || i >= t.hist.length) return; t.i = i; sfx.tick(); drawAll(true); }
-  function newTab(raw, quiet) { if (B.tabs.length >= 6) return null; const t = mkTab(raw); B.tabs.push(t); B.active = t.id; sfx.pop(); drawAll(true); if (!raw && !quiet) after(() => addr.focus({ preventScroll: true }), 0); return t; }
-  function closeTab(id) { const i = B.tabs.findIndex(t => t.id === id); B.tabs.splice(i, 1); if (!B.tabs.length) B.tabs.push(mkTab()); if (B.active === id) B.active = B.tabs[Math.min(i, B.tabs.length - 1)].id; sfx.close(); drawAll(true); }
+  function newTab(raw, quiet) { if (B.tabs.length >= 7) return null; const t = mkTab(raw); B.tabs.push(t); B.active = t.id; sfx.pop(); drawAll(true); if (!raw && !quiet) after(() => addr.focus({ preventScroll: true }), 0); return t; }
+  function closeTab(id) { const i = B.tabs.findIndex(t => t.id === id); if (i < 0 || B.tabs[i].pin) return; B.tabs.splice(i, 1); if (!B.tabs.some(t => !t.pin)) B.tabs.push(mkTab()); if (B.active === id) B.active = B.tabs[Math.min(i, B.tabs.length - 1)].id; sfx.close(); drawAll(true); }
   function toggleMobile(on) { const s = siteOf(entry()); if (!s) return; const v = on === undefined ? !B.mobile.has(s) : on; v ? B.mobile.add(s) : B.mobile.delete(s); sfx.swap(); drawAll(true); }
   function drawAll(fade) { drawTabs(); drawNav(); drawHand(); drawView(fade); drawBubble(); }
 
@@ -179,12 +202,36 @@ function make(app, w) {
     profile: () => h('div', {}, h('div', { class: 'wc-de wc-gate' }, h('div', { class: 'wc-av' }), h('h2', {}, '@stephan'), h('p', { 'data-r': 'gate' }, T('Ce profil ne s’affiche que sur iPhone.', 'This profile only shows on iPhone.')), h('div', { class: 'wc-qr' }, ...Array.from({ length: 81 }, (_, i) => h('i', { class: (i * 7 + (i >> 2)) % 3 ? '' : 'o' }))), h('p', {}, T('Ouvrez l’application mobile pour le voir.', 'Open the mobile app to view it.'))),
       h('div', { class: 'wc-mo' }, h('div', { class: 'wc-c' }, h('div', { style: { display: 'flex', gap: '16px', alignItems: 'center' } }, h('div', { class: 'wc-av' }), h('div', {}, h('h3', {}, '@stephan'), h('p', { 'data-r': 'bio' }, T('Applis Mac, vidéo et un peu de Skyrim.', 'Mac apps, video and a bit of Skyrim.')))),
         h('p', {}, T('9 publications · 1 204 abonnés', '9 posts · 1,204 followers')), h('div', { class: 'wc-ph' }, ...['#f472b6', '#38bdf8', '#fbbf24', '#4ade80', '#c084fc', '#fb923c', '#60a5fa', '#f87171', '#2dd4bf'].map(c => h('i', { style: { background: c } })))))),
+    watch: () => {
+      const srcs = WSRC.filter(x => true), sel = B.wsel, its = B.witems.filter(x => sel === 'all' || x.s === sel), un = its.filter(x => !x.read);
+      const cnt = id => B.witems.filter(x => !x.read && x.s === id).length;
+      const groups = [...new Set(srcs.map(x => x.g[lang() === 'fr' ? 0 : 1]))];
+      const row = (id, label, extra) => h('button', { class: 'wv-row' + (sel === id ? ' on' : ''), onclick: () => { B.wsel = id; sfx.tick(); drawView(); } }, ...extra, h('b', {}, label));
+      const side = h('aside', { class: 'wv-side' }, h('button', { class: 'wc-nb', style: { justifyContent: 'center', marginBottom: '8px' }, onclick: () => toast({ icon: icon(app.id), title: app.id, body: T('Ouvrirait le dialogue « Ajouter une source » : adresse, groupe, fréquence, zone, mots-clés et note pour l’agent.', 'Would open the “Add a source” dialog: address, group, frequency, area, keywords and note for the agent.') }) }, svg('plus'), T('Ajouter une source', 'Add a source')),
+        row('all', T('Tout', 'All'), [unread() ? h('span', { class: 'n', style: { order: 2 } }, String(unread())) : '']),
+        ...groups.flatMap(g => [h('div', { class: 'wv-gh' }, g), ...srcs.filter(x => x.g[lang() === 'fr' ? 0 : 1] === g).map(x => { const c = cnt(x.id), st = x.st === 'needs' ? 'wn' : c ? 'new' : 'ok';
+          return h('button', { class: 'wv-row' + (sel === x.id ? ' on' : ''), onclick: () => { B.wsel = x.id; sfx.tick(); drawView(); } }, h('i', { class: 'dot ' + st }), h('b', {}, x.n), c ? h('span', { class: 'n' }, String(c)) : x.st === 'needs' ? h('span', { class: 'st' }, svg('hand')) : ''); })]),
+        h('div', { class: 'wv-last' }, T('dernier passage 14:02', 'last pass 14:02')));
+      const src = id => WSRC.find(x => x.id === id);
+      const card = it => { const s0 = src(it.s); return h('div', { class: 'wv-card' }, h('div', { class: 'ch' }, h('i', { class: 'dot ' + (it.read ? 'ok' : 'new') }), h('span', { class: 'src' }, s0.n), h('span', { class: 'bdg' + (s0.k[0] === 'Version' || s0.k[0] === 'GitHub' ? ' ac' : '') }, s0.k[lang() === 'fr' ? 0 : 1]), h('span', { class: 'when' }, it.at)),
+        h('div', { class: 'ct' }, it.title), h('div', { class: 'diff' }, ...it.lines.map(l => h('span', {}, '+ ' + l))),
+        s0.note ? h('div', { class: 'note' }, h('i', {}, svg('sparkles')), h('span', {}, T('Pour l’agent IA : ', 'For the AI agent: ') + s0.note[lang() === 'fr' ? 0 : 1])) : null,
+        h('div', { class: 'acts' }, h('button', { class: 'wc-nb', onclick: () => toast({ icon: icon(app.id), title: app.id, body: T('Ouvrirait la page dans un nouvel onglet.', 'Would open the page in a new tab.') }) }, T('Ouvrir la page', 'Open the page')), it.read ? null : h('button', { class: 'wc-nb', onclick: () => { it.read = true; sfx.done(); drawAll(); } }, T('Marquer comme lu', 'Mark as read')))); };
+      const item = it => it.id === B.wopen ? card(it) : h('button', { class: 'wv-it' + (it.read ? ' rd' : ''), onclick: () => { B.wopen = it.id; sfx.tick(); drawView(); } }, h('i', { class: 'dot ' + (it.read ? 'ok' : 'new') }), h('span', { class: 'src' }, src(it.s).n), h('span', { class: 'ct' }, it.title), h('span', { class: 'when' }, it.at));
+      const s1 = sel !== 'all' && src(sel);
+      return h('div', { class: 'wv' }, side, h('div', { class: 'wv-main' }, h('div', { class: 'wv-head' }, h('h2', {}, `${s1 ? s1.n : T('Tout', 'All')} · ${un.length} ${T(un.length > 1 ? 'non lus' : 'non lu', 'unread')}`),
+        h('button', { class: 'wc-nb', onclick: () => { sfx.tick(); toast({ icon: icon(app.id), title: app.id, body: T('Relève lancée : pages lues dans une vue cachée, flux et releases GitHub. Aucune IA, aucune protection contournée.', 'Check started: pages read in a hidden view, feeds and GitHub releases. No AI, no protection bypassed.') }); } }, svg('reload'), T('Vérifier maintenant', 'Check now')),
+        un.length ? h('button', { class: 'wc-nb', onclick: () => { its.forEach(x => { x.read = true; }); sfx.done(); drawAll(); } }, T('Tout marquer lu', 'Mark all read')) : null),
+        s1 && s1.st === 'needs' ? h('p', { class: 'wv-needs' }, T('Main demandée : cette page demande une connexion. wCLAUDE ne contourne jamais ces protections ; l’agent vous passe la main.', 'Needs you: this page asks for a sign-in. wCLAUDE never gets around these protections; the agent hands over to you.')) : null,
+        ...un.map(item), un.length ? null : h('p', { class: 'wv-none' }, T('Rien de nouveau.', 'Nothing new.')),
+        ...(its.some(x => x.read) ? [h('div', { class: 'wv-gh' }, T('Déjà lus', 'Already read')), ...its.filter(x => x.read).map(item)] : [])));
+    },
     nf: () => h('div', {}, h('div', { class: 'wc-c' }, h('h2', {}, T('Page introuvable', 'Page not found')), h('p', {}, T('Cette adresse n’existe pas dans la démo. Essayez clavier.example, partage.example ou reseau.example.', 'This address does not exist in the demo. Try clavier.example, partage.example or reseau.example.'))))
   };
   function drawView(fade) {
     const e = entry(), mo = isMobile() && e.page !== 'new';
     view.classList.toggle('mo', mo); gut.querySelector('span').textContent = siteOf(e);
-    const pg = h('div', { class: 'wc-page' + (e.page === 'new' ? ' dark' : '') + (fade ? ' wc-fade' : '') }, PAGES[e.page](e));
+    const pg = h('div', { class: 'wc-page' + (e.page === 'new' || e.page === 'watch' ? ' dark' : '') + (fade ? ' wc-fade' : '') }, PAGES[e.page](e));
     const st = page.scrollTop; page.replaceWith(pg); page = pg; pg.scrollTop = fade ? 0 : st;
     pg.addEventListener('pointerdown', () => { if (B.pop) { B.pop = null; drawPop(); } });
   }
@@ -224,21 +271,22 @@ function make(app, w) {
     { id: 'a', t: ['Trouver un clavier', 'Find a keyboard'], p: ['Trouvez un clavier mécanique à moins de 100 € et ouvrez sa fiche.', 'Find a mechanical keyboard under $100 and open its page.'], n: 9 },
     { id: 'b', t: ['Télécharger une facture', 'Download an invoice'], p: ['Connectez-vous à mon compte clavier.example et téléchargez ma dernière facture.', 'Sign in to my clavier.example account and download my latest invoice.'], n: 12 },
     { id: 'c', t: ['Envoyer une vidéo de 241 Mo', 'Upload a 241 MB video'], p: ['Envoyez la vidéo rushes_trailer.mov (241 Mo) sur partage.example.', 'Upload rushes_trailer.mov (241 MB) to partage.example.'], n: 6 },
-    { id: 'd', t: ['Ouvrir un profil mobile', 'Open a mobile profile'], p: ['Ouvrez le profil @stephan sur reseau.example : il ne s’affiche que sur iPhone.', 'Open the @stephan profile on reseau.example: it only shows on iPhone.'], n: 5 }
+    { id: 'd', t: ['Ouvrir un profil mobile', 'Open a mobile profile'], p: ['Ouvrez le profil @stephan sur reseau.example : il ne s’affiche que sur iPhone.', 'Open the @stephan profile on reseau.example: it only shows on iPhone.'], n: 5 },
+    { id: 'e', t: ['Lire la veille', 'Read the watch'], p: ['Quoi de neuf dans ma veille ?', 'What is new in my watch?'], n: 2 }
   ];
   const tk = () => TASKS.find(x => x.id === A.task);
   let mcpOpen = false;
   function drawSide() {
     const sc = chat.scrollTop;
     side.replaceChildren(h('div', { class: 'wc-agh' }, h('h3', {}, T('Agent IA', 'AI agent')), dlBtn(app)),
-      h('p', { class: 'wc-sub' }, h('b', {}, AGENT), T(' · connecté par MCP · 33 outils', ' · connected through MCP · 33 tools')),
+      h('p', { class: 'wc-sub' }, h('b', {}, AGENT), T(' · connecté par MCP · 39 outils', ' · connected through MCP · 39 tools')),
       h('div', { class: 'wc-tasks' }, ...TASKS.map(x => h('button', { class: 'wc-task' + (A.task === x.id ? ' on' : ''), disabled: A.run, onclick: () => { A.task = x.id; sfx.tick(); chat.replaceChildren(); prog.style.width = '0%'; drawSide(); } }, h('b', {}, T(x.t[0], x.t[1])), h('small', {}, '« ' + T(x.p[0], x.p[1]) + ' »')))),
       h('div', { class: 'wc-prog' }, prog), chat,
       h('div', { class: 'wc-agf' }, A.run ? h('button', { class: 'sbtn', onclick: () => { A.cancel = true; if (B.handoff) B.handoff.resolve('cancel'); } }, T('Arrêter', 'Stop')) : runB,
         h('button', { class: 'sbtn', onclick: copyMcp }, T('Copier la configuration MCP', 'Copy MCP configuration')), mcpOpen ? h('pre', { class: 'wc-mcp' }, MCP) : null));
     runB.disabled = A.run; chat.scrollTop = sc;
   }
-  const MCP = 'claude mcp add --scope user wclaude -- "$HOME/Applications/Applications Personnelles/wCLAUDE.app/Contents/Resources/app/app/bin/wclaude-mcp"';
+  const MCP = 'claude mcp add --scope user wclaude -- "/Applications/wCLAUDE.app/Contents/Resources/app/app/bin/wclaude-mcp"';
   async function copyMcp() { try { await navigator.clipboard.writeText(MCP); } catch { /* sans presse-papiers */ } mcpOpen = true; sfx.done(); drawSide(); toast({ icon: icon(app.id), title: app.id, body: T('Configuration copiée. Collez-la dans les réglages MCP de votre agent.', 'Configuration copied. Paste it into your agent’s MCP settings.') }); }
 
   /** Une ligne du journal : outil, argument, résultat. */
@@ -313,6 +361,15 @@ function make(app, w) {
       await tool('browser_screenshot', '', 'screenshot', async () => wait(500), T('capture de la version iPhone', 'screenshot of the iPhone version'));
       await say(T('Le profil n’existait que sur mobile : j’ai passé reseau.example en version iPhone, et il s’affiche. Le réglage est retenu pour ce site.', 'The profile only existed on mobile: I switched reseau.example to the iPhone version, and it shows. The setting is remembered for this site.'));
     }
+  };
+  TASK_FN.e = async function () {
+    if (B.active !== B.tabs[0].id) { B.active = B.tabs[0].id; A.tabId = B.active; drawAll(true); }
+    const un = B.witems.filter(x => !x.read);
+    await tool('watch_digest', '', 'watch', async () => wait(600), () => T(`${un.length} non lus · 5 sources · « main demandée » : GPTK, Apple`, `${un.length} unread · 5 sources · needs you: GPTK, Apple`));
+    if (!un.length) { await say(T('Rien de nouveau dans votre veille depuis ma dernière lecture.', 'Nothing new in your watch since my last read.')); return; }
+    await tool('watch_read', `{"ids":[${un.map(x => x.id).join(',')}]}`, 'watch', async () => { await wait(400); un.forEach(x => { x.read = true; }); drawAll(); }, T(`${un.length} éléments marqués lus`, `${un.length} items marked read`));
+    await say(T('Trois nouveautés pendant votre absence. CrossOver 27 Preview 1 est sorti avec un build ARM64 natif, sans Rosetta 2 : c’est ce que vous surveillez pour DXMT et D3DMetal. Community Shaders passe en v1.4.3 et ENB en v0.506. La page GPTK d’Apple demande une connexion : je peux vous passer la main pour la lire.',
+      'Three new items while you were away. CrossOver 27 Preview 1 is out with a native ARM64 build, no Rosetta 2: that is what you watch for DXMT and D3DMetal. Community Shaders moves to v1.4.3 and ENB to v0.506. Apple’s GPTK page asks for a sign-in: I can hand over so you can read it.'));
   };
   async function runTask() {
     if (A.run) return; const t = tk();
