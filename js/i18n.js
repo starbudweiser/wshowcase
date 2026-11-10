@@ -97,7 +97,7 @@ export function setLang(l) {
   L = l; store.set('lang', l); document.documentElement.lang = l; emit('lang', l);
 }
 export function applyStatic() {
-  document.querySelectorAll('[data-i]').forEach(e => { e.textContent = t(e.dataset.i, e.dataset.n ? { n: e.dataset.n } : null); });
+  document.querySelectorAll('[data-i]').forEach(e => { if (/^\d+$/.test(e.dataset.i)) return; e.textContent = t(e.dataset.i, e.dataset.n ? { n: e.dataset.n } : null); });
   document.querySelectorAll('[data-ia]').forEach(e => e.setAttribute('aria-label', t(e.dataset.ia)));
   document.title = L === 'fr' ? 'wSHOWCASE : testez mes applications Mac avant de les télécharger' : 'wSHOWCASE: try my Mac apps before you download them';
 }

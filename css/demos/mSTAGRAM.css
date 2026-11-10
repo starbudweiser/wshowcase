@@ -1,0 +1,95 @@
+/* mSTAGRAM : iPhone 17 Pro Max (écran 440 × 956 pt) réduit à l'échelle de la scène, avec l'interface téléphone d'Instagram (thème sombre). Classes préfixées msta-. */
+.win.msta-win{background:transparent;box-shadow:none;border:0;backdrop-filter:none;-webkit-backdrop-filter:none;overflow:visible;border-radius:0;pointer-events:none}
+.win.msta-win .wbody{padding:0;background:none}
+.win.msta-win .msta-phone,.win.msta-win .msta-strip,.win.msta-win .msta-scrim{pointer-events:auto}
+.msta-root{position:relative;flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;color:#f5f5f5}
+.msta-root *{box-sizing:border-box}
+.msta-wrap{position:relative;flex:none;width:calc(466px*var(--k));height:calc(982px*var(--k))}
+.msta-phone{position:absolute;left:0;top:0;width:466px;height:982px;transform:scale(var(--k));transform-origin:0 0;filter:drop-shadow(0 16px 30px rgba(0,0,0,.45))}
+.msta-dev{position:relative;width:466px;height:982px}
+.msta-body{position:absolute;inset:0;border-radius:72px;background:linear-gradient(150deg,var(--fa),var(--fb) 50%,var(--fa));border:1.5px solid rgba(255,255,255,.35);transition:background .3s}
+.msta-bezel{position:absolute;inset:6px;border-radius:66px;background:#000}
+.msta-btn{position:absolute;width:5px;border-radius:3px;background:linear-gradient(90deg,var(--fb),var(--fa))}.msta-btn.b1{left:-3px;top:150px;height:36px}.msta-btn.b2{left:-3px;top:214px;height:64px}.msta-btn.b3{left:-3px;top:292px;height:64px}.msta-btn.b4{right:-3px;top:240px;height:100px}
+.msta-screen{position:absolute;left:13px;top:13px;width:440px;height:956px;border-radius:56px;overflow:hidden;background:#000}
+.msta-page{position:absolute;left:0;right:0;top:54px;bottom:24px;display:flex;flex-direction:column;background:#000;overflow:hidden}
+.msta-status{position:absolute;left:0;top:0;width:100%;height:54px;background:#0c0e12;display:flex;justify-content:space-between;align-items:flex-start;padding:17px 36px 0 52px;color:#fff;z-index:5}
+.msta-clock{font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;line-height:22px}
+.msta-sig{display:inline-flex;margin-top:4px}
+.msta-island{position:absolute;left:157px;top:11px;width:126px;height:37px;border-radius:20px;background:#000;z-index:6;display:flex;align-items:center;gap:8px;justify-content:center;overflow:hidden;transition:width .35s cubic-bezier(.3,.8,.3,1),left .35s cubic-bezier(.3,.8,.3,1)}
+.msta-island i{flex:none;width:0;height:12px;border-radius:50%;opacity:0;transition:opacity .2s}.msta-island span{font-size:13px;font-weight:600;white-space:nowrap;opacity:0;max-width:0;overflow:hidden;transition:opacity .2s}
+.msta-island.on{left:105px;width:230px}.msta-island.on i{width:12px;opacity:1}.msta-island.on span{opacity:1;max-width:190px}
+.msta-home{position:absolute;left:0;bottom:0;width:100%;height:24px;background:#0c0e12;z-index:5}.msta-home i{position:absolute;left:150px;bottom:8px;width:139px;height:5px;border-radius:3px;background:rgba(255,255,255,.9)}
+.msta-prog{position:absolute;left:0;top:0;height:2px;width:0;background:#0095f6;z-index:9}.msta-prog.run{animation:msta-load .7s ease-out forwards}
+@keyframes msta-load{from{width:0;opacity:1}85%{width:92%;opacity:1}to{width:100%;opacity:0}}
+
+/* barre de commandes sous le téléphone (menus Navigation et Coloris de l'appli) */
+.msta-strip{flex:none;width:440px;height:36px;display:flex;align-items:center;gap:6px;padding:0 10px 0 14px;background:var(--s-raised);border:1px solid var(--s-bd);border-radius:4px;color:var(--s-t);font-size:12px}
+.msta-gap{flex:1}
+.msta-cb{width:26px;height:26px;border:0;border-radius:4px;background:none;color:var(--s-tm);padding:0;display:inline-flex;align-items:center;justify-content:center}.msta-cb:hover:not(:disabled){background:var(--s-ctl);color:var(--s-ts)}.msta-cb:disabled{opacity:.35}
+.msta-sep{width:1px;height:18px;background:var(--s-bd);margin:0 4px}
+.msta-dots{display:inline-flex;gap:6px;align-items:center}
+.msta-dot{width:16px;height:16px;border-radius:50%;border:0;padding:0;background:linear-gradient(135deg,var(--c1),var(--c2))}.msta-dot.on{outline:2px solid var(--s-ts);outline-offset:2px}.msta-dot:hover{filter:brightness(1.15)}
+.msta-dl{height:26px;padding:0 12px;border:0;border-radius:4px;background:var(--s-ctl);color:var(--s-ts);font-size:12px;font-weight:700;letter-spacing:.03em}.msta-dl:disabled{opacity:.4}.msta-dl:hover:not(:disabled){filter:brightness(1.18)}
+.msta-cb:focus-visible,.msta-dot:focus-visible,.msta-dl:focus-visible,.msta-t:focus-visible,.msta-b:focus-visible,.msta-ok:focus-visible{outline:2px solid var(--s-focus);outline-offset:2px}
+.msta-scrim{position:absolute;inset:0;z-index:50;background:rgba(0,0,0,.5);display:grid;place-items:center}
+.msta-about{width:320px;background:var(--s-surf);border:1px solid var(--s-bd);border-radius:12px;padding:24px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;color:var(--s-t);font-size:13px}.msta-about img{width:84px;height:84px}.msta-about b{font-size:17px;color:var(--s-ts)}.msta-about p{margin:0;line-height:1.45}.msta-about small{color:var(--s-sub);font-size:12px;line-height:1.4}
+.msta-ok{margin-top:8px;height:36px;padding:0 24px;border:0;border-radius:4px;background:var(--s-accf);color:#fff;font-weight:700;letter-spacing:.025em}
+
+/* interface Instagram (version téléphone, sombre) */
+.msta-top{flex:none;min-height:44px;border-bottom:1px solid #262626;background:#000;z-index:3}.msta-top.ov{position:absolute;left:0;right:0;top:0;background:none;border:0;z-index:7}
+.msta-hd{height:44px;display:flex;align-items:center;gap:6px;padding:0 12px;font-size:16px}.msta-hd>b{flex:1;text-align:center;font-weight:600}.msta-hd>b.l{flex:none;font-size:20px;text-align:left;margin-left:4px}.msta-hd.home{padding:0 12px 0 16px}.msta-hd.ov b{text-align:left;font-size:22px;padding-left:4px}
+.msta-logo{font:italic 700 29px "Snell Roundhand","Brush Script MT","Apple Chancery",cursive!important;letter-spacing:.5px;color:#fff;flex:none!important}
+.msta-b{flex:none;border:0;background:none;color:#f5f5f5;padding:4px;display:inline-flex;align-items:center;justify-content:center}.msta-b:hover{opacity:.7}.msta-ic{display:inline-flex}
+.msta-link{border:0;background:none;color:#4cb5f9;font-size:14px;font-weight:600;padding:4px 2px}.msta-link:disabled{opacity:.4}.msta-link.mut{color:#a8a8a8;font-weight:400;padding:0;display:block;text-align:left}
+.msta-view{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;transition:opacity .2s;scroll-behavior:auto}.msta-view::-webkit-scrollbar{display:none}.msta-view.flush{scroll-snap-type:y mandatory}
+.msta-tabs{flex:none;height:50px;display:flex;justify-content:space-around;align-items:center;border-top:1px solid #262626;background:#000;z-index:3}
+.msta-t{border:0;background:none;color:#a8a8a8;padding:8px 14px;display:inline-flex}.msta-t.on{color:#fff}
+.msta-over{position:absolute;inset:0;pointer-events:none;z-index:8}.msta-over>*{pointer-events:auto}
+.msta-av{display:inline-block;flex:none;width:var(--s);height:var(--s);border-radius:50%;background:#262626 center/cover no-repeat}.msta-av.ring{box-shadow:0 0 0 1px #000,0 0 0 2px #3a3a3a}
+.msta-stories{display:flex;gap:14px;padding:12px 14px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid #262626}.msta-stories::-webkit-scrollbar{display:none}
+.msta-st{flex:none;border:0;background:none;color:#f5f5f5;display:flex;flex-direction:column;align-items:center;gap:5px;width:70px;padding:0}.msta-st small{font-size:12px;max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#e6e6e6}
+.msta-ring{display:inline-flex;padding:3px;border-radius:50%;background:conic-gradient(from 200deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5,#feda75)}.msta-ring .msta-av{box-shadow:0 0 0 3px #000}.msta-ring.me{background:#363636}
+.msta-post{padding-bottom:6px}
+.msta-ph{display:flex;align-items:center;gap:10px;padding:10px 12px}.msta-ph span{flex:1;min-width:0;display:flex;flex-direction:column}.msta-ph b{font-size:14px;font-weight:600}.msta-ph small{font-size:12px;color:#d0d0d0}
+.msta-img{position:relative;aspect-ratio:4/5;background:#1a1a1a center/cover no-repeat;cursor:pointer}
+.msta-big{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.2);opacity:0;pointer-events:none;display:inline-flex}
+.msta-pa{display:flex;align-items:center;gap:6px;padding:8px 8px 0}
+.msta-b.like.on{color:#ff3040}.msta-b.like.on svg{fill:#ff3040}.msta-b.sv.on svg{fill:#fff}
+.msta-pt{padding:6px 14px 8px;display:flex;flex-direction:column;gap:4px;font-size:14px;line-height:1.35}.msta-pt p{margin:0}.msta-pt small{font-size:11.5px;color:#a8a8a8;margin-top:2px}.msta-cms p{margin:0}
+.msta-end{margin:0;padding:24px;text-align:center;color:#a8a8a8;font-size:13px}.msta-end.big{padding:48px 24px;font-size:14px}
+.msta-xg,.msta-pg{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;grid-auto-flow:dense}
+.msta-x{position:relative;aspect-ratio:1;border:0;padding:0;background:#1a1a1a center/cover no-repeat}.msta-xg .msta-x.big{grid-column:span 2;grid-row:span 2}
+.msta-sbox{flex:1;height:36px;display:flex;align-items:center;gap:8px;padding:0 12px;border-radius:10px;background:#262626;color:#a8a8a8}.msta-sbox input{flex:1;min-width:0;border:0;background:none;color:#fff;font:15px inherit;font-family:inherit;outline:0}
+.msta-reel{position:relative;height:100%;min-height:100%;scroll-snap-align:start;background:#111 center/cover no-repeat;display:block}.msta-reel::after{content:"";position:absolute;inset:auto 0 0 0;height:45%;background:linear-gradient(transparent,rgba(0,0,0,.65));pointer-events:none}
+.msta-rside{position:absolute;right:8px;bottom:70px;z-index:2;display:flex;flex-direction:column;gap:14px;align-items:center}.msta-rside .msta-b.on{color:#ff3040}.msta-rside .msta-b.on svg{fill:#ff3040}
+.msta-rinfo{position:absolute;left:14px;right:70px;bottom:18px;z-index:2;display:flex;flex-direction:column;gap:8px;font-size:14px}.msta-rinfo p{margin:0}.msta-rinfo small{display:inline-flex;gap:6px;align-items:center;font-size:12.5px}.msta-ru{display:flex;align-items:center;gap:10px}.msta-ru b{font-weight:600}
+.msta-fol{height:28px;padding:0 12px;border:1px solid #fff;border-radius:8px;background:none;color:#fff;font-size:13px;font-weight:600}
+.msta-prof{display:flex;flex-direction:column}
+.msta-pr1{display:flex;align-items:center;gap:22px;padding:14px 16px 8px}.msta-stats{flex:1;display:flex;justify-content:space-around;text-align:center}.msta-stats span{display:flex;flex-direction:column;font-size:13px}.msta-stats b{font-size:17px;font-weight:700}
+.msta-bio{padding:4px 16px;font-size:14px;line-height:1.4}.msta-bio p{margin:2px 0 0;white-space:pre-line}.msta-bio b{font-weight:600}.msta-site{color:#e0f1ff;font-weight:600;text-decoration:none;display:inline-block;margin-top:4px}
+.msta-pb{display:flex;gap:8px;padding:12px 16px}.msta-gb{flex:1;height:32px;border:0;border-radius:8px;background:#363636;color:#fff;font-size:14px;font-weight:600}.msta-gb:hover{background:#4a4a4a}
+.msta-hl{display:flex;gap:14px;padding:4px 16px 14px}.msta-hl .msta-st{width:64px}
+.msta-ptabs{display:flex;border-top:1px solid #262626}.msta-ptabs button{flex:1;height:44px;border:0;background:none;color:#737373;border-bottom:1px solid transparent}.msta-ptabs button.on{color:#fff;border-bottom-color:#fff}
+.msta-edit{display:flex;flex-direction:column;gap:6px;padding:16px}.msta-ea{display:flex;flex-direction:column;align-items:center;gap:8px;padding:8px 0 14px}
+.msta-f{display:flex;flex-direction:column;gap:2px;border-bottom:1px solid #262626;padding:8px 0}.msta-f span{font-size:12px;color:#a8a8a8}.msta-f input,.msta-f textarea{border:0;background:none;color:#fff;font:15px inherit;font-family:inherit;outline:0;padding:4px 0;resize:none;width:100%}.msta-f:focus-within{border-bottom-color:#4cb5f9}.msta-f small{font-size:12px;color:#a8a8a8;line-height:1.35}
+.msta-cnt{align-self:flex-end;font-size:12px;color:#a8a8a8}
+.msta-primary{margin-top:10px;height:38px;border:0;border-radius:8px;background:#0095f6;color:#fff;font-size:14px;font-weight:600}.msta-primary:hover{background:#1877f2}
+.msta-flash{position:absolute;left:50%;top:10px;transform:translateX(-50%);max-width:88%;padding:10px 16px;border-radius:12px;background:#363636;color:#fff;font-size:13.5px;text-align:center;z-index:20;pointer-events:none}
+.msta-sc{position:absolute;inset:0;z-index:10;background:rgba(0,0,0,.55);display:flex;align-items:flex-end}.msta-sc.full{background:#000;align-items:stretch}
+.msta-sheet{width:100%;max-height:78%;background:#262626;border-radius:16px 16px 0 0;display:flex;flex-direction:column;padding-bottom:12px}
+.msta-grab{align-self:center;width:36px;height:4px;border-radius:2px;background:#555;margin:8px 0 4px}.msta-sht{text-align:center;font-size:15px;padding:6px 0 10px;border-bottom:1px solid #363636}
+.msta-cl{flex:1;min-height:120px;overflow:auto;padding:10px 14px;display:flex;flex-direction:column;gap:12px;scrollbar-width:none}.msta-cr{display:flex;gap:10px;font-size:14px;line-height:1.35}.msta-cr p{margin:0}
+.msta-ci{display:flex;align-items:center;gap:10px;padding:8px 14px 0;border-top:1px solid #363636}.msta-ci input{flex:1;min-width:0;border:0;background:none;color:#fff;font:14px inherit;font-family:inherit;outline:0}
+.msta-new{flex:1;display:flex;flex-direction:column;min-height:0;background:#000}
+.msta-npv{flex:none;height:300px;background:#1a1a1a center/cover no-repeat;display:grid;place-items:center;color:#a8a8a8}.msta-npv p{margin:0;font-size:14px}
+.msta-nl{margin:0;padding:10px 14px;font-size:14px;font-weight:600}.msta-ng{flex:1;min-height:0;overflow:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:2px;align-content:start;scrollbar-width:none}
+.msta-x.sel{outline:3px solid #0095f6;outline-offset:-3px}.msta-x.sel b{position:absolute;right:6px;top:6px;width:22px;height:22px;border-radius:50%;background:#0095f6;color:#fff;font-size:12px;display:grid;place-items:center}
+.msta-cap{display:flex;gap:12px;padding:14px;border-bottom:1px solid #262626}.msta-tn{flex:none;width:72px;height:90px;background:#1a1a1a center/cover no-repeat;border-radius:4px}.msta-cap textarea{flex:1;border:0;background:none;color:#fff;font:15px inherit;font-family:inherit;outline:0;resize:none}
+.msta-row{margin:0;padding:14px;border-bottom:1px solid #262626;font-size:15px}
+.msta-story{position:absolute;inset:0;z-index:12;background:#000;color:#fff}
+.msta-simg{position:absolute;inset:0;background:#111 center/cover no-repeat;animation:msta-kb 4.4s ease-out both}@keyframes msta-kb{from{transform:scale(1.02)}to{transform:scale(1.1)}}
+.msta-sbars{position:absolute;left:10px;right:10px;top:10px;display:flex;gap:4px;z-index:3}.msta-sbars i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.35);overflow:hidden}.msta-sbars i b{display:block;height:100%;width:0;background:#fff}.msta-sbars i.done b{width:100%}.msta-sbars i.run b{animation:msta-sp 4.2s linear forwards}@keyframes msta-sp{to{width:100%}}
+.msta-sh{position:absolute;left:12px;right:8px;top:22px;display:flex;align-items:center;gap:10px;z-index:3;font-size:14px}.msta-sh small{color:#ddd;font-size:12.5px}
+.msta-sl,.msta-sr{position:absolute;top:70px;bottom:70px;width:40%;border:0;background:none;z-index:2}.msta-sl{left:0}.msta-sr{right:0}
+.msta-sm{position:absolute;left:12px;right:12px;bottom:14px;height:42px;border:1px solid rgba(255,255,255,.6);border-radius:21px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-size:14px;color:#eee;z-index:3}
+@media(prefers-reduced-motion:reduce){.msta-root *{animation:none!important;transition:none!important}.msta-sbars i.run b{width:100%}}

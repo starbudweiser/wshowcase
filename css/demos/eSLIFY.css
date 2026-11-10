@@ -1,0 +1,68 @@
+/* eSLIFY : réplique de l'appli (Socle : plat, sombre, rayon 4 px, filets 1 px). Tout est sous la classe racine .eslify. */
+.eslify{flex:1;min-height:0;display:flex;flex-direction:column;background:var(--s-bg);color:var(--s-t);font-size:13px;position:relative;outline:0}
+.eslify button{font-family:inherit}
+.eslify .e-tb{height:36px;flex:none;display:flex;align-items:center;padding:0 16px;background:var(--s-raised);border-bottom:1px solid var(--s-bd);position:relative}
+.eslify .e-tt{position:absolute;left:0;right:0;text-align:center;font-size:13px;font-weight:600;color:var(--s-tm);pointer-events:none}
+.eslify .e-body{flex:1;min-height:0;display:flex;flex-direction:column;gap:12px;padding:16px}
+.eslify .e-head{display:flex;align-items:center;gap:16px;padding:12px 16px;background:var(--s-raised);border:1px solid var(--s-bd);border-radius:4px}
+.eslify .e-head b{display:block;font-size:16px;letter-spacing:.025em;color:var(--s-ts)}
+.eslify .e-head small{display:block;margin-top:4px;font-size:11.5px;line-height:1.4;color:var(--s-sub)}
+.eslify .e-lang{margin-left:auto;display:flex;gap:2px;flex:none}
+.eslify .e-lang button{height:28px;padding:0 10px;border:0;border-radius:4px;background:var(--s-ctl);color:var(--s-tm);font-weight:700;font-size:11px;letter-spacing:.05em}
+.eslify .e-lang button.on{background:var(--s-accf);color:#fff}
+.eslify .e-btns{display:flex;gap:8px;flex:none}
+.eslify .sbtn{white-space:nowrap;flex:none}.eslify .sbtn.act{margin-left:0}
+.eslify .sbtn.pulse{animation:e-pulse 1.8s ease-in-out 2}
+@keyframes e-pulse{50%{filter:brightness(1.25)}}
+.eslify .e-table{flex:1;min-height:0;display:flex;flex-direction:column;background:var(--s-sunk);border:1px solid var(--s-bd);border-radius:4px;overflow:hidden;position:relative}
+.eslify .e-table.drag{border-color:var(--s-acct)}
+.eslify .e-rows{flex:1;min-height:0;overflow:auto;scrollbar-gutter:stable;--cols:minmax(0,2.3fr) 96px 108px 124px minmax(0,1.5fr)}
+.eslify .e-th,.eslify .e-r{display:grid;grid-template-columns:var(--cols);gap:12px;align-items:center;padding:0 12px}
+.eslify .e-th{position:sticky;top:0;z-index:1;height:32px;background:var(--s-raised);border-bottom:1px solid var(--s-bd);font-size:11.5px;color:var(--s-tm)}
+.eslify .e-r{height:28px;cursor:default;user-select:none;animation:e-in .28s ease-out both;animation-delay:var(--d,0ms)}
+.eslify .e-r:hover{background:var(--s-hover)}
+.eslify .e-r.on{background:color-mix(in srgb,var(--s-accf) 32%,transparent)}
+.eslify .e-r.off{animation:none}
+.eslify .e-r.flash{animation:e-flash 1.2s ease-out}
+.eslify .e-r span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.eslify .e-r .m{font:600 12px ui-monospace,Menlo,monospace;color:var(--s-t)}
+.eslify .e-r .f{color:var(--s-sub)}
+.eslify .e-r .st{font-weight:500}
+@keyframes e-in{from{opacity:0;transform:translateY(4px)}}
+@keyframes e-flash{from{background:color-mix(in srgb,var(--s-ok) 34%,transparent)}}
+.eslify .e-empty{position:absolute;inset:32px 0 0 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:0 32px;color:var(--s-tm)}
+.eslify .e-empty img{width:56px;height:56px;opacity:.9}
+.eslify .e-empty p{margin:0;max-width:420px;line-height:1.5}
+.eslify .e-link{border:0;background:none;color:var(--s-acct);font-size:12.5px;padding:4px 8px;border-radius:4px;text-decoration:underline;text-underline-offset:3px}
+.eslify .e-link:hover{background:var(--s-hover)}
+.eslify .e-msg{margin:0;flex:none;height:54px;overflow:auto;font-size:13px;line-height:1.4;color:var(--s-tm)}
+.eslify .e-msg.ok{color:var(--s-ok)}.eslify .e-msg.dg{color:var(--s-dg)}
+.eslify .e-foot{flex:none;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.eslify .e-chk{display:flex;align-items:center;gap:12px;border:0;background:none;color:var(--s-t);font-size:13px;text-align:left;padding:4px 0}
+.eslify .e-chk .cb{flex:none}
+/* feuilles et alertes */
+.eslify .x-back{position:absolute;inset:0;z-index:30;display:grid;grid-template:minmax(0,1fr)/minmax(0,1fr);place-items:center;background:rgba(0,0,0,.5);animation:e-fade .15s ease-out}
+@keyframes e-fade{from{opacity:0}}
+.eslify .x-sheet{max-width:calc(100% - 32px);max-height:calc(100% - 32px);display:flex;flex-direction:column;background:var(--s-bg);border:1px solid var(--s-bd);border-radius:4px}
+.eslify .x-st{padding:16px 20px 0;font-size:15px;font-weight:700;color:var(--s-ts)}
+.eslify .x-sb{padding:12px 20px;display:flex;flex-direction:column;gap:12px;min-height:0;overflow:auto}
+.eslify .x-sf{display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:12px 20px 16px}
+.eslify .x-sf .x-note{margin-right:auto;flex:1;min-width:0;font-size:11.5px;color:var(--s-sub);line-height:1.4}
+.eslify .x-al{display:flex;gap:16px;padding:20px 20px 4px}
+.eslify .x-al img{width:48px;height:48px;flex:none}
+.eslify .x-al div{display:flex;flex-direction:column;gap:12px;min-width:0;line-height:1.45;overflow:auto;max-height:320px}
+.eslify .x-al b{color:var(--s-ts);font-size:13.5px}
+.eslify .x-al p{margin:0;overflow-wrap:anywhere}
+.eslify .x-sel{height:32px;background:var(--s-sunk);border:1px solid var(--s-bd);border-radius:4px;color:var(--s-t);padding:0 8px;font:inherit}
+.eslify .x-list{display:flex;flex-direction:column;background:var(--s-sunk);border:1px solid var(--s-bd);border-radius:4px;max-height:272px;overflow:auto}
+.eslify .x-li{display:flex;align-items:center;gap:12px;height:32px;padding:0 12px;border:0;background:none;color:var(--s-t);text-align:left;font-size:12.5px;flex:none}
+.eslify .x-li:hover{background:var(--s-hover)}
+.eslify .x-li .cb,.eslify .x-li .rd{flex:none}
+.eslify .x-li .n{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.eslify .x-li small{color:var(--s-sub);font-size:11px}
+.eslify .rd{width:20px;height:20px;border:1px solid var(--s-sub);border-radius:50%;background:var(--s-sunk);display:grid;place-items:center}
+.eslify .rd.on{border-color:var(--s-accf)}.eslify .rd.on::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--s-accf)}
+.eslify .x-row{display:flex;align-items:center;gap:12px}.eslify .x-row .mut{font-size:12px}
+.eslify .x-sel:focus-visible,.eslify .x-li:focus-visible{outline-offset:-2px}
+/* le « e » argenté du nom reste lisible sur le thème clair */
+:root[data-theme="light"] .eslify .lc{color:color-mix(in srgb,var(--lc) 40%,#334155)}

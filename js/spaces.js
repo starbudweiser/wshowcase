@@ -12,7 +12,7 @@ const all = (r, s) => [...r.querySelectorAll(s)];
 export function init() {
   const host = $('#sps'); host.innerHTML = '';
   S.spaces.forEach((sp, i) => {
-    const el = h('section', { class: 'space', id: 'sp-' + sp.id, 'data-i': i });
+    const el = h('section', { class: 'space', id: 'sp-' + sp.id, 'data-idx': i });
     el.style.transform = `translateX(${(i - idx()) * 100}%)`;
     el.append(h('div', { class: 'swp' }, h('div', { class: 'wl' }), h('div', { class: 'wl' })));
     host.append(el);
@@ -42,7 +42,7 @@ export function go(id, { instant = false } = {}) {
   S.cur = id; const i = idx();
   document.querySelectorAll('.space').forEach(el => {
     el.style.transitionDuration = instant ? '0s' : '';
-    el.style.transform = `translateX(${(+el.dataset.i - i) * 100}%)`;
+    el.style.transform = `translateX(${(+el.dataset.idx - i) * 100}%)`;
   });
   if (!instant) sfx.swap();
   renderBar(); emit('space', id);

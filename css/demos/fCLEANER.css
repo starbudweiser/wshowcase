@@ -1,0 +1,62 @@
+/* fCLEANER : réplique de l'appli (Socle : plat, sombre, rayon 4 px, filets 1 px). Tout est sous la classe racine .fcleaner. */
+.fcleaner{flex:1;min-height:0;display:flex;flex-direction:column;background:var(--s-bg);color:var(--s-t);font-size:13px;position:relative;outline:0}
+.fcleaner button,.fcleaner input{font-family:inherit}
+.fcleaner .f-tb{height:36px;flex:none;display:flex;align-items:center;padding:0 16px;background:var(--s-raised);border-bottom:1px solid var(--s-bd);position:relative}
+.fcleaner .f-tt{position:absolute;left:0;right:0;text-align:center;font-size:13px;font-weight:600;color:var(--s-tm);pointer-events:none}
+.fcleaner .f-body{flex:1;min-height:0;display:flex;flex-direction:column;gap:12px;padding:16px}
+.fcleaner .f-p{flex:none;background:var(--s-surf);border:1px solid var(--s-bd);border-radius:4px;padding:12px 16px}
+.fcleaner .f-p.raised{background:var(--s-raised);display:flex;flex-direction:column;gap:8px}
+.fcleaner .f-hd{display:flex;align-items:center;gap:16px}
+.fcleaner .f-hd b{font-size:16px;letter-spacing:.025em;color:var(--s-ts)}
+.fcleaner .f-bro{display:inline-block;transform-origin:70% 90%}
+.fcleaner .f-bro.sweep{animation:f-sweep .9s ease-in-out}
+@keyframes f-sweep{20%{transform:rotate(-24deg)}45%{transform:rotate(18deg)}70%{transform:rotate(-10deg)}}
+.fcleaner .f-lang{margin-left:auto;display:flex;gap:2px;padding:2px;background:var(--s-sunk);border-radius:4px}
+.fcleaner .f-lang button{height:28px;padding:0 12px;border:0;border-radius:4px;background:none;color:var(--s-tm);font-weight:700;font-size:11px;letter-spacing:.05em}
+.fcleaner .f-lang button.on{background:var(--s-hover);color:var(--s-ts)}
+.fcleaner .f-desc{margin:0;font-size:12.5px;line-height:1.5;color:var(--s-tm)}
+.fcleaner .f-path{display:flex;gap:8px}
+.fcleaner .f-in{flex:1;min-width:0;height:36px;background:var(--s-sunk);border:1px solid var(--s-bd);border-radius:4px;color:var(--s-t);padding:0 12px;font-size:13px;outline:0}
+.fcleaner .f-in:focus{border-color:var(--s-focus)}
+.fcleaner .f-in:disabled{opacity:.55}
+.fcleaner .f-p.log{flex:1;min-height:0;display:flex;flex-direction:column;gap:8px}
+.fcleaner .f-p.log h3{margin:0;font-size:14px;color:var(--s-ts)}
+.fcleaner .f-log{flex:1;min-height:0;overflow:auto;background:var(--s-sunk);border:1px solid var(--s-bd);border-radius:4px;padding:12px 16px;font:12px/1.65 ui-monospace,Menlo,monospace;color:var(--s-t)}
+.fcleaner .f-log>div{white-space:pre-wrap;overflow-wrap:anywhere;min-height:1.65em}
+.fcleaner .f-log .a{color:var(--s-acct)}.fcleaner .f-log .w{color:var(--s-wn)}.fcleaner .f-log .d{color:var(--s-dg)}.fcleaner .f-log .o{color:var(--s-ok)}.fcleaner .f-log .m{color:var(--s-sub)}.fcleaner .f-log .b{font-weight:700}
+.fcleaner .f-log .ph{color:var(--s-sub);font-family:inherit;font-size:12.5px}
+.fcleaner .f-act{display:flex;align-items:center;gap:8px}
+.fcleaner .f-st{flex:1;min-width:0;margin:0;font-size:13px;line-height:1.4;color:var(--s-tm)}
+.fcleaner .f-st.ok{color:var(--s-ok)}.fcleaner .f-st.dg{color:var(--s-dg)}
+.fcleaner .sbtn{white-space:nowrap;flex:none}
+.fcleaner .sbtn.act{margin-left:0}
+/* feuilles et alertes */
+.fcleaner .x-back{position:absolute;inset:0;z-index:30;display:grid;grid-template:minmax(0,1fr)/minmax(0,1fr);place-items:center;background:rgba(0,0,0,.5);animation:f-fade .15s ease-out}
+@keyframes f-fade{from{opacity:0}}
+.fcleaner .x-sheet{max-width:calc(100% - 32px);max-height:calc(100% - 32px);display:flex;flex-direction:column;background:var(--s-bg);border:1px solid var(--s-bd);border-radius:4px}
+.fcleaner .x-st{padding:16px 20px 0;font-size:15px;font-weight:700;color:var(--s-ts)}
+.fcleaner .x-sb{padding:12px 20px;display:flex;flex-direction:column;gap:12px;min-height:0;overflow:auto}
+.fcleaner .x-sf{display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:12px 20px 16px}
+.fcleaner .x-sf .x-note{margin-right:auto;flex:1;min-width:0;font-size:11.5px;color:var(--s-sub);line-height:1.4}
+.fcleaner .x-al{display:flex;gap:16px;padding:20px 20px 4px}
+.fcleaner .x-al img{width:48px;height:48px;flex:none}
+.fcleaner .x-al div{display:flex;flex-direction:column;gap:12px;min-width:0;line-height:1.45}
+.fcleaner .x-al b{color:var(--s-ts);font-size:13.5px}
+.fcleaner .x-al p{margin:0;overflow-wrap:anywhere;white-space:pre-line}
+.fcleaner .sbtn.dgr{background:#b91c1c;color:#fff}
+.fcleaner .x-list{display:flex;flex-direction:column;background:var(--s-sunk);border:1px solid var(--s-bd);border-radius:4px;max-height:272px;overflow:auto}
+.fcleaner .x-li{display:flex;align-items:center;gap:12px;min-height:44px;padding:8px 12px;border:0;background:none;color:var(--s-t);text-align:left;font-size:12.5px;flex:none}
+.fcleaner .x-li:hover{background:var(--s-hover)}
+.fcleaner .x-li .n{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.fcleaner .x-li .n b{font:600 12px ui-monospace,Menlo,monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fcleaner .x-li small{color:var(--s-sub);font-size:11.5px}
+.fcleaner .rd{flex:none;width:20px;height:20px;border:1px solid var(--s-sub);border-radius:50%;background:var(--s-sunk);display:grid;place-items:center}
+.fcleaner .rd.on{border-color:var(--s-accf)}.fcleaner .rd.on::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--s-accf)}
+.fcleaner .x-li:focus-visible{outline-offset:-2px}
+/* règles de filtrage */
+.fcleaner .f-rules{background:var(--s-sunk);border:1px solid var(--s-acct);border-radius:4px;padding:12px 16px;overflow:auto;max-height:420px;display:flex;flex-direction:column;gap:12px;line-height:1.5}
+.fcleaner .f-rules h4{margin:0 0 4px;font-size:14px;color:var(--s-ts)}
+.fcleaner .f-rules ul{margin:0;padding:0 0 0 20px;display:flex;flex-direction:column;gap:2px;font-size:12.5px}
+.fcleaner .f-rules code{font:12px ui-monospace,Menlo,monospace;color:var(--s-acct)}
+.fcleaner .f-rules p{margin:0;font-size:12.5px;color:var(--s-tm)}
+.fcleaner .x-h{margin:0;font-size:15px;font-weight:700;color:var(--s-ts)}

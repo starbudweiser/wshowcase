@@ -86,7 +86,7 @@ const visited = new Set(); let hashBound = false;
 async function power(what) {
   if (!macReady) return;
   S.extras.forEach(x => x.quit && x.quit());
-  [...wm.wins.keys()].forEach(id => { const w = wm.wins.get(id); w.el.remove(); wm.wins.delete(id); });
+  [...wm.wins.keys()].forEach(id => { const w = wm.wins.get(id); try { w.o.onclose && w.o.onclose(w); } catch (e) {} w.el.remove(); wm.wins.delete(id); });
   emit('wins', null);
   const mac = $('#mac'), cover = $('#boot');
   cover.hidden = false; cover.classList.add('out'); cover.getBoundingClientRect(); cover.classList.remove('out');
@@ -105,7 +105,7 @@ on('lang', async () => {
   applyStatic(); buildIntro();
   if (!macReady) return;
   const reopen = []; wm.wins.forEach(w => { if (w.render) w.render(); else if (w.redraw) w.redraw(); else if (S.apps.some(a => a.id === w.appId)) reopen.push(w.appId); });
-  reopen.forEach(id => { [...wm.wins.values()].filter(w => w.appId === id).forEach(w => { w.el.remove(); wm.wins.delete(w.id); }); launch(id); });
+  reopen.forEach(id => { [...wm.wins.values()].filter(w => w.appId === id).forEach(w => { try { w.o.onclose && w.o.onclose(w); } catch (e) {} w.el.remove(); wm.wins.delete(w.id); }); launch(id); });
 });
 
 /* ---------- démarrage ---------- */

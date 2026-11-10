@@ -1,0 +1,104 @@
+/* sKYCRASH : réplique de l'appli (Socle : plat, sombre, rayon 4 px, filets 1 px). Tout est sous la classe racine .skycrash. */
+.skycrash{flex:1;min-height:0;display:flex;flex-direction:column;background:var(--s-bg);color:var(--s-t);font-size:13px;position:relative;outline:0}
+.skycrash button,.skycrash input,.skycrash select{font-family:inherit}
+.skycrash .k-tb{height:36px;flex:none;display:flex;align-items:center;padding:0 16px;background:var(--s-raised);border-bottom:1px solid var(--s-bd);position:relative}
+.skycrash .k-tt{position:absolute;left:0;right:0;text-align:center;font-size:13px;font-weight:600;color:var(--s-tm);pointer-events:none}
+.skycrash .k-main{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,1fr)}
+.skycrash .k-left,.skycrash .k-right{display:flex;flex-direction:column;gap:12px;padding:16px;min-width:0;min-height:0}
+.skycrash .k-right{border-left:1px solid var(--s-bd)}
+.skycrash .sbtn{white-space:nowrap;flex:none;letter-spacing:.02em}
+.skycrash .sbtn.act{margin-left:0}
+.skycrash .k-btns,.skycrash .k-bot{display:flex;gap:8px;flex:none}
+.skycrash .k-btns .sbtn,.skycrash .k-bot .sbtn{flex:1;min-width:0;padding:0 8px;overflow:hidden;text-overflow:ellipsis}
+.skycrash .sbtn.dgr{background:color-mix(in srgb,var(--s-dg) 20%,var(--s-bg));color:var(--s-dg)}
+.skycrash .sbtn.dgr:hover:not(:disabled){background:color-mix(in srgb,var(--s-dg) 32%,var(--s-bg));filter:none}
+.skycrash .sbtn.dgx{background:#b91c1c;color:#fff}
+/* zone de rapport */
+.skycrash .k-rep{flex:1;min-height:96px;overflow:auto;background:var(--s-surf);border:1px solid var(--s-bd);border-radius:4px;padding:12px 16px;font:12px/1.65 ui-monospace,Menlo,monospace;color:var(--s-t);outline:0}
+.skycrash .k-rep:focus-visible{outline:2px solid var(--s-focus);outline-offset:-2px}
+.skycrash .k-ln{white-space:pre-wrap;overflow-wrap:anywhere;min-height:1.65em;animation:k-in .22s ease-out both;animation-delay:min(calc(var(--i,0)*16ms),700ms)}
+@keyframes k-in{from{opacity:0;transform:translateY(3px)}}
+.skycrash .w{color:var(--s-wn)}.skycrash .d{color:var(--s-dg)}.skycrash .o{color:var(--s-ok)}.skycrash .a{color:var(--s-acct)}.skycrash .m{color:var(--s-tm)}.skycrash .s{color:var(--s-sub)}.skycrash .b{font-weight:700}.skycrash .t{color:var(--s-ts)}
+/* liste des journaux */
+.skycrash .k-logs{flex:0 1 168px;min-height:88px;overflow:auto;background:var(--s-surf);border:1px solid var(--s-bd);border-radius:4px;padding:4px;position:relative}
+.skycrash .k-lr{display:flex;align-items:center;gap:8px;width:100%;height:32px;flex:none;padding:0 8px;border:0;border-radius:4px;background:none;color:var(--s-ts);text-align:left}
+.skycrash .k-lr:hover{background:var(--s-hover)}
+.skycrash .k-lr.new{animation:k-flash 1.6s ease-out}
+@keyframes k-flash{from{background:color-mix(in srgb,var(--s-wn) 30%,transparent)}}
+.skycrash .k-dot{flex:none;width:8px;height:8px;border-radius:50%;background:var(--s-ok);margin:0 4px}
+.skycrash .k-dot.err{background:var(--s-dg)}
+.skycrash .k-lr b{font-size:12.5px;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.skycrash .k-lr small{margin-left:auto;flex:none;font-size:11px;color:var(--s-sub);white-space:nowrap}
+.skycrash .k-none{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;padding:0 24px;color:var(--s-tm);font-size:12.5px}
+.skycrash .k-none p{margin:0;line-height:1.45}
+.skycrash .k-link{border:0;background:none;color:var(--s-acct);font-size:12.5px;padding:4px 8px;border-radius:4px;text-decoration:underline;text-underline-offset:3px}
+.skycrash .k-link:hover{background:var(--s-hover)}
+/* assistant IA */
+.skycrash .k-ah{display:flex;align-items:center;gap:12px;height:32px;flex:none}
+.skycrash .k-ah h3{margin:0;font-size:15px;color:var(--s-ts);letter-spacing:.02em;white-space:nowrap}
+.skycrash .k-kb{margin-left:auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;color:var(--s-sub)}
+.skycrash .k-chat{flex:1;min-height:96px;overflow:auto;background:var(--s-surf);border:1px solid var(--s-bd);border-radius:4px;padding:12px;line-height:1.5;outline:0}
+.skycrash .k-chat:focus-visible{outline:2px solid var(--s-focus);outline-offset:-2px}
+.skycrash .k-ph{color:var(--s-sub)}
+.skycrash .k-msg{margin-bottom:12px}
+.skycrash .k-who{display:block;font-weight:800;font-size:13px}
+.skycrash .k-who.you{color:var(--s-acct)}.skycrash .k-who.ai{color:var(--s-wn)}.skycrash .k-who.er{color:var(--s-dg)}
+.skycrash .k-txt{overflow-wrap:anywhere}
+.skycrash .k-l{display:block;margin-top:8px;overflow-wrap:anywhere}
+.skycrash .k-l i{font-style:normal;font-weight:800;letter-spacing:1px;font-size:12px;margin-right:8px}
+.skycrash .k-b{display:block;padding-left:8px;margin:2px 0;overflow-wrap:anywhere}
+.skycrash .k-b i{font-style:normal;font-weight:700;margin-right:6px}
+.skycrash .k-verdict{color:var(--s-wn)}.skycrash .k-cause{color:var(--s-dg)}.skycrash .k-confiance,.skycrash .k-preuves{color:var(--s-acct)}.skycrash .k-actions{color:var(--s-ok)}.skycrash .k-manque{color:var(--s-tm)}
+.skycrash .k-body{color:var(--s-t)}.skycrash .k-body strong{color:var(--s-ts);font-weight:700}.skycrash .k-body code{color:var(--s-wn);font:12px ui-monospace,Menlo,monospace}
+.skycrash .k-lv-ok{color:var(--s-ok);font-weight:700}.skycrash .k-lv-wn{color:var(--s-wn);font-weight:700}.skycrash .k-lv-dg{color:var(--s-dg);font-weight:700}
+.skycrash .k-think{color:var(--s-sub)}
+.skycrash .k-think i{display:inline-block;width:4px;height:4px;border-radius:50%;background:currentColor;margin-left:4px;vertical-align:middle;animation:k-dot 1s ease-in-out infinite}
+.skycrash .k-think i:nth-child(2){animation-delay:.15s}.skycrash .k-think i:nth-child(3){animation-delay:.3s}
+@keyframes k-dot{0%,100%{opacity:.25}40%{opacity:1}}
+.skycrash .k-caret{display:inline-block;width:6px;height:1em;background:var(--s-wn);margin-left:2px;vertical-align:text-bottom;animation:k-blink .8s steps(2) infinite}
+@keyframes k-blink{50%{opacity:0}}
+.skycrash .k-ask{display:flex;gap:8px;flex:none}
+.skycrash .k-in,.skycrash .k-f{flex:1;min-width:0;height:36px;background:var(--s-sunk);border:1px solid var(--s-bd);border-radius:4px;color:var(--s-t);padding:0 12px;font-size:13px;outline:0}
+.skycrash .k-in:focus,.skycrash .k-f:focus{border-color:var(--s-focus)}
+.skycrash .k-right>.sbtn{width:100%}
+/* feuilles et alertes */
+.skycrash .x-back{position:absolute;inset:0;z-index:30;display:grid;grid-template:minmax(0,1fr)/minmax(0,1fr);place-items:center;background:rgba(0,0,0,.5);animation:k-fade .15s ease-out}
+@keyframes k-fade{from{opacity:0}}
+.skycrash .x-sheet{max-width:calc(100% - 32px);max-height:calc(100% - 32px);display:flex;flex-direction:column;background:var(--s-bg);border:1px solid var(--s-bd);border-radius:4px}
+.skycrash .x-sheet.big{height:calc(100% - 32px)}
+.skycrash .x-st{padding:16px 20px 0;font-size:15px;font-weight:700;color:var(--s-ts);display:flex;align-items:center;gap:12px}
+.skycrash .x-sb{padding:12px 20px;display:flex;flex-direction:column;gap:12px;min-height:0;overflow:auto;flex:1}
+.skycrash .x-sf{display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:12px 20px 16px}
+.skycrash .x-sf .x-note{margin-right:auto;flex:1;min-width:0;font-size:11.5px;color:var(--s-warn,var(--s-wn));line-height:1.4}
+.skycrash .x-al{display:flex;gap:16px;padding:20px 20px 4px}
+.skycrash .x-al img{width:48px;height:48px;flex:none}
+.skycrash .x-al div{display:flex;flex-direction:column;gap:12px;min-width:0;line-height:1.45}
+.skycrash .x-al b{color:var(--s-ts);font-size:13.5px}
+.skycrash .x-al p{margin:0;overflow-wrap:anywhere;white-space:pre-line}
+.skycrash .x-list{display:flex;flex-direction:column;background:var(--s-sunk);border:1px solid var(--s-bd);border-radius:4px;max-height:272px;overflow:auto}
+.skycrash .x-li{display:flex;align-items:center;gap:12px;min-height:44px;padding:8px 12px;border:0;background:none;color:var(--s-t);text-align:left;font-size:12.5px;flex:none}
+.skycrash .x-li:hover{background:var(--s-hover)}
+.skycrash .x-li .n{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.skycrash .x-li .n b{font:600 12px ui-monospace,Menlo,monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.skycrash .x-li small{color:var(--s-sub);font-size:11.5px}
+.skycrash .x-li.on{background:color-mix(in srgb,var(--s-accf) 30%,transparent)}
+.skycrash .x-li:focus-visible{outline-offset:-2px}
+.skycrash .k-view{flex:1;min-height:0;margin:0;overflow:auto;background:var(--s-sunk);border:1px solid var(--s-bd);border-radius:4px;padding:12px 16px;font:12px/1.65 ui-monospace,Menlo,monospace;color:var(--s-t);white-space:pre;tab-size:4;outline:0}
+.skycrash .k-view .hit{display:block;color:var(--s-dg);background:color-mix(in srgb,var(--s-dg) 14%,transparent)}
+.skycrash .k-view div{min-height:1.65em}
+/* réglages */
+.skycrash .ssegs{margin-left:0;flex-wrap:wrap}
+.skycrash .k-set{display:flex;flex-direction:column;gap:12px;overflow:auto;min-height:0;flex:1;padding-right:4px}
+.skycrash .k-row{display:flex;align-items:flex-start;gap:12px;min-height:36px}
+.skycrash .k-rl{width:168px;flex:none;font-size:12.5px;line-height:36px;color:var(--s-t)}
+.skycrash .k-rc{flex:1;min-width:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-height:36px}
+.skycrash .k-rc .k-f{flex:1 1 160px}
+.skycrash .k-ck{display:flex;align-items:flex-start;gap:12px;border:0;background:none;color:var(--s-t);font-size:12.5px;line-height:1.4;text-align:left;padding:8px 0}
+.skycrash .k-ck .cb{flex:none;margin-top:-2px}
+.skycrash .k-note{margin:0;font-size:11.5px;line-height:1.5;color:var(--s-sub)}
+.skycrash select.k-f{appearance:auto}
+.skycrash .k-fl{flex:1;display:flex;flex-direction:column;background:var(--s-sunk);border:1px solid var(--s-bd);border-radius:4px;min-height:72px;max-height:180px;overflow:auto}
+.skycrash .k-fi{border:0;background:none;color:var(--s-t);text-align:left;padding:0 12px;height:32px;flex:none;font:12px ui-monospace,Menlo,monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.skycrash .k-fi:hover{background:var(--s-hover)}.skycrash .k-fi.on{background:color-mix(in srgb,var(--s-accf) 30%,transparent)}
+.skycrash .k-stat{margin:0;min-height:18px;font-size:12px;color:var(--s-wn)}
+.skycrash .k-ssub{margin:0;font-size:11px;letter-spacing:.08em;font-weight:700;color:var(--s-sub)}

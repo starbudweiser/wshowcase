@@ -1,0 +1,52 @@
+/* mDESK, et briques communes à mDESK / mSPACES / mCLEAN : menu macOS (avec sous-menus), alerte, fenêtre « À propos », élément de barre des menus. */
+
+/* ---------- élément de la barre des menus ---------- */
+.mdesk-x{padding:0 7px}
+.mdesk-x svg{width:19px;height:19px;display:block}
+.mdesk-x.pulse svg{animation:mdesk-pulse .6s cubic-bezier(.3,.8,.3,1)}
+@keyframes mdesk-pulse{0%{transform:scale(1)}35%{transform:scale(1.28)}100%{transform:scale(1)}}
+
+/* ---------- menu macOS (NSMenu) ---------- */
+.mdesk-menu{min-width:268px;padding:6px;z-index:955;user-select:none;-webkit-user-select:none}
+.mdesk-menu .mi{grid-template-columns:18px minmax(0,1fr) auto;gap:8px;padding:4px 10px;font-size:13.5px;line-height:20px;white-space:nowrap;border-radius:7px}
+.mdesk-menu .mi .ck{display:grid;place-items:center;width:18px;font-size:13px}
+.mdesk-menu .mi .ck svg{width:15px;height:15px;display:block}
+.mdesk-menu .mi .lb{overflow:hidden;text-overflow:ellipsis}
+.mdesk-menu .mi .ks{font-size:13px;letter-spacing:.04em}
+.mdesk-menu .mi.hot:not(.dis){background:var(--accent);color:#fff}
+.mdesk-menu .mi.hot:not(.dis) .ks{color:rgba(255,255,255,.85)}
+.mdesk-menu .mi.dis.info{opacity:.62}
+.mdesk-menu .mi.sub .ks{font-size:16px;line-height:1;letter-spacing:0}
+.mdesk-hd{padding:8px 10px 3px;font-size:12px;font-weight:600;color:var(--ink3)}
+.mdesk-menu.sub{z-index:956}
+
+/* ---------- alerte (NSAlert) ---------- */
+.mdesk-scrim{position:absolute;inset:0;z-index:985;background:rgba(0,0,0,.2);animation:mdesk-fade .16s ease-out}
+@keyframes mdesk-fade{from{opacity:0}}
+.mdesk-alert{background:var(--glass-s);position:absolute;left:50%;top:200px;width:392px;margin-left:-196px;border-radius:18px;padding:22px 22px 18px;z-index:986;color:var(--ink);display:grid;grid-template-columns:56px minmax(0,1fr);gap:0 16px;box-shadow:var(--shadow);animation:mdesk-drop .22s cubic-bezier(.2,.9,.3,1.1)}
+@keyframes mdesk-drop{from{opacity:0;transform:translateY(-14px) scale(.97)}}
+.mdesk-alert>img{width:56px;height:56px;display:block;grid-row:1/3}
+.mdesk-alert h4{margin:0;font-size:13.5px;font-weight:700;line-height:1.35}
+.mdesk-alert p{margin:5px 0 0;font-size:12.5px;line-height:1.4;color:var(--ink2);white-space:pre-line}
+.mdesk-alert input{margin-top:12px;height:28px;border:0;border-radius:7px;padding:0 10px;background:var(--ctl);color:var(--ink);font:inherit;font-size:13px;outline:0;box-shadow:inset 0 0 0 1px var(--sep);width:100%}
+.mdesk-alert input:focus{box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 45%,transparent),inset 0 0 0 1px var(--accent)}
+.mdesk-alert .mdesk-bt{grid-column:2;display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+.mdesk-alert .b{border:0;border-radius:7px;min-width:72px;height:26px;padding:0 14px;font-size:13px;background:var(--ctl-h);color:var(--ink)}
+.mdesk-alert .b:hover{filter:brightness(1.08)}
+.mdesk-alert .b.def{background:var(--accent);color:#fff}
+.mdesk-alert .b.dg{color:#ff453a}.mdesk-alert .b.def.dg{background:#ff453a;color:#fff}
+
+/* ---------- À propos ---------- */
+.mdesk-ab .abi{width:84px;height:84px;display:block}
+.mdesk-ab h2 .lc{color:var(--lc)}
+.mdesk-ab p{max-width:300px}
+
+/* ---------- mDESK : simulateur d'écrans de la démo ---------- */
+.mdesk-sim{position:absolute;left:14px;top:40px;z-index:910;display:flex;align-items:center;gap:10px;height:36px;padding:0 5px 0 12px;background:#1e1e1e;border:1px solid #333;border-radius:4px;color:#aaa;font-size:11px;font-weight:700;letter-spacing:.06em;animation:mdesk-fade .3s ease-out}
+.mdesk-sim svg{width:16px;height:16px;display:block;color:#ddd;flex:none}
+.mdesk-sim .seg2{display:flex;gap:2px;padding:2px;background:#181818;border-radius:4px}
+.mdesk-sim button{height:26px;min-width:30px;padding:0 10px;border:0;border-radius:4px;background:none;color:#aaa;font:700 12px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif}
+.mdesk-sim button.on{background:#0369a1;color:#fff}
+.mdesk-sim button:not(.on):hover{background:#2c2c2c;color:#fff}
+#sps.mdesk-hide .di{opacity:0;pointer-events:none;transition:opacity .3s}
+@media(prefers-reduced-motion:reduce){.mdesk-alert,.mdesk-scrim,.mdesk-sim{animation:none}}

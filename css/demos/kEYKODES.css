@@ -1,0 +1,27 @@
+/* kEYKODES : fenêtre unique, mêmes proportions que l'appli (Socle, textes à 110 %). */
+.win.kkd-win .wbody{padding:0}
+.kkd{flex:1;min-height:0;display:flex;flex-direction:column;background:var(--s-bg);color:var(--s-t);font-size:13px}
+.kkd-bar{position:relative;flex:none;height:36px;display:flex;align-items:center;padding:0 14px;background:var(--s-bg)}
+.kkd-bar>b{position:absolute;left:0;right:0;text-align:center;font-size:13px;font-weight:600;letter-spacing:.025em;color:var(--s-tm);pointer-events:none}
+.kkd-body{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;align-items:center;padding:8px 48px 24px;outline:0;user-select:none;-webkit-user-select:none;text-align:center;cursor:default}
+.kkd-prompt{margin:16px 0 0;font-size:15.4px;line-height:20px;color:var(--s-tm);max-width:100%}
+.kkd-prompt.idle{color:var(--s-sub)}
+.kkd-caret{display:inline-block;width:2px;height:15px;margin-left:6px;vertical-align:-2px;background:var(--s-acct);animation:blink 1s steps(2) infinite}
+.kkd-flag{position:absolute;top:10px;right:16px;width:36px;height:32px;border:0;border-radius:4px;background:none;font-size:19px;line-height:1;padding:0}
+.kkd-flag:hover,.kkd-flag.on{background:var(--s-hover)}
+.kkd-menu{position:absolute;z-index:3;top:46px;right:16px;min-width:156px;padding:4px;display:flex;flex-direction:column;text-align:left;background:var(--s-raised);border:1px solid var(--s-bd);border-radius:4px}
+.kkd-mi{display:flex;align-items:center;gap:8px;height:28px;padding:0 12px 0 4px;border:0;border-radius:4px;background:none;color:var(--s-t);font-size:13px;text-align:left}
+.kkd-mi i{width:16px;flex:none;font-style:normal;text-align:center;color:var(--s-acct)}
+.kkd-mi:hover{background:var(--s-hover)}
+.kkd-mid{flex:1;min-height:0;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.kkd-mid>div{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kkd-key{font-size:17.6px;line-height:24px;font-weight:700;color:var(--s-ts)}
+.kkd-ini{font:700 35px/44px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--s-acct)}
+.kkd-ini.danger{color:var(--s-dg)}
+.kkd-dec{font:400 19.8px/28px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--s-t)}
+.kkd-chord{font-size:15.4px;line-height:22px;color:var(--s-tm)}
+.kkd-foot{margin:0;max-width:100%;font-size:11px;line-height:16px;color:var(--s-sub)}
+.kkd-key.flash{animation:kkd-flash-k .4s ease-out}
+.kkd-ini.flash{animation:kkd-flash-i .4s ease-out}
+@keyframes kkd-flash-k{from{color:var(--s-acct)}}
+@keyframes kkd-flash-i{from{color:var(--s-ts)}}

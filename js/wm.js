@@ -15,7 +15,7 @@ export function open(o) {
   if (wins.has(o.id)) { const w = wins.get(o.id); if (w.min) restore(o.id); focus(o.id); return w; }
   const sp = o.space || S.cur, W = o.w || 760, H = o.h || 500;
   cascade = (cascade + 1) % 6;
-  const x = o.x ?? Math.round((1600 - W) / 2 + (cascade - 3) * 26), y = o.y ?? Math.round(MB + (860 - MB - H) / 2 - 20 + (cascade - 3) * 20);
+  const x = o.x ?? Math.round((1600 - W) / 2 + (cascade - 3) * 26), y = o.y ?? Math.max(88, Math.round(MB + (860 - MB - H) / 2 - 20 + (cascade - 3) * 20));
   const w = { id: o.id, appId: o.appId, title: o.title, space: sp, x, y, w: W, h: H, min: false, max: false, o };
   const body = h('div', { class: 'wbody' });
   const el = h('div', { class: 'win' + (o.cls ? ' ' + o.cls : ''), role: 'dialog', 'aria-label': o.title, tabindex: '-1' });
