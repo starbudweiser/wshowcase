@@ -5,7 +5,7 @@ import { lang } from '../i18n.js';
 const loc = () => (lang() === 'fr' ? 'fr-FR' : 'en-US');
 const fmtN = (n, d = 1) => n.toLocaleString(loc(), { maximumFractionDigits: d, minimumFractionDigits: 0 });
 const sz = mb => { const fr = lang() === 'fr'; return mb >= 1024 ? fmtN(mb / 1024) + (fr ? ' Go' : ' GB') : mb >= 10 ? fmtN(Math.round(mb), 0) + (fr ? ' Mo' : ' MB') : mb >= 1 ? fmtN(mb) + (fr ? ' Mo' : ' MB') : fmtN(Math.max(1, Math.round(mb * 1024)), 0) + (fr ? ' Ko' : ' KB'); };
-const loadCss = u => new Promise(res => { css(u); const l = document.querySelector(`link[data-k="${u}"]`); if (!l || l.sheet) return res(); l.addEventListener('load', res); l.addEventListener('error', res); setTimeout(res, 800); });
+const loadCss = u => new Promise(res => { css(u); const l = document.querySelector(`link[data-k="${u}"]`); if (!l || l.sheet) return res(); l.addEventListener('load', res); l.addEventListener('error', res); setTimeout(res, 4000); });
 let BC = '#bf5af2'; const bt = s => esc(s).split('qLOOKS').join(brand('qLOOKS', BC)); /* nom de l'appli coloré dans un texte */
 const ease = k => 1 - Math.pow(1 - k, 3);
 const mmss = s => Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');

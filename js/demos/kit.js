@@ -14,5 +14,5 @@ export const num = n => n.toLocaleString(lang() === 'fr' ? 'fr-FR' : 'en-US');
 /** Charge une feuille de style propre à la démo (une seule fois). */
 export function css(url) {
   if (document.querySelector(`link[data-k="${url}"]`)) return;
-  const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = url; l.dataset.k = url; document.head.append(l);
+  const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = url + '?v=3'; l.dataset.k = url; document.head.append(l);
 }

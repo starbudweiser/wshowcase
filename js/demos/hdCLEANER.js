@@ -16,7 +16,7 @@ const sz = mb => {
   if (mb >= 1) return fmtN(mb) + ' ' + (fr ? 'Mo' : 'MB');
   return fmtN(Math.max(1, Math.round(mb * 1024)), 0) + ' ' + (fr ? 'Ko' : 'KB');
 };
-const loadCss = u => new Promise(res => { css(u); const l = document.querySelector(`link[data-k="${u}"]`); if (!l || l.sheet) return res(); l.addEventListener('load', res); l.addEventListener('error', res); setTimeout(res, 800); });
+const loadCss = u => new Promise(res => { css(u); const l = document.querySelector(`link[data-k="${u}"]`); if (!l || l.sheet) return res(); l.addEventListener('load', res); l.addEventListener('error', res); setTimeout(res, 4000); });
 
 /* ---------- icônes au trait ---------- */
 const I = {

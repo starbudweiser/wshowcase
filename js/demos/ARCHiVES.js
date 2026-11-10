@@ -11,7 +11,7 @@ const sz = mb => {
   if (mb >= 1) return fmtN(mb) + ' ' + (fr ? 'Mo' : 'MB');
   return fmtN(Math.max(1, Math.round(mb * 1024)), 0) + ' ' + (fr ? 'Ko' : 'KB');
 };
-const loadCss = u => new Promise(res => { css(u); const l = document.querySelector(`link[data-k="${u}"]`); if (!l || l.sheet) return res(); l.addEventListener('load', res); l.addEventListener('error', res); setTimeout(res, 800); });
+const loadCss = u => new Promise(res => { css(u); const l = document.querySelector(`link[data-k="${u}"]`); if (!l || l.sheet) return res(); l.addEventListener('load', res); l.addEventListener('error', res); setTimeout(res, 4000); });
 const bt = (s, c) => esc(s).split('ARCHiVES').join(brand('ARCHiVES', c)); /* nom de l'appli coloré dans un texte */
 const mid = (s, n = 34) => (s.length <= n ? s : s.slice(0, Math.ceil((n - 1) * 0.6)) + '…' + s.slice(-Math.floor((n - 1) * 0.4)));
 

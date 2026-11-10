@@ -6,7 +6,7 @@ import { lang } from '../i18n.js';
 const BRAND = '#d97757'; /* couleur argile du « w », relevée sur le logo */
 const AGENT = 'Claude Code';
 const bt = s => esc(s).split('wCLAUDE').join(brand('wCLAUDE', BRAND)); /* nom de l'appli coloré dans un texte */
-const loadCss = u => new Promise(res => { css(u); const l = document.querySelector(`link[data-k="${u}"]`); if (!l || l.sheet) return res(); l.addEventListener('load', res); l.addEventListener('error', res); setTimeout(res, 800); });
+const loadCss = u => new Promise(res => { css(u); const l = document.querySelector(`link[data-k="${u}"]`); if (!l || l.sheet) return res(); l.addEventListener('load', res); l.addEventListener('error', res); setTimeout(res, 4000); });
 const price = p => (lang() === 'fr' ? p + ' €' : '$' + p);
 
 const IC = {
