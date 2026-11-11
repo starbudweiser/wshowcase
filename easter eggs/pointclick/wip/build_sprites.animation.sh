@@ -22,6 +22,11 @@ P honey "$W/item_honey.png" 18 40
 # scène 2
 P dragon_up "$W/dragon_up.png" 64
 P dragon_down "$W/dragon_down.png" 0 --like dragon_up
+P dragon_mid1 "$W/dragon_mid1.png" 0 --like dragon_up
+P dragon_mid2 "$W/dragon_mid2.png" 0 --like dragon_up
+P bird_1 "$W/bird_1.png" 12
+for f in 2 3; do P bird_$f "$W/bird_$f.png" 0 --like bird_1; done
+P puff "$W/puff.png" 16
 P horse "$W/ch2_horse.png" 90
 for f in idle2 walkA walkB; do P horse_$f "$W/an_horse_$f.png" 0 --like horse; done
 P horse_ride "$W/var_horse_ride2.png" 0 --like horse

@@ -75,6 +75,44 @@ const KINDS = {
       }
     };
   },
+  /* zone du décor animée par images (sprites calculés par tools/gen_regions.py) : rivière, roue, mammouth, flammes, herbes */
+  frames(o) {
+    return {
+      draw(g, c, t) {
+        const A = g.animIdx && g.animIdx[o.id]; if (!A) return;
+        const seq = o.seq || [-1, ...Array.from({ length: A.n }, (_, i) => i), ...Array.from({ length: Math.max(0, A.n - 2) }, (_, i) => A.n - 2 - i)];
+        const i = seq[Math.floor((t + (o.offset || 0)) * (o.fps || 3)) % seq.length]; if (i < 0 || i >= A.n) return;
+        const im = g.animImg(o.id, i); if (im) c.drawImage(im, A.x, A.y);
+      }
+    };
+  },
+  /* oiseaux en sprites : 3 poses d'ailes (bird.1 à bird.3), qui traversent le ciel */
+  flock(o) {
+    const n = o.n ?? 4, R = rnd(o.seed || 5), bs = Array.from({ length: n }, () => ({ y: (o.y0 ?? 18) + R() * ((o.y1 ?? 70) - (o.y0 ?? 18)), sp: (o.speed ?? 14) * (0.8 + R() * 0.5), off: R() * 600, ph: R() * 6, dir: R() > 0.5 ? 1 : -1, sc: 0.5 + R() * 0.4 }));
+    return {
+      draw(g, c, t) {
+        bs.forEach(b => {
+          const im = g.spr('bird.' + ([1, 2, 3, 2][Math.floor(t * 7 + b.ph) % 4])); if (!im) return;
+          const x = ((t * b.sp + b.off) % 560) - 40, X = b.dir > 0 ? x : 480 - x, Y = Math.round(b.y + Math.sin(t * 0.8 + b.ph) * 4), w = im.width * b.sc, h = im.height * b.sc;
+          c.save(); c.translate(Math.round(X), Y); if (b.dir < 0) c.scale(-1, 1); c.drawImage(im, Math.round(-w / 2), Math.round(-h / 2), Math.round(w), Math.round(h)); c.restore();
+        });
+      }
+    };
+  },
+  /* fumée en sprites : volutes (puff) qui montent, grossissent et s'effacent */
+  puffs(o) {
+    const n = o.n ?? 7;
+    return {
+      draw(g, c, t) {
+        const im = g.spr('puff'); if (!im) return;
+        for (let i = 0; i < n; i++) {
+          const ph = (t * (o.speed ?? 0.25) + i / n) % 1, s = (o.s0 ?? 0.35) + ph * (o.s1 ?? 1.1), w = im.width * s, h = im.height * s, x = o.x + Math.sin(ph * 5 + i * 2) * 2 + ph * (o.wind ?? 10), y = o.y - ph * (o.h ?? 30);
+          c.globalAlpha = 0.75 * (1 - ph) * Math.min(1, ph * 6); c.drawImage(im, Math.round(x - w / 2), Math.round(y - h / 2), Math.round(w), Math.round(h));
+        }
+        c.globalAlpha = 1;
+      }
+    };
+  },
   /* dragon qui traverse le ciel, ailes battantes, de façon répétée ; cliquable */
   dragon(o) {
     const period = o.period ?? 34, y0 = o.y ?? 26, id = o.id || 'dragon';
@@ -85,7 +123,7 @@ const KINDS = {
       draw(g, c, t) {
         const tt = t + (o.offset ?? 6), cyc = (tt % period) / period, travel = o.travel ?? 0.7;
         if (cyc > travel) { pos = null; return; }
-        const p = cyc / travel, dirL = (o.dir ?? -1) < 0, flap = Math.floor(tt * 2.4) % 2 === 0, im = g.spr(flap ? 'dragon.up' : 'dragon.down'); if (!im) return;
+        const p = cyc / travel, dirL = (o.dir ?? -1) < 0, fi = Math.floor(tt * 4.2) % 4, flap = fi < 2, im = g.spr(g.spr('dragon.mid1') ? ['dragon.up', 'dragon.mid1', 'dragon.down', 'dragon.mid2'][fi] : (flap ? 'dragon.up' : 'dragon.down')); if (!im) return;
         const s = o.scale ?? 1, w = im.width * s, h = im.height * s, x = dirL ? 480 + w / 2 - p * (480 + w) : -w / 2 + p * (480 + w);
         const y = y0 + h / 2 + Math.sin(tt * 0.9) * 7 + (flap ? 0 : 2) + p * (o.drop ?? 14);
         pos = [x, y + h / 2, w, h];

@@ -8,7 +8,8 @@ import { CHAPTERS } from '../scenes/index.js';
 import { loadLang, makeT } from './lang.js';
 import { hasSave, loadSave, writeSave, clearSave } from './save.js';
 import { makeAmbient } from './ambient.js';
-import { SPR, ITEMS } from '../data/sheets.js';
+import * as SH from '../data/sheets.js';
+const { SPR, ITEMS } = SH, ANIM = SH.ANIM || {}, HERO = SH.HERO || null;
 
 export const W = 480, H = 270;
 const VERBS = ['walk', 'take', 'use', 'talk', 'look'];
@@ -29,6 +30,7 @@ export class Game {
     await this.setLang(lang(), true);
     this.build();
     await Promise.all(Object.values(SPR).map(n => this.img(`assets/pointclick/spr/${n}.png`)));
+    try { this.animIdx = await (await fetch('assets/pointclick/anim/index.json')).json(); } catch { this.animIdx = {}; }
     this.ro = new ResizeObserver(() => this.fit()); this.ro.observe(this.root); this.fit();
     this.last = performance.now(); const tick = t => { if (!this.alive) return; this.raf = requestAnimationFrame(tick); const dt = Math.min(0.05, (t - this.last) / 1000); this.last = t; try { this.update(dt); this.draw(); } catch (e) { console.error(e); } };
     this.raf = requestAnimationFrame(tick);
@@ -40,6 +42,17 @@ export class Game {
     if (!first) { this.renderPanel(); this.renderLine(); if (this.titleEl) this.showTitle(); }
   }
   img(src) { return this.imgs[src] || (this.imgs[src] = new Promise(res => { const i = new Image(); i.onload = () => { this.imgs[src] = i; res(i); }; i.onerror = () => res(null); i.src = src; }).then(i => (this.imgs[src] = i))); }
+  /* image d'animation d'un personnage selon son état : repos, parole, déplacement */
+  frame(e) {
+    const A = ANIM[e.spr]; if (!A) return e.spr;
+    const st = e.goal ? 'walk' : e.talk ? 'talk' : 'idle', fr = A[st] || A.idle, fps = (A.fps && A.fps[st]) || 3;
+    return fr[Math.floor(this.now * fps + (e.ph || 0)) % fr.length];
+  }
+  /* image d'une zone du décor animée par images (assets/pointclick/anim/<id>_<n>.png), chargée à la demande */
+  animImg(id, i) {
+    const p = `assets/pointclick/anim/${id}_${i}.png`, im = this.imgs[p]; if (im && im.width) return im;
+    this._ld = this._ld || {}; if (!this._ld[p]) { this._ld[p] = 1; this.img(p).catch(() => {}); } return null;
+  }
   spr(name) { const i = this.imgs[`assets/pointclick/spr/${SPR[name] || name}.png`]; return i && i.width ? i : null; }
 
   /* ───────── interface HTML ───────── */
@@ -133,9 +146,10 @@ export class Game {
     const bg = await this.img('assets/pointclick/' + sc.bg); this.scene = sc; this.bg = bg;
     this.walk = new Walk(sc.walk.map(p => p.slice()), W, H);
     this.hot = sc.hot || []; this.amb = makeAmbient(sc.ambient);
-    this.ents = (sc.ents || []).map(e => ({ visible: true, ...e }));
+    await Promise.all((sc.ambient || []).filter(o => o.type === 'frames' && this.animIdx[o.id]).flatMap(o => Array.from({ length: this.animIdx[o.id].n }, (_, i) => this.img(`assets/pointclick/anim/${o.id}_${i}.png`).catch(() => {}))));
+    this.ents = (sc.ents || []).map(e => ({ visible: true, ph: Math.random() * 5, ...e }));
     const st = how.restored && this.st.hero ? this.st.hero : sc.start;
-    this.hero = { id: 'hero', who: 'hero', spr: 'hero.side', x: st.x, y: st.y, dir: st.dir || 'r', path: [], walkD: 0, hot: true, isHero: true, visible: true };
+    this.hero = { id: 'hero', who: 'hero', spr: HERO ? HERO.stand : 'hero.side', x: st.x, y: st.y, dir: st.dir || 'r', path: [], walkD: 0, hot: true, isHero: true, visible: true };
     this.ents.push(this.hero);
     this.clearBarks(); this.hover = null; this.renderPanel(); this.renderLine();
     if (this.started) snd.music(snd.musicOn !== false, sc.music || id);
@@ -294,11 +308,11 @@ export class Game {
       }
       const s = this.persp(h.y);
       h.flip = h.dir === 'l' && !h.front;
-      if (moving) { h.spr = Math.floor(h.walkD / (11 * s)) % 2 ? 'hero.stride' : 'hero.side'; h.bob = Math.abs(Math.sin(h.walkD / (11 * s) * Math.PI)) * 2.4 * s; if (this.now >= (h.stepT || 0)) { snd.step(); h.stepT = this.now + 0.3; } }
-      else { h.spr = h.front || h.talk ? 'hero.front' : 'hero.side'; h.bob = 0; }
+      if (moving) { h.spr = HERO ? HERO.walk[Math.floor(h.walkD / (8 * s)) % HERO.walk.length] : (Math.floor(h.walkD / (11 * s)) % 2 ? 'hero.stride' : 'hero.side'); h.bob = Math.abs(Math.sin(h.walkD / (11 * s) * Math.PI)) * (HERO ? 1.2 : 2.4) * s; if (this.now >= (h.stepT || 0)) { snd.step(); h.stepT = this.now + 0.3; } }
+      else { if (HERO) { const fr = h.talk ? HERO.talk : h.front ? HERO.idleFront : null; h.spr = fr ? fr[Math.floor(this.now * (h.talk ? 6 : 0.6) + 0.01) % fr.length] : HERO.stand; } else h.spr = h.front || h.talk ? 'hero.front' : 'hero.side'; h.bob = 0; }
     }
     this.ents.forEach(e => {
-      if (e.goal) { const [gx, gy, sp] = e.goal, dx = gx - e.x, dy = gy - e.y, d = Math.hypot(dx, dy), st = sp * dt; if (d <= st) { e.x = gx; e.y = gy; e.goal = null; } else { e.x += dx / d * st; e.y += dy / d * st; } }
+      if (e.goal) { const [gx, gy, sp] = e.goal, dx = gx - e.x, dy = gy - e.y, d = Math.hypot(dx, dy), st = sp * dt; if (d <= st) { e.x = gx; e.y = gy; e.goal = null; } else { e.x += dx / d * st; e.y += dy / d * st; if (ANIM[e.spr] && ANIM[e.spr].walk && Math.abs(dx) > 0.3) e.flip = dx < 0; } }
       if (e.talk && this.now >= this.nextBlip) { snd.blip(e.talk); this.nextBlip = this.now + 0.07; }
     });
     for (let i = this.barks.length - 1; i >= 0; i--) { const k = this.barks[i], e = this.ent(k.who); if (!e || this.now > k.end) { k.b.remove(); this.barks.splice(i, 1); } else { const [ax, ay] = this.headPos(e); this.placeBubble(k.b, ax, ay); } }
@@ -317,7 +331,7 @@ export class Game {
     if (this.fx.fade) { c.fillStyle = `rgba(0,0,0,${this.fx.fade.a})`; c.fillRect(0, 0, W, H); }
   }
   drawEnt(e) {
-    const im = this.spr(e.spr); if (!im) return; const c = this.ctx, s = e.scale ?? this.persp(e.y), w = im.width * s, h = im.height * s;
+    const im = this.spr(this.frame(e)) || this.spr(e.spr); if (!im) return; const c = this.ctx, s = e.scale ?? this.persp(e.y), w = im.width * s, h = im.height * s;
     c.save(); c.translate(Math.round(e.x), Math.round(e.y - (e.bob || 0)));
     if (e.rot) { c.translate(0, -h / 2); c.rotate(e.rot); c.translate(0, h / 2); }
     if (e.flip) c.scale(-1, 1);
