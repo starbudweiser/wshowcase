@@ -7,7 +7,7 @@ export default {
   fg: [[[4, 190], [60, 188], [125, 190], [125, 264], [4, 264]]],   /* le comptoir passe devant le marchand */
   start: { x: 146, y: 262, dir: 'r' },
   hot: [
-    { id: 'mountain', rect: [322, 8, 450, 110] }, { id: 'dragon', rect: [235, 5, 325, 50] }, { id: 'mammoth', rect: [380, 132, 422, 162] }, { id: 'mill', rect: [425, 130, 475, 168] },
+    { id: 'mountain', rect: [322, 8, 450, 110] }, { id: 'mammoth', rect: [388, 130, 418, 160] }, { id: 'mill', rect: [425, 130, 475, 168] },
     { id: 'house', rect: [0, 20, 100, 135] }, { id: 'inn', rect: [100, 60, 215, 150] }, { id: 'sign', rect: [135, 86, 178, 112] },
     { id: 'door', rect: [158, 150, 182, 195], at: [176, 210] },
     { id: 'stall', rect: [4, 138, 128, 262], at: [136, 240], dir: 'l' },
@@ -15,6 +15,17 @@ export default {
     { id: 'flowers', rect: [372, 222, 480, 268], at: [362, 244] },
     { id: 'bridge', rect: [352, 172, 480, 214], at: [332, 206] },
     { id: 'honey', rect: [88, 190, 124, 208], at: [134, 236], dir: 'l' }
+  ],
+  /* décor vivant : dragon qui vole, oiseaux, rivière, roue du moulin, mammouth qui respire, fleurs et herbes dans le vent */
+  ambient: [
+    { type: 'dragon', y: 8, period: 36, offset: 8, scale: 0.95, drop: 8 },
+    { type: 'birds', n: 5, y0: 16, y1: 80, speed: 12, seed: 4 },
+    { type: 'water', poly: [[395, 198], [420, 190], [450, 192], [470, 198], [470, 218], [450, 226], [420, 228], [400, 218]], amp: 1.4, seed: 2 },
+    { type: 'water', poly: [[330, 158], [352, 156], [385, 158], [392, 166], [360, 168], [335, 166]], amp: 1.0, seed: 9, glints: 8 },
+    { type: 'wheel', cx: 466, cy: 152, r: 12, speed: 0.9 },
+    { type: 'bob', rect: [388, 130, 418, 160], amp: 0.04, speed: 1.2 },
+    { type: 'sway', rect: [380, 226, 480, 268], amp: 1.8, speed: 1.6 },
+    { type: 'sway', rect: [270, 238, 380, 268], amp: 1.2, speed: 1.3, phase: 2 }
   ],
   ents: [
     { id: 'merchant', spr: 'merchant', x: 72, y: 214, hot: true, hit: [48, 160, 100, 190], at: [136, 238], z: -50 },
@@ -115,7 +126,7 @@ export default {
   },
   async bridge(g) {
     if (!g.flag('guardmoved')) { await g.cut(async () => { const n = g.count('blocks'); await g.say('guard', n === 1 ? 's.bridge1' : 's.bridge2'); await g.say('hero', n === 1 ? 's.bridge1h' : 's.bridge2h'); }); return; }
-    await g.cut(async () => { await g.say('hero', 's.cross'); await g.walkTo(470, 196); await g.end(); });
+    await g.cut(async () => { await g.say('hero', 's.cross'); await g.walkTo(470, 196); await g.fade(1, 800); setTimeout(() => g.goScene('mill', { intro: true }), 0); });
   },
   async giveHoney(g) {
     g.hero.front = false; await g.say('hero', 's.guard.give1'); g.drop('honey'); g.sfx('coin');

@@ -5,11 +5,12 @@ import { Walk, hitPoly } from './walk.js';
 import { snd } from './sound.js';
 import { loadLang, makeT } from './lang.js';
 import { hasSave, loadSave, writeSave, clearSave } from './save.js';
+import { makeAmbient } from './ambient.js';
 import { SPR, ITEMS } from '../data/sheets.js';
 
 export const W = 480, H = 270;
 const VERBS = ['walk', 'take', 'use', 'talk', 'look'];
-const COLORS = { hero: '#ffe08a', merchant: '#ffa45c', guard: '#9ad0ff', hen: '#ffffff', narr: '#ffffff' };
+const COLORS = { hero: '#ffe08a', rider: '#ffe08a', merchant: '#ffa45c', guard: '#9ad0ff', horse: '#f0c890', hen: '#ffffff', narr: '#ffffff' };
 class Cancel {}
 const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
@@ -120,7 +121,7 @@ export class Game {
     const sc = (await import(`../scenes/${id}.js`)).default; this.st.scene = id;
     const bg = await this.img('assets/pointclick/' + sc.bg); this.scene = sc; this.bg = bg;
     this.walk = new Walk(sc.walk.map(p => p.slice()), W, H);
-    this.hot = sc.hot || [];
+    this.hot = sc.hot || []; this.amb = makeAmbient(sc.ambient);
     this.ents = (sc.ents || []).map(e => ({ visible: true, ...e }));
     const st = how.restored && this.st.hero ? this.st.hero : sc.start;
     this.hero = { id: 'hero', who: 'hero', spr: 'hero.side', x: st.x, y: st.y, dir: st.dir || 'r', path: [], walkD: 0, hot: true, isHero: true, visible: true };
@@ -186,14 +187,15 @@ export class Game {
     await this.until(() => { const t = Math.min(1, (this.now - t0) / d); e.x = x0 + (x1 - x0) * t; e.y = y0 + (y1 - y0) * t - Math.sin(t * Math.PI) * arc; e.rot = spin * t; return t >= 1; });
     this.ents = this.ents.filter(x => x !== e); this.chk();
   }
-  async end() { /* fin du chapitre */
+  async end(pre = 'end') { /* fin du chapitre */
     await this.fade(1, 1200); clearSave(); this.started = false; const d = el('div', 'pc-title socle'), c = el('div', 'pc-card'); const T = this.T;
-    c.append(el('h1', '', T('end.title')), el('p', '', T('end.sub')), el('p', 'pc-fine', T('end.love')));
+    c.append(el('h1', '', T(pre + '.title')), el('p', '', T(pre + '.sub')), el('p', 'pc-fine', T('end.love')));
     const row = el('div', 'pc-btns'), a = el('button', 'sbtn acc', T('end.again')); a.onclick = () => { d.remove(); this.newGame(); }; row.append(a); c.append(row); d.append(c); this.stage.append(d); this.titleEl = d; snd.jingle();
   }
 
   /* ───────── actions ───────── */
   pick(x, y) {
+    for (const a of this.amb || []) if (a.hit && a.hit(x, y)) return { id: a.id, name: 'n.' + a.id };
     const es = this.ents.filter(e => e.visible !== false && e.hot && !e.noHot).sort((a, b) => b.y - a.y);
     for (const e of es) { const r = e.hit || this.entRect(e); if (r && x >= r[0] && x <= r[2] && y >= r[1] && y <= r[3]) return { id: e.id, name: 'n.' + e.id, at: e.at || [e.x, e.y + 4], isEnt: true }; }
     for (let i = this.hot.length - 1; i >= 0; i--) { const h = this.hot[i], r = h.rect; if (r ? (x >= r[0] && x <= r[2] && y >= r[1] && y <= r[3]) : hitPoly(x, y, h.poly)) return { id: h.id, name: 'n.' + h.id, at: h.at, dir: h.dir }; }
@@ -275,6 +277,7 @@ export class Game {
     const c = this.ctx; if (!c || !this.scene || !this.bg || !this.bg.width) { if (c) { c.fillStyle = '#000'; c.fillRect(0, 0, W, H); } return; }
     c.save(); const sh = this.fx.shake; if (sh && this.now < sh.end) c.translate(Math.round((Math.random() - .5) * sh.amp * 2), Math.round((Math.random() - .5) * sh.amp * 2));
     if (this.bg) c.drawImage(this.bg, 0, 0, W, H);
+    if (this.amb) this.amb.forEach(a => a.draw(this, c, this.now));
     [...this.ents].filter(e => e.visible !== false).sort((a, b) => (a.y + (a.z || 0)) - (b.y + (b.z || 0))).forEach(e => this.drawEnt(e));
     (this.scene.fg || []).forEach(p => { c.save(); c.beginPath(); p.forEach(([x, y], i) => (i ? c.lineTo(x, y) : c.moveTo(x, y))); c.closePath(); c.clip(); c.drawImage(this.bg, 0, 0, W, H); c.restore(); });
     c.restore();

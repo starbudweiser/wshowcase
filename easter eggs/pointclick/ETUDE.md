@@ -338,3 +338,23 @@ son cheval, le mannequin d'armure qui bouge quand on tourne le dos (scène de ma
 - Pas de détourage manuel fin : quelques franges de couleur sur les sprites, à retoucher.
 - Tactile : menu de verbes au toucher écrit mais non testé sur appareil ; clavier (1 à 5, Espace, Échap) testé.
 - Scènes 2 à 5 (cheval vertical, géants, choux, gardes) : à faire, une par une.
+
+---
+
+# Addendum 2 (12/11/2026) : décor vivant et scène 2
+
+## Décor vivant sur tous les écrans (`js/pointclick/engine/ambient.js`)
+
+Chaque scène déclare une liste `ambient`. Types disponibles : **dragon** (sprite à deux poses d'ailes qui traverse le ciel en boucle, cliquable),
+**oiseaux** (« v » qui battent des ailes), **water** (rivière : chaque ligne du décor ondule + éclats de lumière), **wheel** (roue de moulin :
+disque du décor qui tourne), **bob** (animal qui respire, ex. le mammouth), **sway** (fleurs et herbes dans le vent), **smoke** (cheminée),
+**glow** (lueur vacillante). Tout est calculé à partir de l'image du décor : aucun fichier de plus.
+Le dragon peint a été retiré du décor de la scène 1 (retouche FLUX) et remplacé par un vrai sprite.
+
+## Scène 2 : « Le chemin du moulin » (`js/pointclick/scenes/mill.js`)
+
+Équitation verticale : potager → **carotte** → la donner au **cheval** → *Utiliser le cheval* : il galope jusqu'à la falaise puis la gravit à
+90 degrés (sprite du cavalier pivoté, secousses d'écran, bruitages) → corniche → **meule de fromage dorée** → redescente → sortie → fin
+du chapitre 2 (teaser du chapitre 3, les géants). La meule servira d'appât dans la scène des géants. Passage entre les scènes : pont de la
+scène 1, fondu au noir. Nouveaux visuels FLUX : décor du moulin, dragon (2 poses), cheval, cheval + héros, carotte, meule
+(`tools/gen_scene2.sh`, puis `tools/build_sprites.sh`).
