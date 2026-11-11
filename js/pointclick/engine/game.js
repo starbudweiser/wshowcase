@@ -119,7 +119,7 @@ export class Game {
     const sb = el('button', 'sbtn', T(snd.musicOn === false ? 'ui.musicOff' : 'ui.musicOn')); sb.onclick = () => { this.setMusic(snd.musicOn === false); sb.textContent = T(snd.musicOn ? 'ui.musicOn' : 'ui.musicOff'); }; opts.append(sb);
     const lb = el('button', 'sbtn', this.lang === 'fr' ? 'English' : 'Français'); lb.onclick = () => this.setLang(this.lang === 'fr' ? 'en' : 'fr'); opts.append(lb);
     let chapEls = []; const rs = reached(), chs = CHAPTERS.filter(x => rs.includes(x.id));
-    if (chs.length > 1) { const cr = el('div', 'pc-opts'); chs.forEach(x => { const b = el('button', 'sbtn', T('ch.' + x.id)); b.onclick = () => { snd.unlock(); this.startAt(x); }; cr.append(b); }); chapEls = [el('p', 'pc-ach', T('ui.chapters')), cr]; }
+    if (chs.length > 1) { const cr = el('div', 'pc-chap'); chs.forEach(x => { const b = el('button', 'sbtn', T('ch.' + x.id)); b.onclick = () => { snd.unlock(); this.startAt(x); }; cr.append(b); }); chapEls = [el('p', 'pc-ach', T('ui.chapters')), cr]; }
     const ac = getAch(), n = ac.lit.filter(x => BLINDS.includes(x)).length;
     c.append(row, opts, ...chapEls, el('p', 'pc-ach' + (ac.done.includes('fiatlux') ? ' done' : ''), T('ach.menu', { n, t: BLINDS.length })), el('p', 'pc-fine', T('ui.fine'))); d.append(c); this.stage.append(d); this.titleEl = d;
   }
