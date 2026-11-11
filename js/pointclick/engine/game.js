@@ -127,6 +127,7 @@ export class Game {
     this.hero = { id: 'hero', who: 'hero', spr: 'hero.side', x: st.x, y: st.y, dir: st.dir || 'r', path: [], walkD: 0, hot: true, isHero: true, visible: true };
     this.ents.push(this.hero);
     this.hover = null; this.renderPanel(); this.renderLine();
+    if (this.started) snd.music(snd.musicOn !== false, sc.music || id);
     if (sc.enter) await sc.enter(this, how);
     this.save();
     if (how.intro && sc.intro) this.run(() => this.cut(() => sc.intro(this)));
