@@ -264,3 +264,77 @@ GitHub Pages compresse en gzip : environ le tiers de ces valeurs en transfert.
 2. Moteur de base + scène 1 jouable de bout en bout (décor FLUX retouché, héros et marchand scriptés).
 3. Essais dans le navigateur (wCLAUDE), captures.
 4. Scènes suivantes (une par bug), à la demande, une à la fois.
+
+---
+
+# Addendum (11/11/2026) : décisions de Stéphan et état de la réalisation
+
+## Décisions validées
+
+| Question | Réponse |
+|---|---|
+| Moteur | Moteur maison (Canvas 2D) |
+| Résolution | **480 × 270** (plus fin que 320 × 180) |
+| Musique et bruitages | Synthèse originale |
+| Voix | Texte seul + « blips » |
+| Icône du bureau | Seau à cornes, libellé « Seau » / « Bucket » |
+| Style | **Au plus près de « Simon the Sorcerer »** (référence donnée : https://www.ppa.pl/gry/simon-the-sorcerer-ii.html) |
+
+Relecture de la référence : décors peints très saturés avec tramage VGA, personnages petits mais détaillés aux proportions adultes,
+visages ironiques, contours sombres, panneau de commande bronze et rouge sombre sous la scène. **Les premiers sprites dessinés par code
+(têtes énormes, trop « enfantins ») ont été abandonnés** : les personnages sont maintenant peints par FLUX 3 Klein local, puis détourés
+et réduits (voir ci-dessous).
+
+## Ce qui a changé par rapport à l'étude
+
+- **Personnages** : générés par FLUX (fond magenta, style « cartoon peint à la main, ironique, proportions adultes »), détourés par
+  `tools/sprites_pixelize.py` (clé couleur, contour sombre de 1 px, 56 couleurs, même facteur d'échelle pour toutes les poses d'un personnage).
+  Poses du héros par édition avec image de référence (profil, foulée), de face pour parler. Chaîne complète rejouable :
+  `tools/gen_chars.sh`, `gen_variants.sh`, `gen_items.sh`, puis `tools/build_sprites.sh`.
+- **Décor** : FLUX 1280×720 → 480×270, 64 couleurs (`tools/gen_rue.sh`, `tools/bg_pixelize.py`). Repères de Skyrim ajoutés sur demande de
+  Stéphan : dragon dans le ciel, Gorge du Monde et ses marches, mammouth et géant au loin, pignons en têtes de dragon, enseigne d'auberge
+  au géant endormi, scierie, fleurs bleues de montagne, choux et fromages à l'étal, charrette (clin d'œil au bug des choux).
+- **Animation** : 2 poses de profil (+ rebond et inversion horizontale) pour la marche, pose de face pour parler (léger écrasement en
+  rythme), pas de dessin image par image. Le marchand a 2 états (normal, seau sur la tête, bras levés).
+- **Accroche dans `js/spaces.js`** : 5 lignes (import de `EGGS`, ajout à `deskList`, `run` appelle `a.load()`, libellé `a.label()`,
+  remise à zéro des positions). Le reste est dans `js/eggs.js` (une ligne par œuf).
+- **Panneau** : style des aventures peintes (bronze et rouge sombre), verbes en deux lignes, huit emplacements d'inventaire, phrase du bas.
+  Écran-titre, fin de chapitre : composants Socle (`.socle`, `.sbtn`).
+
+## Structure réelle
+
+```
+js/eggs.js                          registre des easter eggs
+js/pointclick/boot.js               ouvre la fenêtre (wm.open), charge le moteur à la demande
+js/pointclick/engine/game.js        boucle, rendu, entrées, verbes, inventaire, dialogues, scripts async, cinématiques, sauvegarde, fin
+js/pointclick/engine/walk.js        zone de marche (polygones) + A* sur grille + lissage
+js/pointclick/engine/sound.js       SFX et musique synthétisés (Web Audio), respecte le réglage de son du site
+js/pointclick/engine/lang.js        textes par langue (valeur en tableau = réplique aléatoire)
+js/pointclick/engine/save.js        sauvegarde localStorage (wsc.pc.save), export/import JSON
+js/pointclick/data/sheets.js        registre des sprites et objets d'inventaire
+js/pointclick/scenes/rue.js         scène 1 : zones, personnages, scripts de l'énigme du seau
+js/pointclick/lang/fr.js, en.js     tous les textes (≈ 250 clés par langue)
+css/pointclick.css                  fenêtre, panneau de verbes, dialogues, écran-titre
+assets/pointclick/                  rue.png, spr/*.png, icon.png, police VT323 (OFL)
+easter eggs/pointclick/tools/       scripts de génération (FLUX) et de pixellisation
+```
+
+Poids chargé à l'ouverture : environ 350 Ko (moteur + textes ≈ 60 Ko, décor 70 Ko, sprites 40 Ko, police 150 Ko).
+
+## Sources d'écriture (indiquées par Stéphan)
+
+Culture « meme » de Skyrim et bugs du moteur physique : Reddit r/skyrim (programme spatial des géants, mammouths qui tombent du ciel),
+vidéos de bugs et compilations de glitchs de physique, Know Your Meme (flèche dans le genou, rouleau sucré volé, PNJ arrogant qui répète
+ses répliques), r/SkyrimMemes (furtivité absurde, « ce doit être le vent »). Principe retenu : **clins d'œil reformulés, jamais de
+réplique recopiée mot pour mot** (le texte est une parodie originale ; aucun nom propre de personnage n'est repris).
+Déjà dans la scène 1 : le garde à la flèche dans le genou (répété comme un tic), « ce doit être le vent » devant un marchand au seau sur la tête,
+le garde qui devine « on vous a volé votre rouleau ? » (inversé : le héros vient le voler), la poule intouchable, le cri « FUS RO DAH ».
+Réservé aux scènes suivantes : le PNJ arrogant en boucle propulsé par un « coup de massue » improvisé, le cavalier sans tête qui a perdu
+son cheval, le mannequin d'armure qui bouge quand on tourne le dos (scène de maison), le papillon qui propulse en l'air.
+
+## À faire / limites connues
+
+- Marche à deux poses seulement : un cycle plus fluide demande des poses supplémentaires (FLUX en édition, ~80 s par pose).
+- Pas de détourage manuel fin : quelques franges de couleur sur les sprites, à retoucher.
+- Tactile : menu de verbes au toucher écrit mais non testé sur appareil ; clavier (1 à 5, Espace, Échap) testé.
+- Scènes 2 à 5 (cheval vertical, géants, choux, gardes) : à faire, une par une.

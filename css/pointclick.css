@@ -1,0 +1,42 @@
+/* Jeu d'aventure « Le Seau de Rivebois » : fenêtre, scène, panneau de verbes (esprit des aventures peintes des années 90), écran-titre (Socle). */
+@font-face{font-family:'PCPixel';src:url('../assets/pointclick/VT323-Regular.ttf') format('truetype');font-display:swap}
+.win.pcwin{background:#0b0605;color:#f4e6d0;backdrop-filter:none;-webkit-backdrop-filter:none}
+.win.pcwin .wtb{background:#1d100c}.win.pcwin .wt{color:#e8cfa8}
+.win.pcwin>.wbody{padding:0;display:flex;min-height:0}
+.pc{--u:2;flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#000;position:relative;font-family:'PCPixel',ui-monospace,Menlo,monospace;-webkit-user-select:none;user-select:none;overflow:hidden}
+.pc-stage{position:relative;overflow:hidden;background:#000;flex:none}
+.pc canvas{display:block;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges;cursor:crosshair;touch-action:manipulation}
+.pc canvas.hot{cursor:pointer}
+.pc-ov{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.pc-b{position:absolute;transform:translate(-50%,-100%);max-width:46%;text-align:center;font-size:calc(var(--u)*11.5px);line-height:1.02;padding:0 calc(var(--u)*2px);
+  text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000,0 2px 0 #000,2px 0 0 #000,-2px 0 0 #000,0 -2px 0 #000;letter-spacing:.01em}
+.pc-ask{position:absolute;left:0;right:0;bottom:0;display:flex;flex-direction:column;gap:calc(var(--u)*1px);padding:calc(var(--u)*4px) calc(var(--u)*8px);background:linear-gradient(transparent,rgba(12,5,3,.88) 40%)}
+.pc-ask:empty{display:none}
+.pc-opt{border:0;background:none;text-align:left;font:inherit;font-size:calc(var(--u)*11.5px);color:#ffcf6e;padding:calc(var(--u)*1px) calc(var(--u)*3px);cursor:pointer;text-shadow:1px 1px 0 #000;border-radius:2px}
+.pc-opt:hover,.pc-opt:focus-visible{background:rgba(255,160,60,.25);color:#fff3c9;outline:0}
+.pc-pop{position:absolute;transform:translate(-50%,-100%);display:flex;flex-direction:column;gap:2px;background:rgba(20,9,6,.94);border:2px solid #c8501c;padding:4px;border-radius:4px}
+.pc-pop button{font:inherit;font-size:calc(var(--u)*11px);color:#ffd27a;background:#3a1e14;border:0;padding:calc(var(--u)*3px) calc(var(--u)*8px);cursor:pointer}
+.pc-panel{position:relative;flex:none;display:grid;grid-template-columns:1fr 1.15fr;grid-template-rows:auto 1fr;column-gap:calc(var(--u)*8px);row-gap:calc(var(--u)*2px);padding:calc(var(--u)*3px) calc(var(--u)*8px) calc(var(--u)*5px);box-sizing:border-box;
+  background:linear-gradient(#3b1f15,#1a0b08);border-top:calc(var(--u)*2px) solid #d2561e;box-shadow:inset 0 calc(var(--u)*1px) 0 #7a3418,inset 0 0 0 calc(var(--u)*1px) #4a2214}
+.pc-line{grid-column:1/-1;text-align:center;color:#ffd27a;font-size:calc(var(--u)*11.5px);line-height:1;min-height:calc(var(--u)*11px);text-shadow:1px 1px 0 #000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc-verbs{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:1fr;gap:calc(var(--u)*3px);min-height:0}
+.pc-v{position:relative;font:inherit;font-size:calc(var(--u)*11.5px);line-height:1;color:#f2a24a;background:linear-gradient(#4a2418,#2b130d);border:calc(var(--u)*1px) solid #8a3d18;border-radius:calc(var(--u)*3px);cursor:pointer;padding:0 calc(var(--u)*2px);text-shadow:1px 1px 0 #000;min-width:0;white-space:nowrap}
+.pc-v:hover{color:#ffe2a8;border-color:#d2561e}
+.pc-v.on{color:#fff4cc;background:linear-gradient(#a8441a,#6a2a12);border-color:#ffb060}
+.pc-v i{position:absolute;right:calc(var(--u)*2px);top:calc(var(--u)*1px);font-style:normal;font-size:calc(var(--u)*6px);opacity:.55}
+.pc-inv{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr);gap:calc(var(--u)*3px);min-height:0}
+.pc-slot{padding:0;border:calc(var(--u)*1px) solid #6b2a14;border-radius:calc(var(--u)*3px);background:radial-gradient(#2a120c,#0f0504);cursor:pointer;display:flex;align-items:center;justify-content:center;min-width:0;min-height:0}
+.pc-slot:disabled{cursor:default;opacity:.8}
+.pc-slot:not(:disabled):hover{border-color:#ffb060}
+.pc-slot.on{border-color:#ffe08a;box-shadow:0 0 0 calc(var(--u)*1px) #ffe08a}
+.pc-slot canvas{width:90%;height:90%;object-fit:contain;image-rendering:pixelated;cursor:inherit}
+.pc-menu{position:absolute;right:calc(var(--u)*3px);top:calc(var(--u)*2px);width:calc(var(--u)*11px);height:calc(var(--u)*9px);font-size:calc(var(--u)*9px);line-height:1;border:0;background:none;color:#a45a2c;cursor:pointer;padding:0}
+.pc-menu:hover{color:#ffd27a}
+/* écran-titre et fin de chapitre : composants Socle */
+.pc-title{position:absolute;inset:0;background:rgba(6,3,2,.78);display:flex;align-items:center;justify-content:center;z-index:5;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,system-ui,sans-serif}
+.pc-card{width:min(560px,86%);background:var(--s-surf);border:1px solid var(--s-bd);border-radius:6px;padding:26px 28px;color:var(--s-t);text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.pc-card h1{margin:0 0 8px;font-size:26px;letter-spacing:.02em;color:var(--s-ts)}
+.pc-card p{margin:0 0 18px;font-size:14px;line-height:1.5;color:var(--s-tm)}
+.pc-card .pc-fine{margin:16px 0 0;font-size:11.5px;color:var(--s-sub)}
+.pc-btns,.pc-opts{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}.pc-opts{margin-top:10px}
+.pc-card .sbtn{height:36px;font-size:12.5px}

@@ -1,0 +1,47 @@
+#!/usr/bin/env python3 -I
+"""Sprites FLUX (fond magenta) -> PNG détourés, à la taille du jeu, couleurs réduites.
+Usage : sprites_pixelize.py nom source.png hauteur_px [couleurs]   -> assets/pointclick/spr/<nom>.png
+Plusieurs images d'un même personnage : même facteur d'échelle via l'option --like <nom déjà traité>."""
+import sys, os, json
+from PIL import Image, ImageFilter, ImageEnhance
+R = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+OUT = os.path.join(R, 'assets', 'pointclick', 'spr'); os.makedirs(OUT, exist_ok=True)
+SC = os.path.join(R, 'easter eggs', 'pointclick', 'work', 'scales.json')
+
+
+def key(im):
+    im = im.convert('RGB'); px = im.load(); w, h = im.size
+    bg = tuple(sum(px[x, y][i] for x, y in ((2, 2), (w - 3, 2), (2, h - 3), (w - 3, h - 3))) // 4 for i in range(3))
+    a = Image.new('L', (w, h), 255); ap = a.load()
+    for y in range(h):
+        for x in range(w):
+            r, g, b = px[x, y]; d = abs(r - bg[0]) + abs(g - bg[1]) + abs(b - bg[2])
+            ap[x, y] = 0 if d < 70 else (255 if d > 150 else int((d - 70) / 80 * 255))
+    return im, a
+
+
+def main():
+    a = sys.argv[1:]; like = None; bright = 1.0
+    if '--bright' in a: i = a.index('--bright'); bright = float(a[i + 1]); del a[i:i + 2]
+    if '--like' in a: i = a.index('--like'); like = a[i + 1]; del a[i:i + 2]
+    name, src, th = a[0], a[1], int(a[2]); ncol = int(a[3]) if len(a) > 3 else 56
+    im, al = key(Image.open(src))
+    al = al.point(lambda v: 255 if v > 120 else 0).filter(ImageFilter.MinFilter(3))        # rogne la frange magenta
+    bb = al.getbbox(); im = im.crop(bb); al = al.crop(bb)
+    sc = json.load(open(SC)) if os.path.exists(SC) else {}
+    f = sc[like] if like else th / im.size[1]
+    sc[name] = f; json.dump(sc, open(SC, 'w'))
+    sz = (max(1, round(im.size[0] * f)), max(1, round(im.size[1] * f)))
+    im = im.resize(sz, Image.LANCZOS); al = al.resize(sz, Image.LANCZOS).point(lambda v: 255 if v > 140 else 0)
+    q = im.quantize(colors=ncol, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE).convert('RGB')
+    q = ImageEnhance.Contrast(ImageEnhance.Color(q).enhance(1.15)).enhance(1.08)
+    if bright != 1.0: q = ImageEnhance.Brightness(q).enhance(bright)
+    out = q.convert('RGBA'); out.putalpha(al)
+    pa = out.load(); ow, oh = out.size; src = out.copy().load()          # contour sombre de 1 px (style dessin animé)
+    for y in range(oh):
+        for x in range(ow):
+            if src[x, y][3] == 0 and any(0 <= x+dx < ow and 0 <= y+dy < oh and src[x+dx, y+dy][3] > 0 for dx, dy in ((1,0),(-1,0),(0,1),(0,-1))): pa[x, y] = (34, 18, 24, 255)
+    out.save(os.path.join(OUT, name + '.png'), optimize=True); print(name, out.size)
+
+
+main()

@@ -5,6 +5,7 @@ import { sname, t, lang } from './i18n.js';
 const T = (fr, en) => (lang() === 'fr' ? fr : en);
 import { sfx } from './audio.js';
 import { launch } from './apps.js';
+import { EGGS } from './eggs.js';
 
 const idx = () => Math.max(0, S.spaces.findIndex(s => s.id === S.cur));
 const step = d => { const n = idx() + d; if (n >= 0 && n < S.spaces.length) go(S.spaces[n].id); };
@@ -71,17 +72,17 @@ function layout(spaceId, reset) {
 const savePos = (id, p) => { const d = store.get('desk', {}); d[id] = p; store.set('desk', d); };
 let suppress = false;
 const EXTRA = { id: 'Videos', space: 'skyrim', desk: true, video: true, src: 'assets/icons/videos.png' };
-const deskList = sp => [...S.apps.filter(a => a.space === sp && a.desk), ...(sp === EXTRA.space ? [EXTRA] : [])];
-const run = a => { if (a.video) import('./player.js').then(m => m.open()); else launch(a.id); };
+const deskList = sp => [...S.apps.filter(a => a.space === sp && a.desk), ...(sp === EXTRA.space ? [EXTRA] : []), ...EGGS.filter(e => e.space === sp)];
+const run = a => { if (a.video) import('./player.js').then(m => m.open()); else if (a.load) a.load(); else launch(a.id); };
 export function renderDesk(reset) {
-  if (reset) { const d = store.get('desk', {}); S.apps.forEach(a => delete d[a.id]); delete d[EXTRA.id]; store.set('desk', d); }
+  if (reset) { const d = store.get('desk', {}); S.apps.forEach(a => delete d[a.id]); delete d[EXTRA.id]; EGGS.forEach(e => delete d[e.id]); store.set('desk', d); }
   S.spaces.forEach(sp => {
     const el = $('#sp-' + sp.id); if (!el) return;
     all(el, '.di').forEach(x => x.remove());
     const coarse = matchMedia('(pointer:coarse)').matches, pos = layout(sp.id);
     deskList(sp.id).forEach(a => {
       const d = h('button', { class: 'di' + (reset ? ' snap' : ''), 'aria-label': a.id, style: cell(...pos[a.id]) },
-        h('img', { src: a.src || icon(a.id), alt: '', draggable: 'false' }), a.video ? h('span', {}, T('Vidéos', 'Videos')) : h('span', { html: brand(a.id, a.accent) }));
+        h('img', { src: a.src || icon(a.id), alt: '', draggable: 'false' }), a.video ? h('span', {}, T('Vidéos', 'Videos')) : a.label ? h('span', {}, a.label()) : h('span', { html: brand(a.id, a.accent) }));
       d.style.left = cell(...pos[a.id]).left + 'px'; d.style.top = cell(...pos[a.id]).top + 'px';
       d.addEventListener('click', e => {
         e.stopPropagation(); if (suppress) return;
