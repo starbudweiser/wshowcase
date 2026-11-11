@@ -23,3 +23,10 @@ P horse_ride "$W/var_horse_ride.png" 0 --like horse
 P giant "$W/ch_giant.png" 170
 [ -f "$W/var_giant_swing.png" ] && P giant_swing "$W/var_giant_swing.png" 0 --like giant
 P nazim "$W/ch_nazim.png" 96
+# les aveugles (Pourquoi il fait si sombre ?) et leurs versions éclairées
+P blind_pot "$W/blind_pot.png" 84
+P lit_pot "$W/lit_pot.png" 0 --like blind_pot
+P blind_sack "$W/blind_sack.png" 88
+P lit_sack "$W/lit_sack.png" 0 --like blind_sack
+P blind_hat "$W/blind_hat.png" 88
+P lit_hat "$W/lit_hat.png" 0 --like blind_hat

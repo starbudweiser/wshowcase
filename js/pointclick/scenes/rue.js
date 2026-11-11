@@ -1,4 +1,6 @@
 /* Scène 1 : la rue principale de Rivebois. Énigme du seau : aveugler le marchand, voler le rouleau au miel, amadouer le garde du pont. */
+import { BLINDS, blindEnt, blindEnter, blindTick, blindOn } from './blind.js';
+const BL = BLINDS.rue;
 const GUARD_SPOT = [354, 204];
 
 export default {
@@ -31,15 +33,18 @@ export default {
     { id: 'merchant', spr: 'merchant', x: 72, y: 214, hot: true, hit: [48, 160, 100, 190], at: [136, 238], z: -50 },
     { id: 'guard', spr: 'guard', x: GUARD_SPOT[0], y: GUARD_SPOT[1], hot: true, at: [330, 207] },
     { id: 'hen', spr: 'hen', x: 288, y: 242, hot: true, at: [300, 246] },
-    { id: 'bucket', spr: 'bucket', x: 236, y: 224, hot: true, at: [250, 230], z: -3 }
+    { id: 'bucket', spr: 'bucket', x: 236, y: 224, hot: true, at: [250, 230], z: -3 },
+    blindEnt(BL)
   ],
 
   async enter(g) {
+    blindEnter(g, BL);
     if (g.flag('blind')) g.ent('merchant').spr = 'merchant.bucket';
     if (g.flag('bucketTaken')) g.ents = g.ents.filter(e => e.id !== 'bucket');
     if (g.flag('guardmoved')) { const e = g.ent('guard'); e.x = 306; e.y = 226; g.addWalk([[352, 196], [372, 214], [472, 206], [472, 186], [390, 184]]); }
   },
   tick(g) {
+    blindTick(g, BL);
     const h = g.ent('hen'); if (h) { h.bob = Math.max(0, Math.sin(g.now * 3.1)) * 1.6; if (g.now > (h.ck || 4)) { h.ck = g.now + 6 + Math.random() * 6; if (g.started && !g.locked) g.sfx('cluck'); } }
     const m = g.ent('merchant'); if (m && g.flag('blind')) m.bob = Math.abs(Math.sin(g.now * 1.3)) * 1.2;
   },
@@ -51,6 +56,7 @@ export default {
 
   async on(g, verb, id, item) {
     const F = k => g.flag(k);
+    if (await blindOn(g, BL, verb, id, item)) return true;
     if (id === 'bridge' && (verb === 'walk' || verb === 'use')) { await this.bridge(g); return true; }
     switch (id) {
       case 'bucket':

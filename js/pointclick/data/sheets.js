@@ -5,6 +5,7 @@ export const SPR = {
   'guard': 'guard', 'hen': 'hen', 'bucket': 'bucket', 'honey': 'honey',
   'dragon.up': 'dragon_up', 'dragon.down': 'dragon_down',
   'horse': 'horse', 'horse.ride': 'horse_ride', 'carrot': 'carrot', 'cheese': 'cheese',
-  'giant': 'giant', 'giant.swing': 'giant_swing', 'nazim': 'nazim'
+  'giant': 'giant', 'giant.swing': 'giant_swing', 'nazim': 'nazim',
+  'blind.pot': 'blind_pot', 'blind.sack': 'blind_sack', 'blind.hat': 'blind_hat', 'lit.pot': 'lit_pot', 'lit.sack': 'lit_sack', 'lit.hat': 'lit_hat'
 };
 export const ITEMS = { bucket: { spr: 'bucket' }, honey: { spr: 'honey' }, carrot: { spr: 'carrot' }, cheese: { spr: 'cheese' } };

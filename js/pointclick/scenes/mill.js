@@ -1,4 +1,6 @@
 /* Scène 2 : le chemin du moulin. Énigme de l'équitation verticale : carotte → cheval → falaise à 90 degrés → meule de fromage dorée. */
+import { BLINDS, blindEnt, blindEnter, blindTick, blindOn } from './blind.js';
+const BL = BLINDS.mill;
 const LEDGE = { x: 326, y: 56, poly: [[300, 53], [352, 53], [352, 59], [300, 59]] };
 const BASE = [326, 207];
 const UP = -Math.PI / 2, DOWN = Math.PI / 2;
@@ -28,15 +30,18 @@ export default {
   ],
   ents: [
     { id: 'horse', spr: 'horse', x: 252, y: 226, hot: true, at: [214, 236] },
-    { id: 'cheese', spr: 'cheese', x: LEDGE.x, y: LEDGE.y + 2, scale: 0.8, hot: true, at: [BASE[0], BASE[1] + 4], z: -2 }
+    { id: 'cheese', spr: 'cheese', x: LEDGE.x, y: LEDGE.y + 2, scale: 0.8, hot: true, at: [BASE[0], BASE[1] + 4], z: -2 },
+    blindEnt(BL)
   ],
 
   async enter(g) {
+    blindEnter(g, BL);
     const F = k => g.flag(k);
     if (F('cheese')) g.ents = g.ents.filter(e => e.id !== 'cheese');
     if (F('onLedge') && !F('cheese')) { const h = g.hero; h.x = LEDGE.x - 14; h.y = LEDGE.y; h.scale = 0.5; g.addWalk(LEDGE.poly); const hs = g.ent('horse'); hs.x = LEDGE.x + 18; hs.y = LEDGE.y; hs.scale = 0.45; }
   },
   tick(g) {
+    blindTick(g, BL);
     const h = g.ent('horse'); if (h && h.visible) h.bob = Math.max(0, Math.sin(g.now * 1.7)) * 0.8;
     const r = g.ent('rider'); if (r) r.bob = Math.abs(Math.sin(g.now * 14)) * 1.5;
   },
@@ -48,6 +53,7 @@ export default {
 
   async on(g, verb, id, item) {
     const F = k => g.flag(k);
+    if (await blindOn(g, BL, verb, id, item)) return true;
     if (F('onLedge') && !F('cheese') && id !== 'cheese' && verb !== 'look') { if (id === 'hero' || id === 'ledge') return false; await g.say('hero', 's2.ledge.stuck'); return true; }
     switch (id) {
       case 'horse':

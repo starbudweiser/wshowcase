@@ -1,0 +1,12 @@
+#!/bin/zsh
+# Les « aveugles » (Pourquoi il fait si sombre ?) : un personnage par scène, avec un objet sur les yeux, puis sa version éclairée.
+cd "$(dirname "$0")/../work" || exit 1
+SP="full body game sprite, hand-painted 1990s PC point-and-click adventure game art, sarcastic cartoon style with realistic adult proportions, detailed painterly shading, bold dark outlines, saturated warm colors, plain flat solid magenta background, no shadow, no text"
+g(){ out="$1"; shift; [ -f "$out" ] || flux-image "$@" -o "$out" >/dev/null 2>&1; echo "ok $out"; }
+g blind_pot.png "A stocky middle-aged Nordic villager in worn brown peasant clothes, a big dented iron cooking pot pulled down over his whole face covering his eyes, both arms stretched out in front groping blindly, comical, standing in full front three-quarter view. $SP" -s 1024x1024 --seed 201
+g blind_sack.png "A burly Nordic miller in a flour-dusted apron, a large burlap flour sack pulled down over his whole head covering his eyes and tied with a rope at the neck, both arms stretched out in front groping blindly, comical, standing in full front three-quarter view. $SP" -s 1024x1024 --seed 202
+g blind_hat.png "A bearded Nordic hunter in furs and leather holding a spear, a huge shaggy mammoth-fur hat pulled all the way down over his eyes and nose, one hand out groping blindly, comical, standing in full front three-quarter view. $SP" -s 1024x1024 --seed 203
+g lit_pot.png "The same man, same clothes, same art style and colors, same magenta background, but with no pot on his head at all: his whole face is visible with wide open amazed delighted eyes and a huge joyful open-mouth smile, both arms raised up in celebration, dancing." -i blind_pot.png -s 1024x1024 --seed 211
+g lit_sack.png "The same man, same clothes, same art style and colors, same magenta background, but with no sack on his head at all: his whole face is visible with wide open amazed delighted eyes and a huge joyful open-mouth smile, both arms raised up in celebration, dancing." -i blind_sack.png -s 1024x1024 --seed 212
+g lit_hat.png "The same man, same clothes, same art style and colors, same magenta background, but with no fur hat on his head at all: his bald head and whole face are visible with wide open amazed delighted eyes and a huge joyful open-mouth smile, both arms raised up in celebration, dancing." -i blind_hat.png -s 1024x1024 --seed 213
+echo done

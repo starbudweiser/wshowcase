@@ -40,3 +40,8 @@
 .pc-card .pc-fine{margin:16px 0 0;font-size:11.5px;color:var(--s-sub)}
 .pc-btns,.pc-opts{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}.pc-opts{margin-top:10px}
 .pc-card .sbtn{height:36px;font-size:12.5px}
+
+.pc-toast{position:absolute;left:50%;bottom:calc(var(--u)*14px);transform:translateX(-50%);z-index:6;display:flex;flex-direction:column;gap:2px;align-items:center;max-width:70%;padding:calc(var(--u)*5px) calc(var(--u)*12px);background:rgba(22,10,6,.94);border:1px solid #d49a45;border-radius:4px;color:#ffe9b8;text-align:center;font-size:calc(var(--u)*11px);line-height:1.1;box-shadow:0 8px 30px rgba(0,0,0,.5);animation:pctoast .35s ease-out;transition:opacity .5s}
+.pc-toast b{color:#ffd27a;font-weight:400;font-size:calc(var(--u)*12px);letter-spacing:.04em}.pc-toast.out{opacity:0}
+@keyframes pctoast{from{transform:translate(-50%,16px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
+.pc-card .pc-ach{margin:14px 0 0;font-size:12.5px;color:var(--s-tm)}.pc-card .pc-ach.done{color:#e8b84a}

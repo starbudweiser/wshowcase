@@ -3,6 +3,7 @@
 import { lang } from '../../i18n.js';
 import { Walk, hitPoly } from './walk.js';
 import { snd } from './sound.js';
+import { light, getAch, BLINDS } from './ach.js';
 import { loadLang, makeT } from './lang.js';
 import { hasSave, loadSave, writeSave, clearSave } from './save.js';
 import { makeAmbient } from './ambient.js';
@@ -10,7 +11,7 @@ import { SPR, ITEMS } from '../data/sheets.js';
 
 export const W = 480, H = 270;
 const VERBS = ['walk', 'take', 'use', 'talk', 'look'];
-const COLORS = { hero: '#ffe08a', rider: '#ffe08a', merchant: '#ffa45c', guard: '#9ad0ff', horse: '#f0c890', hen: '#ffffff', giant: '#ffb070', nazim: '#c9a8ff', narr: '#ffffff' };
+const COLORS = { hero: '#ffe08a', rider: '#ffe08a', merchant: '#ffa45c', guard: '#9ad0ff', horse: '#f0c890', hen: '#ffffff', blind_pot: '#e6e0a0', blind_sack: '#e6e0a0', blind_hat: '#e6e0a0', giant: '#ffb070', nazim: '#c9a8ff', narr: '#ffffff' };
 class Cancel {}
 const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
@@ -19,7 +20,7 @@ export class Game {
   constructor(root) {
     this.root = root; this.imgs = {}; this.st = null; this.scene = null; this.ents = []; this.hot = []; this.waiters = [];
     this.verb = 'walk'; this.sel = null; this.hover = null; this.tok = 0; this.runTok = 0; this.locked = false; this.now = 0; this.fx = {};
-    this.bubbles = []; this.choice = null; this.skip = false; this.alive = true; this.started = false; this.nextBlip = 0; this.mouse = [0, 0];
+    this.bubbles = []; this.barks = []; this.choice = null; this.skip = false; this.alive = true; this.started = false; this.nextBlip = 0; this.mouse = [0, 0];
   }
 
   /* ───────── démarrage ───────── */
@@ -101,7 +102,8 @@ export class Game {
     const opts = el('div', 'pc-opts');
     const sb = el('button', 'sbtn', T(snd.musicOn === false ? 'ui.musicOff' : 'ui.musicOn')); sb.onclick = () => { snd.musicOn = snd.musicOn === false ? true : false; snd.music(snd.musicOn); sb.textContent = T(snd.musicOn ? 'ui.musicOn' : 'ui.musicOff'); }; opts.append(sb);
     const lb = el('button', 'sbtn', this.lang === 'fr' ? 'English' : 'Français'); lb.onclick = () => this.setLang(this.lang === 'fr' ? 'en' : 'fr'); opts.append(lb);
-    c.append(row, opts, el('p', 'pc-fine', T('ui.fine'))); d.append(c); this.stage.append(d); this.titleEl = d;
+    const ac = getAch(), n = ac.lit.filter(x => BLINDS.includes(x)).length;
+    c.append(row, opts, el('p', 'pc-ach' + (ac.done.includes('fiatlux') ? ' done' : ''), T('ach.menu', { n, t: BLINDS.length })), el('p', 'pc-fine', T('ui.fine'))); d.append(c); this.stage.append(d); this.titleEl = d;
   }
   hideTitle() { if (this.titleEl) { this.titleEl.remove(); this.titleEl = null; } }
 
@@ -126,7 +128,7 @@ export class Game {
     const st = how.restored && this.st.hero ? this.st.hero : sc.start;
     this.hero = { id: 'hero', who: 'hero', spr: 'hero.side', x: st.x, y: st.y, dir: st.dir || 'r', path: [], walkD: 0, hot: true, isHero: true, visible: true };
     this.ents.push(this.hero);
-    this.hover = null; this.renderPanel(); this.renderLine();
+    this.clearBarks(); this.hover = null; this.renderPanel(); this.renderLine();
     if (this.started) snd.music(snd.musicOn !== false, sc.music || id);
     if (sc.enter) await sc.enter(this, how);
     this.save();
@@ -173,6 +175,23 @@ export class Game {
     const w = b.offsetWidth, l = clamp(x * k, w / 2 + 6, sw - w / 2 - 6); b.style.left = l + 'px'; if (y * k - b.offsetHeight < 4) b.style.top = (b.offsetHeight + 6) + 'px';
   }
   clearBubbles() { this.bubbles.forEach(b => b.remove()); this.bubbles = []; }
+  /* réplique lancée en passant, sans bloquer le jeu (les aveugles qui répètent « Pourquoi il fait si sombre ? ») */
+  bark(who, key, ms = 2800, force = false) {
+    const e = this.ent(who); if (!e || (this.locked && !force) || this.titleEl) return;
+    const b = el('div', 'pc-b', this.T(key)); b.style.color = COLORS[who] || '#fff'; this.ov.append(b);
+    const [ax, ay] = this.headPos(e); this.placeBubble(b, ax, ay); this.barks.push({ b, who, end: this.now + ms / 1000 }); snd.blip('hero');
+  }
+  clearBarks() { this.barks.forEach(k => k.b.remove()); this.barks = []; }
+  toast(title, text) {
+    const t = el('div', 'pc-toast'); t.append(el('b', '', title), el('span', '', text)); this.stage.append(t); snd.jingle();
+    setTimeout(() => t.classList.add('out'), 4200); setTimeout(() => t.remove(), 4800);
+  }
+  /* un aveugle a retrouvé la lumière : compte, toast, succès */
+  lightUp(sceneId) {
+    const r = light(sceneId), T = this.T;
+    this.toast(T('ach.lit.title'), T('ach.lit', { n: r.count, t: r.total }));
+    if (r.first) setTimeout(() => this.toast(T('ach.fiat.title'), T('ach.fiat.text')), 2600);
+  }
   /* choix de dialogue : renvoie l'indice choisi */
   async ask(keys) {
     this.chk(); this.askEl.innerHTML = ''; this.choice = null; this.sel = null;
@@ -270,6 +289,7 @@ export class Game {
       if (e.goal) { const [gx, gy, sp] = e.goal, dx = gx - e.x, dy = gy - e.y, d = Math.hypot(dx, dy), st = sp * dt; if (d <= st) { e.x = gx; e.y = gy; e.goal = null; } else { e.x += dx / d * st; e.y += dy / d * st; } }
       if (e.talk && this.now >= this.nextBlip) { snd.blip(e.talk); this.nextBlip = this.now + 0.07; }
     });
+    for (let i = this.barks.length - 1; i >= 0; i--) { const k = this.barks[i], e = this.ent(k.who); if (!e || this.now > k.end) { k.b.remove(); this.barks.splice(i, 1); } else { const [ax, ay] = this.headPos(e); this.placeBubble(k.b, ax, ay); } }
     if (this.scene && this.scene.tick) this.scene.tick(this, dt);
     for (let i = this.waiters.length - 1; i >= 0; i--) { const w = this.waiters[i]; if (w.cond()) { this.waiters.splice(i, 1); w.res(); } }
     const f = this.fx.fade; if (f) { const t = clamp((this.now - f.t0) / f.ms, 0, 1); f.a = f.from + (f.to - f.from) * t; if (t >= 1) { f.a = f.to; if (f.to === 0) delete this.fx.fade; } }

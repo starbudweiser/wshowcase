@@ -63,34 +63,40 @@ const F = mtof;
 /* Rivebois : calme et large, ré dorien — cordes, luth, flûte, bourdon grave */
 const RUE_R = [50, 48, 46, 50, 50, 53, 48, 50], RUE_T = [3, 4, 4, 3, 3, 4, 4, 3];
 const RUE_M = [[[0, 0, 2], [2, 2, 1], [3, 3, 1]], [[5, 0, 3], [3, 3, 1]], [[2, 0, 2], [0, 2, 1], [-2, 3, 1]], [[0, 0, 4]], [[7, 0, 2], [5, 2, 1], [3, 3, 1]], [[5, 0, 2], [7, 2, 2]], [[10, 0, 2], [9, 2, 1], [7, 3, 1]], [[5, 0, 2], [0, 2, 2]]];
+const RUE_M2 = [[[7, 0, 2], [9, 2, 1], [10, 3, 1]], [[12, 0, 3], [10, 3, 1]], [[9, 0, 2], [7, 2, 1], [5, 3, 1]], [[7, 0, 4]], [[5, 0, 2], [3, 2, 1], [2, 3, 1]], [[3, 0, 2], [5, 2, 2]], [[7, 0, 2], [5, 2, 1], [3, 3, 1]], [[2, 0, 2], [0, 2, 2]]];
 /* Chemin du moulin : gigue de voyage, la dorien — violon, luth, bodhrán, bourdon */
 const MIL_R = [45, 50, 45, 43, 45, 50, 43, 45], MIL_T = [3, 4, 3, 4, 3, 4, 4, 3];
 const MIL_M = [[0, 3, 7, 5, 3, 0], [2, 5, 9, 7, 5, 2], [3, 7, 10, 9, 7, 3], [7, 7, 5, 3, 2, 0], [0, 3, 7, 10, 9, 7], [5, 7, 9, 10, 12, 10], [9, 7, 5, 3, 5, 7], [3, 2, 0, 0, 0, null]];
+const MIL_M2 = [[12, 10, 9, 7, 9, 10], [12, 12, 10, 9, 7, 5], [7, 9, 10, 12, 10, 9], [7, 5, 3, 2, 0, null], [0, 3, 7, 12, 10, 7], [9, 10, 12, 14, 12, 10], [9, 7, 5, 7, 9, 10], [7, 3, 2, 0, 0, null]];
 /* Prairie des géants : marche épique, ré éolien — chœur d'hommes, cuivres graves, tambours de guerre */
 const GEA_R = [38, 34, 41, 36, 38, 34, 36, 33];
 const GEA_M = [[[62, 0, 3], [65, 3, 1]], [[69, 0, 4]], [[67, 0, 3], [65, 3, 1]], [[64, 0, 4]], [[62, 0, 2], [65, 2, 2]], [[70, 0, 3], [69, 3, 1]], [[67, 0, 2], [64, 2, 2]], [[62, 0, 4]]];
+const GEA_M2 = [[[69, 0, 3], [72, 3, 1]], [[74, 0, 4]], [[72, 0, 3], [70, 3, 1]], [[69, 0, 4]], [[65, 0, 2], [69, 2, 2]], [[74, 0, 3], [72, 3, 1]], [[70, 0, 2], [67, 2, 2]], [[69, 0, 4]]];
 const TRACKS = {
   rue: { bar: 3.8, play(i, t, I) {
-    const b = i % 8, B = 0.95, r = RUE_R[b], th = RUE_T[b], d = B * 4.2;
+    const q = i % 16, b = q & 7, B = 0.95, r = RUE_R[b], th = RUE_T[b], d = B * 4.2, A = q < 8;
     I.pad(F(r), t, d, 0.03); I.pad(F(r + 7), t, d, 0.026); I.pad(F(r + 12 + th), t, d, 0.02); I.pad(F(r - 12), t, d, 0.06, 0.6, 'sine');
     [0, 7, 12, th + 12, 12, 7, th + 12, 7].forEach((s, k) => I.pluck(F(r + 12 + s), t + k * B / 2, 0.55, 0.05));
-    RUE_M[b].forEach(([n, s, l]) => I.flute(F(62 + n), t + s * B, l * B * 0.95, 0.07));
-    if (b === 3 || b === 7) I.choir(F(r + 12), t, d, 0.03);
+    (A ? RUE_M : RUE_M2)[b].forEach(([n, s, l]) => I.flute(F(62 + n), t + s * B, l * B * 0.95, A ? 0.07 : 0.075));
+    if (A ? (b === 3 || b === 7) : true) I.choir(F(r + 12), t, d, A ? 0.03 : 0.05);
+    if (!A) { I.choir(F(r), t, d, 0.04); I.pad(F(r + 19), t, d, 0.02, 1.4); }
   } },
   mill: { bar: 1.62, play(i, t, I) {
-    const b = i % 8, E = 0.27, r = MIL_R[b], th = MIL_T[b];
+    const q = i % 16, b = q & 7, E = 0.27, r = MIL_R[b], th = MIL_T[b], A = q < 8;
     I.pad(F(45), t, E * 6.2, 0.045, 0.3, 'sawtooth', 500); I.pad(F(52), t, E * 6.2, 0.032, 0.3, 'sawtooth', 500);
     I.drum(t, 0.26); I.drum(t + 3 * E, 0.2); I.drum(t + 2 * E, 0.07); I.drum(t + 5 * E, 0.07);
     [0, 3].forEach(k => [r + 12, r + 12 + th, r + 19].forEach((n, q) => I.pluck(F(n), t + k * E + q * 0.03, 0.4, 0.085)));
-    MIL_M[b].forEach((s, k) => { if (s !== null) I.fiddle(F(69 + s), t + k * E, E * 0.95, 0.09); });
+    (A ? MIL_M : MIL_M2)[b].forEach((s, k) => { if (s !== null) I.fiddle(F(69 + s), t + k * E, E * 0.95, 0.09); });
+    if (!A && b % 2 === 0) I.fiddle(F(57 + [0, 3, 0, -2][b >> 1]), t, E * 5.5, 0.04);
   } },
   meadow: { bar: 3.76, play(i, t, I) {
-    const b = i % 8, B = 0.94, r = GEA_R[b], d = B * 4.1;
+    const q = i % 16, b = q & 7, B = 0.94, r = GEA_R[b], d = B * 4.1, A = q < 8;
     I.pad(F(26), t, d, 0.07, 0.8, 'sawtooth', 450); I.pad(F(r + 12), t, d, 0.04, 1.2, 'sawtooth', 700); I.pad(F(r + 19), t, d, 0.03, 1.2, 'sawtooth', 700);
     I.brass(F(r + 12), t, B * 1.8, 0.07); I.brass(F(r + 12), t + 2 * B, B * 1.8, 0.07);
-    GEA_M[b].forEach(([n, s, l]) => { I.choir(F(n - 12), t + s * B, l * B, 0.16); I.choir(F(n - 24), t + s * B, l * B, 0.13); });
+    (A ? GEA_M : GEA_M2)[b].forEach(([n, s, l]) => { I.choir(F(n - 12), t + s * B, l * B, 0.16); I.choir(F(n - 24), t + s * B, l * B, 0.13); if (!A) I.choir(F(n - 5), t + s * B, l * B, 0.07); });
+    if (!A) { I.brass(F(r + 24), t, B * 1.4, 0.06); I.brass(F(r + 24), t + 1.5 * B, B * 0.9, 0.05); I.brass(F(r + 31), t + 2.5 * B, B * 1.4, 0.05); }
     I.drum(t, 0.26, true); I.drum(t + 2 * B, 0.22, true); I.drum(t + 3 * B, 0.09); I.drum(t + 3.5 * B, 0.09);
-    if (b === 7) [0, 0.25, 0.5, 0.75].forEach((x, k) => I.drum(t + 3 * B + x * B, 0.1 + k * 0.05, true));
+    if (b === 7 || (!A && b === 3)) [0, 0.25, 0.5, 0.75].forEach((x, k) => I.drum(t + 3 * B + x * B, 0.1 + k * 0.05, true));
   } }
 };
 function stopTrack() {

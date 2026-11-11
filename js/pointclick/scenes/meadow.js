@@ -1,4 +1,6 @@
 /* Scène 3 : la prairie des géants. Programme spatial : meule dorée → géant → noble arrogant en orbite. */
+import { BLINDS, blindEnt, blindEnter, blindTick, blindOn } from './blind.js';
+const BL = BLINDS.meadow;
 import { makeAmbient } from '../engine/ambient.js';
 const GIANT = [262, 243], NAZ = [398, 192];
 const ORBIT = { type: 'orbit', spr: 'nazim', id: 'nazim_orbit', scale: 0.2, y: 44, arc: 8, period: 58, offset: 10, spin: 0.7, x0: 10, x1: 470 };
@@ -25,13 +27,16 @@ export default {
   ],
   ents: [
     { id: 'giant', spr: 'giant', x: GIANT[0], y: GIANT[1], scale: 0.78, hot: true, at: [GIANT[0] - 52, GIANT[1] + 8] },
-    { id: 'nazim', spr: 'nazim', x: NAZ[0], y: NAZ[1], hot: true, at: [372, 212] }
+    { id: 'nazim', spr: 'nazim', x: NAZ[0], y: NAZ[1], hot: true, at: [372, 212] },
+    blindEnt(BL)
   ],
 
   async enter(g) {
+    blindEnter(g, BL);
     if (g.flag('nazimGone')) { g.ents = g.ents.filter(e => e.id !== 'nazim'); g.amb.push(...makeAmbient([ORBIT])); }
   },
   tick(g) {
+    blindTick(g, BL);
     const gi = g.ent('giant'); if (gi && gi.spr === 'giant') gi.bob = (0.5 + 0.5 * Math.sin(g.now * 1.2)) * 0.9;
   },
 
@@ -42,6 +47,7 @@ export default {
 
   async on(g, verb, id, item) {
     const F = k => g.flag(k);
+    if (await blindOn(g, BL, verb, id, item)) return true;
     switch (id) {
       case 'giant':
         if (verb === 'talk' || (verb === 'use' && item === 'cheese')) {
