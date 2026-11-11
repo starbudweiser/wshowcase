@@ -3,7 +3,8 @@
 import { lang } from '../../i18n.js';
 import { Walk, hitPoly } from './walk.js';
 import { snd } from './sound.js';
-import { light, getAch, BLINDS } from './ach.js';
+import { light, getAch, BLINDS, reach, reached } from './ach.js';
+import { CHAPTERS } from '../scenes/index.js';
 import { loadLang, makeT } from './lang.js';
 import { hasSave, loadSave, writeSave, clearSave } from './save.js';
 import { makeAmbient } from './ambient.js';
@@ -102,8 +103,10 @@ export class Game {
     const opts = el('div', 'pc-opts');
     const sb = el('button', 'sbtn', T(snd.musicOn === false ? 'ui.musicOff' : 'ui.musicOn')); sb.onclick = () => { snd.musicOn = snd.musicOn === false ? true : false; snd.music(snd.musicOn); sb.textContent = T(snd.musicOn ? 'ui.musicOn' : 'ui.musicOff'); }; opts.append(sb);
     const lb = el('button', 'sbtn', this.lang === 'fr' ? 'English' : 'Français'); lb.onclick = () => this.setLang(this.lang === 'fr' ? 'en' : 'fr'); opts.append(lb);
+    let chapEls = []; const rs = reached(), chs = CHAPTERS.filter(x => rs.includes(x.id));
+    if (chs.length > 1) { const cr = el('div', 'pc-opts'); chs.forEach(x => { const b = el('button', 'sbtn', T('ch.' + x.id)); b.onclick = () => { snd.unlock(); this.startAt(x); }; cr.append(b); }); chapEls = [el('p', 'pc-ach', T('ui.chapters')), cr]; }
     const ac = getAch(), n = ac.lit.filter(x => BLINDS.includes(x)).length;
-    c.append(row, opts, el('p', 'pc-ach' + (ac.done.includes('fiatlux') ? ' done' : ''), T('ach.menu', { n, t: BLINDS.length })), el('p', 'pc-fine', T('ui.fine'))); d.append(c); this.stage.append(d); this.titleEl = d;
+    c.append(row, opts, ...chapEls, el('p', 'pc-ach' + (ac.done.includes('fiatlux') ? ' done' : ''), T('ach.menu', { n, t: BLINDS.length })), el('p', 'pc-fine', T('ui.fine'))); d.append(c); this.stage.append(d); this.titleEl = d;
   }
   hideTitle() { if (this.titleEl) { this.titleEl.remove(); this.titleEl = null; } }
 
@@ -112,6 +115,12 @@ export class Game {
     this.hideTitle(); clearSave(); this.cancelAll(); this.locked = false; this.sel = null; this.fx = {};
     this.st = { scene: 'rue', flags: {}, inv: [], hero: null }; snd.music(snd.musicOn !== false); this.started = true;
     await this.goScene('rue', { intro: true });
+  }
+  /* sélecteur de scène : repart au début d'un chapitre déjà atteint, avec l'état attendu à son entrée */
+  async startAt(ch) {
+    this.hideTitle(); clearSave(); this.cancelAll(); this.locked = false; this.sel = null; this.fx = {};
+    this.st = { scene: ch.id, flags: { ...ch.flags }, inv: [...ch.inv], hero: null }; snd.music(snd.musicOn !== false, ch.id); this.started = true;
+    await this.goScene(ch.id, { intro: true });
   }
   async continueGame() {
     const s = loadSave(); if (!s) return this.newGame();
@@ -130,6 +139,7 @@ export class Game {
     this.ents.push(this.hero);
     this.clearBarks(); this.hover = null; this.renderPanel(); this.renderLine();
     if (this.started) snd.music(snd.musicOn !== false, sc.music || id);
+    if (this.started) reach(id);
     if (sc.enter) await sc.enter(this, how);
     this.save();
     if (how.intro && sc.intro) this.run(() => this.cut(() => sc.intro(this)));

@@ -233,5 +233,9 @@ export default {
   'ach.lit': 'One blind soul enlightened ({n}/{t})',
   'ach.fiat.title': 'Achievement: Fiat lux',
   'ach.fiat.text': 'Every blind soul has found the light again.',
-  'ach.menu': '“Fiat lux” achievement: blind souls enlightened {n}/{t}'
+  'ach.menu': '“Fiat lux” achievement: blind souls enlightened {n}/{t}',
+  'ui.chapters': 'Pick a scene',
+  'ch.rue': '1. Riverwood main street',
+  'ch.mill': '2. The mill road',
+  'ch.meadow': '3. The giants’ meadow'
 };

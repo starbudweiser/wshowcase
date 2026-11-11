@@ -249,5 +249,9 @@ export default {
   'ach.lit': 'Un aveugle éclairé ({n}/{t})',
   'ach.fiat.title': 'Succès : Fiat lux',
   'ach.fiat.text': 'Tous les aveugles ont retrouvé la lumière.',
-  'ach.menu': 'Succès « Fiat lux » : aveugles éclairés {n}/{t}'
+  'ach.menu': 'Succès « Fiat lux » : aveugles éclairés {n}/{t}',
+  'ui.chapters': 'Choisir une scène',
+  'ch.rue': '1. La rue de Rivebois',
+  'ch.mill': '2. Le chemin du moulin',
+  'ch.meadow': '3. La prairie des géants'
 };

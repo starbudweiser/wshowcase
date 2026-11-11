@@ -380,3 +380,10 @@ arrogant du Quartier des Nuages qui répète ses phrases en boucle et barre la r
 Route libre → fin du chapitre 3. Nouveau type de décor vivant : **orbit** (sprite minuscule qui tourne dans le ciel, cliquable : le seau de la
 scène 1 et Nazim). Visuels : `tools/gen_scene3.sh` puis `tools/build_sprites.sh`. La scène 2 enchaîne maintenant sur la scène 3 (fondu).
 Reste à faire : scène 4 (cinquante choux dans la petite charrette), scène 5 (gardes et flèche dans le genou).
+
+## Sélecteur de scène et ajout de scènes
+
+Chaque scène atteinte est mémorisée (hors sauvegarde, elle survit à « Nouvelle partie »). Le menu (≡) affiche alors « Choisir une scène » avec un bouton
+par chapitre atteint : il repart au début de la scène avec l'état attendu (inventaire et drapeaux). Ajouter une scène : créer `scenes/<id>.js`,
+ajouter une ligne dans `scenes/index.js` (`CHAPTERS`, avec son état d'entrée) et les clés `ch.<id>` dans `lang/fr.js` et `lang/en.js`.
+La sauvegarde automatique (scène, drapeaux, inventaire, position) reste en place pour « Continuer ».
