@@ -70,7 +70,7 @@ export default {
         if (verb === 'walk') { if (id === 'cliff') { await g.say('hero', 'use.cliff'); return true; } }
         break;
       case 'path':
-        if (verb === 'walk' || verb === 'use') { if (!F('cheese')) { await g.say('hero', 's2.exit.no'); return true; } await g.cut(async () => { await g.say('hero', 's2.exit.yes'); await g.walkTo(300, 270); await g.end('end2'); }); return true; }
+        if (verb === 'walk' || verb === 'use') { if (!F('cheese')) { await g.say('hero', 's2.exit.no'); return true; } await g.cut(async () => { await g.say('hero', 's2.exit.yes'); await g.walkTo(300, 270); await g.fade(1, 900); setTimeout(() => g.goScene('meadow', { intro: true }), 0); }); return true; }
         break;
     }
     return false;

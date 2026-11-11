@@ -19,3 +19,7 @@ P horse "$W/ch_horse.png" 90
 P horse_ride "$W/var_horse_ride.png" 0 --like horse
 [ -f "$W/item_carrot.png" ] && P carrot "$W/item_carrot.png" 18 40
 [ -f "$W/item_cheese.png" ] && P cheese "$W/item_cheese.png" 22 40
+# scène 3
+P giant "$W/ch_giant.png" 170
+[ -f "$W/var_giant_swing.png" ] && P giant_swing "$W/var_giant_swing.png" 0 --like giant
+P nazim "$W/ch_nazim.png" 96

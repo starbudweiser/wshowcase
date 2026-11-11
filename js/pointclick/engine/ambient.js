@@ -61,6 +61,20 @@ const KINDS = {
       }
     };
   },
+  /* objet en orbite : un sprite minuscule qui tourne lentement dans le ciel ; cliquable */
+  orbit(o) {
+    const id = o.id || 'satellite'; let pos = null;
+    return {
+      id,
+      hit(x, y) { return !!pos && Math.abs(x - pos[0]) < pos[2] / 2 + 3 && Math.abs(y - pos[1]) < pos[2] / 2 + 3; },
+      draw(g, c, t) {
+        const im = g.spr(o.spr); if (!im) return; const per = o.period ?? 70, p = ((t + (o.offset ?? 0)) % per) / per, s = o.scale ?? 0.3;
+        const x = (o.x0 ?? 20) + p * ((o.x1 ?? 460) - (o.x0 ?? 20)), y = (o.y ?? 24) + Math.sin(p * Math.PI) * -(o.arc ?? 10), w = im.width * s, h = im.height * s;
+        pos = [x, y, Math.max(w, h)];
+        c.save(); c.translate(Math.round(x), Math.round(y)); c.rotate(t * (o.spin ?? 1.2)); c.drawImage(im, Math.round(-w / 2), Math.round(-h / 2), Math.round(w), Math.round(h)); c.restore();
+      }
+    };
+  },
   /* dragon qui traverse le ciel, ailes battantes, de façon répétée ; cliquable */
   dragon(o) {
     const period = o.period ?? 34, y0 = o.y ?? 26, id = o.id || 'dragon';

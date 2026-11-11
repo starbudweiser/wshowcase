@@ -114,7 +114,7 @@ function startTrack(id) {
 
 export const snd = {
   unlock: ensure,
-  blip(who = 'hero') { const base = { hero: 330, merchant: 190, guard: 150, hen: 520, narr: 260 }[who] || 260; tone({ f: base * (0.9 + Math.random() * 0.3), d: 0.045, g: 0.05, type: 'square' }); },
+  blip(who = 'hero') { const base = { hero: 330, merchant: 190, guard: 150, hen: 520, giant: 85, nazim: 300, narr: 260 }[who] || 260; tone({ f: base * (0.9 + Math.random() * 0.3), d: 0.045, g: 0.05, type: 'square' }); },
   step() { noise({ d: 0.06, f: 500 + Math.random() * 300, q: 0.8, g: 0.07, type: 'lowpass' }); },
   click() { tone({ f: 900, to: 600, d: 0.04, g: 0.05, type: 'triangle' }); },
   pop() { tone({ f: 420, to: 1100, d: 0.12, g: 0.1, type: 'triangle' }); tone({ f: 1320, d: 0.16, t: 0.1, g: 0.06, type: 'sine' }); },

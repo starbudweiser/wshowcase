@@ -10,7 +10,7 @@ import { SPR, ITEMS } from '../data/sheets.js';
 
 export const W = 480, H = 270;
 const VERBS = ['walk', 'take', 'use', 'talk', 'look'];
-const COLORS = { hero: '#ffe08a', rider: '#ffe08a', merchant: '#ffa45c', guard: '#9ad0ff', horse: '#f0c890', hen: '#ffffff', narr: '#ffffff' };
+const COLORS = { hero: '#ffe08a', rider: '#ffe08a', merchant: '#ffa45c', guard: '#9ad0ff', horse: '#f0c890', hen: '#ffffff', giant: '#ffb070', nazim: '#c9a8ff', narr: '#ffffff' };
 class Cancel {}
 const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
@@ -182,8 +182,8 @@ export class Game {
   shake(ms = 500, amp = 3) { this.fx.shake = { end: this.now + ms / 1000, amp }; }
   async fade(to, ms = 600) { const from = this.fx.fade ? this.fx.fade.a : (to ? 0 : 1); this.fx.fade = { from, to, t0: this.now, ms: ms / 1000, a: from }; await this.until(() => !this.fx.fade || this.fx.fade.a === to); }
   /* objet lancé : de (x0,y0) vers (x1,y1) avec un arc */
-  async fly(sprName, [x0, y0], [x1, y1], ms = 500, arc = 30, spin = 0) {
-    const e = { id: 'fly', spr: sprName, x: x0, y: y0, scale: 1, visible: true, fly: true, rot: 0, noHot: true }; this.ents.push(e);
+  async fly(sprName, [x0, y0], [x1, y1], ms = 500, arc = 30, spin = 0, scale = 1) {
+    const e = { id: 'fly', spr: sprName, x: x0, y: y0, scale, visible: true, fly: true, rot: 0, noHot: true }; this.ents.push(e);
     const t0 = this.now, d = ms / 1000;
     await this.until(() => { const t = Math.min(1, (this.now - t0) / d); e.x = x0 + (x1 - x0) * t; e.y = y0 + (y1 - y0) * t - Math.sin(t * Math.PI) * arc; e.rot = spin * t; return t >= 1; });
     this.ents = this.ents.filter(x => x !== e); this.chk();

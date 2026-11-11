@@ -358,3 +358,25 @@ Le dragon peint a été retiré du décor de la scène 1 (retouche FLUX) et remp
 du chapitre 2 (teaser du chapitre 3, les géants). La meule servira d'appât dans la scène des géants. Passage entre les scènes : pont de la
 scène 1, fondu au noir. Nouveaux visuels FLUX : décor du moulin, dragon (2 poses), cheval, cheval + héros, carotte, meule
 (`tools/gen_scene2.sh`, puis `tools/build_sprites.sh`).
+
+## Musiques (une par scène, `js/pointclick/engine/sound.js`)
+
+Entièrement synthétisées (Web Audio, aucun fichier audio, compositions originales) avec l'esprit de la musique de Skyrim : modes nordiques
+(ré dorien, la dorien, ré éolien), réverbération de grande salle, **chœur d'hommes** (scies désaccordées + formants « a » + vibrato),
+**cuivres graves**, **cordes**, luth, flûte, violon, **tambours de guerre**. Aucune mélodie n'est reprise du jeu.
+- `rue` (Rivebois) : calme et large, cordes, luth en arpèges, flûte, bourdon grave.
+- `mill` (moulin) : gigue de voyage à 6/8, violon, luth, bodhrán.
+- `meadow` (géants) : marche épique, chœur d'hommes, cuivres, tambours de guerre, roulement à la fin de la boucle.
+Chaque piste dure 8 mesures en boucle ; au changement de scène, fondu enchaîné (1,2 s). Une scène peut forcer sa piste avec `music: 'id'`.
+Volume vérifié à l'analyseur (pics 0,11 à 0,24 : pas de saturation).
+
+## Scène 3 : « La prairie des géants » (`js/pointclick/scenes/meadow.js`)
+
+Décor FLUX reconnaissable : palais de bois de Blancherive sur sa colline, route, crâne de mammouth, tripodes, feu de camp, rampe et
+**cercle de lancement** du programme spatial des géants. Personnages : le **géant** (2 poses : au repos, massue levée) et **Nazim**, noble
+arrogant du Quartier des Nuages qui répète ses phrases en boucle et barre la route (clin d'œil aux PNJ des mèmes).
+Énigme : *Utiliser la meule dorée sur le géant* → il demande qui taper : *moi* (le héros part en orbite et retombe, gag répétable), *le noble*
+(le géant l'envoie dans le ciel, la meule est mangée, Nazim rejoint le **seau en orbite** et tourne dans le ciel pour de bon), ou *personne*.
+Route libre → fin du chapitre 3. Nouveau type de décor vivant : **orbit** (sprite minuscule qui tourne dans le ciel, cliquable : le seau de la
+scène 1 et Nazim). Visuels : `tools/gen_scene3.sh` puis `tools/build_sprites.sh`. La scène 2 enchaîne maintenant sur la scène 3 (fondu).
+Reste à faire : scène 4 (cinquante choux dans la petite charrette), scène 5 (gardes et flèche dans le genou).
