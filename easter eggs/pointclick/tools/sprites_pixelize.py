@@ -41,6 +41,10 @@ def main():
     for y in range(oh):
         for x in range(ow):
             if src[x, y][3] == 0 and any(0 <= x+dx < ow and 0 <= y+dy < oh and src[x+dx, y+dy][3] > 0 for dx, dy in ((1,0),(-1,0),(0,1),(0,-1))): pa[x, y] = (34, 18, 24, 255)
+    # recentre horizontalement sur le centre de masse : les images d'une animation ne « glissent » pas d'une pose à l'autre
+    ap = out.split()[3]; ow, oh = out.size; cols = [sum(1 for y in range(oh) if ap.getpixel((x, y)) > 0) for x in range(ow)]; tot = sum(cols) or 1
+    cx = sum(i * c for i, c in enumerate(cols)) / tot; half = int(max(cx, ow - cx)) + 1
+    canvas = Image.new('RGBA', (half * 2, oh), (0, 0, 0, 0)); canvas.paste(out, (int(round(half - cx)), 0)); out = canvas
     out.save(os.path.join(OUT, name + '.png'), optimize=True); print(name, out.size)
 
 

@@ -1,0 +1,39 @@
+#!/bin/zsh
+# Détoure et réduit tous les sprites FLUX (work/) vers assets/pointclick/spr/. Relancer après toute régénération.
+# Les images d'une même animation partagent le facteur d'échelle du personnage (--like) et sont recentrées sur leur centre de masse.
+D="$(cd "$(dirname "$0")" && pwd)"; W="$D/../work"
+P(){ python3 -I "$D/sprites_pixelize.py" "$@"; }
+rm -f "$W/scales.json"
+# héros (tenue de fer nordique) : face, marche de profil en 3 images, debout de profil, parole, repos
+P hero_front "$W/ch2_hero.png" 92
+for f in walkA walkP walkB stand talk idle2; do P hero_$f "$W/an_hero_$f.png" 0 --like hero_front; done
+# marchand
+P merchant "$W/ch2_merchant.png" 82
+for f in idle2 talk1 talk2; do P merchant_$f "$W/an_merchant_$f.png" 0 --like merchant; done
+P merchant_bucket "$W/an_merchant_bucket.png" 0 --like merchant
+# garde de Blancherive
+P guard "$W/ch2_guard.png" 96
+for f in idle2 talk walkA walkB; do P guard_$f "$W/an_guard_$f.png" 0 --like guard; done
+# poule, objets
+H="$W/ch_hen_74.png"; P hen "$H" 30 40
+for f in peck walk; do P hen_$f "$W/an_hen_$f.png" 0 --like hen; done
+P bucket "$W/item_bucket.png" 26 40
+P honey "$W/item_honey.png" 18 40
+# scène 2
+P dragon_up "$W/dragon_up.png" 64
+P dragon_down "$W/dragon_down.png" 0 --like dragon_up
+P horse "$W/ch2_horse.png" 90
+for f in idle2 walkA walkB; do P horse_$f "$W/an_horse_$f.png" 0 --like horse; done
+P horse_ride "$W/var_horse_ride2.png" 0 --like horse
+P carrot "$W/item_carrot.png" 18 40
+P cheese "$W/item_cheese.png" 22 40
+# scène 3
+P giant "$W/ch_giant.png" 170
+for f in idle2 talk walkA walkB; do P giant_$f "$W/an_giant_$f.png" 0 --like giant; done
+P giant_swing "$W/var_giant_swing.png" 0 --like giant
+P nazim "$W/ch_nazim.png" 96
+for f in idle2 talk; do P nazim_$f "$W/an_nazim_$f.png" 0 --like nazim; done
+# les aveugles et leurs versions éclairées (danse)
+P blind_pot "$W/blind_pot.png" 84;   P blind_pot2 "$W/an_pot_grope2.png" 0 --like blind_pot;   P lit_pot "$W/lit_pot.png" 0 --like blind_pot;   P lit_pot2 "$W/an_pot_dance2.png" 0 --like blind_pot
+P blind_sack "$W/blind_sack.png" 88; P blind_sack2 "$W/an_sack_grope2.png" 0 --like blind_sack; P lit_sack "$W/lit_sack.png" 0 --like blind_sack; P lit_sack2 "$W/an_sack_dance2.png" 0 --like blind_sack
+P blind_hat "$W/blind_hat.png" 88;   P blind_hat2 "$W/an_hat_grope2.png" 0 --like blind_hat;   P lit_hat "$W/lit_hat.png" 0 --like blind_hat;   P lit_hat2 "$W/an_hat_dance2.png" 0 --like blind_hat

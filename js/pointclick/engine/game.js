@@ -165,8 +165,8 @@ export class Game {
     const b = el('div', 'pc-b', text); b.style.color = COLORS[who] || '#fff'; this.ov.append(b); this.bubbles.push(b);
     const [ax, ay] = e ? this.headPos(e) : [W / 2, 40]; this.placeBubble(b, ax, ay);
     if (e) e.talk = who;
-    this.skip = false; const end = this.now + Math.max(1.3, text.length * 0.052);
-    await this.until(() => this.now >= end || this.skip); this.skip = false;
+    this.skip = false; const t0 = this.now, end = t0 + Math.max(1.7, text.length * 0.06); this.sayT0 = t0;
+    await this.until(() => this.now >= end || (this.skip && this.now - t0 > 0.6)); this.skip = false;
     b.remove(); this.bubbles = this.bubbles.filter(x => x !== b); if (e) e.talk = false; this.chk();
   }
   headPos(e) { const im = this.spr(e.spr), s = e.scale ?? this.persp(e.y); return [e.x, e.y - (im ? im.height * s : 40) - 3]; }
@@ -223,6 +223,8 @@ export class Game {
   }
   entRect(e) { const im = this.spr(e.spr); if (!im) return null; const s = e.scale ?? this.persp(e.y), w = im.width * s, h = im.height * s; return [e.x - w / 2, e.y - h, e.x + w / 2, e.y]; }
   onDown(e) {
+    /* pendant une réplique, un clic ne fait que la passer (et seulement après un court délai de lecture) : il ne lance pas une autre action */
+    if (this.bubbles.length && !this.titleEl && e.button !== 2) { if (this.now - (this.sayT0 || 0) > 0.6) this.skip = true; return; }
     if (e.button === 2 || this.locked || this.titleEl) { if (this.locked) this.skip = true; return; }
     this.popEl.hidden = true; snd.unlock();
     const p = this.pos(e), tg = this.pick(...p);
