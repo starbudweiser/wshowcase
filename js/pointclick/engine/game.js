@@ -3,6 +3,7 @@
 import { lang } from '../../i18n.js';
 import { Walk, hitPoly } from './walk.js';
 import { snd } from './sound.js';
+import { store } from '../../util.js';
 import { light, getAch, BLINDS, reach, reached } from './ach.js';
 import { CHAPTERS } from '../scenes/index.js';
 import { loadLang, makeT } from './lang.js';
@@ -64,7 +65,8 @@ export class Game {
     this.stage.append(this.cv, this.ov, this.askEl, this.popEl);
     this.panel = el('div', 'pc-panel'); this.lineEl = el('div', 'pc-line'); this.verbsEl = el('div', 'pc-verbs'); this.invEl = el('div', 'pc-inv');
     this.menuBtn = el('button', 'pc-menu', '≡'); this.menuBtn.title = 'Menu'; this.menuBtn.onclick = () => this.showTitle(true);
-    this.panel.append(this.lineEl, this.verbsEl, this.invEl, this.menuBtn);
+    this.musicBtn = el('button', 'pc-menu pc-music', '♪'); this.musicBtn.onclick = () => this.setMusic(snd.musicOn === false);
+    this.panel.append(this.lineEl, this.verbsEl, this.invEl, this.menuBtn, this.musicBtn); this.setMusic(store.get('pc.music', true), true);
     r.append(this.stage, this.panel);
     this.renderPanel();
     const cv = this.cv;
@@ -114,12 +116,17 @@ export class Game {
     if (!inGame && hasSave()) btn(T('ui.continue'), () => this.continueGame(), 'acc');
     btn(T('ui.new'), () => this.newGame(), !inGame && !hasSave() ? 'acc' : '');
     const opts = el('div', 'pc-opts');
-    const sb = el('button', 'sbtn', T(snd.musicOn === false ? 'ui.musicOff' : 'ui.musicOn')); sb.onclick = () => { snd.musicOn = snd.musicOn === false ? true : false; snd.music(snd.musicOn); sb.textContent = T(snd.musicOn ? 'ui.musicOn' : 'ui.musicOff'); }; opts.append(sb);
+    const sb = el('button', 'sbtn', T(snd.musicOn === false ? 'ui.musicOff' : 'ui.musicOn')); sb.onclick = () => { this.setMusic(snd.musicOn === false); sb.textContent = T(snd.musicOn ? 'ui.musicOn' : 'ui.musicOff'); }; opts.append(sb);
     const lb = el('button', 'sbtn', this.lang === 'fr' ? 'English' : 'Français'); lb.onclick = () => this.setLang(this.lang === 'fr' ? 'en' : 'fr'); opts.append(lb);
     let chapEls = []; const rs = reached(), chs = CHAPTERS.filter(x => rs.includes(x.id));
     if (chs.length > 1) { const cr = el('div', 'pc-opts'); chs.forEach(x => { const b = el('button', 'sbtn', T('ch.' + x.id)); b.onclick = () => { snd.unlock(); this.startAt(x); }; cr.append(b); }); chapEls = [el('p', 'pc-ach', T('ui.chapters')), cr]; }
     const ac = getAch(), n = ac.lit.filter(x => BLINDS.includes(x)).length;
     c.append(row, opts, ...chapEls, el('p', 'pc-ach' + (ac.done.includes('fiatlux') ? ' done' : ''), T('ach.menu', { n, t: BLINDS.length })), el('p', 'pc-fine', T('ui.fine'))); d.append(c); this.stage.append(d); this.titleEl = d;
+  }
+  /* commutateur de musique (bouton ♪ du panneau et bouton du menu), préférence mémorisée */
+  setMusic(on, quiet) {
+    snd.musicOn = !!on; store.set('pc.music', !!on); if (!quiet) snd.music(!!on);
+    this.musicBtn.classList.toggle('off', !on); this.musicBtn.title = this.T ? this.T(on ? 'ui.musicOn' : 'ui.musicOff') : '';
   }
   hideTitle() { if (this.titleEl) { this.titleEl.remove(); this.titleEl = null; } }
 
