@@ -23,8 +23,8 @@ export default {
     { type: 'dragon', y: 8, period: 36, offset: 8, scale: 0.95, drop: 8 },
     { type: 'flock', n: 5, y0: 16, y1: 80, speed: 12, seed: 4 },
     { type: 'frames', id: 'rue_river1', fps: 2.2 }, { type: 'frames', id: 'rue_river2', fps: 2, offset: 0.4 },
-    { type: 'frames', id: 'rue_wheel', fps: 1.4, seq: [0, 1, 2, -1] },
-    { type: 'frames', id: 'rue_mammoth', fps: 0.7, seq: [-1, 0, 0, -1, 1, 1, 2, -1] },
+    { type: 'spin', cx: 468, cy: 152, rx: 10, ry: 14, speed: 0.45 },
+    { type: 'frames', id: 'rue_mammoth', fade: false, fps: 0.7, seq: [-1, 0, 0, -1, 1, 1, 2, -1] },
     { type: 'frames', id: 'rue_flowers', fps: 1.3 }, { type: 'frames', id: 'rue_grass', fps: 1.1, offset: 0.7 }
   ],
   ents: [

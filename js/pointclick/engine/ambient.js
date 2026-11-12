@@ -81,8 +81,23 @@ const KINDS = {
       draw(g, c, t) {
         const A = g.animIdx && g.animIdx[o.id]; if (!A) return;
         const seq = o.seq || [-1, ...Array.from({ length: A.n }, (_, i) => i), ...Array.from({ length: Math.max(0, A.n - 2) }, (_, i) => A.n - 2 - i)];
-        const i = seq[Math.floor((t + (o.offset || 0)) * (o.fps || 3)) % seq.length]; if (i < 0 || i >= A.n) return;
-        const im = g.animImg(o.id, i); if (im) c.drawImage(im, A.x, A.y);
+        /* fondu enchaîné entre deux images successives : le mouvement devient continu même avec peu d'images */
+        const fp = (t + (o.offset || 0)) * (o.fps || 3), k = Math.floor(fp), f = o.fade === false ? 1 : fp - k, ease = f * f * (3 - 2 * f), i = seq[k % seq.length], j = seq[(k + 1) % seq.length];
+        const img = n => (n >= 0 && n < A.n ? g.animImg(o.id, n) : null), a = img(i), b = img(j);
+        if (b) { if (a) c.drawImage(a, A.x, A.y); c.save(); c.globalAlpha = ease; c.drawImage(b, A.x, A.y); c.restore(); }
+        else if (a) { c.save(); c.globalAlpha = 1 - ease; c.drawImage(a, A.x, A.y); c.restore(); }
+      }
+    };
+  },
+  /* roue qui tourne vraiment : la roue du décor, découpée en ellipse (vue de biais), est tournée dans son plan ; `skip` = zone à laisser fixe (barrière devant la roue) */
+  spin(o) {
+    const sx = o.rx / o.ry;
+    return {
+      draw(g, c, t) {
+        if (!g.bg) return;
+        c.save(); c.beginPath(); c.ellipse(o.cx, o.cy, o.rx, o.ry, 0, 0, Math.PI * 2);
+        if (o.skip) { const [x0, y0, x1, y1] = o.skip; c.rect(x0, y0, x1 - x0, y1 - y0); c.clip('evenodd'); } else c.clip();
+        c.translate(o.cx, o.cy); c.scale(sx, 1); c.rotate(t * (o.speed ?? 0.3)); c.scale(1 / sx, 1); c.drawImage(g.bg, -o.cx, -o.cy, 480, 270); c.restore();
       }
     };
   },
@@ -123,11 +138,13 @@ const KINDS = {
       draw(g, c, t) {
         const tt = t + (o.offset ?? 6), cyc = (tt % period) / period, travel = o.travel ?? 0.7;
         if (cyc > travel) { pos = null; return; }
-        const p = cyc / travel, dirL = (o.dir ?? -1) < 0, fi = Math.floor(tt * 4.2) % 4, flap = fi < 2, im = g.spr(g.spr('dragon.mid1') ? ['dragon.up', 'dragon.mid1', 'dragon.down', 'dragon.mid2'][fi] : (flap ? 'dragon.up' : 'dragon.down')); if (!im) return;
+        const p = cyc / travel, dirL = (o.dir ?? -1) < 0, ff = tt * 4.2, fi = Math.floor(ff) % 4, fe = ff - Math.floor(ff), flap = fi < 2, POSES = g.spr('dragon.mid1') ? ['dragon.up', 'dragon.mid1', 'dragon.down', 'dragon.mid2'] : ['dragon.up', 'dragon.up', 'dragon.down', 'dragon.down'], im = g.spr(POSES[fi]), im2 = g.spr(POSES[(fi + 1) % 4]); if (!im) return;
         const s = o.scale ?? 1, w = im.width * s, h = im.height * s, x = dirL ? 480 + w / 2 - p * (480 + w) : -w / 2 + p * (480 + w);
-        const y = y0 + h / 2 + Math.sin(tt * 0.9) * 7 + (flap ? 0 : 2) + p * (o.drop ?? 14);
+        const y = y0 + h / 2 + Math.sin(tt * 0.9) * 7 + (1 + Math.cos(ff * Math.PI / 2)) + p * (o.drop ?? 14);
         pos = [x, y + h / 2, w, h];
-        c.save(); c.translate(Math.round(x), Math.round(y)); if (!dirL) c.scale(-1, 1); c.drawImage(im, Math.round(-w / 2), Math.round(-h / 2), Math.round(w), Math.round(h)); c.restore();
+        c.save(); c.translate(Math.round(x), Math.round(y)); c.rotate(Math.sin(tt * 1.3) * 0.035 * (dirL ? 1 : -1)); if (!dirL) c.scale(-1, 1); c.drawImage(im, Math.round(-w / 2), Math.round(-h / 2), Math.round(w), Math.round(h));
+        if (im2 && im2 !== im) { c.globalAlpha = fe * fe * (3 - 2 * fe); c.drawImage(im2, Math.round(-w / 2), Math.round(-h / 2), Math.round(w), Math.round(h)); }
+        c.restore();
       }
     };
   }

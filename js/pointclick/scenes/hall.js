@@ -3,7 +3,7 @@ import { BLINDS, blindEnt, blindEnter, blindTick, blindOn } from './blind.js';
 const BL = BLINDS.hall, DOOR = [362, 172], AWAY = [150, 236];
 
 export default {
-  id: 'hall', bg: 'hall.png', persp: [172, 0.75, 268, 1.45],
+  id: 'hall', interior: true, bg: 'hall.png', persp: [172, 0.75, 268, 1.45],
   walk: [[[40, 268], [130, 232], [260, 196], [330, 174], [396, 170], [432, 192], [470, 232], [470, 268]]],
   fg: [],
   start: { x: 250, y: 232, dir: 'r' },

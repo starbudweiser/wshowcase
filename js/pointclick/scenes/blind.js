@@ -26,7 +26,7 @@ export function blindEnter(g, c) {
 
 /* à appeler dans le tick de la scène : tâtonne, se plaint régulièrement, ou danse une fois éclairé */
 export function blindTick(g, c) {
-  const e = g.ent(c.id); if (!e) return;
+  const e = g.ent(c.id); if (!e || g.night) return;
   if (e.dance) { e.bob = Math.abs(Math.sin(g.now * 9)) * 5; e.rot = Math.sin(g.now * 7) * 0.2; return; }
   e.rot = Math.sin(g.now * 1.3) * 0.035;
   if (g.now >= (g.blindNext || 0)) {

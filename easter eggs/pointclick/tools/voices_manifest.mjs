@@ -9,7 +9,7 @@ for (const f of files) {
   const s = fs.readFileSync(f, 'utf8');
   for (const m of s.matchAll(/(?:say|bark)\(\s*(['"])([\w.]+)\1\s*,\s*(['"])([^'"]+)\3(\s*\+)?/g)) { if (m[5]) prefix.push([m[4], m[2]]); else exact[m[4]] = m[2]; }
 }
-const rules = [[/^nar\./, 'narr'], [/^blind\.(dark|talk\.n|wow\d)$/, 'blind'], [/^blind\.sing\./, 'blind'], [/^blind\.(talk\.h|after|\w+\.\d)$/, 'hero'], [/^s10\.(p\w+)$/, null], [/^(look|take|use|talk|def)\./, 'hero']];
+const rules = [[/^night\.hero/, 'hero'], [/^night\.wake/, 'sleepy'], [/^nar\./, 'narr'], [/^blind\.(dark|talk\.n|wow\d)$/, 'blind'], [/^blind\.sing\./, 'blind'], [/^blind\.(talk\.h|after|\w+\.\d)$/, 'hero'], [/^s10\.(p\w+)$/, null], [/^(look|take|use|talk|def)\./, 'hero']];
 const skip = /^(n\.|v\.|ui\.|ch\.|ach\.|end\d*\.|end$)/;
 const extra = { 's3.giant.talk1': 'giant', 's3.giant.talk2': 'giant', 's.bridge1': 'guard', 's.bridge2': 'guard', 's.bridge1h': 'hero', 's.bridge2h': 'hero' };
 const who = k => {

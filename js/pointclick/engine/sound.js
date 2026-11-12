@@ -180,6 +180,7 @@ export const snd = {
   shout() { [110, 164, 220].forEach(f => tone({ f, to: f * 0.5, d: 1.1, g: 0.12, type: 'sawtooth' })); noise({ d: 0.9, f: 200, q: 0.5, g: 0.18, type: 'lowpass' }); },
   coin() { tone({ f: 1320, d: 0.08, g: 0.07 }); tone({ f: 1760, d: 0.22, t: 0.07, g: 0.07 }); },
   cluck() { tone({ f: 620, to: 380, d: 0.09, g: 0.06 }); tone({ f: 560, to: 340, d: 0.09, t: 0.12, g: 0.05 }); },
+  cricket() { for (let i = 0; i < 3; i++) tone({ f: 4300 + i * 60, d: 0.035, t: i * 0.07, g: 0.012, type: 'sine' }); },
   jingle() { [523, 659, 784, 1047].forEach((f, i) => tone({ f, d: 0.3, t: i * 0.11, g: 0.08, type: 'triangle' })); },
   /* musique : une piste par scène (voir TRACKS), fondu enchaîné au changement de scène */
   music(on, id) {

@@ -16,6 +16,7 @@ V = {  # personnage : (voix prête, consigne de jeu)
  'farmer': ('serena', 'cheerful hearty farm woman, loud and friendly'),
  'follower': ('vivian', 'stern dutiful warrior woman, deadpan monotone'),
  'horseman': ('aiden', 'hollow ghostly melancholy voice, slow, echoing'), 'phorseman': None,
+ 'sleepy': ('aiden', 'groggy half-asleep confused man, yawning, mumbling'),
  'hen': ('vivian', 'comedic clucking chicken-like voice'),
 }
 V['pmerchant'] = V['merchant']; V['gguard'] = V['pguard'] = V['guard']; V['pgiant'] = V['giant']; V['phorseman'] = V['horseman']

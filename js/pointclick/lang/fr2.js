@@ -259,5 +259,15 @@ export default {
   'nar.house.armorMoved': 'L’armure a bougé dans votre dos. Je n’ai rien vu. Je suis un narrateur : je ne vois jamais rien.',
   'nar.ford.horsemanHappy': 'Un homme à tête de citrouille galope vers l’horizon. Voilà ce que j’appelle une fin heureuse. Vous avez un talent étrange.',
   'nar.hall.followerGone': 'Elle est partie en craquant sous une enclume. Son dévouement est admirable. Votre méthode, moins.',
-  'nar.party.lit': 'Quinze bougies. Un dragon. Un héros ému. Je n’ai jamais été aussi proche d’avoir une larme. Ne le répétez pas.'
+  'nar.party.lit': 'Quinze bougies. Un dragon. Un héros ému. Je n’ai jamais été aussi proche d’avoir une larme. Ne le répétez pas.',
+
+  /* ───── la nuit tombe quand le joueur ne bouge plus ───── */
+  'night.hero.1': 'Euh… il fait nuit ? Je n’ai rien fait, pourtant. Vous, là, derrière l’écran… ça va ?',
+  'night.hero.2': 'Oui, vous. Je vous parle. Vous avez lâché la souris et tout le monde s’est endormi. Même les gardes. Surtout les gardes.',
+  'night.hero.3': 'S’il vous plaît, reprenez la partie. Il commence à faire froid, et le narrateur ronfle.',
+  'night.hero.r1': 'Bougez la souris. N’importe comment. Même mal, je ne dirai rien.',
+  'night.hero.r2': 'Je peux rester ainsi toute la nuit. Mais mon nez touche l’écran, et ça, c’est impoli.',
+  'night.hero.r3': 'Un tout petit mouvement de souris, pour l’amour des dragons.',
+  'night.hero.back': 'Enfin ! Merci. On reprend là où on s’était arrêtés : nulle part, je crois.',
+  'night.wake': ['Hein ? Quoi ? Déjà le matin ?', 'J’ai dormi ? Non. Je… je réfléchissais.', 'Qui a allumé le jour ?', 'Mmh… cinq minutes de plus…']
 };

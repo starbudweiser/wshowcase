@@ -219,7 +219,7 @@ export default {
   'n.blind_pot': 'villageois',
   'n.blind_sack': 'meunier',
   'n.blind_hat': 'chasseur',
-  'blind.dark': ['Pourquoi il fait si sombre ?', 'Pourquoi il fait si sombre ?', 'Mais POURQUOI il fait si sombre ?!', 'Il fait sombre, non ? Pourquoi il fait si sombre ?'],
+  'blind.dark': 'Où est passé le soleil ? Pourquoi il fait si sombre ?',
   'blind.talk.h': 'Excusez-moi ? Il fait grand jour. Vous avez un truc sur les yeux.',
   'blind.talk.n': 'Non, non, tout est noir. Quelqu’un a éteint le soleil. Pourquoi il fait si sombre ?',
   'blind.wow1': 'Il... fait... CLAIR !!!',

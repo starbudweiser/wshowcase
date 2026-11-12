@@ -1,5 +1,6 @@
 /* Moteur du jeu d'aventure : scènes, déplacements, verbes, inventaire, dialogues, scripts, sauvegarde.
    Canvas 2D 480×270 mis à l'échelle par le navigateur ; interface (verbes, inventaire, bulles) en HTML par-dessus. */
+import { buildSky, drawSky, startNight, updateNight, drawNight, wakeNight, IDLE_NIGHT } from './night.js';
 import { lang } from '../../i18n.js';
 import { Walk, hitPoly } from './walk.js';
 import { snd } from './sound.js';
@@ -23,7 +24,7 @@ export class Game {
   constructor(root) {
     this.root = root; this.imgs = {}; this.st = null; this.scene = null; this.ents = []; this.hot = []; this.waiters = [];
     this.verb = 'walk'; this.sel = null; this.hover = null; this.tok = 0; this.runTok = 0; this.locked = false; this.now = 0; this.fx = {};
-    this.nq = []; this.narr = null; this.lastNarr = -99; this.lastAct = 0; this.idleN = 0; this.sayAu = null; this.voiceOn = store.get('pc.voice', true);
+    this.night = null; this.sky = null; this.lastMove = 0; this._mx = null; this._my = null; this.nq = []; this.narr = null; this.lastNarr = -99; this.lastAct = 0; this.idleN = 0; this.sayAu = null; this.voiceOn = store.get('pc.voice', true);
     this.bubbles = []; this.barks = []; this.choice = null; this.skip = false; this.alive = true; this.started = false; this.nextBlip = 0; this.mouse = [0, 0];
   }
 
@@ -38,13 +39,25 @@ export class Game {
     this.raf = requestAnimationFrame(tick);
     this.showTitle();
   }
-  destroy() { this.alive = false; cancelAnimationFrame(this.raf); this.ro && this.ro.disconnect(); snd.stop(); }
+  destroy() { document.removeEventListener('pointermove', this._mv); document.removeEventListener('pointerdown', this._pd); document.removeEventListener('keydown', this._pd); this.alive = false; cancelAnimationFrame(this.raf); this.ro && this.ro.disconnect(); snd.stop(); }
   async setLang(l, first) {
     this.dict = await loadLang(l); this.T = makeT(this.dict); this.lang = l;
     if (!first) { this.renderPanel(); this.renderLine(); if (this.titleEl) this.showTitle(); }
   }
   img(src) { return this.imgs[src] || (this.imgs[src] = new Promise(res => { const i = new Image(); i.onload = () => { this.imgs[src] = i; res(i); }; i.onerror = () => res(null); i.src = src; }).then(i => (this.imgs[src] = i))); }
   /* image d'animation d'un personnage selon son état : repos, parole, déplacement */
+  /* image du héros : orientation (profil, face, dos) x état (marche, parole, repos) ; les images manquantes sont ignorées */
+  heroFrame(h, moving, s) {
+    if (!HERO) return h.front || h.talk ? 'hero.front' : 'hero.side';
+    const ok = n => n && this.spr(n), cyc = (arr, i) => { const f = arr.filter(ok); return f.length ? f[((i % f.length) + f.length) % f.length] : null; };
+    const view = h.back ? 'b' : h.front ? 'f' : 's', t = this.now;
+    if (moving) return (view === 's' ? cyc(HERO.walk, Math.floor(h.walkD / (5.2 * s))) || cyc(HERO.walkOld, Math.floor(h.walkD / (8 * s))) : view === 'f' ? cyc(HERO.walkF, Math.floor(h.walkD / (7 * s))) : cyc(HERO.walkB, Math.floor(h.walkD / (7 * s)))) || HERO.stand;
+    if (h.pose && ok(h.pose)) return h.pose;
+    if (view === 'b') return ok(HERO.standB) ? HERO.standB : HERO.stand;
+    if (view === 'f') { if (h.talk) return cyc(HERO.talk, Math.floor(t * 6)); if (ok(HERO.blink) && t % 4.3 < 0.13) return HERO.blink; return cyc(HERO.idleFront, Math.floor(t * 0.6 + 0.01)); }
+    if (h.talk) return cyc(HERO.talkSide, Math.floor(t * 6)) || HERO.stand;
+    return t % 6 < 1.1 && ok(HERO.idleSide[1]) ? HERO.idleSide[1] : HERO.stand;
+  }
   frame(e) {
     const A = ANIM[e.spr]; if (!A) return e.spr;
     const st = e.goal ? 'walk' : e.talk ? 'talk' : 'idle', fr = A[st] || A.idle, fps = (A.fps && A.fps[st]) || 3;
@@ -68,7 +81,10 @@ export class Game {
     this.menuBtn = el('button', 'pc-menu', '≡'); this.menuBtn.title = 'Menu'; this.menuBtn.onclick = () => this.showTitle(true);
     this.musicBtn = el('button', 'pc-menu pc-music', '♪'); this.musicBtn.onclick = () => this.setMusic(snd.musicOn === false);
     this.voiceBtn = el('button', 'pc-menu pc-voice', '❝'); this.voiceBtn.onclick = () => this.setVoice(!this.voiceOn);
-    this.panel.append(this.lineEl, this.verbsEl, this.invEl, this.menuBtn, this.musicBtn, this.voiceBtn); this.setVoice(this.voiceOn, true); this.setMusic(store.get('pc.music', true), true);
+    this.panel.append(this.lineEl, this.verbsEl, this.invEl, this.menuBtn, this.musicBtn, this.voiceBtn); this.setVoice(this.voiceOn, true);
+    this._mv = e => { const d = this._mx === null ? 0 : Math.hypot(e.clientX - this._mx, e.clientY - this._my); this._mx = e.clientX; this._my = e.clientY; if (d > 2) { this.lastMove = this.now; if (this.night) wakeNight(this); } };
+    this._pd = () => { this.lastMove = this.now; if (this.night) wakeNight(this); };
+    document.addEventListener('pointermove', this._mv); document.addEventListener('pointerdown', this._pd); document.addEventListener('keydown', this._pd); this.setMusic(store.get('pc.music', true), true);
     r.append(this.stage, this.panel);
     this.renderPanel();
     const cv = this.cv;
@@ -145,6 +161,7 @@ export class Game {
     this.nq.push({ key, force: !!o.force, t: this.now + (o.delay || 0) });
   }
   pumpNarr() {
+    if (this.night) return;
     const n = this.narr;
     if (n) { const playing = n.au && !n.au.ended && !n.au.error && !n.au.paused; if (this.now > n.end && !playing) { n.b.remove(); this.narr = null; this.lastNarr = this.now; } return; }
     if (!this.started || this.titleEl || this.locked || this.bubbles.length || this.barks.length) return;
@@ -176,7 +193,7 @@ export class Game {
   save() { if (this.st && this.started) writeSave({ scene: this.st.scene, flags: this.st.flags, inv: this.st.inv, hero: this.hero ? { x: this.hero.x, y: this.hero.y, dir: this.hero.dir } : null }); }
   async goScene(id, how = {}) {
     const sc = (await import(`../scenes/${id}.js`)).default; this.st.scene = id;
-    const bg = await this.img('assets/pointclick/' + sc.bg); this.scene = sc; this.bg = bg;
+    const bg = await this.img('assets/pointclick/' + sc.bg); this.scene = sc; this.bg = bg; this.night = null; this.sky = sc.interior ? null : buildSky(bg); this.lastMove = this.now;
     this.walk = new Walk(sc.walk.map(p => p.slice()), W, H);
     this.hot = sc.hot || []; this.amb = makeAmbient(sc.ambient);
     await Promise.all((sc.ambient || []).filter(o => o.type === 'frames' && this.animIdx[o.id]).flatMap(o => Array.from({ length: this.animIdx[o.id].n }, (_, i) => this.img(`assets/pointclick/anim/${o.id}_${i}.png`).catch(() => {}))));
@@ -213,10 +230,14 @@ export class Game {
     try { await fn(); } catch (e) { if (!(e instanceof Cancel)) console.error(e); }
     finally { if (this.runTok === tok && !this.locked) { this.clearBubbles(); this.ents.forEach(e => { e.talk = false; }); } }
   }
-  input(fn) { this.lastAct = this.now; if (this.locked || !this.started || this.titleEl) return; this.cancelAll(); this.run(fn); }
+  input(fn) { this.lastAct = this.now; if (this.night) { wakeNight(this); return; } if (this.locked || !this.started || this.titleEl) return; this.cancelAll(); this.run(fn); }
   persp(y) { const p = this.scene.persp; return clamp(p[1] + (p[3] - p[1]) * (y - p[0]) / (p[2] - p[0]), Math.min(p[1], p[3]) * 0.8, Math.max(p[1], p[3])); }
-  async walkTo(x, y) { this.chk(); this.hero.path = this.walk.path([this.hero.x, this.hero.y], [x, y]); await this.until(() => !this.hero.path.length); this.chk(); }
-  face(x) { this.hero.dir = x >= this.hero.x ? 'r' : 'l'; this.hero.front = false; }
+  async walkTo(x, y) { this.chk(); this.hero.path = this.walk.path([this.hero.x, this.hero.y], [x, y], this.blockers()); await this.until(() => !this.hero.path.length); this.chk(); }
+  face(x, y) {
+    const h = this.hero, dx = x - h.x; h.front = false; h.back = false;
+    if (y !== undefined) { const dy = y - h.y; if (dy < -22 && Math.abs(dx) < Math.abs(dy) * 0.9 && this.spr('hero.bStand')) { h.back = true; return; } }
+    if (Math.abs(dx) > 3 || y === undefined) h.dir = dx >= 0 ? 'r' : 'l';
+  }
   async walkEnt(id, x, y, speed = 40) { const e = this.ent(id); e.goal = [x, y, speed]; await this.until(() => !e.goal); this.chk(); }
   async say(who, key, vars) {
     this.chk(); const text = key.startsWith('=') ? key.slice(1) : this.T(key, vars), e = who === 'narr' ? null : this.ent(who);
@@ -273,12 +294,17 @@ export class Game {
     const row = el('div', 'pc-btns'), a = el('button', 'sbtn acc', T('end.again')); a.onclick = () => { d.remove(); this.newGame(); }; row.append(a); c.append(row); d.append(c); this.stage.append(d); this.titleEl = d; snd.jingle();
   }
 
+  /* centre d'une zone cliquable (rectangle ou polygone) : sert à tourner le héros vers elle */
+  center(h) { if (h.rect) return { cx: (h.rect[0] + h.rect[2]) / 2, cy: (h.rect[1] + h.rect[3]) / 2 }; const p = h.poly || [], n = p.length || 1; return { cx: p.reduce((a, q) => a + q[0], 0) / n, cy: p.reduce((a, q) => a + q[1], 0) / n }; }
+  /* obstacles mobiles pour la recherche de chemin : les personnages et objets posés au sol */
+  blockers() { return this.ents.filter(e => !e.isHero && e.visible !== false && !e.noHot && !e.nhide && e.solid !== false && e.hot).map(e => [e.x, e.y, 9, 4]); }
+
   /* ───────── actions ───────── */
   pick(x, y) {
     for (const a of this.amb || []) if (a.hit && a.hit(x, y)) return { id: a.id, name: 'n.' + a.id };
     const es = this.ents.filter(e => e.visible !== false && e.hot && !e.noHot).sort((a, b) => b.y - a.y);
-    for (const e of es) { const r = e.hit || this.entRect(e); if (r && x >= r[0] && x <= r[2] && y >= r[1] && y <= r[3]) return { id: e.id, name: 'n.' + e.id, at: e.at || [e.x, e.y + 4], isEnt: true }; }
-    for (let i = this.hot.length - 1; i >= 0; i--) { const h = this.hot[i], r = h.rect; if (r ? (x >= r[0] && x <= r[2] && y >= r[1] && y <= r[3]) : hitPoly(x, y, h.poly)) return { id: h.id, name: 'n.' + h.id, at: h.at, dir: h.dir }; }
+    for (const e of es) { const r = e.hit || this.entRect(e); if (r && x >= r[0] && x <= r[2] && y >= r[1] && y <= r[3]) return { id: e.id, name: 'n.' + e.id, at: e.at || [e.x, e.y + 4], isEnt: true, cx: e.x, cy: e.y - 24 }; }
+    for (let i = this.hot.length - 1; i >= 0; i--) { const h = this.hot[i], r = h.rect; if (r ? (x >= r[0] && x <= r[2] && y >= r[1] && y <= r[3]) : hitPoly(x, y, h.poly)) return { id: h.id, name: 'n.' + h.id, at: h.at, dir: h.dir, ...this.center(h) }; }
     return null;
   }
   entRect(e) { const im = this.spr(e.spr); if (!im) return null; const s = e.scale ?? this.persp(e.y), w = im.width * s, h = im.height * s; return [e.x - w / 2, e.y - h, e.x + w / 2, e.y]; }
@@ -305,10 +331,11 @@ export class Game {
     if (this.verb === 'use') { if (!this.sel) { this.sel = id; this.renderInv(); this.renderLine(); return; } if (this.sel === id) { this.sel = null; this.renderInv(); this.renderLine(); return; } const it = this.sel; this.sel = null; this.renderInv(); return this.input(() => this.act('use', { id, name: 'n.' + id, isItem: true }, it)); }
     this.input(() => this.act(this.verb === 'walk' ? 'look' : this.verb, { id, name: 'n.' + id, isItem: true }));
   }
+  faceTg(tg) { const e = tg.isEnt && this.ent(tg.id); if (e) this.face(e.x, e.y - 24); else if (tg.cx !== undefined) this.face(tg.cx, tg.cy); else if (tg.at) this.face(tg.at[0] + (tg.dir === 'l' ? -9 : 9)); }
   async act(verb, tg, item) {
     if (!tg.at && !tg.isItem && !tg.isEnt && verb !== 'look' && verb !== 'walk') { const done = this.scene.on && await this.scene.on(this, verb, tg.id, item); if (!done) await this.fallbackFar(verb, tg); return; }
-    if (verb === 'walk') { if (!tg.at) { await this.say('hero', 'def.far'); return; } await this.walkTo(...tg.at); this.face(tg.at[0] + (tg.dir === 'l' ? -9 : 9)); if (this.scene.on) await this.scene.on(this, 'walk', tg.id); return; }
-    if (verb !== 'look' && !tg.isItem && tg.at) { await this.walkTo(...tg.at); const cx = tg.isEnt && this.ent(tg.id) ? this.ent(tg.id).x : tg.at[0] + (tg.dir === 'l' ? -9 : 9); this.face(cx); }
+    if (verb === 'walk') { if (!tg.at) { await this.say('hero', 'def.far'); return; } await this.walkTo(...tg.at); this.faceTg(tg); if (this.scene.on) await this.scene.on(this, 'walk', tg.id); return; }
+    if (verb !== 'look' && !tg.isItem && tg.at) { await this.walkTo(...tg.at); this.faceTg(tg); if ((verb === 'take' || verb === 'use') && this.spr('hero.sReach') && !this.hero.back) { this.hero.pose = 'hero.sReach'; setTimeout(() => { if (this.hero) this.hero.pose = null; }, 1100); } } else if (verb === 'look' && !tg.isItem) this.faceTg(tg);
     const sc = this.scene; let done = false;
     if (sc.on) done = await sc.on(this, verb, tg.id, item);
     if (!done) await this.fallback(verb, tg, item);
@@ -338,20 +365,22 @@ export class Game {
       let moving = false;
       if (h.path.length) {
         const [tx, ty] = h.path[0], dx = tx - h.x, dy = ty - h.y, dist = Math.hypot(dx, dy), s = this.persp(h.y), step = 78 * s * dt + 6 * dt; moving = true;
-        if (Math.abs(dx) > 0.2) { h.dir = dx > 0 ? 'r' : 'l'; h.front = false; }
+        if (Math.abs(dy) > Math.abs(dx) * 1.6 && this.spr('hero.fWalkA') && this.spr('hero.bWalkA')) { h.front = dy > 0; h.back = dy < 0; } else if (Math.abs(dx) > 0.2) { h.dir = dx > 0 ? 'r' : 'l'; h.front = false; h.back = false; }
         if (dist <= step) { h.x = tx; h.y = ty; h.path.shift(); } else { h.x += dx / dist * step; h.y += dy / dist * step; }
         h.walkD += step;
       }
       const s = this.persp(h.y);
-      h.flip = h.dir === 'l' && !h.front;
-      if (moving) { h.spr = HERO ? HERO.walk[Math.floor(h.walkD / (8 * s)) % HERO.walk.length] : (Math.floor(h.walkD / (11 * s)) % 2 ? 'hero.stride' : 'hero.side'); h.bob = Math.abs(Math.sin(h.walkD / (11 * s) * Math.PI)) * (HERO ? 1.2 : 2.4) * s; if (this.now >= (h.stepT || 0)) { snd.step(); h.stepT = this.now + 0.3; } }
-      else { if (HERO) { const fr = h.talk ? HERO.talk : h.front ? HERO.idleFront : null; h.spr = fr ? fr[Math.floor(this.now * (h.talk ? 6 : 0.6) + 0.01) % fr.length] : HERO.stand; } else h.spr = h.front || h.talk ? 'hero.front' : 'hero.side'; h.bob = 0; }
+      h.flip = h.dir === 'l' && !h.front && !h.back;
+      if (moving) h.pose = null;
+      h.spr = this.heroFrame(h, moving, s);
+      if (moving) { h.bob = Math.abs(Math.sin(h.walkD / (5.2 * s) * Math.PI / 2)) * (this.spr('hero.w1') ? 0.7 : 1.2) * s; if (this.now >= (h.stepT || 0)) { snd.step(); h.stepT = this.now + 0.3; } } else h.bob = 0;
     }
     this.ents.forEach(e => {
       if (e.goal) { const [gx, gy, sp] = e.goal, dx = gx - e.x, dy = gy - e.y, d = Math.hypot(dx, dy), st = sp * dt; if (d <= st) { e.x = gx; e.y = gy; e.goal = null; } else { e.x += dx / d * st; e.y += dy / d * st; if (ANIM[e.spr] && ANIM[e.spr].walk && Math.abs(dx) > 0.3) e.flip = dx < 0; } }
     });
     for (let i = this.barks.length - 1; i >= 0; i--) { const k = this.barks[i], e = this.ent(k.who); if (!e || this.now > k.end) { k.b.remove(); this.barks.splice(i, 1); } else { const [ax, ay] = this.headPos(e); this.placeBubble(k.b, ax, ay); } }
     if (this.scene && this.scene.tick) this.scene.tick(this, dt);
+    if (this.night) updateNight(this, dt); else if (this.started && !this.titleEl && this.alive) { if (this.locked || this.bubbles.length || this.barks.length || this.narr) this.lastMove = Math.max(this.lastMove, this.now - IDLE_NIGHT + 25); else if (this.now - this.lastMove > IDLE_NIGHT && document.visibilityState === 'visible' && this.hero) startNight(this); }
     this.pumpNarr();
     for (let i = this.waiters.length - 1; i >= 0; i--) { const w = this.waiters[i]; if (w.cond()) { this.waiters.splice(i, 1); w.res(); } }
     const f = this.fx.fade; if (f) { const t = clamp((this.now - f.t0) / f.ms, 0, 1); f.a = f.from + (f.to - f.from) * t; if (t >= 1) { f.a = f.to; if (f.to === 0) delete this.fx.fade; } }
@@ -360,16 +389,19 @@ export class Game {
     const c = this.ctx; if (!c || !this.scene || !this.bg || !this.bg.width) { if (c) { c.fillStyle = '#000'; c.fillRect(0, 0, W, H); } return; }
     c.save(); const sh = this.fx.shake; if (sh && this.now < sh.end) c.translate(Math.round((Math.random() - .5) * sh.amp * 2), Math.round((Math.random() - .5) * sh.amp * 2));
     if (this.bg) c.drawImage(this.bg, 0, 0, W, H);
+    if (this.sky) drawSky(c, this.sky, this.now);
     if (this.amb) this.amb.forEach(a => a.draw(this, c, this.now));
     [...this.ents].filter(e => e.visible !== false).sort((a, b) => (a.y + (a.z || 0)) - (b.y + (b.z || 0))).forEach(e => this.drawEnt(e));
     (this.scene.fg || []).forEach(p => { c.save(); c.beginPath(); p.forEach(([x, y], i) => (i ? c.lineTo(x, y) : c.moveTo(x, y))); c.closePath(); c.clip(); c.drawImage(this.bg, 0, 0, W, H); c.restore(); });
     c.restore();
+    drawNight(this, c);
     if (this.fx.fade) { c.fillStyle = `rgba(0,0,0,${this.fx.fade.a})`; c.fillRect(0, 0, W, H); }
   }
   drawEnt(e) {
     const im = this.spr(this.frame(e)) || this.spr(e.spr); if (!im) return; const c = this.ctx, s = e.scale ?? this.persp(e.y), w = im.width * s, h = im.height * s;
     c.save(); c.translate(Math.round(e.x), Math.round(e.y - (e.bob || 0)));
-    if (e.rot) { c.translate(0, -h / 2); c.rotate(e.rot); c.translate(0, h / 2); }
+    if (e.nrot) c.translate(0, Math.min(1, Math.abs(e.nrot) / 1.5708) * Math.max(0, h - w) / 2);
+    if (e.rot || e.nrot) { c.translate(0, -h / 2); c.rotate((e.rot || 0) + (e.nrot || 0)); c.translate(0, h / 2); }
     if (e.flip) c.scale(-1, 1);
     if (e.talk) c.scale(1, 1 + 0.018 * Math.sin(this.now * 26));
     c.drawImage(im, Math.round(-w / 2), Math.round(-h), Math.round(w), Math.round(h)); c.restore();

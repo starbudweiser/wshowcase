@@ -257,5 +257,15 @@ export default {
   'nar.house.armorMoved': 'The armor moved behind your back. I saw nothing. I’m a narrator: I never see anything.',
   'nar.ford.horsemanHappy': 'A man with a pumpkin head gallops to the horizon. That’s what I call a happy ending. You have a strange talent.',
   'nar.hall.followerGone': 'She left creaking under an anvil. Her devotion is admirable. Your method, less so.',
-  'nar.party.lit': 'Fifteen candles. A dragon. A moved hero. I have never been so close to shedding a tear. Don’t repeat that.'
+  'nar.party.lit': 'Fifteen candles. A dragon. A moved hero. I have never been so close to shedding a tear. Don’t repeat that.',
+
+  /* night falls when the player stops moving */
+  'night.hero.1': 'Uh… is it night? I didn’t do anything, though. You there, behind the screen… are you all right?',
+  'night.hero.2': 'Yes, you. I’m talking to you. You let go of the mouse and everybody fell asleep. Even the guards. Especially the guards.',
+  'night.hero.3': 'Please, resume the game. It’s getting cold, and the narrator is snoring.',
+  'night.hero.r1': 'Move the mouse. Any way you like. Even badly, I won’t say a word.',
+  'night.hero.r2': 'I can stay like this all night. But my nose is touching the screen, and that’s rude.',
+  'night.hero.r3': 'One tiny mouse movement, for the love of dragons.',
+  'night.hero.back': 'At last! Thank you. Let’s pick up where we left off: nowhere, I think.',
+  'night.wake': ['Huh? What? Morning already?', 'Was I asleep? No. I was… thinking.', 'Who turned the day on?', 'Mmh… five more minutes…']
 };

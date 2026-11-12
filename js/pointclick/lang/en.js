@@ -203,7 +203,7 @@ export default {
   'n.blind_pot': 'villager',
   'n.blind_sack': 'miller',
   'n.blind_hat': 'hunter',
-  'blind.dark': ['Why is it so dark?', 'Why is it so dark?', 'But WHY is it so dark?!', 'It’s dark, isn’t it? Why is it so dark?'],
+  'blind.dark': 'Where did the sun go? Why is it so dark?',
   'blind.talk.h': 'Excuse me? It’s broad daylight. You’ve got something over your eyes.',
   'blind.talk.n': 'No, no, everything is black. Someone turned off the sun. Why is it so dark?',
   'blind.wow1': 'It’s... BRIGHT !!!',

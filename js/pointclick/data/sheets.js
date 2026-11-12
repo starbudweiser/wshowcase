@@ -38,5 +38,13 @@ NEWB.forEach(k => {
   ANIM['lit.' + k] = { idle: ['lit.' + k, 'lit.' + k + '2'], walk: ['lit.' + k, 'lit.' + k + '2'], fps: { idle: 5, walk: 6 } };
 });
 /* le héros : marche en 4 temps, debout de profil, face (repos / parole) */
-export const HERO = { walk: ['hero.walkA', 'hero.walkP', 'hero.walkB', 'hero.walkP'], stand: 'hero.stand', idleFront: ['hero.front', 'hero.idle2'], talk: ['hero.front', 'hero.talk'] };
+/* animations détaillées du héros (tools/gen_hero.sh) : marche de profil en 8 phases, de face, de dos, parole, gestes, portrait ; repli sur les anciennes images si une manque */
+['w1', 'w2', 'w3', 'w4', 'w5', 'w6', 'w7', 'w8', 'sIdle', 'sTalk1', 'sTalk2', 'sReach', 'sPick', 'fWalkA', 'fWalkP', 'fWalkB', 'fBlink', 'fTalk2', 'fShrug', 'fSurprise', 'bStand', 'bWalkA', 'bWalkB', 'pNeutral', 'pTalk', 'pBlink', 'pSleepy'].forEach(k => (SPR['hero.' + k] = 'hero_' + k));
+export const HERO = {
+  walk: ['hero.w1', 'hero.w2', 'hero.w3', 'hero.w4', 'hero.w5', 'hero.w6', 'hero.w7', 'hero.w8'], walkOld: ['hero.walkA', 'hero.walkP', 'hero.walkB', 'hero.walkP'],
+  walkF: ['hero.fWalkA', 'hero.fWalkP', 'hero.fWalkB', 'hero.fWalkP'], walkB: ['hero.bWalkA', 'hero.bStand', 'hero.bWalkB', 'hero.bStand'],
+  stand: 'hero.stand', standB: 'hero.bStand', idleSide: ['hero.stand', 'hero.sIdle'], talkSide: ['hero.sTalk1', 'hero.sTalk2', 'hero.sTalk1', 'hero.stand'],
+  idleFront: ['hero.front', 'hero.idle2'], talk: ['hero.front', 'hero.talk', 'hero.fTalk2', 'hero.talk'], blink: 'hero.fBlink',
+  portrait: { neutral: 'hero.pNeutral', talk: 'hero.pTalk', blink: 'hero.pBlink', sleepy: 'hero.pSleepy' }
+};
 export const ITEMS = { bucket: { spr: 'bucket' }, honey: { spr: 'honey' }, carrot: { spr: 'carrot' }, cheese: { spr: 'cheese' }, cabbage: { spr: 'cabbage' }, arrow: { spr: 'arrow' }, pumpkin: { spr: 'pumpkin' }, anvil: { spr: 'anvil' } };
