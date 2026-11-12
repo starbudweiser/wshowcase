@@ -1,5 +1,6 @@
 /* Textes des scènes 4 à 10 et des aveugles associés (français). Fusionné dans fr.js. */
 export default {
+  'ui.fullscreen': 'Plein écran', 'ui.filter': 'Agrandissement', 'ui.filter.sharp': 'Pixels nets', 'ui.filter.nearest': 'Pixels bruts', 'ui.filter.smooth': 'Lissé', 'ui.filter.scale2x': 'Scale2x', 'ui.filter.scale4x': 'Scale4x',
   /* ───── noms et regards communs ───── */
   'n.cabbage': 'chou', 'n.arrow': 'flèche', 'n.pumpkin': 'citrouille', 'n.anvil': 'enclume',
   'ch.market': '4. Le marché aux choux', 'ch.gate': '5. La porte de la ville', 'ch.house': '6. La maison de la veuve', 'ch.ford': '7. Le gué du cavalier',

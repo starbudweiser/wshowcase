@@ -1,5 +1,6 @@
 /* Moteur du jeu d'aventure : scènes, déplacements, verbes, inventaire, dialogues, scripts, sauvegarde.
    Canvas 2D 480×270 mis à l'échelle par le navigateur ; interface (verbes, inventaire, bulles) en HTML par-dessus. */
+import { Scaler } from './scaler.js';
 import { updateWinks, drawWinks } from './winks.js';
 import { updateGlass, drawGlass } from './glass.js';
 import { buildSky, drawSky, startNight, updateNight, drawNight, wakeNight, IDLE_NIGHT } from './night.js';
@@ -78,16 +79,19 @@ export class Game {
     this.stage = el('div', 'pc-stage'); this.view = this.stage;
     this.cv = el('canvas'); this.cv.width = W; this.cv.height = H; this.ctx = this.cv.getContext('2d'); this.ctx.imageSmoothingEnabled = false;
     this.ov = el('div', 'pc-ov'); this.askEl = el('div', 'pc-ask'); this.popEl = el('div', 'pc-pop'); this.popEl.hidden = true;
-    this.stage.append(this.cv, this.ov, this.askEl, this.popEl);
+    this.out = el('canvas', 'pc-out'); this.scaler = Scaler.create(this.cv, this.out); this.filter = store.get('pc.filter', 'sharp'); if (this.scaler) { this.scaler.mode = this.filter; this.cv.classList.add('pc-src'); }
+    this.ambient = el('canvas', 'pc-ambient'); this.ambient.width = 48; this.ambient.height = 27; this.actx = this.ambient.getContext('2d'); this.ambT = 0;
+    this.stage.append(...(this.scaler ? [this.out] : []), this.cv, this.ov, this.askEl, this.popEl);
     this.panel = el('div', 'pc-panel'); this.lineEl = el('div', 'pc-line'); this.verbsEl = el('div', 'pc-verbs'); this.invEl = el('div', 'pc-inv');
     this.menuBtn = el('button', 'pc-menu', '≡'); this.menuBtn.title = 'Menu'; this.menuBtn.onclick = () => this.showTitle(true);
     this.musicBtn = el('button', 'pc-menu pc-music', '♪'); this.musicBtn.onclick = () => this.setMusic(snd.musicOn === false);
     this.voiceBtn = el('button', 'pc-menu pc-voice', '❝'); this.voiceBtn.onclick = () => this.setVoice(!this.voiceOn);
-    this.panel.append(this.lineEl, this.verbsEl, this.invEl, this.menuBtn, this.musicBtn, this.voiceBtn); this.setVoice(this.voiceOn, true);
+    this.fsBtn = el('button', 'pc-menu pc-fs', '⛶'); this.fsBtn.onclick = () => this.toggleFullscreen();
+    this.panel.append(this.lineEl, this.verbsEl, this.invEl, this.menuBtn, this.musicBtn, this.voiceBtn, this.fsBtn); this.setVoice(this.voiceOn, true);
     this._mv = e => { const d = this._mx === null ? 0 : Math.hypot(e.clientX - this._mx, e.clientY - this._my); this._mx = e.clientX; this._my = e.clientY; if (d > 2) { this.lastMove = this.now; if (this.night) wakeNight(this); } };
     this._pd = () => { this.lastMove = this.now; if (this.night) wakeNight(this); };
     document.addEventListener('pointermove', this._mv); document.addEventListener('pointerdown', this._pd); document.addEventListener('keydown', this._pd); this.setMusic(store.get('pc.music', true), true);
-    r.append(this.stage, this.panel);
+    r.append(this.ambient, this.stage, this.panel);
     this.renderPanel();
     const cv = this.cv;
     cv.addEventListener('pointermove', e => { this.mouse = this.pos(e); this.setHover(this.pick(...this.mouse)); });
@@ -102,9 +106,9 @@ export class Game {
     const rw = this.root.clientWidth, rh = this.root.clientHeight; if (!rw || !rh) return;
     const w = Math.min(rw, rh / (9 / 16 + 66 / 480)), u = w / W;
     this.root.style.setProperty('--u', u.toFixed(4)); this.stage.style.width = w + 'px'; this.stage.style.height = (w * 9 / 16) + 'px';
-    this.panel.style.width = w + 'px'; this.panel.style.height = (66 * u) + 'px';
+    this.panel.style.width = w + 'px'; this.panel.style.height = (66 * u) + 'px'; if (this.scaler) this.scaler.resize(w, w * 9 / 16);
   }
-  pos(e) { const r = this.cv.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * W, (e.clientY - r.top) / r.height * H]; }
+  pos(e) { const r = this.stage.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * W, (e.clientY - r.top) / r.height * H]; }
   renderPanel() {
     this.verbsEl.innerHTML = '';
     VERBS.forEach((v, i) => { const b = el('button', 'pc-v' + (this.verb === v ? ' on' : ''), `${this.T('v.' + v)}<i>${i + 1}</i>`); b.onclick = () => this.setVerb(v); this.verbsEl.append(b); });
@@ -133,6 +137,8 @@ export class Game {
     c.append(el('h1', '', T('ui.title')), el('p', '', T('ui.sub')));
     const row = el('div', 'pc-btns'), btn = (t, fn, cls) => { const b = el('button', 'sbtn' + (cls ? ' ' + cls : ''), t); b.onclick = () => { snd.unlock(); fn(); }; row.append(b); return b; };
     if (inGame) btn(T('ui.resume'), () => this.hideTitle(), 'acc');
+    btn(T('ui.fullscreen'), () => { this.hideTitle(); this.toggleFullscreen(); });
+    if (this.scaler) { const fb = btn(T('ui.filter') + ' : ' + T('ui.filter.' + this.filter), () => {}); fb.onclick = () => { snd.unlock(); const L = ['sharp', 'nearest', 'smooth', 'scale2x', 'scale4x']; this.setFilter(L[(L.indexOf(this.filter) + 1) % L.length], true); fb.textContent = this.T('ui.filter') + ' : ' + this.T('ui.filter.' + this.filter); }; }
     if (!inGame && hasSave()) btn(T('ui.continue'), () => this.continueGame(), 'acc');
     btn(T('ui.new'), () => this.newGame(), !inGame && !hasSave() ? 'acc' : '');
     const opts = el('div', 'pc-opts');
@@ -304,6 +310,17 @@ export class Game {
     const row = el('div', 'pc-btns'), a = el('button', 'sbtn acc', T('end.again')); a.onclick = () => { d.remove(); this.newGame(); }; row.append(a); c.append(row); d.append(c); this.stage.append(d); this.titleEl = d; snd.jingle();
   }
 
+  /* plein écran (la fenêtre de jeu remplit l'écran, la scène s'agrandit au maximum) et choix de l'agrandisseur d'image */
+  toggleFullscreen() {
+    const r = this.root, d = document;
+    if (d.fullscreenElement || d.webkitFullscreenElement) (d.exitFullscreen || d.webkitExitFullscreen).call(d);
+    else (r.requestFullscreen || r.webkitRequestFullscreen || (() => {})).call(r);
+  }
+  setFilter(f, quiet) {
+    this.filter = f; store.set('pc.filter', f); if (this.scaler) this.scaler.mode = f;
+    if (!quiet) this.toast(this.T('ui.filter'), this.T('ui.filter.' + f));
+  }
+  cycleFilter() { const L = ['sharp', 'nearest', 'smooth', 'scale2x', 'scale4x']; this.setFilter(L[(L.indexOf(this.filter) + 1) % L.length]); }
   /* centre d'une zone cliquable (rectangle ou polygone) : sert à tourner le héros vers elle */
   center(h) { if (h.rect) return { cx: (h.rect[0] + h.rect[2]) / 2, cy: (h.rect[1] + h.rect[3]) / 2 }; const p = h.poly || [], n = p.length || 1; return { cx: p.reduce((a, q) => a + q[0], 0) / n, cy: p.reduce((a, q) => a + q[1], 0) / n }; }
   /* obstacles mobiles pour la recherche de chemin : les personnages et objets posés au sol */
@@ -365,7 +382,9 @@ export class Game {
     if (this.titleEl) return;
     if (e.key >= '1' && e.key <= '5') this.setVerb(VERBS[+e.key - 1]);
     else if (e.key === ' ' || e.key === 'Enter') { this.skip = true; e.preventDefault(); }
-    else if (e.key === 'Escape') this.showTitle(true);
+    else if (e.key === 'f' || e.key === 'F') this.toggleFullscreen();
+    else if (e.key === 'g' || e.key === 'G') this.cycleFilter();
+    else if (e.key === 'Escape') { if (!(document.fullscreenElement || document.webkitFullscreenElement)) this.showTitle(true); }
   }
 
   /* ───────── mise à jour et rendu ───────── */
@@ -397,7 +416,7 @@ export class Game {
     const f = this.fx.fade; if (f) { const t = clamp((this.now - f.t0) / f.ms, 0, 1); f.a = f.from + (f.to - f.from) * t; if (t >= 1) { f.a = f.to; if (f.to === 0) delete this.fx.fade; } }
   }
   draw() {
-    const c = this.ctx; if (!c || !this.scene || !this.bg || !this.bg.width) { if (c) { c.fillStyle = '#000'; c.fillRect(0, 0, W, H); } return; }
+    const c = this.ctx; if (!c || !this.scene || !this.bg || !this.bg.width) { if (c) { c.fillStyle = '#000'; c.fillRect(0, 0, W, H); if (this.scaler) this.scaler.render(); } return; }
     c.save(); const sh = this.fx.shake; if (sh && this.now < sh.end) c.translate(Math.round((Math.random() - .5) * sh.amp * 2), Math.round((Math.random() - .5) * sh.amp * 2));
     if (this.bg) c.drawImage(this.bg, 0, 0, W, H);
     if (this.sky) drawSky(c, this.sky, this.now);
@@ -408,6 +427,8 @@ export class Game {
     drawWinks(this, c);
     drawNight(this, c); drawGlass(this, c);
     if (this.fx.fade) { c.fillStyle = `rgba(0,0,0,${this.fx.fade.a})`; c.fillRect(0, 0, W, H); }
+    if (this.actx && this.now - this.ambT > 0.12) { this.ambT = this.now; this.actx.drawImage(this.cv, 0, 0, 48, 27); }
+    if (this.scaler) this.scaler.render();
   }
   drawEnt(e) {
     const im = this.spr(this.frame(e)) || this.spr(e.spr); if (!im) return; const c = this.ctx, s = e.scale ?? this.persp(e.y), w = im.width * s, h = im.height * s;

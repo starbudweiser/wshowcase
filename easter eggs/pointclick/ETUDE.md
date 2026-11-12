@@ -446,3 +446,10 @@ Ajouter une réplique : écrire la clé dans les deux langues, relancer `voices_
 - **Vitre de l'écran** (`engine/glass.js`) : mouche (posée, écrasée, qui repart), éternuement du héros ou d'un personnage, fiente d'oiseau ; le héros nettoie (chiffon, feuille de chou, plumeau, manche), très rarement.
 - **Voix** : jamais deux à la fois (dialogue > aboiements et narrateur ; le narrateur se tait dès qu'un dialogue commence) ; narrateur en voix prête avec une consigne d'intonation par type de réplique ;
   « Où est passé le soleil ? » : 6 intonations différentes par personnage, beaucoup moins fréquente.
+
+---
+## Plein écran et agrandisseurs d'image (12/11/2026)
+
+`engine/scaler.js` (WebGL) : le jeu reste dessiné en 480×270 puis est agrandi vers l'écran, à la manière de ScummVM. Filtres (touche G ou menu ≡) : **Pixels nets** (par défaut : bords francs,
+lissage limité aux limites de pixels, sans irrégularités quel que soit le facteur), **Pixels bruts**, **Lissé**, **Scale2x** (EPX), **Scale4x** (EPX deux fois), puis pixels nets. Sans WebGL, le canvas du jeu s'affiche tel quel.
+Plein écran : bouton ⛶, touche F ou menu ; la scène s'agrandit au maximum et un fond d'ambiance (copie floutée de la scène) remplit les marges de la fenêtre. Choix mémorisé (`pc.filter`).

@@ -1,5 +1,6 @@
 /* Texts of scenes 4 to 10 and their blind characters (English). Merged into en.js. */
 export default {
+  'ui.fullscreen': 'Full screen', 'ui.filter': 'Scaler', 'ui.filter.sharp': 'Sharp pixels', 'ui.filter.nearest': 'Raw pixels', 'ui.filter.smooth': 'Smooth', 'ui.filter.scale2x': 'Scale2x', 'ui.filter.scale4x': 'Scale4x',
   'n.cabbage': 'cabbage', 'n.arrow': 'arrow', 'n.pumpkin': 'pumpkin', 'n.anvil': 'anvil',
   'ch.market': '4. The cabbage market', 'ch.gate': '5. The city gate', 'ch.house': '6. The widow’s house', 'ch.ford': '7. The horseman’s ford',
   'ch.wood': '8. The butterfly wood', 'ch.hall': '9. The long hall', 'ch.party': '10. The fifteenth-birthday party',
