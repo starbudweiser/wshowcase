@@ -1,0 +1,57 @@
+/* mTAB : démo du sélecteur de fenêtres. Socle : aplats, filets 1 px, aucune ombre ni dégradé. */
+.mtab-win{--bg:#1e1e1e;--sunk:#181818;--surf:#222;--raised:#262626;--sel:#303030;--ctl:#333;--ctlh:#404040;--bd:#333;--ts:#fff;--t:#ddd;--tm:#aaa;--tu:#8f8f8f;--ac:#0ea5e9;--acf:#0369a1;--act:#38bdf8}
+.mtab{display:flex;flex-direction:column;height:100%;background:var(--bg);color:var(--t);font:12px/16px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.mtab-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:10px 14px;background:var(--raised);border-bottom:1px solid var(--bd)}
+.mtab-name{font:700 15px/20px inherit;letter-spacing:.025em;color:var(--ts);margin-right:6px}
+.mtab-bar label{color:var(--tm);font-weight:500}
+.mtab-seg{display:inline-flex;gap:2px;padding:2px;background:var(--sunk);border-radius:4px}
+.mtab-seg button,.mtab-chk,.mtab-open{border:0;background:none;color:var(--tm);height:26px;padding:0 10px;border-radius:4px;font:500 12px/16px inherit;cursor:pointer;transition:background .15s}
+.mtab-seg button.on{background:var(--acf);color:#fff;font-weight:700}
+.mtab-seg button:hover:not(.on){color:var(--t)}
+.mtab-chk{display:inline-flex;align-items:center;gap:8px;color:var(--t)}
+.mtab-chk i{width:16px;height:16px;border:1.5px solid #707070;border-radius:3px;box-sizing:border-box;display:inline-block}
+.mtab-chk.on i{background:var(--ac);border-color:var(--ac);box-shadow:inset 0 0 0 3px var(--ac),inset 0 0 0 8px #082f49}
+.mtab-open{margin-left:auto;background:var(--acf);color:#fff;font-weight:700;letter-spacing:.05em;text-transform:uppercase;height:32px;padding:0 16px}
+.mtab-open:hover{background:#075985}
+.mtab-stage{position:relative;flex:1;overflow:hidden;background:var(--sunk);outline:none}
+.mtab-stage:focus-visible{box-shadow:inset 0 0 0 2px var(--act)}
+.mtab-tip{padding:8px 14px;background:var(--raised);border-top:1px solid var(--bd);color:var(--tu);font-size:11px}
+/* fenêtres fictives */
+.mtab-win-s{position:absolute;width:46%;aspect-ratio:1.55;font-size:14px;cursor:default;border:1px solid var(--bd);border-radius:6px;overflow:hidden}
+.mtab-win-s.prev{outline:2px solid var(--ac);outline-offset:-1px;z-index:2}
+.mw{height:100%;background:#f7f7f7;color:#555;font-size:inherit;display:flex;flex-direction:column}
+.mw.sm{font-size:7px}
+.mw-bar{display:flex;align-items:center;gap:.4em;padding:.45em .7em;background:#e2e2e2;font-size:.9em}
+.mw-bar i{width:.8em;height:.8em;border-radius:50%;background:#f87171}.mw-bar i:nth-child(2){background:#fbbf24}.mw-bar i:nth-child(3){background:#4ade80}
+.mw-bar b{font-weight:600;margin-left:.6em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mw-body{flex:1;padding:1.2em;display:flex;flex-direction:column;gap:.9em}
+.mw-hero{height:26%;background:var(--c);border-radius:2px}
+.mw-line{height:.9em;background:#cfcfcf;border-radius:1px}
+/* sélecteur */
+.mtab-over{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:5}
+.mtab-over[hidden]{display:none}
+.mtab-panel{max-width:94%;max-height:92%;overflow:auto;padding:22px;background:var(--bg);border:1px solid var(--bd);border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.mtab-sb{height:30px;min-width:260px;padding:0 12px;display:flex;align-items:center;background:var(--sunk);color:var(--tu);font-size:12px}
+.mtab-grid{display:grid;gap:10px}
+.mtab-grid.thumbs{grid-template-columns:repeat(3,200px)}
+.mtab-grid.icons{grid-template-columns:repeat(6,84px)}
+.mtab-grid.titles{grid-template-columns:480px;gap:2px}
+.mtab-cell{position:relative;border-radius:8px;border:2px solid transparent;cursor:pointer;color:var(--t)}
+.mtab-cell.on{background:var(--sel);border-color:var(--ac);color:var(--ts)}
+.thumbs .mtab-cell{padding:9px}
+.mtab-hd{display:flex;align-items:center;gap:8px;height:24px;font-weight:700;font-size:12px}
+.mtab-hd span:last-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mtab-ico{display:inline-flex;align-items:center;justify-content:center;flex:none;width:22px;height:22px;border-radius:6px;color:#111;font-size:12px;font-weight:700}
+.mtab-ico.big{width:56px;height:56px;border-radius:14px;font-size:26px;margin:8px auto 4px;display:flex}
+.mtab-th{position:relative;margin-top:6px;aspect-ratio:1.6;border-radius:8px;overflow:hidden;background:var(--sunk)}
+.icons .mtab-cell{height:84px}
+.titles .mtab-cell{display:flex;align-items:center;gap:10px;height:38px;padding:0 10px}
+.mtab-tt{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mtab-ap{margin-left:auto;color:var(--tu);font-size:11px}
+.mtab-badges{display:flex;gap:4px}
+.thumbs .mtab-badges{position:absolute;left:5px;bottom:5px}
+.icons .mtab-badges{position:absolute;left:0;right:0;bottom:3px;justify-content:center}
+.mtab-badges em{font:400 10px/12px inherit;font-style:normal;padding:2px 5px;border-radius:3px;background:#333;color:var(--tm)}
+.mtab-badges em.sp{color:var(--act)}
+.mtab-cap{display:flex;flex-direction:column;align-items:center;gap:2px}.mtab-cap b{color:var(--ts);font-size:14px}.mtab-cap span{color:var(--tu);font-size:11px}
+.mtab-none{padding:30px;color:var(--tm);font-size:14px}
