@@ -9,13 +9,14 @@ OUT = os.path.join(R, 'assets', 'pointclick', 'spr'); os.makedirs(OUT, exist_ok=
 SC = os.path.join(R, 'easter eggs', 'pointclick', 'work', 'scales.json')
 
 
-def key(im):
+def key(im, hue=False):
+    """hue : portraits sur fond rose-rouge, proche de la peau ; l'écart bleu-vert (positif pour le fond, négatif pour la peau) départage"""
     im = im.convert('RGB'); px = im.load(); w, h = im.size
     bg = tuple(sum(px[x, y][i] for x, y in ((2, 2), (w - 3, 2), (2, h - 3), (w - 3, h - 3))) // 4 for i in range(3))
     a = Image.new('L', (w, h), 255); ap = a.load(); dm = Image.new('L', (w, h), 0); dp = dm.load()
     for y in range(h):
         for x in range(w):
-            r, g, b = px[x, y]; d = abs(r - bg[0]) + abs(g - bg[1]) + abs(b - bg[2])
+            r, g, b = px[x, y]; d = abs(r - bg[0]) + abs(g - bg[1]) + abs(b - bg[2]) + (2 * abs((b - g) - (bg[2] - bg[1])) if hue else 0)
             ap[x, y] = 0 if d < 70 else (255 if d > 150 else int((d - 70) / 80 * 255)); dp[x, y] = 255 if d >= 30 else 0
     return im, a, dm
 
@@ -29,7 +30,7 @@ def main():
     fill = '--fill' in a
     if fill: a.remove('--fill')
     name, src, th = a[0], a[1], int(a[2]); ncol = int(a[3]) if len(a) > 3 else 56
-    im, al, dm = key(Image.open(src))
+    im, al, dm = key(Image.open(src), fill)
     al = al.point(lambda v: 255 if v > 120 else 0)
     # comble les trous du masque (peau proche du fond magenta) : sinon le contour sombre dessine des « nervures » noires dans le corps
     fl = al.copy(); ImageDraw.floodfill(fl, (0, 0), 128); al = ImageChops.lighter(al, ImageChops.multiply(fl.point(lambda v: 255 if v == 0 else 0), dm))   # seuls les trous qui ne sont pas du fond
