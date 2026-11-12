@@ -4,8 +4,8 @@ D="$(cd "$(dirname "$0")" && pwd)"; W="$D/../work"
 P(){ python3 -I "$D/sprites_pixelize.py" "$@"; }
 rm -f "$W/scales.json"
 P hero_front "$W/ch_hero_32.png" 92
-P hero_side "$W/pose_hero_walkA.png" 0 --like hero_front --bright 1.2
-[ -f "$W/var_hero_stride.png" ] && P hero_stride "$W/var_hero_stride.png" 0 --like hero_front --bright 1.2
+P hero_side "$W/pose_hero_walkA.png" 0 --like hero_front --bright 1.0
+[ -f "$W/var_hero_stride.png" ] && P hero_stride "$W/var_hero_stride.png" 0 --like hero_front --bright 1.0
 P merchant "$W/ch_merchant_51.png" 82
 [ -f "$W/var_merchant_bucket.png" ] && P merchant_bucket "$W/var_merchant_bucket.png" 0 --like merchant
 P guard "$W/ch_guard_62.png" 96
