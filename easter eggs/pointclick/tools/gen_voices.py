@@ -70,7 +70,8 @@ def blind_style(k):
     if k.startswith('blind.sing'): return 'joyful ecstatic singing, excited, dancing'
     return 'confused grumbling man'
 items = [o for o in json.load(open(os.path.join(R, 'easter eggs', 'pointclick', 'work', 'voices.json'))) if o['lang'] == lang and (not only or o['who'] == only)]
-PV = os.path.expanduser('~/.claude/skills/voix-locale/voix/' + ('doubleur_fr' if lang == 'fr' else 'picard_voice'))
+# narrateur : voix « comédien de théâtre, la soixantaine » (VoiceDesign), choisie par Stéphan le 12/11/2026, clonée pour toutes les répliques
+PV = os.path.expanduser('~/.claude/skills/voix-locale/voix/narrateur_theatre')
 out = os.path.join(R, 'assets', 'pointclick', 'voice', lang); os.makedirs(out, exist_ok=True)
 n = 0
 for o in items:
@@ -79,8 +80,7 @@ for o in items:
     if os.path.exists(dst): continue
     if o['who'].startswith('bd_'): sc = o['who'][3:]; v = (BD[sc], BDB[sc] + ', ' + BDS[o['idx'] % 6])
     else: v = ('aiden', blind_style(o['key'])) if o['who'] == 'blind' else V.get(o['who'], V['hero'])
-    if o['who'] == 'narr':
-        narr_take(o, L, dst); n += 1; print('ok', name, flush=True); continue
+    if o['who'] == 'narr': continue   # narrateur : voir gen_narr.py (Chatterbox, voix « comédien de théâtre »)
     tmp = tempfile.mktemp(suffix='.wav')
     cmd = ['voix-locale', o['text'], '-o', tmp, '-l', L, '-v', v[0], '-s', v[1]]
     subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
