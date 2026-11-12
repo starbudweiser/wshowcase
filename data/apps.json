@@ -39,7 +39,7 @@
    "demo": "mORTEX",
    "shots": 3,
    "download": true,
-   "version": "2.0.0",
+   "version": "2.0.1",
    "tag": {
     "fr": "Le gestionnaire de mods, version Mac.",
     "en": "The mod manager, Mac edition.",
@@ -57,7 +57,7 @@
    "demo": "mABBAJACK",
    "shots": 3,
    "download": true,
-   "version": "2.0.0",
+   "version": "2.0.1",
    "tag": {
     "fr": "Installez des listes de mods Wabbajack sur Mac.",
     "en": "Install Wabbajack mod lists on Mac.",
@@ -93,7 +93,7 @@
    "demo": "sKYCRASH",
    "shots": 3,
    "download": true,
-   "version": "2.0.0",
+   "version": "2.2.0",
    "tag": {
     "fr": "Analyse vos crash logs Skyrim et désigne le coupable.",
     "en": "Reads your Skyrim crash logs and names the culprit.",
@@ -237,7 +237,7 @@
    "demo": "mO2FLATTENER",
    "shots": 3,
    "download": true,
-   "version": "2.0.0",
+   "version": "2.0.1",
    "tag": {
     "fr": "Transforme une instance Mod Organizer 2 en dossier prêt à jouer.",
     "en": "Turns a Mod Organizer 2 instance into a ready-to-play folder.",
@@ -273,7 +273,7 @@
    "demo": "hERALD",
    "shots": 0,
    "download": true,
-   "version": "1.3.1",
+   "version": "1.6.0",
    "tag": {
     "fr": "Prépare et suit vos campagnes de communication, sans rien publier à votre place.",
     "en": "Plans and tracks your communication campaigns, never posts for you.",
@@ -661,6 +661,24 @@
     "en": "Finds, sorts and tracks rental listings, application file included.",
     "es": "Encuentra, clasifica y sigue anuncios de alquiler, con su dosier PDF.",
     "it": "Trova, ordina e segue gli annunci di affitto, fascicolo PDF incluso."
+   }
+  },
+  {
+   "id": "mCLOUD",
+   "space": "util",
+   "repo": "mCLOUD",
+   "accent": "#38bdf8",
+   "kind": "menubar",
+   "desk": false,
+   "demo": "engine",
+   "shots": 0,
+   "download": true,
+   "version": "1.0.3",
+   "tag": {
+    "fr": "Vos clouds comme des disques dans le Finder.",
+    "en": "Your clouds as drives in the Finder.",
+    "es": "Tus nubes como discos en el Finder.",
+    "it": "I tuoi cloud come dischi nel Finder."
    }
   }
  ]
