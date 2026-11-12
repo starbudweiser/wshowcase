@@ -1,5 +1,6 @@
 /* Game text: English (adapted from the French, not translated word for word). An array value = a random line. */
 import X from './en2.js';
+import { darkKeys } from './dark.js';
 export default {
   ...X,
   'v.walk': 'Walk to', 'v.take': 'Pick up', 'v.use': 'Use', 'v.talk': 'Talk to', 'v.look': 'Look at', 'ui.with': 'with',
@@ -203,7 +204,7 @@ export default {
   'n.blind_pot': 'villager',
   'n.blind_sack': 'miller',
   'n.blind_hat': 'hunter',
-  'blind.dark': 'Where did the sun go? Why is it so dark?',
+  ...darkKeys('Where did the sun go? Why is it so dark?'),
   'blind.talk.h': 'Excuse me? It’s broad daylight. You’ve got something over your eyes.',
   'blind.talk.n': 'No, no, everything is black. Someone turned off the sun. Why is it so dark?',
   'blind.wow1': 'It’s... BRIGHT !!!',

@@ -12,7 +12,8 @@ export default {
     { id: 'plantern', rect: [0, 70, 480, 122] }, { id: 'pfeast', rect: [0, 122, 160, 200] }, { id: 'pfeast', rect: [330, 130, 480, 205] }
   ],
   ambient: [
-    { type: 'dragon', y: 26, period: 36, offset: 8, scale: 0.9, drop: 6 },
+    { type: 'dragon', kind: 'frost', y: 36, period: 44, offset: 22, drop: 8, mode: 'glide', scale: 0.7, dir: 1 },
+    { type: 'dragon', kind: 'gold', y: 26, period: 36, offset: 8, drop: 6, mode: 'swoop', amp: 20, fire: true, scale: 0.8 },
     { type: 'flock', n: 3, y0: 40, y1: 90, speed: 8, seed: 51 },
     { type: 'frames', id: 'party_fw_l', fps: 1.6 },
     { type: 'frames', id: 'party_fw_r', fps: 1.6, offset: 0.5 },

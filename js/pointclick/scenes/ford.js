@@ -13,7 +13,7 @@ export default {
   ],
   ambient: [
     { type: 'flock', n: 5, y0: 20, y1: 80, speed: 8, seed: 31 },
-    { type: 'dragon', y: 18, period: 52, offset: 30, scale: 0.8, drop: 6 },
+    { type: 'dragon', kind: 'ember', y: 18, period: 52, offset: 30, drop: 6, mode: 'circle', cx: 240, r: 170, ry: 10, turns: 1.25, scale: 0.6, haze: true, flap: 3.6 },
     { type: 'frames', id: 'ford_water', fps: 1.8 },
     { type: 'frames', id: 'ford_mist', fps: 0.9 }
   ],

@@ -16,10 +16,29 @@ V = {  # personnage : (voix prête, consigne de jeu)
  'farmer': ('serena', 'cheerful hearty farm woman, loud and friendly'),
  'follower': ('vivian', 'stern dutiful warrior woman, deadpan monotone'),
  'horseman': ('aiden', 'hollow ghostly melancholy voice, slow, echoing'), 'phorseman': None,
+ 'wk_ex': ('ryan', 'breathless adventurous man running, out of breath, panicked'), 'wk_bu': ('aiden', 'excited nerdy ghost hunter shouting'),
+ 'wk_te': ('ryan', 'squeaky villainous cartoon voice, high pitched, menacing but silly'), 'wk_ki': ('serena', 'excited child shouting'),
+ 'wk_ba': ('ryan', 'extremely deep growling barbarian, slow'), 'wk_wi': ('aiden', 'old wise wizard, calm and powerful, slow, booming'),
+ 'wk_ha': ('ryan', 'cheerful hungry halfling, light-hearted'), 'wk_ma': ('ryan', 'calm resourceful handyman, laid back'),
+ 'wk_si': ('ryan', 'grumpy sarcastic teenager, whining'), 'wk_pi': ('ryan', 'cocky cheeky young pirate'), 'wk_gr': ('aiden', 'cheerful medieval adventurer'),
+ 'wk_tr': ('aiden', 'grumpy gruff bridge troll, deep voice'), 'wk_ag': ('aiden', 'serious deadpan FBI agent speaking low, monotone'), 'wk_ho': ('aiden', 'deep slow comedic horse voice, proud'),
  'sleepy': ('aiden', 'groggy half-asleep confused man, yawning, mumbling'),
  'hen': ('vivian', 'comedic clucking chicken-like voice'),
 }
 V['pmerchant'] = V['merchant']; V['gguard'] = V['pguard'] = V['guard']; V['pgiant'] = V['giant']; V['phorseman'] = V['horseman']
+BD = {'rue': 'aiden', 'mill': 'ryan', 'meadow': 'aiden', 'market': 'serena', 'gate': 'ryan', 'house': 'aiden', 'ford': 'ryan', 'wood': 'aiden', 'hall': 'vivian', 'party': 'ryan'}
+BDB = {'rue': 'stocky villager', 'mill': 'burly miller', 'meadow': 'rough hunter', 'market': 'young farm boy, high pitched', 'gate': 'tired watchman', 'house': 'chubby man', 'ford': 'scruffy wandering bard', 'wood': 'old hermit, cracked voice', 'hall': 'young maid', 'party': 'cheerful drummer'}
+BDS = ['plaintive whining, lost in the dark', 'angry exasperated shouting, complaining', 'bewildered confused, slow and puzzled, almost whispering', 'desperate panicked pleading', 'sing-song mocking whining, drawn-out vowels', 'tired resigned sigh, flat monotone']
+NB = 'a sardonic velvet-voiced British narrator, theatrical, strongly varied intonation, dramatic pauses, expressive pitch changes, never monotone, '
+def narr_style(k):
+    if k.startswith('nar.fail'): return NB + 'mocking and disappointed, condescending, with a dramatic sigh'
+    if k.startswith('nar.lit'): return NB + 'grudgingly impressed, dry wit, a hint of warmth'
+    if k.startswith('nar.idle') or k.endswith('.idle'): return NB + 'bored and drawling, long sighs, sarcastic'
+    if k.endswith('.enter'): return NB + 'grand storyteller announcing a scene, wry and a little pompous'
+    if k.startswith('nar.back'): return NB + 'smugly surprised, eyebrow raised'
+    if k == 'wink.dexter': return NB + 'low calm whisper, ominous but comic'
+    if k.startswith('wink.'): return NB + 'playful and conspiratorial, then a dry punchline'
+    return NB + 'smug and wryly amused, delighted irony'
 def blind_style(k):
     if k == 'blind.dark': return 'plaintive whining lost man complaining, groping in the dark'
     if k.startswith('blind.wow'): return 'amazed overjoyed shouting, tears of joy'
@@ -33,10 +52,11 @@ for o in items:
     if n >= limit: break
     name = o['key'] + ('' if o['idx'] < 0 else f".v{o['idx']}") + '.mp3'; dst = os.path.join(out, name)
     if os.path.exists(dst): continue
-    v = ('aiden', blind_style(o['key'])) if o['who'] == 'blind' else V.get(o['who'], V['hero'])
+    if o['who'].startswith('bd_'): sc = o['who'][3:]; v = (BD[sc], BDB[sc] + ', ' + BDS[o['idx'] % 6])
+    else: v = ('aiden', blind_style(o['key'])) if o['who'] == 'blind' else V.get(o['who'], V['hero'])
     tmp = tempfile.mktemp(suffix='.wav')
     cmd = ['voix-locale', o['text'], '-o', tmp, '-l', L]
-    cmd += ['-r', PV + '.wav', '-t', open(PV + '.txt').read().strip(), '--speed', '0.92'] if o['who'] == 'narr' else ['-v', v[0], '-s', v[1]]
+    cmd += ['-v', 'aiden', '-s', narr_style(o['key']), '--speed', '0.96'] if o['who'] == 'narr' else ['-v', v[0], '-s', v[1]]
     subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     if os.path.exists(tmp):
         subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', tmp, '-ac', '1', '-ar', '24000', '-b:a', '40k', dst]); os.remove(tmp)

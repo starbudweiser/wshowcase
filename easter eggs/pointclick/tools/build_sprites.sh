@@ -66,4 +66,15 @@ Q hero_sIdle hs_idle2.png 0 --like hero_front; Q hero_sTalk1 hs_talk1.png 0 --li
 Q hero_fWalkA hf_walkA.png 0 --like hero_front; Q hero_fWalkP hf_walkP.png 0 --like hero_front; Q hero_fWalkB hf_walkB.png 0 --like hero_front; Q hero_fBlink hf_blink.png 0 --like hero_front
 Q hero_fTalk2 hf_talk2.png 0 --like hero_front; Q hero_fShrug hf_shrug.png 0 --like hero_front; Q hero_fSurprise hf_surprise.png 0 --like hero_front
 Q hero_bStand hb_stand.png 0 --like hero_front; Q hero_bWalkA hb_walkA.png 0 --like hero_front; Q hero_bWalkB hb_walkB.png 0 --like hero_front
-Q hero_pNeutral hp_neutral.png 250 72; Q hero_pTalk hp_talk.png 0 --like hero_pNeutral; Q hero_pBlink hp_blink.png 0 --like hero_pNeutral; Q hero_pSleepy hp_sleepy.png 0 --like hero_pNeutral
+Q hero_pNeutral hp_neutral.png 250 72 --fill; Q hero_pTalk hp_talk.png 0 --like hero_pNeutral --fill; Q hero_pBlink hp_blink.png 0 --like hero_pNeutral --fill; Q hero_pSleepy hp_sleepy.png 0 --like hero_pNeutral --fill
+
+# dragons d'autres espèces (relancer après tools/gen_dragons.sh)
+Q dragon_frost_up dr_frost_up.png 72; Q dragon_ember_up dr_ember_up.png 78; Q dragon_moss_up dr_moss_up.png 66; Q dragon_gold_up dr_gold_up.png 48
+for k in frost ember moss gold; do for q in mid1 down mid2; do Q dragon_${k}_$q dr_${k}_$q.png 0 --like dragon_${k}_up; done; done
+
+# clins d'œil (relancer après tools/gen_winks.sh)
+Wk(){ k="$1"; h="$2"; Q wk_${k}_a wk_${k}_a.png $h; Q wk_${k}_b wk_${k}_b.png 0 --like wk_${k}_a; }
+Wk explorer 88; Wk buster 88; Wk kids 84; Wk barbarian 100; Wk wizard 100; Wk halfling 62; Wk handyman 88; Wk simon 78; Wk pirate 88; Wk graham 84; Wk agent 90
+Wk ghost 58; Wk racer 46; Wk tentacle 64; Wk owl 40; Wk troll 48; Q wk_boulder wk_boulder.png 64; Q wk_owl_f wk_owl_f.png 0 --like wk_owl_a; Q wk_horsearmor wk_horsearmor.png 0 --like horse
+
+Q hero_pKnock1 hp_knock1.png 0 --like hero_pNeutral --fill; Q hero_pKnock2 hp_knock2.png 0 --like hero_pNeutral --fill

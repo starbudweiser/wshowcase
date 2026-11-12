@@ -20,9 +20,9 @@ export default {
     { id: 'path', rect: [250, 238, 350, 268], at: [300, 262] }
   ],
   ambient: [
-    { type: 'dragon', y: 10, period: 40, offset: 14, scale: 0.9, drop: 6 },
+    { type: 'dragon', kind: 'frost', y: 10, period: 40, offset: 14, drop: 6, mode: 'glide', scale: 0.7, flap: 3.4 },
     { type: 'flock', n: 4, y0: 20, y1: 90, speed: 11, seed: 8 },
-    { type: 'spin', cx: 167, cy: 156, rx: 26, ry: 34, speed: 0.3, skip: [165, 170, 194, 187] },
+    { type: 'spin', cx: 167, cy: 156, rx: 26, ry: 34, speed: 0.3, fade: [164, 158, 176] },
     { type: 'frames', id: 'mill_river', fps: 2.2 },
     { type: 'puffs', x: 103, y: 50, h: 32, wind: 12, n: 7 },
     { type: 'frames', id: 'mill_garden', fps: 1.2 }, { type: 'frames', id: 'mill_grass', fps: 1.1, offset: 0.8 }

@@ -431,3 +431,18 @@ Le moteur lit le mp3 de la langue courante (`voicePlay`), prolonge la bulle jusq
 à la fois, bulle en italique en haut de l'écran. Déclencheurs : entrée dans la scène (`nar.<scène>.enter`), événement d'histoire (tout `g.set('x')` dont la clé `nar.<scène>.x` existe),
 aveugle éclairé (`nar.lit`), réponse par défaut du héros (`nar.fail`, une fois sur deux ou presque, au plus toutes les 20 s), inactivité de 45 s (indices `nar.<scène>.idle`, puis `nar.idle`), reprise de partie (`nar.back`).
 Ajouter une réplique : écrire la clé dans les deux langues, relancer `voices_manifest.mjs` puis `gen_voices.py`.
+
+---
+## Dragons, clins d'œil, vitre de l'écran, nuit (12/11/2026)
+
+- **Dragons** : 5 espèces (brun, glace, braise, marais, jeune doré ; `tools/gen_dragons.sh`), 4 modes de vol (`cross`, `glide`, `swoop`, `circle`), souffle de flammes, voile de lointain ;
+  ils passent **derrière** falaise, arbres et toits (`night.js` : `buildSky` déduit le ciel lointain du décor, `occlude` repeint le décor proche par-dessus).
+- **Nuages** : défilement en miroir d'une bande de ciel nettoyée (arbres et falaises remplacés par le ciel voisin).
+- **Nuit** (60 s sans bouger la souris) : paliers, étoiles, très grosse lune derrière les arbres, personnages qui rentrent ou s'allongent, gros plan du héros qui **frappe à l'écran**
+  (`hero.pKnock1/2`, `tools/gen_knock.sh`) puis réclame la reprise ; passage du vélo avec la créature devant la lune.
+- **Clins d'œil** (`engine/winks.js`) : scénettes aléatoires, rares (1ʳᵉ après ~2 min, puis toutes les 3 à 6 min), au premier plan ou à l'arrière-plan sur de vraies voies du décor (`LANES`,
+  échelle et voix adaptées), avec dialogues doublés puis commentaire du narrateur : Indiana Jones, S.O.S. Fantômes, Morrowind, Day of the Tentacle, Twin Peaks, Les Goonies, Conan,
+  Le Seigneur des anneaux, MacGyver, Simon the Sorcerer, Monkey Island, King's Quest, Oblivion, Dexter. Sprites : `tools/gen_winks.sh`. Ajouter un clin d'œil : une entrée dans `V` de winks.js + textes `wink.*`.
+- **Vitre de l'écran** (`engine/glass.js`) : mouche (posée, écrasée, qui repart), éternuement du héros ou d'un personnage, fiente d'oiseau ; le héros nettoie (chiffon, feuille de chou, plumeau, manche), très rarement.
+- **Voix** : jamais deux à la fois (dialogue > aboiements et narrateur ; le narrateur se tait dès qu'un dialogue commence) ; narrateur en voix prête avec une consigne d'intonation par type de réplique ;
+  « Où est passé le soleil ? » : 6 intonations différentes par personnage, beaucoup moins fréquente.

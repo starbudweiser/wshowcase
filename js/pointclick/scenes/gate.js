@@ -13,7 +13,7 @@ export default {
     { id: 'gtree', rect: [0, 0, 84, 252], at: [92, 246], dir: 'l' }
   ],
   ambient: [
-    { type: 'dragon', y: 8, period: 48, offset: 6, scale: 0.8, drop: 6 },
+    { type: 'dragon', kind: 'moss', y: 8, period: 48, offset: 6, drop: 6, mode: 'cross', scale: 0.55, flap: 3.2, haze: true },
     { type: 'flock', n: 3, y0: 8, y1: 40, speed: 9, seed: 21 },
     { type: 'frames', id: 'gate_banner_l', fps: 2.4 },
     { type: 'frames', id: 'gate_banner_r', fps: 2.4, offset: 0.7 }

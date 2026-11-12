@@ -9,14 +9,18 @@ for (const f of files) {
   const s = fs.readFileSync(f, 'utf8');
   for (const m of s.matchAll(/(?:say|bark)\(\s*(['"])([\w.]+)\1\s*,\s*(['"])([^'"]+)\3(\s*\+)?/g)) { if (m[5]) prefix.push([m[4], m[2]]); else exact[m[4]] = m[2]; }
 }
-const rules = [[/^night\.hero/, 'hero'], [/^night\.wake/, 'sleepy'], [/^nar\./, 'narr'], [/^blind\.(dark|talk\.n|wow\d)$/, 'blind'], [/^blind\.sing\./, 'blind'], [/^blind\.(talk\.h|after|\w+\.\d)$/, 'hero'], [/^s10\.(p\w+)$/, null], [/^(look|take|use|talk|def)\./, 'hero']];
+const rules = [[/^blind\.dark\.(\w+)$/, null, 'bd_'], [/^night\.hero/, 'hero'], [/^night\.wake/, 'sleepy'], [/^nar\./, 'narr'], [/^blind\.(dark|talk\.n|wow\d)$/, 'blind'], [/^blind\.sing\./, 'blind'], [/^blind\.(talk\.h|after|\w+\.\d)$/, 'hero'], [/^s10\.(p\w+)$/, null], [/^(look|take|use|talk|def)\./, 'hero']];
 const skip = /^(n\.|v\.|ui\.|ch\.|ach\.|end\d*\.|end$)/;
 const extra = { 's3.giant.talk1': 'giant', 's3.giant.talk2': 'giant', 's.bridge1': 'guard', 's.bridge2': 'guard', 's.bridge1h': 'hero', 's.bridge2h': 'hero' };
 const who = k => {
+  if (k === 'clean.npc.sneeze') return 'sleepy';
+  if (k.startsWith('clean.')) return 'hero';
+  if (k === 'wink.dexter') return 'narr';
+  { const m = k.match(/^wink\.\w+\.([a-z]+)\d?$/); if (m) return m[1] === 'n' ? 'narr' : m[1] === 'h' ? 'hero' : 'wk_' + m[1]; }
   if (extra[k]) return extra[k];
   if (exact[k]) return exact[k];
   const p = prefix.filter(([pre]) => k.startsWith(pre)).sort((a, b) => b[0].length - a[0].length)[0]; if (p) return p[1];
-  for (const [re, w] of rules) { const m = k.match(re); if (m) return w === null ? m[1] : w; }
+  for (const [re, w, pre] of rules) { const m = k.match(re); if (m) return w === null ? (pre || '') + m[1] : w; }
   return null;
 };
 const clean = t => t.replace(/[♪♫]/g, '').replace(/\([^)]*\)/g, '').replace(/\s+/g, ' ').trim();

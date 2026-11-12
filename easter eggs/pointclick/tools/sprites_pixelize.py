@@ -24,11 +24,15 @@ def main():
     a = sys.argv[1:]; like = None; bright = 1.0
     if '--bright' in a: i = a.index('--bright'); bright = float(a[i + 1]); del a[i:i + 2]
     if '--like' in a: i = a.index('--like'); like = a[i + 1]; del a[i:i + 2]
+    fill = '--fill' in a
+    if fill: a.remove('--fill')
     name, src, th = a[0], a[1], int(a[2]); ncol = int(a[3]) if len(a) > 3 else 56
     im, al, dm = key(Image.open(src))
     al = al.point(lambda v: 255 if v > 120 else 0)
     # comble les trous du masque (peau proche du fond magenta) : sinon le contour sombre dessine des « nervures » noires dans le corps
     fl = al.copy(); ImageDraw.floodfill(fl, (0, 0), 128); al = ImageChops.lighter(al, ImageChops.multiply(fl.point(lambda v: 255 if v == 0 else 0), dm))   # seuls les trous qui ne sont pas du fond
+    if fill:   # portraits : tout ce qui n'est pas relié au bord est le sujet (langue rose, dents...), même de couleur proche du fond
+        fl = al.copy(); ImageDraw.floodfill(fl, (0, 0), 128); al = ImageChops.lighter(al, fl.point(lambda v: 255 if v == 0 else 0))
     al = al.filter(ImageFilter.MinFilter(3))                                                   # rogne la frange magenta
     bb = al.getbbox(); im = im.crop(bb); al = al.crop(bb)
     sc = json.load(open(SC)) if os.path.exists(SC) else {}

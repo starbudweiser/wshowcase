@@ -1,5 +1,7 @@
 /* Moteur du jeu d'aventure : scènes, déplacements, verbes, inventaire, dialogues, scripts, sauvegarde.
    Canvas 2D 480×270 mis à l'échelle par le navigateur ; interface (verbes, inventaire, bulles) en HTML par-dessus. */
+import { updateWinks, drawWinks } from './winks.js';
+import { updateGlass, drawGlass } from './glass.js';
 import { buildSky, drawSky, startNight, updateNight, drawNight, wakeNight, IDLE_NIGHT } from './night.js';
 import { lang } from '../../i18n.js';
 import { Walk, hitPoly } from './walk.js';
@@ -24,7 +26,7 @@ export class Game {
   constructor(root) {
     this.root = root; this.imgs = {}; this.st = null; this.scene = null; this.ents = []; this.hot = []; this.waiters = [];
     this.verb = 'walk'; this.sel = null; this.hover = null; this.tok = 0; this.runTok = 0; this.locked = false; this.now = 0; this.fx = {};
-    this.night = null; this.sky = null; this.lastMove = 0; this._mx = null; this._my = null; this.nq = []; this.narr = null; this.lastNarr = -99; this.lastAct = 0; this.idleN = 0; this.sayAu = null; this.voiceOn = store.get('pc.voice', true);
+    this.wk = null; this.night = null; this.sky = null; this.lastMove = 0; this._mx = null; this._my = null; this.nq = []; this.narr = null; this.lastNarr = -99; this.lastAct = 0; this.idleN = 0; this.sayAu = null; this.voiceOn = store.get('pc.voice', true);
     this.bubbles = []; this.barks = []; this.choice = null; this.skip = false; this.alive = true; this.started = false; this.nextBlip = 0; this.mouse = [0, 0];
   }
 
@@ -60,13 +62,13 @@ export class Game {
   }
   frame(e) {
     const A = ANIM[e.spr]; if (!A) return e.spr;
-    const st = e.goal ? 'walk' : e.talk ? 'talk' : 'idle', fr = A[st] || A.idle, fps = (A.fps && A.fps[st]) || 3;
+    const st = e.animState || (e.goal ? 'walk' : e.talk ? 'talk' : 'idle'), fr = A[st] || A.idle, fps = (A.fps && A.fps[st]) || 3;
     return fr[Math.floor(this.now * fps + (e.ph || 0)) % fr.length];
   }
   /* image d'une zone du décor animée par images (assets/pointclick/anim/<id>_<n>.png), chargée à la demande */
   animImg(id, i) {
     const p = `assets/pointclick/anim/${id}_${i}.png`, im = this.imgs[p]; if (im && im.width) return im;
-    this._ld = this._ld || {}; if (!this._ld[p]) { this._ld[p] = 1; this.img(p).catch(() => {}); } return null;
+    this._ld = this._ld || {}; if (!this._ld[p]) { this._ld[p] = 1; Promise.resolve(this.img(p)).catch(() => {}); } return null;
   }
   spr(name) { const i = this.imgs[`assets/pointclick/spr/${SPR[name] || name}.png`]; return i && i.width ? i : null; }
 
@@ -151,9 +153,14 @@ export class Game {
     this.voiceOn = !!on; store.set('pc.voice', !!on); this.voiceBtn.classList.toggle('off', !on); this.voiceBtn.title = this.T ? this.T(on ? 'ui.voiceOn' : 'ui.voiceOff') : '';
     if (!on && !quiet) { for (const a of [this.sayAu, this.narr && this.narr.au]) if (a) a.pause(); }
   }
+  /* une seule voix à la fois : dialogue (haute priorité) > aboiements des aveugles et narrateur (basse priorité, jamais en même temps qu'un dialogue) */
+  static playing(a) { return !!a && !a.paused && !a.ended && !a.error; }
+  hiBusy() { return Game.playing(this.sayAu) || (this.night && this.night.say && Game.playing(this.night.say.au)); }
+  lowBusy() { return (this.narr && Game.playing(this.narr.au)) || this.barks.some(k => Game.playing(k.au)); }
+  hushNarr() { const n = this.narr; if (n) { n.b.remove(); if (n.au) n.au.pause(); this.narr = null; this.lastNarr = this.now; } }
   voicePlay(key, idx) {
     if (!this.voiceOn || !key || key[0] === '=') return null;
-    try { const a = new Audio(`assets/pointclick/voice/${this.lang === 'fr' ? 'fr' : 'en'}/${key}${idx >= 0 ? '.v' + idx : ''}.mp3`); a.volume = 0.95; a.play().catch(() => {}); return a; } catch { return null; }
+    try { const a = new Audio(`assets/pointclick/voice/${this.lang === 'fr' ? 'fr' : 'en'}/${key}${idx >= 0 ? '.v' + idx : ''}.mp3`); a.volume = this.vvol ?? 0.95; a.play().catch(() => {}); return a; } catch { return null; }
   }
   /* le narrateur : commentaires sarcastiques qui ne bloquent jamais le jeu (file d'attente, un seul à la fois) */
   narrate(key, o = {}) {
@@ -161,10 +168,11 @@ export class Game {
     this.nq.push({ key, force: !!o.force, t: this.now + (o.delay || 0) });
   }
   pumpNarr() {
-    if (this.night) return;
+    if (this.night || (this.gl && this.gl.run)) return;
     const n = this.narr;
+    if (n && (this.bubbles.length || this.locked || this.hiBusy())) { this.hushNarr(); return; }
     if (n) { const playing = n.au && !n.au.ended && !n.au.error && !n.au.paused; if (this.now > n.end && !playing) { n.b.remove(); this.narr = null; this.lastNarr = this.now; } return; }
-    if (!this.started || this.titleEl || this.locked || this.bubbles.length || this.barks.length) return;
+    if (!this.started || this.titleEl || this.locked || this.bubbles.length || this.barks.length || this.hiBusy() || this.lowBusy()) return;
     if (!this.nq.length && this.now - this.lastAct > 45) { this.lastAct = this.now; const k = 'nar.' + this.st.scene + '.idle'; this.narrate(this.idleN++ % 3 === 2 || !this.T.has(k) ? 'nar.idle' : k); }
     const q = this.nq[0]; if (!q || this.now < q.t || (!q.force && this.now - this.lastNarr < 8)) return; this.nq.shift();
     const text = this.T(q.key), idx = this.T.idx, b = el('div', 'pc-b pc-narr', text); b.style.color = COLORS.narr; this.ov.append(b); this.placeBubble(b, W / 2, 46);
@@ -193,10 +201,10 @@ export class Game {
   save() { if (this.st && this.started) writeSave({ scene: this.st.scene, flags: this.st.flags, inv: this.st.inv, hero: this.hero ? { x: this.hero.x, y: this.hero.y, dir: this.hero.dir } : null }); }
   async goScene(id, how = {}) {
     const sc = (await import(`../scenes/${id}.js`)).default; this.st.scene = id;
-    const bg = await this.img('assets/pointclick/' + sc.bg); this.scene = sc; this.bg = bg; this.night = null; this.sky = sc.interior ? null : buildSky(bg); this.lastMove = this.now;
+    const bg = await this.img('assets/pointclick/' + sc.bg); this.scene = sc; this.bg = bg; this.wk = null; this.wkAt = Math.max(this.wkAt ?? 0, this.now + 45); this.night = null; this.sky = sc.interior ? null : buildSky(bg); this.lastMove = this.now;
     this.walk = new Walk(sc.walk.map(p => p.slice()), W, H);
     this.hot = sc.hot || []; this.amb = makeAmbient(sc.ambient);
-    await Promise.all((sc.ambient || []).filter(o => o.type === 'frames' && this.animIdx[o.id]).flatMap(o => Array.from({ length: this.animIdx[o.id].n }, (_, i) => this.img(`assets/pointclick/anim/${o.id}_${i}.png`).catch(() => {}))));
+    await Promise.all((sc.ambient || []).filter(o => o.type === 'frames' && this.animIdx[o.id]).flatMap(o => Array.from({ length: this.animIdx[o.id].n }, (_, i) => Promise.resolve(this.img(`assets/pointclick/anim/${o.id}_${i}.png`)).catch(() => {}))));
     this.ents = (sc.ents || []).map(e => ({ visible: true, ph: Math.random() * 5, ...e }));
     const st = how.restored && this.st.hero ? this.st.hero : sc.start;
     this.hero = { id: 'hero', who: 'hero', spr: HERO ? HERO.stand : 'hero.side', x: st.x, y: st.y, dir: st.dir || 'r', path: [], walkD: 0, hot: true, isHero: true, visible: true };
@@ -240,7 +248,9 @@ export class Game {
   }
   async walkEnt(id, x, y, speed = 40) { const e = this.ent(id); e.goal = [x, y, speed]; await this.until(() => !e.goal); this.chk(); }
   async say(who, key, vars) {
-    this.chk(); const text = key.startsWith('=') ? key.slice(1) : this.T(key, vars), e = who === 'narr' ? null : this.ent(who);
+    this.chk(); this.clearBarks(); this.hushNarr();
+    if (this.voiceOn && this.hiBusy()) { const w0 = this.now; await this.until(() => !this.hiBusy() || this.now - w0 > 9); this.chk(); }
+    const text = key.startsWith('=') ? key.slice(1) : this.T(key, vars), e = who === 'narr' ? null : this.ent(who);
     const b = el('div', 'pc-b', text); b.style.color = COLORS[who] || '#fff'; this.ov.append(b); this.bubbles.push(b);
     const [ax, ay] = e ? this.headPos(e) : [W / 2, 40]; this.placeBubble(b, ax, ay);
     if (e) e.talk = who;
@@ -258,7 +268,7 @@ export class Game {
   clearBubbles() { this.bubbles.forEach(b => b.remove()); this.bubbles = []; }
   /* réplique lancée en passant, sans bloquer le jeu (les aveugles qui répètent « Pourquoi il fait si sombre ? ») */
   bark(who, key, ms = 2800, force = false) {
-    const e = this.ent(who); if (!e || (this.locked && !force) || this.titleEl) return;
+    const e = this.ent(who); if (!e || (this.locked && !force) || this.titleEl || this.hiBusy() || this.lowBusy() || this.narr) return;
     const b = el('div', 'pc-b', this.T(key)); b.style.color = COLORS[who] || '#fff'; this.ov.append(b);
     const [ax, ay] = this.headPos(e); this.placeBubble(b, ax, ay); const au = this.voicePlay(key, this.T.idx), bk = { b, who, end: this.now + ms / 1000, au }; this.barks.push(bk); if (au) au.addEventListener('loadedmetadata', () => { bk.end = Math.max(bk.end, this.now + au.duration + 0.2); });
   }
@@ -380,7 +390,8 @@ export class Game {
     });
     for (let i = this.barks.length - 1; i >= 0; i--) { const k = this.barks[i], e = this.ent(k.who); if (!e || this.now > k.end) { k.b.remove(); this.barks.splice(i, 1); } else { const [ax, ay] = this.headPos(e); this.placeBubble(k.b, ax, ay); } }
     if (this.scene && this.scene.tick) this.scene.tick(this, dt);
-    if (this.night) updateNight(this, dt); else if (this.started && !this.titleEl && this.alive) { if (this.locked || this.bubbles.length || this.barks.length || this.narr) this.lastMove = Math.max(this.lastMove, this.now - IDLE_NIGHT + 25); else if (this.now - this.lastMove > IDLE_NIGHT && document.visibilityState === 'visible' && this.hero) startNight(this); }
+    updateWinks(this, dt); updateGlass(this, dt);
+    if (this.night) updateNight(this, dt); else if (this.started && !this.titleEl && this.alive) { if (this.locked || this.bubbles.length || this.barks.length || this.narr) this.lastMove = Math.max(this.lastMove, this.now - IDLE_NIGHT + 25); else if (this.now - this.lastMove > IDLE_NIGHT && !(this.gl && this.gl.run) && document.visibilityState === 'visible' && this.hero) startNight(this); }
     this.pumpNarr();
     for (let i = this.waiters.length - 1; i >= 0; i--) { const w = this.waiters[i]; if (w.cond()) { this.waiters.splice(i, 1); w.res(); } }
     const f = this.fx.fade; if (f) { const t = clamp((this.now - f.t0) / f.ms, 0, 1); f.a = f.from + (f.to - f.from) * t; if (t >= 1) { f.a = f.to; if (f.to === 0) delete this.fx.fade; } }
@@ -394,12 +405,13 @@ export class Game {
     [...this.ents].filter(e => e.visible !== false).sort((a, b) => (a.y + (a.z || 0)) - (b.y + (b.z || 0))).forEach(e => this.drawEnt(e));
     (this.scene.fg || []).forEach(p => { c.save(); c.beginPath(); p.forEach(([x, y], i) => (i ? c.lineTo(x, y) : c.moveTo(x, y))); c.closePath(); c.clip(); c.drawImage(this.bg, 0, 0, W, H); c.restore(); });
     c.restore();
-    drawNight(this, c);
+    drawWinks(this, c);
+    drawNight(this, c); drawGlass(this, c);
     if (this.fx.fade) { c.fillStyle = `rgba(0,0,0,${this.fx.fade.a})`; c.fillRect(0, 0, W, H); }
   }
   drawEnt(e) {
     const im = this.spr(this.frame(e)) || this.spr(e.spr); if (!im) return; const c = this.ctx, s = e.scale ?? this.persp(e.y), w = im.width * s, h = im.height * s;
-    c.save(); c.translate(Math.round(e.x), Math.round(e.y - (e.bob || 0)));
+    c.save(); if (e.alpha !== undefined) c.globalAlpha = e.alpha; c.translate(Math.round(e.x), Math.round(e.y - (e.bob || 0)));
     if (e.nrot) c.translate(0, Math.min(1, Math.abs(e.nrot) / 1.5708) * Math.max(0, h - w) / 2);
     if (e.rot || e.nrot) { c.translate(0, -h / 2); c.rotate((e.rot || 0) + (e.nrot || 0)); c.translate(0, h / 2); }
     if (e.flip) c.scale(-1, 1);

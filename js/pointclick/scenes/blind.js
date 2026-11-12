@@ -21,7 +21,7 @@ export const blindEnt = c => ({ id: c.id, spr: c.spr, x: c.x, y: c.y, hot: true,
 
 export function blindEnter(g, c) {
   if (g.flag('lit_' + c.scene)) g.ents = g.ents.filter(e => e.id !== c.id);
-  g.blindNext = g.now + 3.5;
+  g.blindNext = g.now + 9;
 }
 
 /* à appeler dans le tick de la scène : tâtonne, se plaint régulièrement, ou danse une fois éclairé */
@@ -30,13 +30,13 @@ export function blindTick(g, c) {
   if (e.dance) { e.bob = Math.abs(Math.sin(g.now * 9)) * 5; e.rot = Math.sin(g.now * 7) * 0.2; return; }
   e.rot = Math.sin(g.now * 1.3) * 0.035;
   if (g.now >= (g.blindNext || 0)) {
-    if (!g.locked && !g.bubbles.length && !g.barks.length) { g.bark(c.id, 'blind.dark'); g.blindNext = g.now + 7 + Math.random() * 4; } else g.blindNext = g.now + 1.5;
+    if (!g.locked && !g.bubbles.length && !g.barks.length) { g.bark(c.id, 'blind.dark.' + c.scene); g.blindNext = g.now + 22 + Math.random() * 14; } else g.blindNext = g.now + 1.5;
   }
 }
 
 export async function blindOn(g, c, verb, id, item) {
   if (id !== c.id || !g.ent(c.id)) return false;
-  if (verb === 'talk') { g.clearBarks(); await g.say(c.id, 'blind.dark'); await g.say('hero', 'blind.talk.h'); await g.say(c.id, 'blind.talk.n'); return true; }
+  if (verb === 'talk') { g.clearBarks(); await g.say(c.id, 'blind.dark.' + c.scene); await g.say('hero', 'blind.talk.h'); await g.say(c.id, 'blind.talk.n'); return true; }
   if (verb === 'use' && !item) { await g.cut(() => reveal(g, c)); return true; }
   return false;
 }

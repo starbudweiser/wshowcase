@@ -1,5 +1,6 @@
 /* Textes du jeu : français (rédigé en premier). Une valeur en tableau = réplique tirée au hasard. */
 import X from './fr2.js';
+import { darkKeys } from './dark.js';
 export default {
   ...X,
   /* interface */
@@ -219,7 +220,7 @@ export default {
   'n.blind_pot': 'villageois',
   'n.blind_sack': 'meunier',
   'n.blind_hat': 'chasseur',
-  'blind.dark': 'Où est passé le soleil ? Pourquoi il fait si sombre ?',
+  ...darkKeys('Où est passé le soleil ? Pourquoi il fait si sombre ?'),
   'blind.talk.h': 'Excusez-moi ? Il fait grand jour. Vous avez un truc sur les yeux.',
   'blind.talk.n': 'Non, non, tout est noir. Quelqu’un a éteint le soleil. Pourquoi il fait si sombre ?',
   'blind.wow1': 'Il... fait... CLAIR !!!',

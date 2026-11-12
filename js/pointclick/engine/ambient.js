@@ -1,3 +1,4 @@
+import { occlude } from './night.js';
 /* Décor vivant : zones du décor animées (eau, roue, herbes), respiration des animaux, fumée, oiseaux, dragon qui vole, lueurs.
    Chaque scène déclare `ambient: [...]`. Tout est dessiné par-dessus le décor, avant les personnages. */
 import { hitPoly } from './walk.js';
@@ -91,13 +92,16 @@ const KINDS = {
   },
   /* roue qui tourne vraiment : la roue du décor, découpée en ellipse (vue de biais), est tournée dans son plan ; `skip` = zone à laisser fixe (barrière devant la roue) */
   spin(o) {
-    const sx = o.rx / o.ry;
+    const sx = o.rx / o.ry, bw = Math.ceil(o.rx * 2 + 4), bh = Math.ceil(o.ry * 2 + 4), tmp = document.createElement('canvas'); tmp.width = bw; tmp.height = bh;
+    const T = tmp.getContext('2d'), ox = Math.floor(o.cx - bw / 2), oy = Math.floor(o.cy - bh / 2);
     return {
       draw(g, c, t) {
         if (!g.bg) return;
-        c.save(); c.beginPath(); c.ellipse(o.cx, o.cy, o.rx, o.ry, 0, 0, Math.PI * 2);
-        if (o.skip) { const [x0, y0, x1, y1] = o.skip; c.rect(x0, y0, x1 - x0, y1 - y0); c.clip('evenodd'); } else c.clip();
-        c.translate(o.cx, o.cy); c.scale(sx, 1); c.rotate(t * (o.speed ?? 0.3)); c.scale(1 / sx, 1); c.drawImage(g.bg, -o.cx, -o.cy, 480, 270); c.restore();
+        T.globalCompositeOperation = 'source-over'; T.clearRect(0, 0, bw, bh); T.save(); T.beginPath(); T.ellipse(o.cx - ox, o.cy - oy, o.rx, o.ry, 0, 0, Math.PI * 2); T.clip();
+        T.translate(o.cx - ox, o.cy - oy); T.scale(sx, 1); T.rotate(t * (o.speed ?? 0.3)); T.scale(1 / sx, 1); T.drawImage(g.bg, -o.cx, -o.cy, 480, 270); T.restore();
+        /* `fade` = [x0, yHaut, yBas] : à droite de x0, la rotation s'estompe de yHaut à yBas (la barrière reste celle du décor, sans coupure nette) */
+        if (o.fade) { const [x0, y0, y1] = o.fade, gr = T.createLinearGradient(0, y0 - oy, 0, y1 - oy); gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(1, 'rgba(0,0,0,1)'); T.globalCompositeOperation = 'destination-out'; T.fillStyle = gr; T.fillRect(x0 - ox, y0 - oy, bw, bh); T.fillStyle = 'rgba(0,0,0,1)'; T.fillRect(x0 - ox, y1 - oy, bw, bh); }
+        c.drawImage(tmp, ox, oy);
       }
     };
   },
@@ -128,9 +132,10 @@ const KINDS = {
       }
     };
   },
-  /* dragon qui traverse le ciel, ailes battantes, de façon répétée ; cliquable */
+  /* dragon dans le ciel, toujours derrière le décor proche (falaise, arbres, toits : voir night.js `occlude`) ; cliquable.
+     modes de vol : cross (traversée), glide (plané, ailes tenues), swoop (piqué puis remontée), circle (tourne au loin) ; `fire` = souffle de flammes, `haze` = lointain voilé */
   dragon(o) {
-    const period = o.period ?? 34, y0 = o.y ?? 26, id = o.id || 'dragon';
+    const period = o.period ?? 34, y0 = o.y ?? 26, id = o.id || 'dragon', mode = o.mode || 'cross';
     let pos = null;
     return {
       id,
@@ -138,13 +143,31 @@ const KINDS = {
       draw(g, c, t) {
         const tt = t + (o.offset ?? 6), cyc = (tt % period) / period, travel = o.travel ?? 0.7;
         if (cyc > travel) { pos = null; return; }
-        const p = cyc / travel, dirL = (o.dir ?? -1) < 0, ff = tt * 4.2, fi = Math.floor(ff) % 4, fe = ff - Math.floor(ff), flap = fi < 2, POSES = g.spr('dragon.mid1') ? ['dragon.up', 'dragon.mid1', 'dragon.down', 'dragon.mid2'] : ['dragon.up', 'dragon.up', 'dragon.down', 'dragon.down'], im = g.spr(POSES[fi]), im2 = g.spr(POSES[(fi + 1) % 4]); if (!im) return;
-        const s = o.scale ?? 1, w = im.width * s, h = im.height * s, x = dirL ? 480 + w / 2 - p * (480 + w) : -w / 2 + p * (480 + w);
-        const y = y0 + h / 2 + Math.sin(tt * 0.9) * 7 + (1 + Math.cos(ff * Math.PI / 2)) + p * (o.drop ?? 14);
-        pos = [x, y + h / 2, w, h];
-        c.save(); c.translate(Math.round(x), Math.round(y)); c.rotate(Math.sin(tt * 1.3) * 0.035 * (dirL ? 1 : -1)); if (!dirL) c.scale(-1, 1); c.drawImage(im, Math.round(-w / 2), Math.round(-h / 2), Math.round(w), Math.round(h));
-        if (im2 && im2 !== im) { c.globalAlpha = fe * fe * (3 - 2 * fe); c.drawImage(im2, Math.round(-w / 2), Math.round(-h / 2), Math.round(w), Math.round(h)); }
+        const K = o.kind && g.spr(o.kind + '.up') ? o.kind + '.' : 'dragon.', base = g.spr(K + 'up'); if (!base) return;
+        const p = cyc / travel, POSES = g.spr(K + 'mid1') ? [K + 'up', K + 'mid1', K + 'down', K + 'mid2'] : [K + 'up', K + 'up', K + 'down', K + 'down'];
+        let sc = o.scale ?? 1, dirL = (o.dir ?? -1) < 0, xc, yc, tilt = 0, ff = tt * (o.flap ?? 4.2);
+        if (mode === 'glide') ff = (tt % 7) < 1.8 ? ff : 3;                       /* quelques battements, puis ailes à plat */
+        if (mode === 'circle') {
+          const a = p * Math.PI * 2 * (o.turns ?? 1.25) + (o.phase ?? 0), sn = Math.sin(a); sc *= 0.7 + 0.3 * (sn * 0.5 + 0.5); dirL = sn > 0;
+          xc = (o.cx ?? 240) + (o.r ?? 150) * Math.cos(a); yc = y0 + (o.ry ?? 16) * sn;
+        } else {
+          const w0 = base.width * sc, h0 = base.height * sc; xc = dirL ? 480 + w0 / 2 - p * (480 + w0) : -w0 / 2 + p * (480 + w0);
+          yc = y0 + h0 / 2 + Math.sin(tt * 0.9) * 6 + p * (o.drop ?? 14);
+          if (mode === 'swoop') { const A = o.amp ?? 30, k = Math.PI * 2 * (o.waves ?? 1); yc += A * Math.sin(p * k); tilt = Math.atan(A * k * Math.cos(p * k) / (480 + w0)) * (dirL ? -1 : 1); }
+          else tilt = Math.sin(tt * 1.3) * 0.03 * (dirL ? -1 : 1);
+        }
+        const fi = Math.floor(ff) % 4, fe = ff - Math.floor(ff), im = g.spr(POSES[fi]), im2 = g.spr(POSES[(fi + 1) % 4]); if (!im) return;
+        const w = im.width * sc, h = im.height * sc; pos = [xc, yc + h / 2, w, h];
+        c.save(); if (o.haze) c.globalAlpha = 0.78; c.translate(Math.round(xc), Math.round(yc)); c.rotate(tilt); if (!dirL) c.scale(-1, 1);
+        c.drawImage(im, Math.round(-w / 2), Math.round(-h / 2), Math.round(w), Math.round(h));
+        if (im2 && im2 !== im && !(mode === 'glide' && (tt % 7) >= 1.8)) { c.globalAlpha *= fe * fe * (3 - 2 * fe); c.drawImage(im2, Math.round(-w / 2), Math.round(-h / 2), Math.round(w), Math.round(h)); }
         c.restore();
+        /* souffle de flammes : particules déterministes qui partent de la gueule (à l'avant du dragon) */
+        if (o.fire && p > 0.38 && p < 0.52) {
+          const dir = dirL ? -1 : 1, mx = xc + dir * w * 0.46, my = yc - h * 0.06, k = Math.sin((p - 0.38) / 0.14 * Math.PI);
+          c.save(); for (let i = 0; i < 22; i++) { const a = (tt * 2.6 + i / 22) % 1, r = (2 + a * 6) * Math.max(0.5, sc), px = mx + dir * (a * 44 * sc + 2), py = my + Math.sin(i * 1.7 + tt * 9) * a * 5 + a * 6; c.globalAlpha = k * (1 - a) * 0.85; c.fillStyle = a < 0.35 ? '#fff2a0' : a < 0.7 ? '#ffa030' : '#d8401a'; c.beginPath(); c.arc(px, py, r, 0, 7); c.fill(); } c.restore();
+        }
+        if (g.sky && g.sky.occ) occlude(c, g.sky, xc - w / 2 - 50, yc - h / 2 - 12, w + 100, h + 24);
       }
     };
   }

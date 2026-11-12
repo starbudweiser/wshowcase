@@ -14,7 +14,7 @@ export default {
     { id: 'mroad', rect: [326, 150, 410, 196], at: [352, 186] }
   ],
   ambient: [
-    { type: 'dragon', y: 14, period: 44, offset: 18, scale: 0.8, drop: 6 },
+    { type: 'dragon', kind: 'gold', y: 14, period: 44, offset: 18, drop: 6, mode: 'swoop', amp: 26, scale: 0.75 },
     { type: 'flock', n: 4, y0: 14, y1: 70, speed: 10, seed: 14 },
     { type: 'puffs', x: 54, y: 16, h: 30, wind: 9, n: 6 },
     { type: 'frames', id: 'market_stream', fps: 2.2 },

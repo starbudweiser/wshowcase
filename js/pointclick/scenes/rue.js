@@ -20,7 +20,7 @@ export default {
   ],
   /* décor vivant : dragon qui vole, oiseaux, rivière, roue du moulin, mammouth qui respire, fleurs et herbes dans le vent */
   ambient: [
-    { type: 'dragon', y: 8, period: 36, offset: 8, scale: 0.95, drop: 8 },
+    { type: 'dragon', y: 8, period: 36, offset: 8, drop: 8, mode: 'cross', fire: true, scale: 0.9 },
     { type: 'flock', n: 5, y0: 16, y1: 80, speed: 12, seed: 4 },
     { type: 'frames', id: 'rue_river1', fps: 2.2 }, { type: 'frames', id: 'rue_river2', fps: 2, offset: 0.4 },
     { type: 'spin', cx: 468, cy: 152, rx: 10, ry: 14, speed: 0.45 },
