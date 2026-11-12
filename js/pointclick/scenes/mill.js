@@ -22,7 +22,8 @@ export default {
   ambient: [
     { type: 'dragon', mode: 'perch', kind: 'frost', x: 102, y: 66, dir: -1, scale: 0.6 },
     { type: 'flock', n: 4, y0: 20, y1: 90, speed: 11, seed: 8 },
-    { type: 'wheel3d', cx: 167, cy: 156, rx: 26, ry: 34, speed: 0.5, front: [[[164, 169], [202, 165], [202, 196], [164, 196]], [[126, 186], [204, 186], [204, 198], [126, 198]]] },
+    /* roue à aubes : 16 images calculées depuis la roue d'origine du décor (tools/gen_wheel.py), sens horaire, boucle sans fondu */
+    { type: 'frames', id: 'mill_wheel', fps: 12, seq: Array.from({ length: 16 }, (_, i) => i), fade: false },
     { type: 'frames', id: 'mill_river', fps: 2.2 },
     { type: 'puffs', x: 103, y: 50, h: 32, wind: 12, n: 7 },
     { type: 'frames', id: 'mill_garden', fps: 1.2 }, { type: 'frames', id: 'mill_grass', fps: 1.1, offset: 0.8 }
