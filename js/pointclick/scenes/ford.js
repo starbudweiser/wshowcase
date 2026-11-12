@@ -15,6 +15,7 @@ export default {
     { type: 'dragon', mode: 'perch', kind: 'ember', x: 255, y: 101, dir: -1, scale: 0.6 },
     { type: 'flock', n: 5, y0: 20, y1: 80, speed: 8, seed: 31 },
     { type: 'frames', id: 'ford_water', fps: 1.8 },
+    { type: 'fish', spots: [[190, 166, 0.65], [230, 173, 0.7], [262, 161, 0.6]], every: 5, seed: 33 },
     { type: 'frames', id: 'ford_mist', fps: 0.9 }
   ],
   ents: [

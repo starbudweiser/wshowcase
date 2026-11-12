@@ -10,3 +10,5 @@ g puff.png "A single round fluffy puff of pale grey-white smoke, soft edges. $SP
 g dragon_mid1.png "Exactly the same dragon, same style and colors, same magenta background, wings held half raised halfway between up and down, same side profile facing left." -i dragon_up.png --seed 621
 g dragon_mid2.png "Exactly the same dragon, same style and colors, same magenta background, wings held level straight out, same side profile facing left." -i dragon_down.png --seed 622
 echo done
+# poisson qui saute (saumon), de profil, corps arqué, tête à droite
+g fish.png "A single silver-blue and olive-green Atlantic salmon with small black spots, no pink, leaping out of the water seen from the side, body gracefully arched, head pointing right, fins spread, no water. $SP" --seed 611

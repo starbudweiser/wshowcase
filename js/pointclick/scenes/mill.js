@@ -25,6 +25,7 @@ export default {
     /* roue à aubes : 16 images calculées depuis la roue d'origine du décor (tools/gen_wheel.py), sens horaire, boucle sans fondu */
     { type: 'frames', id: 'mill_wheel', fps: 12, seq: Array.from({ length: 16 }, (_, i) => i), fade: false },
     { type: 'frames', id: 'mill_river', fps: 2.2 },
+    { type: 'fish', spots: [[345, 197, 0.75], [395, 193, 0.7], [440, 212, 0.85], [462, 197, 0.7]], every: 3.5, seed: 12 },
     { type: 'puffs', x: 103, y: 50, h: 32, wind: 12, n: 7 },
     { type: 'frames', id: 'mill_garden', fps: 1.2 }, { type: 'frames', id: 'mill_grass', fps: 1.1, offset: 0.8 }
   ],

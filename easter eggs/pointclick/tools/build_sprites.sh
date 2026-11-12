@@ -27,6 +27,7 @@ P dragon_mid2 "$W/dragon_mid2.png" 0 --like dragon_up
 P bird_1 "$W/bird_1.png" 12
 for f in 2 3; do P bird_$f "$W/bird_$f.png" 0 --like bird_1; done
 P puff "$W/puff.png" 16
+P fish "$W/fish.png" 11
 P horse "$W/ch2_horse.png" 90
 for f in walkA walkB; do P horse_$f "$W/an_horse_$f.png" 0 --like horse; done
 P horse_idle2 "$W/an_horse_idle2.png" 0 --like horse --mul 1.14   # le cheval qui broute avait un corps plus petit

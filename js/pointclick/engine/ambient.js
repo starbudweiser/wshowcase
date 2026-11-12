@@ -151,6 +151,37 @@ const KINDS = {
       }
     };
   },
+  /* poissons qui sautent : de temps en temps, un saumon jaillit d'un des points d'eau `spots` ([x, y, échelle]), décrit un arc en suivant
+     sa trajectoire et replonge ; ce qui est sous la surface est caché, éclaboussures et ronds dans l'eau au départ et à l'arrivée */
+  fish(o) {
+    const R = rnd(o.seed || 21), spots = o.spots, D = 0.95, jumps = [];
+    let next = 1.5 + R() * 3;
+    const splash = (c, x, y, s, k) => {
+      /* rond dans l'eau qui s'élargit, puis gouttes qui retombent */
+      const a = 1 - k; if (a <= 0) return;
+      c.strokeStyle = `rgba(235,245,255,${(0.8 * a).toFixed(2)})`; c.lineWidth = 1; c.beginPath(); c.ellipse(x, y, (2 + k * 7) * s, (0.8 + k * 2) * s, 0, 0, 7); c.stroke();
+      c.fillStyle = `rgba(245,250,255,${(0.95 * a).toFixed(2)})`;
+      for (let i = 0; i < 5; i++) { const vx = (i - 2) * 2.2 * s, h = (5 + (i % 2) * 3) * s, px = x + vx * k * 1.6, py = y - h * 4 * k * (1 - k); c.fillRect(Math.round(px), Math.round(py), 1, 1); }
+    };
+    return {
+      draw(g, c, t) {
+        const im = g.spr('fish');
+        if (t > next) { const sp = spots[(R() * spots.length) | 0]; jumps.push({ t0: t, x: sp[0], y: sp[1], s: sp[2] ?? 1, dir: sp[3] ?? (R() > 0.5 ? 1 : -1), L: 14 + R() * 8, H: 11 + R() * 7 }); next = t + (o.every ?? 4) + R() * (o.spread ?? 5); }
+        for (let i = jumps.length - 1; i >= 0; i--) {
+          const j = jumps[i], k = (t - j.t0) / D, s = j.s;
+          if (k > 1.8) { jumps.splice(i, 1); continue; }
+          splash(c, j.x, j.y, s, Math.min(1, k / 0.8));                                 /* départ */
+          if (k > 1) splash(c, j.x + j.dir * j.L * s, j.y, s, (k - 1) / 0.8);          /* arrivée */
+          if (k > 1 || !im) continue;
+          const x = j.x + j.dir * j.L * s * k, y = j.y - 4 * j.H * s * k * (1 - k);
+          const ang = Math.atan2(-4 * j.H * (1 - 2 * k), j.L);                           /* le nez suit la trajectoire */
+          const w = im.width * s * (o.scale ?? 1.4), h = im.height * s * (o.scale ?? 1.4);
+          c.save(); c.beginPath(); c.rect(0, 0, 480, j.y + 0.5); c.clip();             /* sous la surface : caché */
+          c.translate(Math.round(x), Math.round(y)); c.scale(j.dir, 1); c.rotate(ang - 0.35); c.drawImage(im, Math.round(-w / 2), Math.round(-h / 2), Math.round(w), Math.round(h)); c.restore();
+        }
+      }
+    };
+  },
   /* fumée en sprites : volutes (puff) qui montent, grossissent et s'effacent */
   puffs(o) {
     const n = o.n ?? 7;
