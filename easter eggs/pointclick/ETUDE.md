@@ -417,3 +417,17 @@ Chaque scène a son « aveugle » (Fiat lux = 10 sur 10) et un enchaînement par
 Aveugles : chou (garçon de ferme), casque (veilleur), panier, botte (barde), champignon (ermite), bannière (servante), chapeau de fête (tambour).
 Mises à jour (même jour) : chaque aveugle a 2 images de tâtonnement et 2 de danse (`tools/gen_anim3.sh`) ; 16 zones de décor animées par images (flammes, eau, brume, bannières, torches, lanternes, feux d'artifice : `tools/gen_regions.py`, lancé par `tools/chain2.sh`) ; musiques recalées sur la bande originale (tempo, tonalité et accords relevés avec librosa, mélodies originales dans `sound.js`) ; échelle des personnages recalée dans la maison, la salle et la porte (`persp`).
 Règle d'échelle : choisir `persp` pour qu'un adulte mesure environ 70 à 85 % d'une porte à sa profondeur.
+
+---
+## Voix locales et narrateur sarcastique (12/11/2026)
+
+**Voix** : toutes les répliques (≈ 530 par langue) sont doublées en local et gratuitement avec Qwen3-TTS (`voix-locale`). `tools/voices_manifest.mjs` déduit le personnage de chaque clé
+(appels `say` / `bark` des scènes) et écrit `work/voices.json` ; `tools/gen_voices.py fr|en [limite] [personnage]` produit un mp3 mono 24 kHz par réplique dans
+`assets/pointclick/voice/<fr|en>/<clé>[.v<n>].mp3` (`.v<n>` = variante d'une réplique tirée au hasard). Relançable : saute ce qui existe. Une voix prête par personnage
+avec une consigne de jeu (héros Ryan, marchand et gardes Aiden, fermière Serena, compagne Vivian…) ; le narrateur est une voix clonée (`doubleur_fr` en français, `picard_voice` en anglais).
+Le moteur lit le mp3 de la langue courante (`voicePlay`), prolonge la bulle jusqu'à la fin de la voix, la coupe si on passe la réplique ; interrupteur ❝ dans le panneau (préférence `pc.voice`).
+
+**Narrateur** (`nar.*` dans `lang/fr2.js` / `en2.js`) : commentaires sarcastiques à la manière des narrateurs des jeux Sierra (Leisure Suit Larry), non bloquants, une file d'attente et un seul
+à la fois, bulle en italique en haut de l'écran. Déclencheurs : entrée dans la scène (`nar.<scène>.enter`), événement d'histoire (tout `g.set('x')` dont la clé `nar.<scène>.x` existe),
+aveugle éclairé (`nar.lit`), réponse par défaut du héros (`nar.fail`, une fois sur deux ou presque, au plus toutes les 20 s), inactivité de 45 s (indices `nar.<scène>.idle`, puis `nar.idle`), reprise de partie (`nar.back`).
+Ajouter une réplique : écrire la clé dans les deux langues, relancer `voices_manifest.mjs` puis `gen_voices.py`.

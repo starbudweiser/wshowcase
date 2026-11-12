@@ -10,7 +10,7 @@ export function makeT(dict, fallback = cache.fr) {
   const raw = k => dict[k] ?? (fallback && fallback[k]);
   const t = (k, vars) => {
     let s = raw(k); if (s == null) return k;
-    if (Array.isArray(s)) s = s[Math.floor(Math.random() * s.length)];
+    t.idx = -1; if (Array.isArray(s)) { t.idx = Math.floor(Math.random() * s.length); s = s[t.idx]; }
     if (vars) for (const [a, b] of Object.entries(vars)) s = s.replaceAll(`{${a}}`, b);
     return s;
   };

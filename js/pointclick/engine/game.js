@@ -14,7 +14,7 @@ const { SPR, ITEMS } = SH, ANIM = SH.ANIM || {}, HERO = SH.HERO || null;
 
 export const W = 480, H = 270;
 const VERBS = ['walk', 'take', 'use', 'talk', 'look'];
-const COLORS = { hero: '#ffe08a', rider: '#ffe08a', merchant: '#ffa45c', guard: '#9ad0ff', horse: '#f0c890', hen: '#ffffff', blind_pot: '#e6e0a0', blind_sack: '#e6e0a0', blind_hat: '#e6e0a0', giant: '#ffb070', nazim: '#c9a8ff', farmer: '#9fe08a', pmerchant: '#ffa45c', pguard: '#9ad0ff', pgiant: '#ffb070', phorseman: '#ff9a5c', gguard: '#9ad0ff', horseman: '#ff9a5c', follower: '#ffb0c8', butterfly: '#9ad8ff', blind_cabbage: '#e6e0a0', blind_helmet: '#e6e0a0', blind_basket: '#e6e0a0', blind_boot: '#e6e0a0', blind_mushroom: '#e6e0a0', blind_banner: '#e6e0a0', blind_partyhat: '#e6e0a0', narr: '#ffffff' };
+const COLORS = { hero: '#ffe08a', rider: '#ffe08a', merchant: '#ffa45c', guard: '#9ad0ff', horse: '#f0c890', hen: '#ffffff', blind_pot: '#e6e0a0', blind_sack: '#e6e0a0', blind_hat: '#e6e0a0', giant: '#ffb070', nazim: '#c9a8ff', farmer: '#9fe08a', pmerchant: '#ffa45c', pguard: '#9ad0ff', pgiant: '#ffb070', phorseman: '#ff9a5c', gguard: '#9ad0ff', horseman: '#ff9a5c', follower: '#ffb0c8', butterfly: '#9ad8ff', blind_cabbage: '#e6e0a0', blind_helmet: '#e6e0a0', blind_basket: '#e6e0a0', blind_boot: '#e6e0a0', blind_mushroom: '#e6e0a0', blind_banner: '#e6e0a0', blind_partyhat: '#e6e0a0', narr: '#cfe0ff' };
 class Cancel {}
 const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
@@ -23,6 +23,7 @@ export class Game {
   constructor(root) {
     this.root = root; this.imgs = {}; this.st = null; this.scene = null; this.ents = []; this.hot = []; this.waiters = [];
     this.verb = 'walk'; this.sel = null; this.hover = null; this.tok = 0; this.runTok = 0; this.locked = false; this.now = 0; this.fx = {};
+    this.nq = []; this.narr = null; this.lastNarr = -99; this.lastAct = 0; this.idleN = 0; this.sayAu = null; this.voiceOn = store.get('pc.voice', true);
     this.bubbles = []; this.barks = []; this.choice = null; this.skip = false; this.alive = true; this.started = false; this.nextBlip = 0; this.mouse = [0, 0];
   }
 
@@ -66,7 +67,8 @@ export class Game {
     this.panel = el('div', 'pc-panel'); this.lineEl = el('div', 'pc-line'); this.verbsEl = el('div', 'pc-verbs'); this.invEl = el('div', 'pc-inv');
     this.menuBtn = el('button', 'pc-menu', '≡'); this.menuBtn.title = 'Menu'; this.menuBtn.onclick = () => this.showTitle(true);
     this.musicBtn = el('button', 'pc-menu pc-music', '♪'); this.musicBtn.onclick = () => this.setMusic(snd.musicOn === false);
-    this.panel.append(this.lineEl, this.verbsEl, this.invEl, this.menuBtn, this.musicBtn); this.setMusic(store.get('pc.music', true), true);
+    this.voiceBtn = el('button', 'pc-menu pc-voice', '❝'); this.voiceBtn.onclick = () => this.setVoice(!this.voiceOn);
+    this.panel.append(this.lineEl, this.verbsEl, this.invEl, this.menuBtn, this.musicBtn, this.voiceBtn); this.setVoice(this.voiceOn, true); this.setMusic(store.get('pc.music', true), true);
     r.append(this.stage, this.panel);
     this.renderPanel();
     const cv = this.cv;
@@ -128,6 +130,30 @@ export class Game {
     snd.musicOn = !!on; store.set('pc.music', !!on); if (!quiet) snd.music(!!on);
     this.musicBtn.classList.toggle('off', !on); this.musicBtn.title = this.T ? this.T(on ? 'ui.musicOn' : 'ui.musicOff') : '';
   }
+  /* voix : un mp3 par réplique (assets/pointclick/voice/<fr|en>/<clé>[.v<n>].mp3), interrupteur ❝ mémorisé */
+  setVoice(on, quiet) {
+    this.voiceOn = !!on; store.set('pc.voice', !!on); this.voiceBtn.classList.toggle('off', !on); this.voiceBtn.title = this.T ? this.T(on ? 'ui.voiceOn' : 'ui.voiceOff') : '';
+    if (!on && !quiet) { for (const a of [this.sayAu, this.narr && this.narr.au]) if (a) a.pause(); }
+  }
+  voicePlay(key, idx) {
+    if (!this.voiceOn || !key || key[0] === '=') return null;
+    try { const a = new Audio(`assets/pointclick/voice/${this.lang === 'fr' ? 'fr' : 'en'}/${key}${idx >= 0 ? '.v' + idx : ''}.mp3`); a.volume = 0.95; a.play().catch(() => {}); return a; } catch { return null; }
+  }
+  /* le narrateur : commentaires sarcastiques qui ne bloquent jamais le jeu (file d'attente, un seul à la fois) */
+  narrate(key, o = {}) {
+    if (!this.T.has(key) || this.nq.some(q => q.key === key) || this.nq.length > 2) return;
+    this.nq.push({ key, force: !!o.force, t: this.now + (o.delay || 0) });
+  }
+  pumpNarr() {
+    const n = this.narr;
+    if (n) { const playing = n.au && !n.au.ended && !n.au.error && !n.au.paused; if (this.now > n.end && !playing) { n.b.remove(); this.narr = null; this.lastNarr = this.now; } return; }
+    if (!this.started || this.titleEl || this.locked || this.bubbles.length || this.barks.length) return;
+    if (!this.nq.length && this.now - this.lastAct > 45) { this.lastAct = this.now; const k = 'nar.' + this.st.scene + '.idle'; this.narrate(this.idleN++ % 3 === 2 || !this.T.has(k) ? 'nar.idle' : k); }
+    const q = this.nq[0]; if (!q || this.now < q.t || (!q.force && this.now - this.lastNarr < 8)) return; this.nq.shift();
+    const text = this.T(q.key), idx = this.T.idx, b = el('div', 'pc-b pc-narr', text); b.style.color = COLORS.narr; this.ov.append(b); this.placeBubble(b, W / 2, 46);
+    this.narr = { b, au: this.voicePlay(q.key, idx), end: this.now + Math.max(3, text.length * 0.065) };
+    if (this.narr.au) this.narr.au.addEventListener('loadedmetadata', () => { if (this.narr) this.narr.end = Math.max(this.narr.end, this.now + this.narr.au.duration + 0.3); });
+  }
   hideTitle() { if (this.titleEl) { this.titleEl.remove(); this.titleEl = null; } }
 
   /* ───────── parties ───────── */
@@ -163,12 +189,13 @@ export class Game {
     if (this.started) reach(id);
     if (sc.enter) await sc.enter(this, how);
     this.save();
-    if (how.intro && sc.intro) this.run(() => this.cut(() => sc.intro(this)));
+    this.lastAct = this.now; if (how.restored) this.narrate('nar.back', { delay: 1.5, force: true });
+    if (how.intro && sc.intro) this.run(async () => { await this.cut(() => sc.intro(this)); this.narrate('nar.' + id + '.enter', { force: true, delay: 1.2 }); });
   }
 
   /* ───────── API pour les scènes ───────── */
   flag(k) { return this.st.flags[k]; }
-  set(k, v = true) { this.st.flags[k] = v; this.save(); }
+  set(k, v = true) { this.st.flags[k] = v; this.save(); if (v === true) this.narrate('nar.' + this.st.scene + '.' + k); }
   count(k, d = 1) { this.st.flags[k] = (this.st.flags[k] || 0) + d; this.save(); return this.st.flags[k]; }
   has(id) { return this.st.inv.includes(id); }
   give(id) { if (!this.has(id)) this.st.inv.push(id); this.renderInv(); this.save(); }
@@ -180,13 +207,13 @@ export class Game {
   until(cond) { return new Promise(res => this.waiters.push({ cond, res })); }
   async wait(ms) { this.chk(); const end = this.now + ms / 1000; await this.until(() => this.now >= end); this.chk(); }
   async cut(fn) { this.locked = true; this.renderLine(); try { await fn(); } finally { this.locked = false; this.renderLine(); } }
-  cancelAll() { this.tok++; this.waiters.splice(0).forEach(w => w.res()); this.clearBubbles(); if (this.hero) this.hero.path = []; this.askEl.innerHTML = ''; this.choice = null; }
+  cancelAll() { this.tok++; if (this.sayAu) { this.sayAu.pause(); this.sayAu = null; } this.waiters.splice(0).forEach(w => w.res()); this.clearBubbles(); if (this.hero) this.hero.path = []; this.askEl.innerHTML = ''; this.choice = null; }
   async run(fn) {
     const tok = ++this.tok; this.runTok = tok;
     try { await fn(); } catch (e) { if (!(e instanceof Cancel)) console.error(e); }
     finally { if (this.runTok === tok && !this.locked) { this.clearBubbles(); this.ents.forEach(e => { e.talk = false; }); } }
   }
-  input(fn) { if (this.locked || !this.started || this.titleEl) return; this.cancelAll(); this.run(fn); }
+  input(fn) { this.lastAct = this.now; if (this.locked || !this.started || this.titleEl) return; this.cancelAll(); this.run(fn); }
   persp(y) { const p = this.scene.persp; return clamp(p[1] + (p[3] - p[1]) * (y - p[0]) / (p[2] - p[0]), Math.min(p[1], p[3]) * 0.8, Math.max(p[1], p[3])); }
   async walkTo(x, y) { this.chk(); this.hero.path = this.walk.path([this.hero.x, this.hero.y], [x, y]); await this.until(() => !this.hero.path.length); this.chk(); }
   face(x) { this.hero.dir = x >= this.hero.x ? 'r' : 'l'; this.hero.front = false; }
@@ -196,8 +223,10 @@ export class Game {
     const b = el('div', 'pc-b', text); b.style.color = COLORS[who] || '#fff'; this.ov.append(b); this.bubbles.push(b);
     const [ax, ay] = e ? this.headPos(e) : [W / 2, 40]; this.placeBubble(b, ax, ay);
     if (e) e.talk = who;
+    const au = this.voicePlay(key, key[0] === '=' ? -1 : this.T.idx); this.sayAu = au;
     this.skip = false; const t0 = this.now, end = t0 + Math.max(1.7, text.length * 0.06); this.sayT0 = t0;
-    await this.until(() => this.now >= end || (this.skip && this.now - t0 > 0.6)); this.skip = false;
+    const talking = () => au && !au.ended && !au.error && !au.paused && this.voiceOn;
+    await this.until(() => (this.now >= end && !talking()) || (this.skip && this.now - t0 > 0.6)); this.skip = false; if (au) au.pause(); this.sayAu = null;
     b.remove(); this.bubbles = this.bubbles.filter(x => x !== b); if (e) e.talk = false; this.chk();
   }
   headPos(e) { const im = this.spr(e.spr), s = e.scale ?? this.persp(e.y); return [e.x, e.y - (im ? im.height * s : 40) - 3]; }
@@ -210,16 +239,16 @@ export class Game {
   bark(who, key, ms = 2800, force = false) {
     const e = this.ent(who); if (!e || (this.locked && !force) || this.titleEl) return;
     const b = el('div', 'pc-b', this.T(key)); b.style.color = COLORS[who] || '#fff'; this.ov.append(b);
-    const [ax, ay] = this.headPos(e); this.placeBubble(b, ax, ay); this.barks.push({ b, who, end: this.now + ms / 1000 }); snd.blip('hero');
+    const [ax, ay] = this.headPos(e); this.placeBubble(b, ax, ay); const au = this.voicePlay(key, this.T.idx), bk = { b, who, end: this.now + ms / 1000, au }; this.barks.push(bk); if (au) au.addEventListener('loadedmetadata', () => { bk.end = Math.max(bk.end, this.now + au.duration + 0.2); }); else snd.blip('hero');
   }
-  clearBarks() { this.barks.forEach(k => k.b.remove()); this.barks = []; }
+  clearBarks() { this.barks.forEach(k => { k.b.remove(); if (k.au) k.au.pause(); }); this.barks = []; }
   toast(title, text) {
     const t = el('div', 'pc-toast'); t.append(el('b', '', title), el('span', '', text)); this.stage.append(t); snd.jingle();
     setTimeout(() => t.classList.add('out'), 4200); setTimeout(() => t.remove(), 4800);
   }
   /* un aveugle a retrouvé la lumière : compte, toast, succès */
   lightUp(sceneId) {
-    const r = light(sceneId), T = this.T;
+    const r = light(sceneId), T = this.T; this.narrate('nar.lit');
     this.toast(T('ach.lit.title'), T('ach.lit', { n: r.count, t: r.total }));
     if (r.first) setTimeout(() => this.toast(T('ach.fiat.title'), T('ach.fiat.text')), 2600);
   }
@@ -293,7 +322,7 @@ export class Game {
     else if (verb === 'talk') k = ['talk.' + tg.id, 'def.talk'];
     else if (item) k = [`use.${item}.${tg.id}`, `use.${tg.id}.${item}`, item === tg.id ? 'def.useSelf' : 'def.useWith'];
     else k = ['use.' + tg.id, 'def.use'];
-    const key = k.find(x => T.has(x)); await this.say('hero', key);
+    const key = k.find(x => T.has(x)); await this.say('hero', key); if (key.startsWith('def.') && Math.random() < 0.4 && this.now - this.lastNarr > 20) this.narrate('nar.fail');
   }
   key(e) {
     if (this.titleEl) return;
@@ -324,6 +353,7 @@ export class Game {
     });
     for (let i = this.barks.length - 1; i >= 0; i--) { const k = this.barks[i], e = this.ent(k.who); if (!e || this.now > k.end) { k.b.remove(); this.barks.splice(i, 1); } else { const [ax, ay] = this.headPos(e); this.placeBubble(k.b, ax, ay); } }
     if (this.scene && this.scene.tick) this.scene.tick(this, dt);
+    this.pumpNarr();
     for (let i = this.waiters.length - 1; i >= 0; i--) { const w = this.waiters[i]; if (w.cond()) { this.waiters.splice(i, 1); w.res(); } }
     const f = this.fx.fade; if (f) { const t = clamp((this.now - f.t0) / f.ms, 0, 1); f.a = f.from + (f.to - f.from) * t; if (t >= 1) { f.a = f.to; if (f.to === 0) delete this.fx.fade; } }
   }
