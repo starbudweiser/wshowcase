@@ -117,5 +117,27 @@ export const CONFIG = {
     const jobs = [[T('Documents → Disque externe', 'Documents → External drive'), T('Hier 22:00', 'Yesterday 22:00')], [T('Projets → NAS', 'Projects → NAS'), T('Il y a 3 h', '3 h ago')], [T('Photos → Disque miroir', 'Photos → Mirror drive'), T('Jamais', 'Never')]].map(([n, l]) => ({ n, last: l, p: 0 })), box = h('div', { class: 'xlist' });
     const draw = () => { box.innerHTML = ''; jobs.forEach(j => box.append(h('div', { class: 'xrow col' }, h('div', { class: 'xr2' }, h('b', {}, j.n), h('button', { class: 'btn', disabled: j.p > 0 && j.p < 100, onclick: () => run(j) }, T('Lancer', 'Run now'))), h('small', { class: 'mut' }, j.p > 0 && j.p < 100 ? Math.round(j.p) + ' %' : T('Dernière copie : ', 'Last copy: ') + j.last), j.p > 0 && j.p < 100 ? h('div', { class: 'sprog wide' }, h('i', { style: { width: j.p + '%' } })) : null))); };
     const run = j => { j.p = 1; sfx.click(); const iv = setInterval(() => { j.p += 7 + Math.random() * 8; if (j.p >= 100) { clearInterval(iv); j.p = 0; j.last = T('À l’instant', 'Just now'); sfx.done(); ctx.toast(j.n + T(' : copie terminée.', ': copy complete.')); } if (box.isConnected) draw(); }, 220); draw(); };
-    body.append(box); draw(); } })
+    body.append(box); draw(); } }),
+  mCLOUD: () => ({ type: 'menu', sub: T('Vos clouds comme des disques', 'Your clouds as drives'), view: (body, ctx) => {
+    const accts = [['Google Drive', 'Google Drive', 'gdrive'], ['Dropbox', 'Dropbox', 'dropbox'], ['OneDrive', 'OneDrive', 'onedrive'], ['Infomaniak kDrive', 'kDrive', 'kdrive'], [T('Serveur SFTP', 'SFTP server'), 'SFTP', 'sftp']]
+      .map(([n, svc, id]) => ({ n, svc, id, st: 0, p: 0 })), box = h('div', { class: 'xlist' });
+    const foot = h('small', { class: 'mut' });
+    const draw = () => {
+      box.innerHTML = '';
+      accts.forEach(a => box.append(h('div', { class: 'xrow col' },
+        h('div', { class: 'xr2' }, h('b', {}, a.n),
+          h('button', { class: 'btn', disabled: a.st === 1, onclick: () => toggle(a) }, a.st === 2 ? T('Démonter', 'Unmount') : T('Monter', 'Mount'))),
+        h('small', { class: 'mut' }, a.st === 0 ? a.svc + ' · ' + T('Non monté', 'Not mounted') : a.st === 1 ? T('Connexion…', 'Connecting…') : a.svc + ' · ' + T('Monté dans le Finder', 'Mounted in the Finder')),
+        a.st === 1 ? h('div', { class: 'sprog wide' }, h('i', { style: { width: a.p + '%' } })) : null)));
+      const n = accts.filter(a => a.st === 2).length;
+      foot.textContent = T('Cache local minimal · ', 'Minimal local cache · ') + (n ? T(n + ' disque(s) monté(s)', n + ' drive(s) mounted') : T('Veille : rien à signaler', 'Watch: nothing to report'));
+    };
+    const toggle = a => {
+      sfx.click();
+      if (a.st === 2) { a.st = 0; ctx.toast(a.n + T(' démonté.', ' unmounted.')); draw(); return; }
+      a.st = 1; a.p = 5;
+      const iv = setInterval(() => { a.p += 14 + Math.random() * 12; if (a.p >= 100) { clearInterval(iv); a.st = 2; sfx.done(); ctx.toast(T('Disque « ' + a.n + ' » monté : visible dans le Finder.', 'Drive “' + a.n + '” mounted: visible in the Finder.')); } if (box.isConnected) draw(); }, 200);
+      draw();
+    };
+    body.append(box, foot); draw(); } })
 };

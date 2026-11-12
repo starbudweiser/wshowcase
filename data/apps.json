@@ -662,6 +662,24 @@
     "es": "Encuentra, clasifica y sigue anuncios de alquiler, con su dosier PDF.",
     "it": "Trova, ordina e segue gli annunci di affitto, fascicolo PDF incluso."
    }
+  },
+  {
+   "id": "mCLOUD",
+   "space": "util",
+   "repo": "mCLOUD",
+   "accent": "#38bdf8",
+   "kind": "menubar",
+   "desk": false,
+   "demo": "engine",
+   "shots": 0,
+   "download": false,
+   "version": "",
+   "tag": {
+    "fr": "Vos clouds comme des disques dans le Finder.",
+    "en": "Your clouds as drives in the Finder.",
+    "es": "Tus nubes como discos en el Finder.",
+    "it": "I tuoi cloud come dischi nel Finder."
+   }
   }
  ]
 }
