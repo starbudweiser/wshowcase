@@ -1,5 +1,6 @@
 /* Textes des scènes 4 à 10 et des aveugles associés (français). Fusionné dans fr.js. */
 export default {
+  'ui.ambOn': 'Ambiance : oui', 'ui.ambOff': 'Ambiance : non',
   'ui.fullscreen': 'Plein écran', 'ui.filter': 'Agrandissement', 'ui.filter.sharp': 'Pixels nets', 'ui.filter.nearest': 'Pixels bruts', 'ui.filter.smooth': 'Lissé', 'ui.filter.scale2x': 'Scale2x', 'ui.filter.scale4x': 'Scale4x',
   /* ───── noms et regards communs ───── */
   'n.cabbage': 'chou', 'n.arrow': 'flèche', 'n.pumpkin': 'citrouille', 'n.anvil': 'enclume',
@@ -285,7 +286,12 @@ export default {
   'wink.owl.n': 'Les hiboux ne sont pas ce qu’ils paraissent. Surtout celui-ci : il a vu la fin de la série.',
   'wink.goonies.ki': 'On a la carte ! Vite, avant que les grands comprennent !',
   'wink.goonies.n': 'Ils reviendront sûrement avec un bateau pirate. Ça fait toujours plaisir.',
-  'wink.conan.ba': 'Qu’y a-t-il de meilleur dans la vie ? Un grand cheval, un vent froid, une épée… et un fromage qui ne répond pas.',
+  'wink.conan.ba': 'Crom !',
+  'wink.conan.ba2': 'Ce qu’il y a de mieux dans la vie ?',
+  'wink.conan.ba3': 'Écraser ses ennemis, les voir fuir devant soi…',
+  'wink.conan.ba4': '… et entendre les lamentations de leurs fromages.',
+  'wink.simon.si2': 'Moi, je rentre chez moi.',
+  'wink.twin.ag2': 'Ce village est étrange : les gens portent des seaux sur la tête.',
   'wink.conan.n': 'Un barbare au repos. Sa philosophie tient en trois phrases et une épée.',
   'wink.lotr.wi': 'Vous ne passerez pas !',
   'wink.lotr.ha': 'Il paraît qu’on mange un second petit déjeuner, ici ?',
@@ -293,7 +299,7 @@ export default {
   'wink.macgyver.ma': 'Un trombone, un élastique, du ruban adhésif… et c’est réparé.',
   'wink.macgyver.ma2': 'Bon. Presque réparé.',
   'wink.macgyver.n': 'Avec de la patience et un couteau multifonction, on désamorce un dragon. Ou on le fâche.',
-  'wink.simon.si': 'C’est nul, ce jeu. Trop de verbes, pas assez de blagues. Moi, je rentre chez moi.',
+  'wink.simon.si': 'C’est nul, ce jeu. Trop de verbes, pas assez de blagues.',
   'wink.simon.n': 'Un sorcier râleur passe. Il avait juré de ne plus adresser la parole aux héros. Raté.',
   'wink.monkey.pi': 'Tu te bats comme un producteur de choux !',
   'wink.monkey.h': 'Quelle coïncidence : toi, tu navigues comme un pirate sans bateau.',
@@ -301,7 +307,7 @@ export default {
   'wink.monkey.n': 'Les joutes verbales demandent beaucoup d’entraînement. Pour les perdre aussi.',
   'wink.kings.gr': 'Daventry est si loin… Quelqu’un a vu une chèvre ? Ou un chou ?',
   'wink.kings.n': 'Un chapeau à plume suffit parfois à faire un roi. Il suffit aussi à faire un nom de jeu.',
-  'wink.twin.ag': 'Journal de bord, quatorze heures. Ce village est étrange : les gens y portent des seaux sur la tête.',
+  'wink.twin.ag': 'Journal de bord, quatorze heures.',
   'wink.twin.n': 'Un café noir comme la nuit et une tarte aux cerises. On ne dit jamais assez de bien des tartes.',
   'wink.trollb.tr': 'Qui traverse mon pont ?… Ah, personne. Comme d’habitude.',
   'wink.trollb.n': 'Ce pont n’a pas de péage. Le troll a donc des revendications.',

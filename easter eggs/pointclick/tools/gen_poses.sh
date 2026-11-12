@@ -1,7 +1,12 @@
 #!/bin/zsh
-# Poses d'un personnage à partir d'une image de référence (édition FLUX 3 Klein). Usage : gen_poses.sh nom reference.png
+# Poses du héros en gros plan (nuit, nettoyage de l'écran) : chaque pose bouche fermée + bouche ouverte. FLUX local, gratuit.
 cd "$(dirname "$0")/../work" || exit 1
-n="$1"; ref="$2"; K="Exactly the same character, same costume, same art style, same colors, same plain flat magenta background, full body, no shadow."
-flux-image "$K The character walking to the right in full right side profile, right leg stepping far forward, left arm swinging forward, mouth closed, wry smirk." -i "$ref" -o "pose_${n}_walkA.png" -s 1024x1024 --seed 41 >/dev/null 2>&1 && echo ok A
-flux-image "$K The character walking to the right in full right side profile, left leg stepping far forward, right arm swinging forward, mouth closed, wry smirk." -i "$ref" -o "pose_${n}_walkB.png" -s 1024x1024 --seed 42 >/dev/null 2>&1 && echo ok B
-flux-image "$K The character standing facing the viewer in a relaxed pose, arms at sides, mouth wide open as if talking." -i "$ref" -o "pose_${n}_talk.png" -s 1024x1024 --seed 43 >/dev/null 2>&1 && echo ok T
+B="No border, no frame, full-bleed flat solid magenta background. The same close-up portrait, same horned helmet and face, same painting style."
+e(){ out="$1"; ref="$2"; seed="$3"; shift 3; [ -f "$out" ] || flux-image "$@" -i "$ref" -o "$out" -s 1024x1024 --seed $seed >/dev/null 2>&1; echo "ok $out"; }
+n=880
+for p in "point:pointing his index finger straight at the viewer, eyebrows raised" "shrug:shrugging with both palms up beside his face, awkward smile" "plead:hands pressed together pleading, big puppy eyes" "think:one hand on his chin, thinking, one eyebrow raised" "wave:waving one hand at the viewer, friendly grin" "lean:leaning very close to the viewer, face slightly bigger, squinting suspiciously"; do
+  k=${p%%:*}; d=${p#*:}; n=$((n+2))
+  e hp_${k}.png hp_neutral.png $n "$B He is $d, mouth closed."
+  e hp_${k}_t.png hp_${k}.png $((n+1)) "$B Exactly the same pose and gesture, same hands, but his mouth is wide open talking."
+done
+echo done

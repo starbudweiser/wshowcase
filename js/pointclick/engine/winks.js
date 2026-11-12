@@ -16,15 +16,15 @@ const V = {
   tentacle: { dur: 12, cast: [{ id: 'te', spr: 'wk.tentacle', wp: [[0.2, 540, 256], [3.4, 300, 256], [7.2, 300, 256], [10.6, -60, 256]], hop: 14, dir: -1 }], lines: [[4, 'te', 'wink.tentacle.te']], sfx: [[3.6, 'pop']], after: 'wink.tentacle.n' },
   owl: { fly: true, ext: true, dur: 10, cast: [{ id: 'ow', spr: 'wk.owl', wp: [[0.2, -50, 70], [3.6, 230, 78], [6.4, 230, 78], [9.8, 540, 70]], bob: 3, poses: [[3.7, 'wk.owl.f'], [6.3, 'wk.owl']] }], sfx: [[3.7, 'owl']], after: 'wink.owl.n' },
   goonies: { dur: 9, cast: [{ id: 'ki', spr: 'wk.kids', wp: [[0.2, -60, 258], [3.5, 250, 258], [4.5, 250, 258], [7.8, 560, 258]] }], lines: [[3.6, 'ki', 'wink.goonies.ki']], after: 'wink.goonies.n' },
-  conan: { dur: 15, cast: [{ id: 'ba', spr: 'wk.barbarian', wp: [[0.2, -60, 256], [4, 240, 256], [10, 240, 256], [13.6, 560, 256]] }], lines: [[4.6, 'ba', 'wink.conan.ba']], after: 'wink.conan.n' },
+  conan: { dur: 20, cast: [{ id: 'ba', spr: 'wk.barbarian', wp: [[0.2, -60, 256], [4, 240, 256], [15, 240, 256], [18.6, 560, 256]] }], lines: [[4.4, 'ba', 'wink.conan.ba'], [5.6, 'ba', 'wink.conan.ba2'], [7.4, 'ba', 'wink.conan.ba3'], [9.6, 'ba', 'wink.conan.ba4']], after: 'wink.conan.n' },
   lotr: { ext: true, dur: 15, cast: [
     { id: 'wi', spr: 'wk.wizard', wp: [[0.2, -60, 256], [4.5, 260, 256], [9.5, 260, 256], [13.5, 560, 256]] },
     { id: 'ha', spr: 'wk.halfling', wp: [[8.4, -60, 258], [11.2, 150, 258], [13.4, 150, 258], [14.6, 560, 258]] }], lines: [[5, 'wi', 'wink.lotr.wi'], [10, 'ha', 'wink.lotr.ha']], after: 'wink.lotr.n' },
   macgyver: { dur: 14, cast: [{ id: 'ma', spr: 'wk.handyman', wp: [[0.2, 540, 256], [3.6, 300, 256], [10, 300, 256], [13, -60, 256]], dir: -1 }], lines: [[4, 'ma', 'wink.macgyver.ma'], [8.6, 'ma', 'wink.macgyver.ma2']], sfx: [[5.6, 'click'], [6.2, 'click'], [6.8, 'click'], [8, 'boom']], shake: [[8, 500, 4]], puff: [[8, 300, 230]], after: 'wink.macgyver.n' },
-  simon: { dur: 11, cast: [{ id: 'si', spr: 'wk.simon', wp: [[0.2, -50, 258], [9.8, 540, 258]] }], lines: [[2.2, 'si', 'wink.simon.si']], after: 'wink.simon.n' },
+  simon: { dur: 13, cast: [{ id: 'si', spr: 'wk.simon', wp: [[0.2, -50, 258], [12, 540, 258]] }], lines: [[2.2, 'si', 'wink.simon.si'], [5.4, 'si', 'wink.simon.si2']], after: 'wink.simon.n' },
   monkey: { far: false, dur: 12, cast: [{ id: 'pi', spr: 'wk.pirate', wp: [[0.2, 540, 258], [3.6, 'hx+70', 258], [9.4, 'hx+70', 258], [11.4, 560, 258]], dir: -1 }], lines: [[4.2, 'pi', 'wink.monkey.pi'], [7, 'hero', 'wink.monkey.h'], [9.6, 'pi', 'wink.monkey.pi2']], after: 'wink.monkey.n' },
   kings: { dur: 12, cast: [{ id: 'gr', spr: 'wk.graham', wp: [[0.2, 540, 256], [4, 300, 256], [8, 300, 256], [11, -60, 256]], dir: -1 }], lines: [[4.6, 'gr', 'wink.kings.gr']], after: 'wink.kings.n' },
-  twin: { dur: 13, cast: [{ id: 'ag', spr: 'wk.agent', wp: [[0.2, -60, 256], [4, 250, 256], [9.4, 250, 256], [12, 560, 256]] }], lines: [[4.5, 'ag', 'wink.twin.ag']], after: 'wink.twin.n' },
+  twin: { dur: 15, cast: [{ id: 'ag', spr: 'wk.agent', wp: [[0.2, -60, 256], [4, 250, 256], [11.4, 250, 256], [14, 560, 256]] }], lines: [[4.5, 'ag', 'wink.twin.ag'], [7, 'ag', 'wink.twin.ag2']], after: 'wink.twin.n' },
   trollb: { far: false, only: ['rue'], dur: 9, cast: [{ id: 'tr', spr: 'wk.troll', wp: [[0.2, 372, 205], [8.5, 372, 205]], z: -60, rise: [0.4, 2.2, 6.8, 8.4, 14], bounce: 1 }], lines: [[2.8, 'tr', 'wink.trollb.tr']], after: 'wink.trollb.n' },
   oblivion: { far: false, only: ['mill'], dur: 9, horse: true, lines: [[1.4, 'horse', 'wink.oblivion.ho']], after: 'wink.oblivion.n' },
   dexter: { dur: 0, after: 'wink.dexter' }

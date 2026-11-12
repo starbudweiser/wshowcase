@@ -28,7 +28,8 @@ P bird_1 "$W/bird_1.png" 12
 for f in 2 3; do P bird_$f "$W/bird_$f.png" 0 --like bird_1; done
 P puff "$W/puff.png" 16
 P horse "$W/ch2_horse.png" 90
-for f in idle2 walkA walkB; do P horse_$f "$W/an_horse_$f.png" 0 --like horse; done
+for f in walkA walkB; do P horse_$f "$W/an_horse_$f.png" 0 --like horse; done
+P horse_idle2 "$W/an_horse_idle2.png" 0 --like horse --mul 1.14   # le cheval qui broute avait un corps plus petit
 P horse_ride "$W/var_horse_ride2.png" 0 --like horse
 P carrot "$W/item_carrot.png" 18 40
 P cheese "$W/item_cheese.png" 22 40
@@ -78,3 +79,5 @@ Wk explorer 88; Wk buster 88; Wk kids 84; Wk barbarian 100; Wk wizard 100; Wk ha
 Wk ghost 58; Wk racer 46; Wk tentacle 64; Wk owl 40; Wk troll 48; Q wk_boulder wk_boulder.png 64; Q wk_owl_f wk_owl_f.png 0 --like wk_owl_a; Q wk_horsearmor wk_horsearmor.png 0 --like horse
 
 Q hero_pKnock1 hp_knock1.png 0 --like hero_pNeutral --fill; Q hero_pKnock2 hp_knock2.png 0 --like hero_pNeutral --fill
+
+for k in Point Shrug Plead Think Wave Lean; do l=${(L)k}; Q hero_p$k hp_$l.png 0 --like hero_pNeutral --fill; Q hero_p${k}T hp_${l}_t.png 0 --like hero_pNeutral --fill; done

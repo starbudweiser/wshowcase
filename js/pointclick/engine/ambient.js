@@ -90,6 +90,39 @@ const KINDS = {
       }
     };
   },
+  /* roue à aubes calculée en 3D : deux jantes, rayons, moyeu, pales qui dépassent ; le plan de la roue est tourné de φ autour de la verticale
+     (φ déduit de l'ellipse du décor : cos φ = rx / ry), projection orthographique, pièces triées en profondeur et éclairées selon leur orientation.
+     Le fond derrière la roue est assombri (mur dans l'ombre) ; `front` = zone du décor redessinée devant (barrière). */
+  wheel3d(o) {
+    const R = o.ry, phi = Math.acos(Math.min(1, o.rx / o.ry)), cp = Math.cos(phi), sp = Math.sin(phi) * (o.side ?? -1), Wd = o.width ?? R * 0.32, NS = o.spokes ?? 12, NP = o.paddles ?? 16;
+    const P = (r, th, w) => { const u = r * Math.cos(th), v = r * Math.sin(th); return [o.cx + u * cp + w * sp, o.cy - v, -u * Math.sin(phi) * (o.side ?? -1) + w * cp]; };
+    const shade = (hex, k) => { const n = parseInt(hex.slice(1), 16), f = c => Math.max(0, Math.min(255, Math.round(c * k))); return `rgb(${f(n >> 16)},${f((n >> 8) & 255)},${f(n & 255)})`; };
+    const WOOD = o.wood || '#8a5a2c', DARK = '#24140a';
+    return {
+      draw(g, c, t) {
+        const a0 = t * (o.speed ?? 0.55) * (o.dir ?? 1);
+        c.save(); c.lineCap = c.lineJoin = 'round';
+        /* fond : le mur derrière la roue, dans l'ombre */
+        const bg = c.createRadialGradient(o.cx, o.cy, R * 0.2, o.cx, o.cy, R * 1.15); bg.addColorStop(0, '#2c1c10'); bg.addColorStop(1, '#3e2814');
+        c.fillStyle = bg; c.beginPath(); c.ellipse(o.cx + Wd * sp * 0.5, o.cy, o.rx + Wd * Math.abs(sp) * 0.5 + 1.5, R + 1.5, 0, 0, 7); c.fill();
+        const ring = (w, col, lw) => { c.strokeStyle = DARK; c.lineWidth = lw + 1.6; c.beginPath(); for (let i = 0; i <= 48; i++) { const p = P(R, i / 48 * Math.PI * 2, w); i ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1]); } c.stroke(); c.strokeStyle = col; c.lineWidth = lw; c.stroke(); };
+        const spokes = (w, k) => { for (let i = 0; i < NS; i++) { const th = a0 + i * Math.PI * 2 / NS, p0 = P(R * 0.14, th, w), p1 = P(R * 0.97, th, w); c.strokeStyle = DARK; c.lineWidth = 2.6; c.beginPath(); c.moveTo(p0[0], p0[1]); c.lineTo(p1[0], p1[1]); c.stroke(); c.strokeStyle = shade(WOOD, k * (0.85 + 0.25 * Math.cos(th - 2.2))); c.lineWidth = 1.3; c.stroke(); } };
+        /* arrière : jante et rayons du fond, plus sombres */
+        ring(-Wd / 2, shade(WOOD, 0.55), 2.4); spokes(-Wd / 2, 0.6);
+        /* pales, de la plus lointaine à la plus proche */
+        const pads = []; for (let i = 0; i < NP; i++) { const th = a0 + (i + 0.5) * Math.PI * 2 / NP, q = [P(R * 0.8, th, -Wd / 2), P(R * 1.1, th, -Wd / 2), P(R * 1.1, th, Wd / 2), P(R * 0.8, th, Wd / 2)]; pads.push({ q, z: q.reduce((s, p) => s + p[2], 0) / 4, th }); }
+        pads.sort((x, y) => y.z - x.z);
+        for (const p of pads) { const k = 0.55 + 0.5 * Math.abs(Math.sin(p.th + 0.6)) * (p.z < 0 ? 1 : 0.75); c.fillStyle = shade(WOOD, k); c.strokeStyle = DARK; c.lineWidth = 1; c.beginPath(); p.q.forEach((v, i) => (i ? c.lineTo(v[0], v[1]) : c.moveTo(v[0], v[1]))); c.closePath(); c.fill(); c.stroke(); }
+        /* avant : rayons et jante, moyeu */
+        spokes(Wd / 2, 1); ring(Wd / 2, shade(WOOD, 1.08), 2.8);
+        const h = P(0, 0, Wd / 2 + 1); c.fillStyle = DARK; c.beginPath(); c.ellipse(h[0], h[1], R * 0.16 * cp + 1, R * 0.16 + 1, 0, 0, 7); c.fill(); c.fillStyle = shade(WOOD, 0.9); c.beginPath(); c.ellipse(h[0], h[1], R * 0.11 * cp, R * 0.11, 0, 0, 7); c.fill();
+        c.fillStyle = '#7d7d82'; c.beginPath(); c.ellipse(h[0], h[1], R * 0.045 * cp + 0.5, R * 0.045 + 0.5, 0, 0, 7); c.fill();
+        c.restore();
+        /* ce qui est devant la roue dans le décor (barrière, buissons) est redessiné par-dessus */
+        if (o.front && g.bg) for (const f of o.front) { c.save(); c.beginPath(); f.forEach(([x, y], i) => (i ? c.lineTo(x, y) : c.moveTo(x, y))); c.closePath(); c.clip(); c.drawImage(g.bg, 0, 0, 480, 270); c.restore(); }
+      }
+    };
+  },
   /* roue qui tourne vraiment : la roue du décor, découpée en ellipse (vue de biais), est tournée dans son plan ; `skip` = zone à laisser fixe (barrière devant la roue) */
   spin(o) {
     const sx = o.rx / o.ry, bw = Math.ceil(o.rx * 2 + 4), bh = Math.ceil(o.ry * 2 + 4), tmp = document.createElement('canvas'); tmp.width = bw; tmp.height = bh;
@@ -135,6 +168,7 @@ const KINDS = {
   /* dragon dans le ciel, toujours derrière le décor proche (falaise, arbres, toits : voir night.js `occlude`) ; cliquable.
      modes de vol : cross (traversée), glide (plané, ailes tenues), swoop (piqué puis remontée), circle (tourne au loin) ; `fire` = souffle de flammes, `haze` = lointain voilé */
   dragon(o) {
+    if (o.mode === 'perch') return perch(o);
     const period = o.period ?? 34, y0 = o.y ?? 26, id = o.id || 'dragon', mode = o.mode || 'cross';
     let pos = null;
     return {
@@ -173,4 +207,30 @@ const KINDS = {
   }
 };
 
+/* dragon perché (falaise, toit, tour, pont…) : il ne vole pas ; il respire, bouge la tête, étire parfois ses ailes et, de temps en temps, crache du feu */
+function perch(o) {
+  const id = o.id || 'dragon', ph = (o.x * 7 + o.y * 3) % 17, every = o.every ?? 26 + (ph % 9), dir = o.dir ?? -1; let pos = null;
+  return {
+    id,
+    hit(x, y) { return !!pos && x >= pos[0] - pos[2] / 2 && x <= pos[0] + pos[2] / 2 && y >= pos[1] - pos[3] && y <= pos[1]; },
+    draw(g, c, t) {
+      const K = o.kind && g.spr(o.kind + '.up') ? o.kind + '.' : 'dragon.', P = n => g.spr(K + n); if (!P('up')) return;
+      const sc = o.scale ?? 0.7, tt = t + ph, stretch = (tt % 15) / 1.7, fireT = (tt + 7) % every, fire = o.fire !== false && fireT < 2.6;
+      let a = 'down', b = 'down', f = 0;
+      if (stretch < 1) { const seq = ['down', 'mid2', 'up', 'mid2', 'down'], q = stretch * 4, i = Math.floor(q); a = seq[i]; b = seq[Math.min(4, i + 1)]; f = q - i; }
+      else if (fire && fireT < 0.5) { a = 'mid1'; b = 'mid2'; f = fireT / 0.5; }
+      const im = P(a), im2 = P(b); if (!im) return; const w = im.width * sc, h = im.height * sc, br = 1 + 0.014 * Math.sin(tt * 2.2), tilt = Math.sin(tt * 0.8) * 0.025 + (fire ? -0.06 * Math.min(1, fireT / 0.4) * dir * -1 : 0);
+      pos = [o.x, o.y, w, h];
+      c.save(); c.translate(Math.round(o.x), Math.round(o.y + 2)); c.rotate(tilt); if (dir > 0) c.scale(-1, 1); c.scale(1, br);
+      c.drawImage(im, Math.round(-w / 2), Math.round(-h), Math.round(w), Math.round(h));
+      if (im2 && im2 !== im) { c.globalAlpha = f * f * (3 - 2 * f); c.drawImage(im2, Math.round(-w / 2), Math.round(-h), Math.round(w), Math.round(h)); }
+      c.restore();
+      if (fire && fireT > 0.4) {
+        const k = Math.sin(Math.min(1, (fireT - 0.4) / 2.2) * Math.PI), mx = o.x + dir * w * 0.47, my = o.y - h * 0.56; if (fireT < 0.45 && g.sfx) g.sfx('whoosh');
+        c.save(); for (let i = 0; i < 26; i++) { const q = (t * 2.4 + i / 26) % 1, r = (2 + q * 7) * Math.max(0.5, sc), px = mx + dir * (q * 52 * sc + 2), py = my + Math.sin(i * 1.7 + t * 9) * q * 5 + q * q * 16; c.globalAlpha = k * (1 - q) * 0.9; c.fillStyle = q < 0.3 ? '#fff2a0' : q < 0.65 ? '#ffa030' : '#d8401a'; c.beginPath(); c.arc(px, py, r, 0, 7); c.fill(); } c.restore();
+      }
+      if (o.occ && g.sky && g.sky.occ) occlude(c, g.sky, o.x - w / 2 - 10, o.y - h - 10, w + 20, h + 20);
+    }
+  };
+}
 export function makeAmbient(list) { return (list || []).map(o => KINDS[o.type](o)).filter(Boolean); }

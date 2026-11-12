@@ -56,12 +56,12 @@ async function reveal(g, c) {
 
 export const BLINDS = {
   rue: { id: 'blind_pot', scene: 'rue', spr: 'blind.pot', lit: 'lit.pot', gag: 'pot', sing: 'blind.sing.pot', x: 262, y: 256, at: [240, 262], exit: [150, 330] },
-  mill: { id: 'blind_sack', scene: 'mill', spr: 'blind.sack', lit: 'lit.sack', gag: 'sack', sing: 'blind.sing.sack', x: 188, y: 240, at: [166, 246], exit: [100, 330] },
+  mill: { id: 'blind_sack', scene: 'mill', spr: 'blind.sack', lit: 'lit.sack', gag: 'sack', sing: 'blind.sing.sack', x: 318, y: 258, at: [296, 260], exit: [520, 300] },
   market: { id: 'blind_cabbage', scene: 'market', spr: 'blind.cabbage', lit: 'lit.cabbage', gag: 'cabbage', sing: 'blind.sing.cabbage', x: 402, y: 242, at: [378, 246], exit: [470, 330] },
   gate: { id: 'blind_helmet', scene: 'gate', spr: 'blind.helmet', lit: 'lit.helmet', gag: 'helmet', sing: 'blind.sing.helmet', x: 112, y: 250, at: [138, 254], exit: [-30, 300] },
   house: { id: 'blind_basket', scene: 'house', spr: 'blind.basket', lit: 'lit.basket', gag: 'basket', sing: 'blind.sing.basket', x: 262, y: 256, at: [292, 262], exit: [-30, 300] },
   ford: { id: 'blind_boot', scene: 'ford', spr: 'blind.boot', lit: 'lit.boot', gag: 'boot', sing: 'blind.sing.boot', x: 440, y: 254, at: [414, 258], exit: [540, 300] },
-  wood: { id: 'blind_mushroom', scene: 'wood', spr: 'blind.mushroom', lit: 'lit.mushroom', gag: 'mushroom', sing: 'blind.sing.mushroom', x: 120, y: 258, at: [148, 262], exit: [-30, 300] },
+  wood: { id: 'blind_mushroom', scene: 'wood', spr: 'blind.mushroom', lit: 'lit.mushroom', gag: 'mushroom', sing: 'blind.sing.mushroom', x: 296, y: 256, at: [272, 258], exit: [-30, 300] },
   hall: { id: 'blind_banner', scene: 'hall', spr: 'blind.banner', lit: 'lit.banner', gag: 'banner', sing: 'blind.sing.banner', x: 176, y: 250, at: [202, 254], exit: [-30, 300] },
   party: { id: 'blind_partyhat', scene: 'party', spr: 'blind.partyhat', lit: 'lit.partyhat', gag: 'partyhat', sing: 'blind.sing.partyhat', x: 176, y: 254, at: [204, 258], exit: [-30, 300] },
   meadow: { id: 'blind_hat', scene: 'meadow', spr: 'blind.hat', lit: 'lit.hat', gag: 'hat', sing: 'blind.sing.hat', x: 336, y: 256, at: [312, 260], exit: [470, 330] }

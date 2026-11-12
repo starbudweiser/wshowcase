@@ -1,6 +1,7 @@
 /* « La vitre de l'écran » : rarement et au hasard, quelque chose salit l'écran du joueur (mouche posée ou écrasée, éternuement du héros ou d'un personnage,
    fiente d'oiseau) puis le héros vient le nettoyer, de façon différente à chaque fois (chiffon, feuille de chou, plumeau, manche d'armure). */
 import { snd } from './sound.js';
+import { pickPose } from './night.js';
 const W = 480, H = 270, R = (a, b) => a + Math.random() * (b - a), pick = a => a[(Math.random() * a.length) | 0];
 const ease = k => k * k * (3 - 2 * k);
 
@@ -44,13 +45,14 @@ function ragDraw(c, rag, t) {
 
 function heroFace(g, c, run, k, t) {
   const pose = run.pose, key = { talk: 'hero.pTalk', sleepy: 'hero.pSleepy', knock: 'hero.pKnock1', blink: 'hero.pBlink' }[pose] || 'hero.pNeutral', talking = run.say && run.say.au && !run.say.au.paused && !run.say.au.ended;
-  const im = g.spr(talking && Math.floor(t * 7) % 2 && pose !== 'sleepy' ? 'hero.pTalk' : key) || g.spr('hero.pNeutral'); if (!im) return;
-  const sc = 0.82, y = H * 0.74 + (1 - k) * 180; c.save(); c.imageSmoothingEnabled = false; c.globalAlpha = Math.min(1, k * 1.4); c.drawImage(im, W / 2 - im.width * sc / 2, y - im.height * sc / 2, im.width * sc, im.height * sc); c.restore();
+  const base = run.p && (pose === 'neutral' || pose === 'talk') ? 'hero.p' + run.p : null, fl = talking && Math.floor(t * 7) % 2;
+  const im = (base && g.spr(base) ? g.spr(fl && g.spr(base + 'T') ? base + 'T' : base) : g.spr(fl && pose !== 'sleepy' ? 'hero.pTalk' : key)) || g.spr('hero.pNeutral'); if (!im) return;
+  const am = talking ? 1.7 : 1, sc = 0.82 * (1 + 0.012 * Math.sin(t * 1.7)), y = H * 0.74 + (1 - k) * 180 + Math.sin(t * 2.1) * 2 * am; c.save(); c.imageSmoothingEnabled = false; c.globalAlpha = Math.min(1, k * 1.4); c.translate(W / 2 + Math.sin(t * 1.3) * 3 * am, y); c.rotate(Math.sin(t * 0.9) * 0.025 * am); c.drawImage(im, -im.width * sc / 2, -im.height * sc / 2, im.width * sc, im.height * sc); c.restore();
 }
 
 function say(g, run, key) {
   const text = g.T(key), idx = g.T.idx, b = document.createElement('div'); b.className = 'pc-b pc-nightb'; b.textContent = text; b.style.color = '#ffe08a'; g.ov.append(b); g.placeBubble(b, W / 2, 40);
-  const au = g.voicePlay(key, idx), s = { b, au, end: g.now + Math.max(2.2, text.length * 0.065) };
+  run.p = pickPose(g, run.p); const au = g.voicePlay(key, idx), s = { b, au, end: g.now + Math.max(2.2, text.length * 0.065) };
   if (au) au.addEventListener('loadedmetadata', () => { s.end = Math.max(s.end, g.now + au.duration + 0.25); }); run.say = s;
 }
 

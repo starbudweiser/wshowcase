@@ -28,7 +28,7 @@ export default {
   tick(g) { blindTick(g, BL); },
 
   async intro(g) {
-    await g.fade(0, 900); await g.walkTo(150, 252); g.hero.front = true;
+    await g.fade(0, 900); await g.walkTo(186, 256); g.hero.front = true;
     await g.say('hero', 's6.intro1'); await g.say('hero', 's6.intro2'); g.hero.front = false;
   },
 

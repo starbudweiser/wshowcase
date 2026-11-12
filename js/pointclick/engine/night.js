@@ -25,8 +25,10 @@ function flood(d, thr) {
 export function buildSky(bg) {
   try {
     const cv = document.createElement('canvas'); cv.width = W; cv.height = H; const x = cv.getContext('2d', { willReadFrequently: true }); x.drawImage(bg, 0, 0, W, H);
-    const id = x.getImageData(0, 0, W, SKY_H), d = id.data, A = flood(d, 28), B = flood(d, 110);
+    const id = x.getImageData(0, 0, W, SKY_H), d = id.data, A = flood(d, 28), B = flood(d, 45);
     if (A.n < 1800) return null;
+    /* nettoyage du masque de « premier plan » : les pixels isolés (bruit, bords de nuages) redeviennent du ciel */
+    for (let pass = 0; pass < 2; pass++) { const cpm = B.m.slice(); for (let y = 1; y < SKY_H - 1; y++) for (let xx = 1; xx < W - 1; xx++) { const i = y * W + xx; if (cpm[i]) continue; let n = 0; for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) if ((dx || dy) && !cpm[i + dy * W + dx]) n++; if (n < 4) B.m[i] = 1; } }
     /* masque réduit de 3 pixels : le défilement ne touche jamais les bords des arbres */
     const m = new Uint8Array(W * SKY_H);
     for (let y = 3; y < SKY_H - 3; y++) for (let xx = 3; xx < W - 3; xx++) { let ok = A.m[y * W + xx] === 1; for (let dy = -3; dy <= 3 && ok; dy += 3) for (let dx = -3; dx <= 3 && ok; dx += 3) if (!A.m[(y + dy) * W + xx + dx]) ok = false; m[y * W + xx] = ok ? 1 : 0; }
@@ -107,8 +109,10 @@ export function startNight(g) {
   });
   h.pose = null; snd.music(false);
 }
+export const POSES = ['Point', 'Shrug', 'Plead', 'Think', 'Wave'];
+export function pickPose(g, prev) { const ok = POSES.filter(p => p !== prev && g.spr('hero.p' + p)); return ok.length && Math.random() < 0.8 ? ok[Math.random() * ok.length | 0] : null; }
 function nightSay(g, key, raw) {
-  const n = g.night, text = raw || g.T(key), idx = raw ? -1 : g.T.idx, b = document.createElement('div'); b.className = 'pc-b pc-nightb'; b.textContent = text; b.style.color = '#ffe08a'; g.ov.append(b); g.placeBubble(b, W / 2, 62);
+  const n = g.night; if (!raw) n.pose = pickPose(g, n.pose); const text = raw || g.T(key), idx = raw ? -1 : g.T.idx, b = document.createElement('div'); b.className = 'pc-b pc-nightb'; b.textContent = text; b.style.color = '#ffe08a'; g.ov.append(b); g.placeBubble(b, W / 2, 62);
   const au = raw ? null : g.voicePlay(key, idx), say = { b, au, end: g.now + Math.max(2.4, text.length * 0.065) };
   if (au) au.addEventListener('loadedmetadata', () => { say.end = Math.max(say.end, g.now + au.duration + 0.3); });
   n.say = say;
@@ -120,7 +124,6 @@ export function updateNight(g, dt) {
   if (n.st === 'wake') return wakeUpdate(g, dt);
   const lv = t < 3 ? 1 : t < 6 ? 2 : t < 9 ? 3 : 4; n.level = lv;
   n.a += (STEPS[lv - 1] - n.a) * Math.min(1, dt * 5);
-  if (lv >= 2 && now > n.cricket) { snd.cricket(); n.cricket = now + 0.7 + Math.random() * 0.7; }
   for (const o of n.ents) {
     if (!o.started && t >= o.t) { o.started = true; if (o.mode === 'home') o.e.goal = [o.e.x < 240 ? -40 : 520, o.e.y, 44]; }
     if (o.started && !o.done) {
@@ -191,8 +194,9 @@ export function drawNight(g, c) {
     c.save(); c.imageSmoothingEnabled = false; const S = n.s0 || 1;
     if (im) { const s = S + (5.4 - S) * k, x = (n.x0 ?? h.x) + (240 - (n.x0 ?? h.x)) * k, y = (n.y0 ?? h.y) + (532 - (n.y0 ?? h.y)) * k; c.globalAlpha = k > 0.62 && g.spr('hero.pNeutral') ? Math.max(0, 1 - (k - 0.62) / 0.3) : 1; c.drawImage(im, x - im.width * s / 2, y - im.height * s, im.width * s, im.height * s); }
     const talking = n.say && n.say.au && !n.say.au.paused && !n.say.au.ended, kk = n.knock ? (() => { const tk = t - n.knock.t0; for (const h of n.knock.hits) if (tk >= h && tk < h + 0.17) return 'hero.pKnock1'; return tk > 0.05 ? 'hero.pKnock2' : null; })() : null,
-      pk = !(g.hero && g.spr('hero.pNeutral')) ? null : (kk && g.spr(kk) ? kk : talking && Math.floor(t * 7) % 2 ? 'hero.pTalk' : (t % 3.7 < 0.14 ? 'hero.pBlink' : 'hero.pNeutral')), pi = pk && (g.spr(pk) || g.spr('hero.pNeutral'));
-    if (pi && k > 0.6) { c.globalAlpha = Math.min(1, (k - 0.6) / 0.3); const sc = Math.min(W / pi.width, H / pi.height) * 1.02; c.drawImage(pi, W / 2 - pi.width * sc / 2, H / 2 - pi.height * sc / 2 + 6, pi.width * sc, pi.height * sc); }
+      base = n.pose ? 'hero.p' + n.pose : null,
+      pk = !(g.hero && g.spr('hero.pNeutral')) ? null : (kk && g.spr(kk) ? kk : base && g.spr(base) ? (talking && Math.floor(t * 7) % 2 && g.spr(base + 'T') ? base + 'T' : base) : talking && Math.floor(t * 7) % 2 ? 'hero.pTalk' : (t % 3.7 < 0.14 ? 'hero.pBlink' : 'hero.pNeutral')), pi = pk && (g.spr(pk) || g.spr('hero.pNeutral'));
+    if (pi && k > 0.6) { c.globalAlpha = Math.min(1, (k - 0.6) / 0.3); const am = talking ? 1.7 : 1, sc = Math.min(W / pi.width, H / pi.height) * 1.02 * (1 + 0.012 * Math.sin(t * 1.7)), ox = Math.sin(t * 1.3) * 3 * am, oy = Math.sin(t * 2.1) * 2 * am; c.translate(W / 2 + ox, H / 2 + 6 + oy); c.rotate(Math.sin(t * 0.9) * 0.025 * am); c.drawImage(pi, -pi.width * sc / 2, -pi.height * sc / 2, pi.width * sc, pi.height * sc); }
     c.restore();
   }
   if (n.ring && g.now - n.ring.t0 < 0.55) { const k = (g.now - n.ring.t0) / 0.55; c.save(); c.globalAlpha = (1 - k) * 0.8; c.strokeStyle = '#dfeaff'; c.lineWidth = 2; c.beginPath(); c.ellipse(W * 0.6, H * 0.46, 14 + k * 46, 10 + k * 32, 0, 0, 7); c.stroke(); c.restore(); }

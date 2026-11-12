@@ -17,8 +17,7 @@ export default {
     { id: 'fire', rect: [118, 198, 168, 232], at: [150, 244] }, { id: 'road', rect: [350, 100, 420, 190], at: [378, 206] }
   ],
   ambient: [
-    { type: 'dragon', y: 40, period: 52, offset: 4, drop: 4, mode: 'cross', scale: 0.45, flap: 3, haze: true, travel: 0.8 },
-    { type: 'dragon', kind: 'ember', y: 12, period: 46, offset: 22, drop: 6, mode: 'circle', cx: 330, r: 120, ry: 14, turns: 1.5, scale: 0.8, haze: true },
+    { type: 'dragon', mode: 'perch', kind: 'ember', x: 70, y: 40, dir: 1, scale: 0.5 },
     { type: 'flock', n: 4, y0: 14, y1: 80, speed: 12, seed: 11 },
     { type: 'orbit', spr: 'bucket', id: 'satellite', scale: 0.4, y: 30, arc: 10, period: 64, offset: 30, spin: 1.1 },
     { type: 'frames', id: 'meadow_fire', fps: 7, seq: [0, 1, 2, 1] },

@@ -39,6 +39,30 @@ def narr_style(k):
     if k == 'wink.dexter': return NB + 'low calm whisper, ominous but comic'
     if k.startswith('wink.'): return NB + 'playful and conspiratorial, then a dry punchline'
     return NB + 'smug and wryly amused, delighted irony'
+def prosody_variants(t):
+    """Variantes de ponctuation qui changent le rythme et l'intonation de la même phrase (texte dit uniquement)."""
+    a = t.replace('. ', '… ').replace(', ', ', … ') if len(t) > 60 else t
+    b = t.replace('. ', ' ! … ', 1).replace(' ?', ' ?!') if ('. ' in t) else t.replace('.', ' !')
+    return [(t, 0.93), (a, 1.0), (b, 0.97)]
+def expressiveness(wav):
+    import librosa, numpy as np
+    y, sr = librosa.load(wav, sr=16000); f0, vf, _ = librosa.pyin(y, fmin=65, fmax=330, sr=sr, frame_length=1024)
+    f = f0[~np.isnan(f0)]
+    if len(f) < 10: return 0
+    st = 12 * np.log2(f / np.median(f)); return float(np.std(st)) + 0.5 * float(np.percentile(st, 95) - np.percentile(st, 5))
+def narr_take(o, L, dst):
+    best, bs = None, -1
+    for k, (txt, spd) in enumerate(prosody_variants(o['text'])):
+        tmp = tempfile.mktemp(suffix='.wav')
+        subprocess.run(['voix-locale', txt, '-o', tmp, '-l', L, '-r', PV + '.wav', '-t', open(PV + '.txt').read().strip(), '--speed', str(spd)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if not os.path.exists(tmp): continue
+        import subprocess as sp
+        du = float(sp.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', tmp], capture_output=True, text=True).stdout or 0); cps = len(o['text']) / max(du, 0.01)
+        sc = expressiveness(tmp) if 6.5 <= cps <= 22 else -1
+        if sc > bs: bs = sc; (best and os.path.exists(best) and os.remove(best)); best = tmp
+        else: os.remove(tmp)
+    if best:
+        subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', best, '-ac', '1', '-ar', '24000', '-b:a', '40k', dst]); os.remove(best)
 def blind_style(k):
     if k == 'blind.dark': return 'plaintive whining lost man complaining, groping in the dark'
     if k.startswith('blind.wow'): return 'amazed overjoyed shouting, tears of joy'
@@ -54,9 +78,10 @@ for o in items:
     if os.path.exists(dst): continue
     if o['who'].startswith('bd_'): sc = o['who'][3:]; v = (BD[sc], BDB[sc] + ', ' + BDS[o['idx'] % 6])
     else: v = ('aiden', blind_style(o['key'])) if o['who'] == 'blind' else V.get(o['who'], V['hero'])
+    if o['who'] == 'narr':
+        narr_take(o, L, dst); n += 1; print('ok', name, flush=True); continue
     tmp = tempfile.mktemp(suffix='.wav')
-    cmd = ['voix-locale', o['text'], '-o', tmp, '-l', L]
-    cmd += ['-v', 'aiden', '-s', narr_style(o['key']), '--speed', '0.96'] if o['who'] == 'narr' else ['-v', v[0], '-s', v[1]]
+    cmd = ['voix-locale', o['text'], '-o', tmp, '-l', L, '-v', v[0], '-s', v[1]]
     subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     if os.path.exists(tmp):
         subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', tmp, '-ac', '1', '-ar', '24000', '-b:a', '40k', dst]); os.remove(tmp)

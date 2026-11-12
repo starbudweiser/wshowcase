@@ -169,7 +169,51 @@ function startTrack(id) {
   musicTimer = setInterval(sched, 250); sched();
 }
 
+/* ───── ambiances : boucles réalistes par décor (assets/pointclick/amb/<id>.mp3, générées en local) + sons ponctuels synthétisés ───── */
+const ambCache = {}; let ambCur = null, ambTok = 0, ambOn = true;
+async function ambLoad(c, id) {
+  if (ambCache[id]) return ambCache[id];
+  const r = await fetch(`assets/pointclick/amb/${id}.mp3`); if (!r.ok) throw new Error('amb'); return (ambCache[id] = await c.decodeAudioData(await r.arrayBuffer()));
+}
+const ONE = {
+  bird: () => { const f = 2300 + Math.random() * 1800, n = 2 + (Math.random() * 4 | 0); for (let i = 0; i < n; i++) tone({ f: f * (0.9 + Math.random() * 0.3), to: f * (0.7 + Math.random() * 0.7), d: 0.06 + Math.random() * 0.04, t: i * (0.09 + Math.random() * 0.03), g: 0.022, type: 'sine' }); },
+  crow: () => { for (let i = 0; i < 2 + (Math.random() * 2 | 0); i++) { tone({ f: 430, to: 290, d: 0.22, t: i * 0.34, g: 0.04, type: 'sawtooth' }); noise({ d: 0.2, f: 900, q: 1.5, g: 0.03, t: i * 0.34, type: 'bandpass' }); } },
+  frog: () => { for (let i = 0; i < 3; i++) tone({ f: 170, to: 115, d: 0.09, t: i * 0.13, g: 0.035, type: 'square' }); },
+  owl: () => { [[0, 330], [0.5, 290], [0.95, 290]].forEach(([t, f]) => tone({ f, to: f * 0.92, d: 0.38, t, g: 0.04, type: 'sine' })); },
+  wind: () => noise({ d: 3.6, f: 420 + Math.random() * 300, q: 0.5, g: 0.05, type: 'bandpass' }),
+  hawk: () => { tone({ f: 2700, to: 1500, d: 0.7, g: 0.022, type: 'sawtooth' }); },
+  horn: () => { tone({ f: 118, d: 1.7, g: 0.04, type: 'sawtooth' }); tone({ f: 176, d: 1.7, g: 0.02, type: 'sawtooth' }); },
+  anvil: () => { for (let i = 0; i < 3; i++) { tone({ f: 1900, d: 0.16, t: i * 0.42, g: 0.03, type: 'triangle' }); tone({ f: 3150, d: 0.1, t: i * 0.42, g: 0.02, type: 'sine' }); } },
+  bell: () => { tone({ f: 880, d: 1.4, g: 0.025, type: 'triangle' }); tone({ f: 1320, d: 1.1, t: 0.02, g: 0.015, type: 'sine' }); },
+  clink: () => { tone({ f: 2600, d: 0.12, g: 0.025, type: 'triangle' }); tone({ f: 3400, d: 0.1, t: 0.06, g: 0.018, type: 'sine' }); },
+  creak: () => tone({ f: 95, to: 140, d: 0.7, g: 0.02, type: 'sawtooth' }),
+  dog: () => { for (let i = 0; i < 2; i++) { tone({ f: 430, to: 250, d: 0.13, t: i * 0.3, g: 0.04, type: 'sawtooth' }); noise({ d: 0.1, f: 700, q: 1, g: 0.03, t: i * 0.3, type: 'bandpass' }); } },
+  chime: () => { for (let i = 0; i < 2; i++) tone({ f: [880, 988, 1175, 1319, 1568][Math.random() * 5 | 0], d: 0.7, t: i * 0.18, g: 0.025, type: 'sine' }); },
+  cheer: () => noise({ d: 1.4, f: 1300, q: 0.7, g: 0.05, type: 'bandpass' }),
+  pop: () => { noise({ d: 0.22, f: 600, q: 1, g: 0.06, type: 'lowpass' }); noise({ d: 0.5, f: 4200, q: 3, g: 0.025, t: 0.12, type: 'highpass' }); },
+  hen: () => { tone({ f: 600, to: 360, d: 0.1, g: 0.03 }); tone({ f: 560, to: 340, d: 0.1, t: 0.13, g: 0.025 }); },
+  cricket: () => { for (let i = 0; i < 4; i++) tone({ f: 4300, d: 0.03, t: i * 0.07, g: 0.012, type: 'sine' }); }
+};
+const POOL = {
+  rue: ['bird', 'bird', 'hen', 'anvil', 'wind', 'bell'], mill: ['bird', 'wind', 'crow', 'hawk'], meadow: ['wind', 'hawk', 'horn', 'wind'], market: ['hen', 'bell', 'clink', 'bird', 'clink'],
+  gate: ['bird', 'clink', 'wind', 'horn'], house: ['creak', 'wind', 'dog', 'creak'], ford: ['crow', 'frog', 'owl', 'wind', 'frog'], wood: ['bird', 'bird', 'chime', 'wind', 'chime'],
+  hall: ['creak', 'clink', 'wind', 'creak'], party: ['cheer', 'pop', 'clink', 'cheer', 'pop'], night: ['owl', 'dog', 'wind', 'cricket', 'cricket'], nightIn: ['creak', 'dog', 'cricket']
+};
 export const snd = {
+  /* ambiance : fondu enchaîné vers la boucle de l'id (rue, mill…) ; vol = niveau de base */
+  async ambient(id, vol = 0.4, fade = 2.5) {
+    const c = ensure(); if (!c || !id) return; const tok = ++ambTok;
+    if (ambCur && ambCur.id === id) { ambCur.vol = vol; this.ambVol(1); return; }
+    let buf; try { buf = await ambLoad(c, id); } catch { return; } if (tok !== ambTok) return;
+    const g = c.createGain(), src = c.createBufferSource(); src.buffer = buf; src.loop = true; g.gain.setValueAtTime(0.0001, c.currentTime); g.gain.linearRampToValueAtTime(ambOn ? vol : 0.0001, c.currentTime + fade); src.connect(g).connect(master); src.start();
+    const old = ambCur; if (old) { try { old.g.gain.cancelScheduledValues(c.currentTime); old.g.gain.setValueAtTime(old.g.gain.value, c.currentTime); old.g.gain.linearRampToValueAtTime(0.0001, c.currentTime + fade); } catch {} setTimeout(() => { try { old.src.stop(); old.src.disconnect(); } catch {} }, fade * 1000 + 200); }
+    ambCur = { id, src, g, vol };
+  },
+  ambVol(mult = 1) { if (ambCur && ctx) ambCur.g.gain.setTargetAtTime(ambOn ? ambCur.vol * mult : 0.0001, ctx.currentTime, 0.35); },
+  ambSwitch(on) { ambOn = !!on; this.ambVol(1); },
+  ambStop() { ambTok++; if (ambCur && ctx) { const o = ambCur; ambCur = null; try { o.g.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.3); } catch {} setTimeout(() => { try { o.src.stop(); } catch {} }, 1200); } },
+  oneshot(kind) { if (!ambOn || !ONE[kind] || !ensure()) return; ONE[kind](); },
+  oneshotFor(scene, night, interior) { const l = POOL[night ? (interior ? 'nightIn' : 'night') : scene]; return l && l[Math.random() * l.length | 0]; },
   unlock: ensure,
   blip(who = 'hero') { const base = { hero: 330, merchant: 190, guard: 150, hen: 520, giant: 85, nazim: 300, narr: 260 }[who] || 260; tone({ f: base * (0.9 + Math.random() * 0.3), d: 0.045, g: 0.05, type: 'square' }); },
   step() { noise({ d: 0.06, f: 500 + Math.random() * 300, q: 0.8, g: 0.07, type: 'lowpass' }); },
@@ -199,6 +243,6 @@ export const snd = {
     if (!ensure()) return;
     startTrack(wanted);
   },
-  stop() { stopTrack(); },
+  stop() { stopTrack(); this.ambStop(); },
   _master: () => master
 };

@@ -12,8 +12,8 @@ export default {
     { id: 'fwater', rect: [160, 112, 292, 182] }, { id: 'ftrees', rect: [0, 0, 130, 132] }, { id: 'fcrows', rect: [40, 78, 140, 124] }
   ],
   ambient: [
+    { type: 'dragon', mode: 'perch', kind: 'ember', x: 255, y: 101, dir: -1, scale: 0.6 },
     { type: 'flock', n: 5, y0: 20, y1: 80, speed: 8, seed: 31 },
-    { type: 'dragon', kind: 'ember', y: 18, period: 52, offset: 30, drop: 6, mode: 'circle', cx: 240, r: 170, ry: 10, turns: 1.25, scale: 0.6, haze: true, flap: 3.6 },
     { type: 'frames', id: 'ford_water', fps: 1.8 },
     { type: 'frames', id: 'ford_mist', fps: 0.9 }
   ],

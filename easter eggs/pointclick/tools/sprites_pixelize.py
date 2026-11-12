@@ -24,6 +24,8 @@ def main():
     a = sys.argv[1:]; like = None; bright = 1.0
     if '--bright' in a: i = a.index('--bright'); bright = float(a[i + 1]); del a[i:i + 2]
     if '--like' in a: i = a.index('--like'); like = a[i + 1]; del a[i:i + 2]
+    mul = 1.0
+    if '--mul' in a: i = a.index('--mul'); mul = float(a[i + 1]); del a[i:i + 2]
     fill = '--fill' in a
     if fill: a.remove('--fill')
     name, src, th = a[0], a[1], int(a[2]); ncol = int(a[3]) if len(a) > 3 else 56
@@ -36,7 +38,7 @@ def main():
     al = al.filter(ImageFilter.MinFilter(3))                                                   # rogne la frange magenta
     bb = al.getbbox(); im = im.crop(bb); al = al.crop(bb)
     sc = json.load(open(SC)) if os.path.exists(SC) else {}
-    f = sc[like] if like else th / im.size[1]
+    f = (sc[like] if like else th / im.size[1]) * mul
     sc[name] = f; json.dump(sc, open(SC, 'w'))
     sz = (max(1, round(im.size[0] * f)), max(1, round(im.size[1] * f)))
     im = im.resize(sz, Image.LANCZOS); al = al.resize(sz, Image.LANCZOS).point(lambda v: 255 if v > 140 else 0)
