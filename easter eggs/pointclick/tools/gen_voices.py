@@ -21,7 +21,8 @@ V = {  # personnage : (voix prête, consigne de jeu)
  'wk_ba': ('ryan', 'extremely deep growling barbarian, slow'), 'wk_wi': ('aiden', 'old wise wizard, calm and powerful, slow, booming'),
  'wk_ha': ('ryan', 'cheerful hungry halfling, light-hearted'), 'wk_ma': ('ryan', 'calm resourceful handyman, laid back'),
  'wk_si': ('ryan', 'grumpy sarcastic teenager, whining'), 'wk_pi': ('ryan', 'cocky cheeky young pirate'), 'wk_gr': ('aiden', 'cheerful medieval adventurer'),
- 'wk_tr': ('aiden', 'grumpy gruff bridge troll, deep voice'), 'wk_ag': ('aiden', 'serious deadpan FBI agent speaking low, monotone'), 'wk_ho': ('aiden', 'deep slow comedic horse voice, proud'),
+ 'wk_tr': ('aiden', 'grumpy gruff bridge troll, deep voice'), 'wk_ag': ('aiden', 'serious deadpan FBI agent speaking low, monotone'), 'wk_ar': ('aiden', 'weary exasperated king, tired sigh, dry'), 'wk_pe': ('ryan', 'naive slow clueless young knight, dreamy'), 'wk_ka': ('aiden', 'jovial greedy big man with his mouth full, enthusiastic'), 'wk_la': ('aiden', 'solemn noble knight, grave and proud'), 'wk_me': ('ryan', 'confused scatterbrained wizard, hesitant, whiny'), 'wk_le': ('aiden', 'grumpy brutal old warrior king, gruff growl'), 'wk_se': ('vivian', 'sharp sarcastic mature lady, biting tone'), 'wk_gu': ('serena', 'sweet naive young queen, soft and innocent'), 'wk_mv': ('vivian', 'haughty disdainful aristocratic lady, slow'), 'wk_gt': ('aiden', 'stubborn angry peasant shouting, rustic'), 'wk_ro': ('ryan', 'indignant whiny peasant shouting back, rustic'), 'wk_ta': ('aiden', 'tired weary innkeeper, flat and polite'),
+  'wk_ho': ('aiden', 'deep slow comedic horse voice, proud'),
  'sleepy': ('aiden', 'groggy half-asleep confused man, yawning, mumbling'),
  'hen': ('vivian', 'comedic clucking chicken-like voice'),
 }

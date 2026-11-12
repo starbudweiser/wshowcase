@@ -32,3 +32,16 @@ g wk_troll_a.png "A small green bridge troll peeking up from below, only head, b
 e wk_troll_b.png wk_troll_a.png 2202 "$K The same troll, now laughing with mouth wide open, club raised."
 e wk_horsearmor.png ch2_horse.png 2210 "$K The same horse, same side profile, now wearing absurd shiny silver plate armor over its body and head, silly and proud."
 echo done
+# Kaamelott (caricatures génériques, pas de ressemblance avec les acteurs)
+walker arthur "A weary medieval king in his forties with short dark hair and a short beard, red and gold royal tunic, a simple golden crown, a long sword at his belt, exasperated face"
+walker lancelot "A proud handsome medieval knight with long wavy brown hair, shining silver plate armor with a white tabard, solemn serious face"
+walker merlin "A scruffy middle-aged druid wizard with messy long hair and a stubbly beard, a shabby green and brown robe covered in stains, a crooked wooden staff, confused face"
+walker karadoc "A big round medieval knight with a bushy black beard, chain mail too tight over a big belly, eating a huge chicken leg, happy greedy face"
+walker perceval "A naive young medieval knight with short blond hair, light leather armor and a blue tunic, holding a sword upside down, dreamy clueless smile"
+walker mevanwi "An elegant haughty medieval noblewoman with long auburn hair in braids, a deep green velvet dress with gold embroidery, a delicate circlet, proud seductive look"
+walker guenievre "A gentle naive medieval queen with long light brown hair, a pale blue dress, a small golden crown, dreamy innocent smile, holding a flower"
+walker leodagan "A grim tough old medieval warrior king with grey hair and a grey beard, dark leather and fur armor, a heavy war axe, a permanent angry scowl"
+walker seli "A sharp-tongued middle-aged medieval lady with her hair in a bun under a veil, a burgundy dress and an apron, carrying a fruit pie, sarcastic look"
+walker tavernier "A chubby medieval innkeeper with a bald head and a moustache, a stained apron, holding a wooden tankard and a cloth, tired face"
+walker guethenoc "A stubborn medieval peasant with a ruddy face and a scruffy beard, a patched brown tunic, a straw hat, carrying a sack of turnips, grumpy"
+walker roparzh "A skinny medieval peasant with a long thin face and a pointed nose, a grey ragged tunic, a hood, holding a pitchfork, indignant"

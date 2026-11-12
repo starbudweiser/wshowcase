@@ -76,6 +76,7 @@ for k in frost ember moss gold; do for q in mid1 down mid2; do Q dragon_${k}_$q 
 # clins d'œil (relancer après tools/gen_winks.sh)
 Wk(){ k="$1"; h="$2"; Q wk_${k}_a wk_${k}_a.png $h; Q wk_${k}_b wk_${k}_b.png 0 --like wk_${k}_a; }
 Wk explorer 88; Wk buster 88; Wk kids 84; Wk barbarian 100; Wk wizard 100; Wk halfling 62; Wk handyman 88; Wk simon 78; Wk pirate 88; Wk graham 84; Wk agent 90
+Wk arthur 92; Wk lancelot 94; Wk merlin 90; Wk karadoc 92; Wk perceval 90; Wk mevanwi 88; Wk guenievre 86; Wk leodagan 92; Wk seli 84; Wk tavernier 86; Wk guethenoc 84; Wk roparzh 86
 Wk ghost 58; Wk racer 46; Wk tentacle 64; Wk owl 40; Wk troll 48; Q wk_boulder wk_boulder.png 64; Q wk_owl_f wk_owl_f.png 0 --like wk_owl_a; Q wk_horsearmor wk_horsearmor.png 0 --like horse
 
 Q hero_pKnock1 hp_knock1.png 0 --like hero_pNeutral --fill; Q hero_pKnock2 hp_knock2.png 0 --like hero_pNeutral --fill

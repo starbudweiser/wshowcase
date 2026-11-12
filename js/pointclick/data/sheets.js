@@ -21,7 +21,7 @@ f('blind', ['pot2', 'sack2', 'hat2']); f('lit', ['pot2', 'sack2', 'hat2']);
 
 ['frost', 'ember', 'moss', 'gold'].forEach(k => ['up', 'mid1', 'down', 'mid2'].forEach(q => (SPR[k + '.' + q] = 'dragon_' + k + '_' + q)));   /* dragons d'autres espèces (tools/gen_dragons.sh) */
 /* clins d'œil (tools/gen_winks.sh) : deux images par personnage */
-const WK = ['explorer', 'buster', 'kids', 'barbarian', 'wizard', 'halfling', 'handyman', 'simon', 'pirate', 'graham', 'agent'];
+const WK = ['explorer', 'buster', 'kids', 'barbarian', 'wizard', 'halfling', 'handyman', 'simon', 'pirate', 'graham', 'agent', 'arthur', 'lancelot', 'merlin', 'karadoc', 'perceval', 'mevanwi', 'guenievre', 'leodagan', 'seli', 'tavernier', 'guethenoc', 'roparzh'];
 WK.forEach(k => { SPR['wk.' + k] = 'wk_' + k + '_a'; SPR['wk.' + k + '.b'] = 'wk_' + k + '_b'; });
 Object.assign(SPR, { 'wk.boulder': 'wk_boulder', 'wk.ghost': 'wk_ghost_a', 'wk.ghost.b': 'wk_ghost_b', 'wk.racer': 'wk_racer_a', 'wk.racer.b': 'wk_racer_b', 'wk.tentacle': 'wk_tentacle_a', 'wk.tentacle.b': 'wk_tentacle_b',
   'wk.owl': 'wk_owl_a', 'wk.owl.b': 'wk_owl_b', 'wk.owl.f': 'wk_owl_f', 'wk.troll': 'wk_troll_a', 'wk.troll.b': 'wk_troll_b', 'wk.horsearmor': 'wk_horsearmor' });
