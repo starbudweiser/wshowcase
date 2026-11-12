@@ -152,14 +152,26 @@ Object.assign(TRACKS, {
 });
 function stopTrack() {
   if (musicTimer) { clearInterval(musicTimer); musicTimer = null; }
-  if (cur && ctx) { const o = cur; try { o.bus.gain.cancelScheduledValues(ctx.currentTime); o.bus.gain.setValueAtTime(o.bus.gain.value, ctx.currentTime); o.bus.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.5); } catch {} setTimeout(() => { try { o.bus.disconnect(); } catch {} }, 1500); }
+  if (cur && ctx) { const o = cur; try { o.bus.gain.cancelScheduledValues(ctx.currentTime); o.bus.gain.setValueAtTime(o.bus.gain.value, ctx.currentTime); o.bus.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.5); } catch {} setTimeout(() => { try { o.src && o.src.stop(); o.bus.disconnect(); } catch {} }, 1500); }
   cur = null;
 }
+/* musiques enregistrées (Google Flow Music) : boucle sans couture assets/pointclick/music/<id>.mp3 ; sinon la piste synthétisée */
+const FILES = { rue: 0.55, wood: 0.55 }, fileCache = {};
+async function fileBuf(id) {
+  if (fileCache[id]) return fileCache[id];
+  const r = await fetch(`assets/pointclick/music/${id}.mp3`); if (!r.ok) throw new Error('music'); return (fileCache[id] = await ctx.decodeAudioData(await r.arrayBuffer()));
+}
 function startTrack(id) {
-  if (!TRACKS[id]) id = 'rue';
-  if (cur && cur.id === id && musicTimer) return;
+  if (!TRACKS[id] && !(id in FILES)) id = 'rue';
+  if (cur && cur.id === id && (musicTimer || cur.file)) return;
   stopTrack(); musicBus(); const c = ctx; if (!c) return;
   const bus = c.createGain(); bus.gain.setValueAtTime(0.0001, c.currentTime); bus.gain.linearRampToValueAtTime(1, c.currentTime + 1.2); bus.connect(musicIn);
+  if (id in FILES) {
+    const o = cur = { id, bus, file: true };
+    fileBuf(id).then(b => { if (cur !== o) return; const s = o.src = c.createBufferSource(); s.buffer = b; s.loop = true; const g = c.createGain(); g.gain.value = FILES[id]; s.connect(g).connect(bus); s.start(); })
+      .catch(() => { if (cur === o) { delete FILES[id]; cur = null; if (TRACKS[id]) startTrack(id); } });
+    return;
+  }
   cur = { id, bus, i: 0, tnext: c.currentTime + 0.35, I: INSTR(bus) };
   const sched = () => {
     if (!cur || !sfx.on || !musicOn) { if (cur) cur.tnext = Math.max(cur.tnext, ctx.currentTime + 0.1); return; }
