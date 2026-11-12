@@ -17,7 +17,7 @@ A 16:9 Mac boots in the page (startup chime included), with two virtual desktops
 | Desktop | Link | Content |
 |---|---|---|
 | Skyrim Mac Toolkit | `#skyrim` | the 15 Skyrim apps (this is the link used by skyrimtools.com) |
-| Utilities | `#util` | the 17 other apps |
+| Utilities | `#util` | the 20 other apps |
 
 Deep links also open an app directly: `#skyrim/mTRANSLATOR`, `#util/mSTICK`.
 

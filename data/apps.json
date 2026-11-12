@@ -604,6 +604,65 @@
     "es": "Notas ricas, rápidas y siempre a mano.",
     "it": "Note ricche, veloci e sempre a portata di mano."
    }
+  },
+  {
+   "id": "mTAB",
+   "space": "util",
+   "repo": "mTAB",
+   "accent": "#38bdf8",
+   "kind": "menubar",
+   "desk": true,
+   "demo": "mTAB",
+   "shots": 3,
+   "download": false,
+   "version": "",
+   "tag": {
+    "fr": "Le sélecteur de fenêtres de macOS : aperçus, recherche, raccourcis.",
+    "en": "A window switcher for macOS: previews, search, shortcuts.",
+    "es": "Un selector de ventanas para macOS: vistas previas, búsqueda y atajos.",
+    "it": "Un selettore di finestre per macOS: anteprime, ricerca e scorciatoie."
+   },
+   "src": false
+  },
+  {
+   "id": "CAREERDeSK",
+   "space": "util",
+   "repo": "CAREERDeSK",
+   "accent": "#f8b820",
+   "kind": "app",
+   "desk": true,
+   "demo": "CAREERDeSK",
+   "shots": 3,
+   "download": false,
+   "version": "",
+   "tier": "demo",
+   "src": false,
+   "tag": {
+    "fr": "Suit vos candidatures, de l'offre à la relance, avec l'aide de l'IA.",
+    "en": "Tracks your job applications, from offer to follow-up, with AI help.",
+    "es": "Sigue tus candidaturas, de la oferta al seguimiento.",
+    "it": "Segue le tue candidature, dall'offerta al sollecito."
+   }
+  },
+  {
+   "id": "HORIZONs",
+   "space": "util",
+   "repo": "HORIZONs",
+   "accent": "#f59e0b",
+   "kind": "app",
+   "desk": true,
+   "demo": "HORIZONs",
+   "shots": 3,
+   "download": false,
+   "version": "",
+   "tier": "demo",
+   "src": false,
+   "tag": {
+    "fr": "Trouve, trie et suit vos annonces de location, dossier PDF compris.",
+    "en": "Finds, sorts and tracks rental listings, application file included.",
+    "es": "Encuentra, clasifica y sigue anuncios de alquiler, con su dosier PDF.",
+    "it": "Trova, ordina e segue gli annunci di affitto, fascicolo PDF incluso."
+   }
   }
  ]
 }
