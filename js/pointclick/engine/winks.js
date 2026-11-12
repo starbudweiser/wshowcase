@@ -46,13 +46,18 @@ const V = {
   dexter: { dur: 0, after: 'wink.dexter' }
 };
 const IDS = Object.keys(V);
-/* voies d'arrière-plan : chemins réels du décor (gauche -> droite) où les figurants lointains marchent, à l'échelle de leur profondeur */
+/* voies d'arrière-plan : chemins réels du décor où passent les figurants lointains, à l'échelle de leur profondeur.
+   Chaque voie entre et sort hors de l'image (bord ou bas de l'écran), ou par une issue du décor (porte du château, fond de la rue) :
+   là seulement, le figurant apparaît ou s'efface en fondu. Pas de voie dans les décors sans chemin crédible (premier plan seulement). */
 const LANES = {
-  rue: [[250, 150], [300, 158], [350, 172], [400, 180], [440, 190], [480, 200]], mill: [[120, 188], [170, 186], [220, 190], [270, 196], [310, 200]],
-  meadow: [[330, 185], [350, 172], [372, 160], [392, 138], [420, 112]], market: [[200, 205], [260, 190], [320, 178], [345, 170], [360, 165]],
-  gate: [[200, 84], [240, 84], [280, 84], [320, 84]], house: [[110, 212], [200, 210], [300, 210], [380, 212]], ford: [[165, 112], [220, 106], [300, 104], [370, 108], [390, 114]],
-  wood: [[140, 160], [200, 140], [260, 128], [330, 110], [380, 100]], hall: [[120, 200], [200, 190], [270, 180], [330, 172], [390, 170]], party: [[90, 110], [200, 102], [300, 100], [400, 106], [470, 112]]
+  rue: [[500, 206], [450, 193], [400, 181], [350, 174], [300, 180], [250, 200], [200, 235], [160, 300]],
+  mill: [[95, 300], [104, 240], [135, 212], [200, 205], [300, 205], [350, 216], [345, 250], [325, 300]],
+  meadow: [[350, 108], [338, 140], [330, 185], [380, 215], [440, 245], [500, 262]],
+  market: [[360, 165], [345, 170], [320, 178], [260, 190], [200, 205], [130, 240], [80, 300]],
+  ford: [[-25, 118], [80, 116], [165, 112], [220, 106], [300, 104], [370, 108], [400, 125], [420, 170], [432, 300]],
+  party: [[-25, 112], [90, 110], [200, 102], [300, 100], [400, 106], [505, 114]]
 };
+const onScreen = p => p[0] >= 0 && p[0] <= 480 && p[1] >= 0 && p[1] <= 270;
 function lanePt(L, u) { const n = L.length - 1, f = Math.min(Math.max(u, 0), 1) * n, i = Math.min(n - 1, Math.floor(f)), k = f - i; return [L[i][0] + (L[i + 1][0] - L[i][0]) * k, L[i][1] + (L[i + 1][1] - L[i][1]) * k]; }
 
 export function updateWinks(g, dt) {
@@ -84,7 +89,12 @@ function run(g, w, dt) {
       const [t0, x0, y0] = wp[i], [t1, x1, y1] = wp[i + 1];
       if (t >= t0 && t <= t1) { const k = t1 > t0 ? (t - t0) / (t1 - t0) : 1, ax = at(x0, r.hero), bx = at(x1, r.hero); x = ax + (bx - ax) * k; y = y0 + (y1 - y0) * k; moving = Math.abs(bx - ax) > 0.5; if (moving) e.flip = (c.dir ?? 1) * (bx - ax) < 0 ? c.dir === -1 ? false : true : c.dir === -1; break; }
     }
-    if (r.lane && !c.fly && x > -900) { const u = (x + 60) / 620, p = lanePt(r.lane, u); x = p[0]; y = p[1]; }
+    if (r.lane && !c.fly && x > -900) {
+      const L = r.lane, u = (x + 60) / 620, p = lanePt(L, u); x = p[0]; y = p[1];
+      /* bout de voie visible (issue du décor) : le figurant y passe en fondu, jamais d'apparition sèche en plein décor */
+      const fa = onScreen(L[0]) ? Math.min(1, u / 0.07) : 1, fb = onScreen(L[L.length - 1]) ? Math.min(1, (1 - u) / 0.07) : 1;
+      e.alpha = 0.92 * Math.max(0, Math.min(fa, fb)); e.z = 0;
+    }
     e.x = x; e.y = y; e.animState = moving ? 'walk' : 'idle'; e.visible = x > -900;
     if (c.hop) e.bob = Math.abs(Math.sin(t * 6)) * (moving ? c.hop : 3); else if (c.bob) e.bob = Math.sin(t * 3) * c.bob; else e.bob = 0;
     if (c.spin) e.rot = (t * 4.5) % (Math.PI * 2);

@@ -25,7 +25,7 @@ export default {
     { type: 'fish', spots: [[392, 206, 0.55, 1], [424, 208, 0.55, -1]], every: 6, seed: 9 },
     { type: 'wheel3d', cx: 468, cy: 152, rx: 10, ry: 14, speed: 0.6, spokes: 8, paddles: 12 },
     { type: 'frames', id: 'rue_mammoth', fade: false, fps: 0.7, seq: [-1, 0, 0, -1, 1, 1, 2, -1] },
-    { type: 'frames', id: 'rue_flowers', fps: 1.3 }, { type: 'frames', id: 'rue_grass', fps: 1.1, offset: 0.7 }
+    { type: 'frames', id: 'rue_flowers', fps: 1.3, seq: [-1, 0, 2, 0] }, { type: 'frames', id: 'rue_grass', fps: 1.1, offset: 0.7 }
   ],
   ents: [
     { id: 'merchant', spr: 'merchant', x: 72, y: 214, hot: true, hit: [48, 160, 100, 190], at: [136, 238], z: -50 },

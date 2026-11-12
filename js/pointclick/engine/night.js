@@ -94,10 +94,11 @@ function drawBike(c, x, y, t, sc = 0.8) {
   c.restore();
 }
 function flyby(g, c, n, sk) {
-  const e = n.eti; if (!e || !sk || !sk.moon) return; const u = (g.now - e.t0) / 8; if (u < 0 || u > 1) return;
-  const [mx, my] = sk.moon, um = (mx + 30) / 540, x = -30 + 540 * u, k = (u - um) / Math.max(um, 1 - um), y = my + 6 + 78 * k * k * (k < 0 ? 0.8 : 1);
+  const e = n.eti; if (!e || !sk || !sk.moon) return false; const u = (g.now - e.t0) / 8; if (u < 0 || u > 1) return false;
+  /* trajectoire haute : un arc léger qui culmine devant la lune, sans jamais descendre dans le décor */
+  const [mx, my] = sk.moon, um = (mx + 30) / 540, x = -30 + 540 * u, k = (u - um) / Math.max(um, 1 - um), y = Math.min(my + 6 + 22 * k * k, my + 24);
   if (!e.sung && u > 0.05) { e.sung = true; snd.flyby && snd.flyby(); }
-  drawBike(c, x, y, g.now, 1.05);
+  drawBike(c, x, y, g.now, 1.05); return true;
 }
 
 /* ───── mode nuit ───── */
@@ -181,8 +182,9 @@ export function drawNight(g, c) {
       c.fillStyle = 'rgba(110,140,185,0.30)'; for (const [fx, fy, fr] of [[-0.35, -0.45, 0.2], [0.2, -0.2, 0.15], [-0.1, 0.25, 0.24], [0.42, 0.3, 0.12], [-0.5, 0.1, 0.1], [0.05, -0.62, 0.1], [0.5, -0.4, 0.09]]) { c.beginPath(); c.arc(mx + fx * R, my + fy * R, fr * R, 0, 7); c.fill(); } }
     c.restore();
   }
-  if (sk && sk.moon && va > 0) { occludeTint(c, sk, sk.moon[0] - 70, sk.moon[1] - 70, 140, 140, `rgb(${255 - a * 215 | 0},${255 - a * 200 | 0},${255 - a * 120 | 0})`); }   /* la lune passe derrière les arbres */
-  flyby(g, c, n, sk);
+  /* le vélo passe dans le ciel, comme la lune : tous deux derrière le décor proche (arbres, falaise, toits), repeint par-dessus */
+  const bike = flyby(g, c, n, sk);
+  if (sk && sk.moon && va > 0) { const tint = `rgb(${255 - a * 215 | 0},${255 - a * 200 | 0},${255 - a * 120 | 0})`; if (bike) occludeTint(c, sk, 0, 0, W, SKY_H, tint); else occludeTint(c, sk, sk.moon[0] - 70, sk.moon[1] - 70, 140, 140, tint); }
   const vg = c.createRadialGradient(W / 2, H / 2, 70, W / 2, H / 2, 300); vg.addColorStop(0, 'rgba(0,0,10,0)'); vg.addColorStop(1, `rgba(0,0,10,${a * 0.55})`); c.fillStyle = vg; c.fillRect(0, 0, W, H);
   /* z z z au-dessus des dormeurs */
   c.save(); c.font = '12px VT323, monospace'; c.fillStyle = '#dfe8ff';
