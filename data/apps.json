@@ -614,15 +614,14 @@
    "desk": true,
    "demo": "mTAB",
    "shots": 3,
-   "download": false,
-   "version": "",
+   "download": true,
+   "version": "1.0.0",
    "tag": {
     "fr": "Le sélecteur de fenêtres de macOS : aperçus, recherche, raccourcis.",
     "en": "A window switcher for macOS: previews, search, shortcuts.",
     "es": "Un selector de ventanas para macOS: vistas previas, búsqueda y atajos.",
     "it": "Un selettore di finestre per macOS: anteprime, ricerca e scorciatoie."
-   },
-   "src": false
+   }
   },
   {
    "id": "CAREERDeSK",
