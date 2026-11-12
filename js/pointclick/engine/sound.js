@@ -156,7 +156,7 @@ function stopTrack() {
   cur = null;
 }
 /* musiques enregistrées (Google Flow Music) : boucle sans couture assets/pointclick/music/<id>.mp3 ; sinon la piste synthétisée */
-const FILES = { rue: 0.55, wood: 0.55 }, fileCache = {};
+const FILES = { rue: 0.55, wood: 0.55, mill: 0.55, meadow: 0.55, market: 0.55, gate: 0.55, house: 0.55, ford: 0.55, hall: 0.55, party: 0.55 }, fileCache = {};
 async function fileBuf(id) {
   if (fileCache[id]) return fileCache[id];
   const r = await fetch(`assets/pointclick/music/${id}.mp3`); if (!r.ok) throw new Error('music'); return (fileCache[id] = await ctx.decodeAudioData(await r.arrayBuffer()));
