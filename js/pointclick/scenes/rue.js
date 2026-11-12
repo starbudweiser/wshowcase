@@ -21,13 +21,11 @@ export default {
   /* décor vivant : dragon qui vole, oiseaux, rivière, roue du moulin, mammouth qui respire, fleurs et herbes dans le vent */
   ambient: [
     { type: 'dragon', y: 8, period: 36, offset: 8, scale: 0.95, drop: 8 },
-    { type: 'birds', n: 5, y0: 16, y1: 80, speed: 12, seed: 4 },
-    { type: 'water', poly: [[395, 198], [420, 190], [450, 192], [470, 198], [470, 218], [450, 226], [420, 228], [400, 218]], amp: 1.4, seed: 2 },
-    { type: 'water', poly: [[330, 158], [352, 156], [385, 158], [392, 166], [360, 168], [335, 166]], amp: 1.0, seed: 9, glints: 8 },
-    { type: 'wheel', cx: 466, cy: 152, r: 12, speed: 0.9 },
-    { type: 'bob', rect: [388, 130, 418, 160], amp: 0.04, speed: 1.2 },
-    { type: 'sway', rect: [380, 226, 480, 268], amp: 1.8, speed: 1.6 },
-    { type: 'sway', rect: [270, 238, 380, 268], amp: 1.2, speed: 1.3, phase: 2 }
+    { type: 'flock', n: 5, y0: 16, y1: 80, speed: 12, seed: 4 },
+    { type: 'frames', id: 'rue_river1', fps: 2.2 }, { type: 'frames', id: 'rue_river2', fps: 2, offset: 0.4 },
+    { type: 'frames', id: 'rue_wheel', fps: 1.4, seq: [0, 1, 2, -1] },
+    { type: 'frames', id: 'rue_mammoth', fps: 0.7, seq: [-1, 0, 0, -1, 1, 1, 2, -1] },
+    { type: 'frames', id: 'rue_flowers', fps: 1.3 }, { type: 'frames', id: 'rue_grass', fps: 1.1, offset: 0.7 }
   ],
   ents: [
     { id: 'merchant', spr: 'merchant', x: 72, y: 214, hot: true, hit: [48, 160, 100, 190], at: [136, 238], z: -50 },

@@ -387,3 +387,12 @@ Chaque scène atteinte est mémorisée (hors sauvegarde, elle survit à « Nouve
 par chapitre atteint : il repart au début de la scène avec l'état attendu (inventaire et drapeaux). Ajouter une scène : créer `scenes/<id>.js`,
 ajouter une ligne dans `scenes/index.js` (`CHAPTERS`, avec son état d'entrée) et les clés `ch.<id>` dans `lang/fr.js` et `lang/en.js`.
 La sauvegarde automatique (scène, drapeaux, inventaire, position) reste en place pour « Continuer ».
+
+## Sprites animés et tenues du lore (état final de cette étape)
+
+- **Tenues** : héros (casque de fer à cornes, plastron clouté, manteau de fourrure, bouclier), marchand nordique (tunique à col de fourrure, tablier, clés), garde de Blancherive (casque de fer, cotte de mailles, tabard au cheval blanc), cheval sellé. `tools/gen_anim.sh`.
+- **Personnages animés par images** (`data/sheets.js`, table `ANIM`, état repos / parole / marche choisi par `Game.frame()`) : héros (marche en 4 temps, face, parole), marchand,
+  garde, poule, cheval, géant, Nazim, aveugles (tâtonnement) et leur danse une fois éclairés. Les images d'un personnage partagent l'échelle et sont recentrées sur leur centre de masse.
+- **Décor animé par images** (`tools/gen_regions.py` -> `assets/pointclick/anim/`, type d'ambiance `frames`) : rivières, roues de moulin, mammouth, flammes, herbes et fleurs.
+  Oiseaux (`flock`), fumée (`puffs`) et dragon à 4 poses d'ailes sont aussi des sprites (`tools/gen_anim2.sh`). Les anciens effets par déformation de pixels (water, wheel, sway, bob) ne sont plus utilisés.
+- Correctif du détourage : les trous du masque (peau proche du fond magenta) sont comblés, sinon des « nervures » noires apparaissaient.

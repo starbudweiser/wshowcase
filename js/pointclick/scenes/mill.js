@@ -21,12 +21,11 @@ export default {
   ],
   ambient: [
     { type: 'dragon', y: 10, period: 40, offset: 14, scale: 0.9, drop: 6 },
-    { type: 'birds', n: 4, y0: 20, y1: 90, speed: 11, seed: 8 },
-    { type: 'wheel', cx: 162, cy: 150, r: 30, speed: 0.8 },
-    { type: 'water', poly: [[300, 190], [345, 182], [420, 180], [480, 192], [480, 228], [440, 224], [395, 214], [345, 206], [310, 200]], amp: 1.4, seed: 6, glints: 16 },
-    { type: 'smoke', x: 103, y: 48, h: 30, wind: 12, n: 9 },
-    { type: 'sway', rect: [0, 190, 116, 214], amp: 1.0, speed: 1.4 },
-    { type: 'sway', rect: [100, 236, 300, 268], amp: 1.0, speed: 1.2, phase: 1 }
+    { type: 'flock', n: 4, y0: 20, y1: 90, speed: 11, seed: 8 },
+    { type: 'frames', id: 'mill_wheel', fps: 1.6, seq: [0, 1, 2, -1] },
+    { type: 'frames', id: 'mill_river', fps: 2.2 },
+    { type: 'puffs', x: 103, y: 50, h: 32, wind: 12, n: 7 },
+    { type: 'frames', id: 'mill_garden', fps: 1.2 }, { type: 'frames', id: 'mill_grass', fps: 1.1, offset: 0.8 }
   ],
   ents: [
     { id: 'horse', spr: 'horse', x: 252, y: 226, hot: true, at: [214, 236] },

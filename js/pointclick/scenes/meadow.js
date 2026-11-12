@@ -18,12 +18,11 @@ export default {
   ],
   ambient: [
     { type: 'dragon', y: 12, period: 46, offset: 22, scale: 0.9, drop: 6 },
-    { type: 'birds', n: 4, y0: 14, y1: 80, speed: 12, seed: 11 },
+    { type: 'flock', n: 4, y0: 14, y1: 80, speed: 12, seed: 11 },
     { type: 'orbit', spr: 'bucket', id: 'satellite', scale: 0.4, y: 30, arc: 10, period: 64, offset: 30, spin: 1.1 },
-    { type: 'smoke', x: 139, y: 214, h: 42, wind: 8, n: 11 },
-    { type: 'glow', x: 139, y: 222, r: 26 },
-    { type: 'sway', rect: [0, 236, 480, 268], amp: 1.1, speed: 1.3 },
-    { type: 'sway', rect: [230, 140, 480, 184], amp: 0.8, speed: 1.0, phase: 2 }
+    { type: 'frames', id: 'meadow_fire', fps: 7, seq: [0, 1, 2, 1] },
+    { type: 'puffs', x: 140, y: 212, h: 44, wind: 8, n: 8 },
+    { type: 'frames', id: 'meadow_grass', fps: 1.1 }
   ],
   ents: [
     { id: 'giant', spr: 'giant', x: GIANT[0], y: GIANT[1], scale: 0.78, hot: true, at: [GIANT[0] - 52, GIANT[1] + 8] },
