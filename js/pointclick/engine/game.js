@@ -239,7 +239,7 @@ export class Game {
   bark(who, key, ms = 2800, force = false) {
     const e = this.ent(who); if (!e || (this.locked && !force) || this.titleEl) return;
     const b = el('div', 'pc-b', this.T(key)); b.style.color = COLORS[who] || '#fff'; this.ov.append(b);
-    const [ax, ay] = this.headPos(e); this.placeBubble(b, ax, ay); const au = this.voicePlay(key, this.T.idx), bk = { b, who, end: this.now + ms / 1000, au }; this.barks.push(bk); if (au) au.addEventListener('loadedmetadata', () => { bk.end = Math.max(bk.end, this.now + au.duration + 0.2); }); else snd.blip('hero');
+    const [ax, ay] = this.headPos(e); this.placeBubble(b, ax, ay); const au = this.voicePlay(key, this.T.idx), bk = { b, who, end: this.now + ms / 1000, au }; this.barks.push(bk); if (au) au.addEventListener('loadedmetadata', () => { bk.end = Math.max(bk.end, this.now + au.duration + 0.2); });
   }
   clearBarks() { this.barks.forEach(k => { k.b.remove(); if (k.au) k.au.pause(); }); this.barks = []; }
   toast(title, text) {
@@ -349,7 +349,6 @@ export class Game {
     }
     this.ents.forEach(e => {
       if (e.goal) { const [gx, gy, sp] = e.goal, dx = gx - e.x, dy = gy - e.y, d = Math.hypot(dx, dy), st = sp * dt; if (d <= st) { e.x = gx; e.y = gy; e.goal = null; } else { e.x += dx / d * st; e.y += dy / d * st; if (ANIM[e.spr] && ANIM[e.spr].walk && Math.abs(dx) > 0.3) e.flip = dx < 0; } }
-      if (e.talk && this.now >= this.nextBlip) { snd.blip(e.talk); this.nextBlip = this.now + 0.07; }
     });
     for (let i = this.barks.length - 1; i >= 0; i--) { const k = this.barks[i], e = this.ent(k.who); if (!e || this.now > k.end) { k.b.remove(); this.barks.splice(i, 1); } else { const [ax, ay] = this.headPos(e); this.placeBubble(k.b, ax, ay); } }
     if (this.scene && this.scene.tick) this.scene.tick(this, dt);
