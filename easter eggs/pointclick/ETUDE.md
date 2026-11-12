@@ -415,4 +415,5 @@ Chaque scène a son « aveugle » (Fiat lux = 10 sur 10) et un enchaînement par
 | 10 | `party` La fête des quinze ans | Le dragon allume les quinze bougies ; déclaration d'amour à Skyrim ; fin du jeu (`end10`) |
 
 Aveugles : chou (garçon de ferme), casque (veilleur), panier, botte (barde), champignon (ermite), bannière (servante), chapeau de fête (tambour).
-Limites : un seul sprite par aveugle (pas d'animation de repos ni de danse par images), pas de décor animé par images dans ces scènes (dragon, oiseaux et fumées seulement).
+Mises à jour (même jour) : chaque aveugle a 2 images de tâtonnement et 2 de danse (`tools/gen_anim3.sh`) ; 16 zones de décor animées par images (flammes, eau, brume, bannières, torches, lanternes, feux d'artifice : `tools/gen_regions.py`, lancé par `tools/chain2.sh`) ; musiques recalées sur la bande originale (tempo, tonalité et accords relevés avec librosa, mélodies originales dans `sound.js`) ; échelle des personnages recalée dans la maison, la salle et la porte (`persp`).
+Règle d'échelle : choisir `persp` pour qu'un adulte mesure environ 70 à 85 % d'une porte à sa profondeur.

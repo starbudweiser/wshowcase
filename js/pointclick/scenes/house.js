@@ -3,7 +3,7 @@ import { BLINDS, blindEnt, blindEnter, blindTick, blindOn } from './blind.js';
 const BL = BLINDS.house, MAN = [392, 240], AWAY = [146, 250];
 
 export default {
-  id: 'house', bg: 'house.png', persp: [200, 0.72, 268, 1.0],
+  id: 'house', bg: 'house.png', persp: [205, 1.1, 268, 1.6],
   walk: [[[96, 268], [124, 226], [200, 208], [340, 208], [404, 226], [432, 268]]],
   fg: [],
   start: { x: 120, y: 256, dir: 'r' },
@@ -12,7 +12,10 @@ export default {
     { id: 'hbed', rect: [188, 124, 312, 186], at: [250, 208] }, { id: 'hwindow', rect: [212, 82, 260, 124], at: [236, 208] },
     { id: 'hshelf', rect: [326, 78, 382, 210], at: [352, 224] }, { id: 'hdoor', rect: [384, 56, 456, 232], at: [414, 240] }
   ],
-  ambient: [],
+  ambient: [
+    { type: 'frames', id: 'house_fire', fps: 7, seq: [0, 1, 2, 1] },
+    { type: 'frames', id: 'house_candle', fps: 6, seq: [0, 1, 2, 1], offset: 0.2 }
+  ],
   ents: [
     { id: 'mannequin', spr: 'mannequin', x: MAN[0], y: MAN[1], hot: true, at: [MAN[0] - 40, MAN[1] + 8] },
     blindEnt(BL)
@@ -25,7 +28,7 @@ export default {
   tick(g) { blindTick(g, BL); },
 
   async intro(g) {
-    await g.fade(0, 900); await g.walkTo(170, 250); g.hero.front = true;
+    await g.fade(0, 900); await g.walkTo(150, 252); g.hero.front = true;
     await g.say('hero', 's6.intro1'); await g.say('hero', 's6.intro2'); g.hero.front = false;
   },
 

@@ -3,7 +3,7 @@ import { BLINDS, blindEnt, blindEnter, blindTick, blindOn } from './blind.js';
 const BL = BLINDS.hall, DOOR = [362, 172], AWAY = [150, 236];
 
 export default {
-  id: 'hall', bg: 'hall.png', persp: [165, 0.45, 268, 1.0],
+  id: 'hall', bg: 'hall.png', persp: [172, 0.75, 268, 1.45],
   walk: [[[40, 268], [130, 232], [260, 196], [330, 174], [396, 170], [432, 192], [470, 232], [470, 268]]],
   fg: [],
   start: { x: 250, y: 232, dir: 'r' },
@@ -12,7 +12,10 @@ export default {
     { id: 'hbanner', rect: [100, 20, 262, 132] }, { id: 'htorch', rect: [28, 68, 64, 162], at: [78, 232], dir: 'l' },
     { id: 'hrug', rect: [200, 190, 410, 268], at: [300, 250] }, { id: 'hchest', rect: [22, 206, 88, 262], at: [104, 248], dir: 'l' }
   ],
-  ambient: [],
+  ambient: [
+    { type: 'frames', id: 'hall_torch_l', fps: 7, seq: [0, 1, 2, 1] },
+    { type: 'frames', id: 'hall_torch_r', fps: 7, seq: [0, 1, 2, 1], offset: 0.3 }
+  ],
   ents: [
     { id: 'follower', spr: 'follower', x: DOOR[0], y: DOOR[1], hot: true, at: [DOOR[0] - 22, DOOR[1] + 10] },
     blindEnt(BL)

@@ -58,4 +58,4 @@ Q follower ch_follower.png 98
 Q anvil item_anvil.png 22 40
 Q cake ch_cake.png 76
 Q cake_lit var_cake_lit.png 0 --like cake
-for k in cabbage helmet basket boot mushroom banner partyhat; do Q blind_$k blind_$k.png 86; Q lit_$k lit_$k.png 0 --like blind_$k; done
+for k in cabbage helmet basket boot mushroom banner partyhat; do Q blind_$k blind_$k.png 86; Q lit_$k lit_$k.png 0 --like blind_$k; Q blind_${k}2 an_${k}_grope2.png 0 --like blind_$k; Q lit_${k}2 an_${k}_dance2.png 0 --like blind_$k; done

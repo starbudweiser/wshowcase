@@ -19,6 +19,8 @@ f('hero', ['walkA', 'walkP', 'walkB', 'stand', 'talk', 'idle2']); f('merchant', 
 f('hen', ['peck', 'walk']); f('horse', ['idle2', 'walkA', 'walkB']); f('giant', ['idle2', 'talk', 'walkA', 'walkB']); f('nazim', ['idle2', 'talk']);
 f('blind', ['pot2', 'sack2', 'hat2']); f('lit', ['pot2', 'sack2', 'hat2']);
 
+const NEWB = ['cabbage', 'helmet', 'basket', 'boot', 'mushroom', 'banner', 'partyhat'];
+NEWB.forEach(k => { SPR['blind.' + k + '2'] = 'blind_' + k + '2'; SPR['lit.' + k + '2'] = 'lit_' + k + '2'; });
 export const ANIM = {
   'merchant': { idle: ['merchant', 'merchant.idle2'], talk: ['merchant.talk1', 'merchant.talk2', 'merchant'], fps: { idle: 0.7, talk: 6 } },
   'guard': { idle: ['guard', 'guard.idle2'], talk: ['guard', 'guard.talk'], walk: ['guard.walkA', 'guard', 'guard.walkB', 'guard'], fps: { idle: 0.5, talk: 6, walk: 5 } },
@@ -31,6 +33,10 @@ export const ANIM = {
   'lit.sack': { idle: ['lit.sack', 'lit.sack2'], walk: ['lit.sack', 'lit.sack2'], fps: { idle: 5, walk: 6 } },
   'lit.hat': { idle: ['lit.hat', 'lit.hat2'], walk: ['lit.hat', 'lit.hat2'], fps: { idle: 5, walk: 6 } }
 };
+NEWB.forEach(k => {
+  ANIM['blind.' + k] = { idle: ['blind.' + k, 'blind.' + k + '2'], fps: { idle: 1.6 } };
+  ANIM['lit.' + k] = { idle: ['lit.' + k, 'lit.' + k + '2'], walk: ['lit.' + k, 'lit.' + k + '2'], fps: { idle: 5, walk: 6 } };
+});
 /* le héros : marche en 4 temps, debout de profil, face (repos / parole) */
 export const HERO = { walk: ['hero.walkA', 'hero.walkP', 'hero.walkB', 'hero.walkP'], stand: 'hero.stand', idleFront: ['hero.front', 'hero.idle2'], talk: ['hero.front', 'hero.talk'] };
 export const ITEMS = { bucket: { spr: 'bucket' }, honey: { spr: 'honey' }, carrot: { spr: 'carrot' }, cheese: { spr: 'cheese' }, cabbage: { spr: 'cabbage' }, arrow: { spr: 'arrow' }, pumpkin: { spr: 'pumpkin' }, anvil: { spr: 'anvil' } };

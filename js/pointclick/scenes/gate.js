@@ -3,7 +3,7 @@ import { BLINDS, blindEnt, blindEnter, blindTick, blindOn } from './blind.js';
 const BL = BLINDS.gate;
 
 export default {
-  id: 'gate', bg: 'gate.png', persp: [200, 0.62, 268, 1.0],
+  id: 'gate', bg: 'gate.png', persp: [200, 0.45, 268, 0.8],
   walk: [[[30, 268], [48, 240], [170, 228], [300, 226], [410, 236], [450, 268]]],
   fg: [],
   start: { x: 60, y: 256, dir: 'r' },
@@ -14,7 +14,9 @@ export default {
   ],
   ambient: [
     { type: 'dragon', y: 8, period: 48, offset: 6, scale: 0.8, drop: 6 },
-    { type: 'flock', n: 3, y0: 8, y1: 40, speed: 9, seed: 21 }
+    { type: 'flock', n: 3, y0: 8, y1: 40, speed: 9, seed: 21 },
+    { type: 'frames', id: 'gate_banner_l', fps: 2.4 },
+    { type: 'frames', id: 'gate_banner_r', fps: 2.4, offset: 0.7 }
   ],
   ents: [
     { id: 'gguard', spr: 'guard', x: 262, y: 236, hot: true, at: [236, 242] },

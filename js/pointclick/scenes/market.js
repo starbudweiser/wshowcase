@@ -16,7 +16,9 @@ export default {
   ambient: [
     { type: 'dragon', y: 14, period: 44, offset: 18, scale: 0.8, drop: 6 },
     { type: 'flock', n: 4, y0: 14, y1: 70, speed: 10, seed: 14 },
-    { type: 'puffs', x: 54, y: 16, h: 30, wind: 9, n: 6 }
+    { type: 'puffs', x: 54, y: 16, h: 30, wind: 9, n: 6 },
+    { type: 'frames', id: 'market_stream', fps: 2.2 },
+    { type: 'frames', id: 'market_lamp', fps: 6, seq: [0, 1, 2, 1] }
   ],
   ents: [
     { id: 'farmer', spr: 'farmer', x: 258, y: 224, hot: true, at: [236, 230] },

@@ -12,7 +12,10 @@ export default {
     { id: 'wpond', rect: [380, 206, 480, 262], at: [404, 240] }, { id: 'wlight', rect: [150, 0, 290, 112] }
   ],
   ambient: [
-    { type: 'flock', n: 3, y0: 10, y1: 50, speed: 7, seed: 41 }
+    { type: 'flock', n: 3, y0: 10, y1: 50, speed: 7, seed: 41 },
+    { type: 'frames', id: 'wood_pond', fps: 2.2 },
+    { type: 'frames', id: 'wood_rays', fps: 1.2 },
+    { type: 'frames', id: 'wood_spark', fps: 1.6, offset: 0.5 }
   ],
   ents: [
     { id: 'butterfly', spr: 'butterfly', x: 230, y: 150, hot: true, at: [228, 226], z: 400 },

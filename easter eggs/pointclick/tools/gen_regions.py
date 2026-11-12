@@ -32,6 +32,41 @@ CFG = {
     {'id': 'meadow_grass', 'poly': rect(0, 238, 480, 268), 'desc': WIND}]}
 }
 
+FLAME = ['the fireplace flames flickering tall and leaning left with a few sparks', 'the fireplace flames flickering low and wide with glowing embers', 'the fireplace flames tall and narrow leaning right with sparks']
+CANDLE = ['the candle flame flickering small and straight', 'the candle flame taller and leaning left', 'the candle flame leaning right with a slightly brighter glow']
+TORCH = ['the torch flame flickering tall and leaning left', 'the torch flame low and wide with embers', 'the torch flame tall and leaning right with sparks']
+BANNER = ['the hanging red banner billowing slightly with its folds shifted to the left', 'the hanging red banner with its folds shifted to the right', 'the hanging red banner fluttering with a soft wave across its length']
+MIST = ['the white mist drifting with its swirls shifted a little to the left', 'the white mist drifting with its swirls shifted a little to the right', 'the white mist thicker in new swirls']
+GLINT = ['the floating golden sparkles and fireflies in new positions', 'the floating golden sparkles and fireflies drifted upwards in other positions', 'the floating golden sparkles and fireflies drifted sideways in other positions']
+FIREW = ['the fireworks bursts in slightly different shapes with new sparkles', 'the fireworks bursts larger with new falling sparkles', 'the fireworks bursts smaller with different colors of sparkles']
+LANT = ['the lantern glow flickering brighter', 'the lantern with a dimmer warm glow swaying slightly', 'the lantern swaying slightly to the right with a bright glow']
+CFG2 = {
+  'market': {'src': 'market.png', 'items': [
+    {'id': 'market_stream', 'poly': rect(404, 236, 480, 268), 'desc': WATER},
+    {'id': 'market_lamp', 'poly': rect(76, 58, 106, 92), 'desc': LANT}]},
+  'gate': {'src': 'gate.png', 'items': [
+    {'id': 'gate_banner_l', 'poly': rect(154, 80, 184, 142), 'desc': BANNER},
+    {'id': 'gate_banner_r', 'poly': rect(328, 80, 358, 142), 'desc': BANNER}]},
+  'house': {'src': 'house.png', 'items': [
+    {'id': 'house_fire', 'poly': rect(22, 108, 100, 208), 'desc': FLAME},
+    {'id': 'house_candle', 'poly': rect(138, 124, 160, 150), 'desc': CANDLE}]},
+  'ford': {'src': 'ford.png', 'items': [
+    {'id': 'ford_water', 'poly': rect(172, 112, 292, 180), 'desc': WATER},
+    {'id': 'ford_mist', 'poly': rect(60, 62, 200, 118), 'desc': MIST}]},
+  'wood': {'src': 'wood.png', 'items': [
+    {'id': 'wood_pond', 'poly': rect(382, 208, 480, 264), 'desc': WATER},
+    {'id': 'wood_rays', 'poly': rect(150, 0, 290, 112), 'desc': GLINT},
+    {'id': 'wood_spark', 'poly': rect(300, 10, 440, 70), 'desc': GLINT}]},
+  'hall': {'src': 'hall.png', 'items': [
+    {'id': 'hall_torch_l', 'poly': rect(30, 70, 64, 150), 'desc': TORCH},
+    {'id': 'hall_torch_r', 'poly': rect(414, 92, 444, 150), 'desc': TORCH}]},
+  'party': {'src': 'party.png', 'items': [
+    {'id': 'party_fw_l', 'poly': rect(20, 0, 150, 52), 'desc': FIREW},
+    {'id': 'party_fw_r', 'poly': rect(360, 0, 470, 52), 'desc': FIREW},
+    {'id': 'party_lamp', 'poly': rect(384, 88, 440, 126), 'desc': LANT}]}
+}
+CFG.update(CFG2)
+
 
 def build(scene, cfg, idx):
     hi = Image.open(os.path.join(WORK, cfg['src'])).convert('RGB'); bgp = Image.open(os.path.join(R, 'assets', 'pointclick', scene + '.png'))

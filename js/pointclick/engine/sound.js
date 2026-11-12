@@ -105,7 +105,8 @@ const SCALES = { dor: [0, 2, 3, 5, 7, 9, 10], aeo: [0, 2, 3, 5, 7, 8, 10], mix: 
 const dg = (sc, d) => sc[((d % 7) + 7) % 7] + 12 * Math.floor(d / 7);
 function mkTrack(o) {
   const sc = SCALES[o.sc], B = o.bar / o.beats; let s = o.seed; const r = () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296;
-  const mel = [0, 1].map(() => o.prog.map((c, b) => { let d = c + 7 + (r() * 3 | 0), t = 0; const out = []; while (t < o.beats - 0.01) { const l = Math.min(r() < 0.45 ? 1 : r() < 0.6 ? 2 : 0.5, o.beats - t); if (r() > o.rest) out.push([d, t, l]); d = Math.max(c + 3, Math.min(c + 12, d + (r() * 5 | 0) - 2)); t += l; } if (b === 7 && out.length) out[out.length - 1][0] = 7; return out; }));
+  const parse = bar => { let t = 0; const out = []; for (const k of bar.split(' ')) { const [d, l] = k.split(':'), L = +l; if (d !== 'r') out.push([+d, t, L]); t += L; } return out; };
+  const mel = o.mel ? o.mel.map(ph => ph.map(parse)) : [0, 1].map(() => o.prog.map((c, b) => { let d = c + 7 + (r() * 3 | 0), t = 0; const out = []; while (t < o.beats - 0.01) { const l = Math.min(r() < 0.45 ? 1 : r() < 0.6 ? 2 : 0.5, o.beats - t); if (r() > o.rest) out.push([d, t, l]); d = Math.max(c + 3, Math.min(c + 12, d + (r() * 5 | 0) - 2)); t += l; } if (b === 7 && out.length) out[out.length - 1][0] = 7; return out; }));
   return { bar: o.bar, play(i, t, I) {
     const q = i % 16, b = q & 7, A = q < 8, c = o.prog[b], R = o.root + dg(sc, c), d = o.bar * 1.04;
     I.pad(F(R), t, d, o.pad || 0.03, 0.6); I.pad(F(R + dg(sc, c + 4) - dg(sc, c)), t, d, (o.pad || 0.03) * 0.8, 0.6); I.pad(F(R - 12), t, d, 0.05, 0.6, 'sine');
@@ -118,14 +119,36 @@ function mkTrack(o) {
     else if (o.drum === 'slow') { I.drum(t, 0.26, true); if (b & 1) I.drum(t + 2 * B, 0.18, true); }
   } };
 }
+/* Réglages relevés sur la bande originale (tempo, tonalité, enchaînement d'accords, texture) ; mélodies originales écrites pour le jeu. */
 Object.assign(TRACKS, {
-  market: mkTrack({ root: 50, sc: 'mix', bar: 2.4, beats: 4, prog: [0, 3, 4, 0, 0, 3, 4, 0], lead: 'flute', lead2: 'fiddle', arp: 0.05, rest: 0.12, drum: 'jig', seed: 4 }),
-  gate: mkTrack({ root: 45, sc: 'aeo', bar: 3.2, beats: 4, prog: [0, 0, 5, 4, 0, 3, 4, 0], lead: 'brass', lead2: 'brass', rest: 0.3, drum: 'march', pad: 0.04, seed: 5, choir: true }),
-  house: mkTrack({ root: 53, sc: 'lyd', bar: 3.6, beats: 4, prog: [0, 4, 3, 0, 0, 4, 1, 0], lead: 'flute', arp: 0.06, rest: 0.4, drum: 'soft', seed: 6 }),
-  ford: mkTrack({ root: 40, sc: 'phr', bar: 4.4, beats: 4, prog: [0, 1, 0, 5, 0, 1, 5, 0], lead: 'flute', low: true, rest: 0.55, drum: 'slow', pad: 0.05, seed: 7, choir: true }),
-  wood: mkTrack({ root: 55, sc: 'lyd', bar: 3.4, beats: 4, prog: [0, 2, 4, 1, 0, 3, 4, 0], lead: 'pluck', lead2: 'flute', arp: 0.07, rest: 0.25, drum: 'none', pad: 0.035, seed: 8 }),
-  hall: mkTrack({ root: 47, sc: 'dor', bar: 3.8, beats: 4, prog: [0, 3, 4, 0, 0, 5, 4, 0], lead: 'choir', lead2: 'brass', rest: 0.35, drum: 'slow', pad: 0.045, seed: 9 }),
-  party: mkTrack({ root: 55, sc: 'maj', bar: 1.9, beats: 4, prog: [0, 3, 4, 0, 0, 3, 4, 0], lead: 'fiddle', arp: 0.06, rest: 0.08, drum: 'jig', seed: 10, choir: true })
+  /* Marché ← « Streets of Whiterun » : folk tranquille à ~92, I–vi–V, flûte puis violon, luth, tambour étouffé */
+  market: mkTrack({ root: 52, sc: 'maj', bar: 2.6, beats: 4, prog: [0, 5, 4, 4, 0, 5, 3, 4], lead: 'flute', lead2: 'fiddle', arp: 0.05, drum: 'soft', mel: [
+    ['9:1 11:1 12:2', '11:1 9:1 10:2', '9:1 8:1 7:2', '8:3 r:1', '9:1 11:1 12:1 14:1', '13:1 12:1 11:2', '9:2 8:1 7:1', '7:3 r:1'],
+    ['11:1 12:1 14:2', '13:1 12:1 11:2', '12:1 11:1 9:2', '11:3 r:1', '11:1 12:1 14:1 12:1', '13:1 12:1 11:1 9:1', '9:2 8:1 7:1', '7:3 r:1']] }),
+  /* Porte ← « The City Gates » : sol mineur à ~86, i–bIII–iv–bVII, cuivres longs, chœur d'hommes, tambours rares */
+  gate: mkTrack({ root: 43, sc: 'aeo', bar: 2.8, beats: 4, prog: [0, 0, 2, 0, 0, 3, 6, 0], lead: 'brass', lead2: 'brass', drum: 'slow', pad: 0.05, choir: true, mel: [
+    ['7:2 9:2', '11:3 10:1', '9:2 10:1 9:1', '7:4', '7:1 9:1 11:2', '12:2 11:1 10:1', '9:2 10:1 8:1', '7:3 r:1'],
+    ['11:2 13:2', '14:3 13:1', '13:2 12:1 11:1', '9:4', '11:1 12:1 14:2', '15:2 14:1 13:1', '13:2 12:1 11:1', '7:4']] }),
+  /* Maison ← « A Winter's Tale » / « Around the Fire » : sol éolien lent (~60), i–iv–bVII, flûte et violon très tenus */
+  house: mkTrack({ root: 43, sc: 'aeo', bar: 3.6, beats: 4, prog: [0, 0, 3, 6, 0, 0, 3, 0], lead: 'flute', lead2: 'fiddle', arp: 0.05, drum: 'none', pad: 0.035, mel: [
+    ['9:3 r:1', '8:2 7:2', '10:2 9:2', '8:3 r:1', '9:2 11:2', '10:3 9:1', '8:2 7:1 6:1', '7:4'],
+    ['11:3 r:1', '11:2 10:2', '12:2 11:2', '10:3 r:1', '11:2 13:2', '12:3 11:1', '10:2 9:2', '7:4']] }),
+  /* Gué ← « Silent Footsteps » / « Night Without Stars » : fa mineur, i–bVI–bVII, notes rares, chœur grave, cœur qui bat */
+  ford: mkTrack({ root: 41, sc: 'aeo', bar: 3.8, beats: 4, prog: [0, 5, 6, 0, 0, 5, 6, 5], lead: 'flute', lead2: 'choir', low: true, drum: 'slow', pad: 0.05, choir: true, mel: [
+    ['7:2 r:2', '9:2 8:2', '7:3 r:1', 'r:1 7:1 8:1 9:1', '10:2 9:2', '8:2 7:2', '6:2 5:2', '7:4'],
+    ['11:4', '12:2 11:2', '10:4', '9:2 8:2', '11:2 12:2', '13:2 12:2', '11:2 10:2', '7:4']] }),
+  /* Bois ← « Aurora » / « Secunda » : la mineur, i–bVI–bVII, harpe qui ruisselle, voix éthérées, aucune percussion */
+  wood: mkTrack({ root: 45, sc: 'aeo', bar: 3.4, beats: 4, prog: [0, 5, 6, 0, 0, 5, 6, 4], lead: 'pluck', lead2: 'choir', arp: 0.07, drum: 'none', pad: 0.04, choir: true, mel: [
+    ['7:0.5 9:0.5 11:0.5 14:0.5 11:1 9:1', '12:0.5 14:0.5 12:0.5 11:0.5 9:2', '11:0.5 13:0.5 11:0.5 9:0.5 8:2', '7:0.5 9:0.5 11:0.5 9:0.5 7:2', '7:0.5 9:0.5 11:0.5 14:0.5 12:1 11:1', '12:0.5 14:0.5 12:0.5 11:0.5 10:2', '13:0.5 12:0.5 11:0.5 10:0.5 9:2', '7:3 r:1'],
+    ['11:4', '12:2 11:2', '13:2 12:2', '11:4', '14:2 12:2', '13:2 12:2', '11:2 9:2', '7:4']] }),
+  /* Salle ← « Dragonsreach » : ré mineur épique en demi-temps, i–bVII–v–bVI, chœur puis cuivres, grosse caisse */
+  hall: mkTrack({ root: 38, sc: 'aeo', bar: 4.1, beats: 4, prog: [0, 6, 4, 5, 0, 6, 5, 4], lead: 'choir', lead2: 'brass', drum: 'slow', pad: 0.05, choir: true, mel: [
+    ['7:2 9:2', '11:3 10:1', '9:2 11:2', '12:2 11:2', '7:2 9:2', '11:2 13:2', '12:2 11:1 10:1', '7:4'],
+    ['14:1.5 13:0.5 11:2', '13:2 11:2', '12:1.5 11:0.5 9:2', '11:2 10:2', '14:1.5 13:0.5 11:2', '13:2 14:2', '12:2 11:1 10:1', '7:4']] }),
+  /* Fête ← « The Bannered Mare » : gigue de taverne à 6/8, sol mixolydien, violon, luth, tambour, chœur à la reprise */
+  party: mkTrack({ root: 55, sc: 'mix', bar: 1.9, beats: 6, prog: [0, 6, 3, 0, 0, 6, 3, 0], lead: 'fiddle', arp: 0.06, drum: 'jig', choir: true, mel: [
+    ['7:1 9:1 11:1 9:1 7:1 9:1', '10:1 12:1 14:1 12:1 10:1 12:1', '11:1 11:1 10:1 9:1 8:1 9:1', '8:1 9:1 10:1 11:1 10:1 8:1', '7:1 9:1 11:1 9:1 7:1 9:1', '12:1 11:1 10:1 12:1 11:1 10:1', '11:1 10:1 9:1 8:1 9:1 10:1', '7:3 r:3'],
+    ['11:1 13:1 14:1 13:1 11:1 13:1', '14:1 12:1 14:1 12:1 14:1 12:1', '14:1 13:1 12:1 11:1 12:1 13:1', '12:1 11:1 10:1 11:1 12:1 10:1', '11:1 13:1 14:1 13:1 11:1 13:1', '14:1 12:1 11:1 14:1 12:1 11:1', '12:1 11:1 10:1 9:1 10:1 11:1', '7:3 r:3']] })
 });
 function stopTrack() {
   if (musicTimer) { clearInterval(musicTimer); musicTimer = null; }

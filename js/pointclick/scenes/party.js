@@ -13,7 +13,10 @@ export default {
   ],
   ambient: [
     { type: 'dragon', y: 26, period: 36, offset: 8, scale: 0.9, drop: 6 },
-    { type: 'flock', n: 3, y0: 40, y1: 90, speed: 8, seed: 51 }
+    { type: 'flock', n: 3, y0: 40, y1: 90, speed: 8, seed: 51 },
+    { type: 'frames', id: 'party_fw_l', fps: 1.6 },
+    { type: 'frames', id: 'party_fw_r', fps: 1.6, offset: 0.5 },
+    { type: 'frames', id: 'party_lamp', fps: 4, seq: [0, 1, 2, 1] }
   ],
   ents: [
     { id: 'cake', spr: 'cake', x: CAKE[0], y: CAKE[1], hot: true, at: [CAKE[0], 258], scale: 0.9, z: 2 },

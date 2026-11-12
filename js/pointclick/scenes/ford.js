@@ -13,7 +13,9 @@ export default {
   ],
   ambient: [
     { type: 'flock', n: 5, y0: 20, y1: 80, speed: 8, seed: 31 },
-    { type: 'dragon', y: 18, period: 52, offset: 30, scale: 0.8, drop: 6 }
+    { type: 'dragon', y: 18, period: 52, offset: 30, scale: 0.8, drop: 6 },
+    { type: 'frames', id: 'ford_water', fps: 1.8 },
+    { type: 'frames', id: 'ford_mist', fps: 0.9 }
   ],
   ents: [
     { id: 'horseman', spr: 'horseman', x: 340, y: 216, hot: true, at: [296, 232] },
