@@ -99,6 +99,34 @@ const TRACKS = {
     if (b === 7 || (!A && b === 3)) [0, 0.25, 0.5, 0.75].forEach((x, k) => I.drum(t + 3 * B + x * B, 0.1 + k * 0.05, true));
   } }
 };
+/* Scènes 4 à 10 : pistes générées à partir de quelques réglages (gamme, progression, instruments, rythme), mélodie tirée d'une graine fixe.
+   Même forme que les pistes à la main : 16 mesures AB, tonique à la fin de chaque phrase. */
+const SCALES = { dor: [0, 2, 3, 5, 7, 9, 10], aeo: [0, 2, 3, 5, 7, 8, 10], mix: [0, 2, 4, 5, 7, 9, 10], lyd: [0, 2, 4, 6, 7, 9, 11], phr: [0, 1, 3, 5, 7, 8, 10], maj: [0, 2, 4, 5, 7, 9, 11] };
+const dg = (sc, d) => sc[((d % 7) + 7) % 7] + 12 * Math.floor(d / 7);
+function mkTrack(o) {
+  const sc = SCALES[o.sc], B = o.bar / o.beats; let s = o.seed; const r = () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296;
+  const mel = [0, 1].map(() => o.prog.map((c, b) => { let d = c + 7 + (r() * 3 | 0), t = 0; const out = []; while (t < o.beats - 0.01) { const l = Math.min(r() < 0.45 ? 1 : r() < 0.6 ? 2 : 0.5, o.beats - t); if (r() > o.rest) out.push([d, t, l]); d = Math.max(c + 3, Math.min(c + 12, d + (r() * 5 | 0) - 2)); t += l; } if (b === 7 && out.length) out[out.length - 1][0] = 7; return out; }));
+  return { bar: o.bar, play(i, t, I) {
+    const q = i % 16, b = q & 7, A = q < 8, c = o.prog[b], R = o.root + dg(sc, c), d = o.bar * 1.04;
+    I.pad(F(R), t, d, o.pad || 0.03, 0.6); I.pad(F(R + dg(sc, c + 4) - dg(sc, c)), t, d, (o.pad || 0.03) * 0.8, 0.6); I.pad(F(R - 12), t, d, 0.05, 0.6, 'sine');
+    if (o.arp) for (let k = 0; k < o.beats * 2; k++) I.pluck(F(R + 12 + dg(sc, [0, 2, 4, 2][k % 4] + c) - dg(sc, c)), t + k * B / 2, 0.5, o.arp);
+    mel[A ? 0 : 1][b].forEach(([n, st, l]) => I[A ? o.lead : (o.lead2 || o.lead)](F(o.root + dg(sc, n) - (o.low ? 12 : 0)), t + st * B, l * B * 0.95, A ? 0.075 : 0.085));
+    if (!A && o.choir) I.choir(F(R + 12), t, d, 0.04);
+    if (o.drum === 'march') { I.drum(t, 0.24, true); I.drum(t + B, 0.1); I.drum(t + 2 * B, 0.2, true); I.drum(t + 3 * B, 0.1); I.drum(t + 3.5 * B, 0.08); }
+    else if (o.drum === 'jig') { I.drum(t, 0.24); I.drum(t + B * o.beats / 2, 0.18); I.drum(t + B * 1.5, 0.07); }
+    else if (o.drum === 'soft') { I.drum(t, 0.1); }
+    else if (o.drum === 'slow') { I.drum(t, 0.26, true); if (b & 1) I.drum(t + 2 * B, 0.18, true); }
+  } };
+}
+Object.assign(TRACKS, {
+  market: mkTrack({ root: 50, sc: 'mix', bar: 2.4, beats: 4, prog: [0, 3, 4, 0, 0, 3, 4, 0], lead: 'flute', lead2: 'fiddle', arp: 0.05, rest: 0.12, drum: 'jig', seed: 4 }),
+  gate: mkTrack({ root: 45, sc: 'aeo', bar: 3.2, beats: 4, prog: [0, 0, 5, 4, 0, 3, 4, 0], lead: 'brass', lead2: 'brass', rest: 0.3, drum: 'march', pad: 0.04, seed: 5, choir: true }),
+  house: mkTrack({ root: 53, sc: 'lyd', bar: 3.6, beats: 4, prog: [0, 4, 3, 0, 0, 4, 1, 0], lead: 'flute', arp: 0.06, rest: 0.4, drum: 'soft', seed: 6 }),
+  ford: mkTrack({ root: 40, sc: 'phr', bar: 4.4, beats: 4, prog: [0, 1, 0, 5, 0, 1, 5, 0], lead: 'flute', low: true, rest: 0.55, drum: 'slow', pad: 0.05, seed: 7, choir: true }),
+  wood: mkTrack({ root: 55, sc: 'lyd', bar: 3.4, beats: 4, prog: [0, 2, 4, 1, 0, 3, 4, 0], lead: 'pluck', lead2: 'flute', arp: 0.07, rest: 0.25, drum: 'none', pad: 0.035, seed: 8 }),
+  hall: mkTrack({ root: 47, sc: 'dor', bar: 3.8, beats: 4, prog: [0, 3, 4, 0, 0, 5, 4, 0], lead: 'choir', lead2: 'brass', rest: 0.35, drum: 'slow', pad: 0.045, seed: 9 }),
+  party: mkTrack({ root: 55, sc: 'maj', bar: 1.9, beats: 4, prog: [0, 3, 4, 0, 0, 3, 4, 0], lead: 'fiddle', arp: 0.06, rest: 0.08, drum: 'jig', seed: 10, choir: true })
+});
 function stopTrack() {
   if (musicTimer) { clearInterval(musicTimer); musicTimer = null; }
   if (cur && ctx) { const o = cur; try { o.bus.gain.cancelScheduledValues(ctx.currentTime); o.bus.gain.setValueAtTime(o.bus.gain.value, ctx.currentTime); o.bus.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.5); } catch {} setTimeout(() => { try { o.bus.disconnect(); } catch {} }, 1500); }

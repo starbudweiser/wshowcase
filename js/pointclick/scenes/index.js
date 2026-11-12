@@ -3,5 +3,12 @@
 export const CHAPTERS = [
   { id: 'rue', flags: {}, inv: [] },
   { id: 'mill', flags: {}, inv: [] },
-  { id: 'meadow', flags: { hasCarrot: true, friend: true, cheese: true }, inv: ['cheese'] }
+  { id: 'meadow', flags: { hasCarrot: true, friend: true, cheese: true }, inv: ['cheese'] },
+  { id: 'market', flags: {}, inv: [] },
+  { id: 'gate', flags: { cartGone: true }, inv: [] },
+  { id: 'house', flags: { guardGone: true }, inv: ['arrow'] },
+  { id: 'ford', flags: { armorMoved: true }, inv: ['arrow'] },
+  { id: 'wood', flags: { horsemanHappy: true }, inv: ['arrow'] },
+  { id: 'hall', flags: { butterflyDone: true }, inv: ['arrow'] },
+  { id: 'party', flags: { followerGone: true }, inv: ['arrow'] }
 ];

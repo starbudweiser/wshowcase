@@ -1,5 +1,7 @@
 /* Textes du jeu : français (rédigé en premier). Une valeur en tableau = réplique tirée au hasard. */
+import X from './fr2.js';
 export default {
+  ...X,
   /* interface */
   'v.walk': 'Aller vers', 'v.take': 'Prendre', 'v.use': 'Utiliser', 'v.talk': 'Parler à', 'v.look': 'Regarder', 'ui.with': 'avec',
   'ui.title': 'Le Seau de Rivebois', 'ui.sub': 'Un jeu d’aventure parodique pour les 15 ans de Skyrim : un casque à cornes, un seau et beaucoup de mauvaise foi.',

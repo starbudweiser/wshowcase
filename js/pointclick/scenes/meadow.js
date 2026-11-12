@@ -60,7 +60,7 @@ export default {
       case 'road':
         if (verb === 'walk' || verb === 'use') {
           if (!F('nazimGone')) { await g.say('hero', 's3.road.no'); return true; }
-          await g.cut(async () => { await g.say('hero', 's3.exit.yes'); await g.walkTo(396, 190); await g.end('end3'); }); return true;
+          await g.cut(async () => { await g.say('hero', 's3.exit.yes'); await g.walkTo(396, 190); await g.fade(1, 900); setTimeout(() => g.goScene('market', { intro: true }), 0); }); return true;
         }
         break;
       case 'circle': case 'ramp':

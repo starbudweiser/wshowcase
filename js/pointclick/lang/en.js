@@ -1,5 +1,7 @@
 /* Game text: English (adapted from the French, not translated word for word). An array value = a random line. */
+import X from './en2.js';
 export default {
+  ...X,
   'v.walk': 'Walk to', 'v.take': 'Pick up', 'v.use': 'Use', 'v.talk': 'Talk to', 'v.look': 'Look at', 'ui.with': 'with',
   'ui.title': 'The Bucket of Riverwood', 'ui.sub': 'A parody adventure for Skyrim’s 15th anniversary: one horned helmet, one bucket and plenty of bad faith.',
   'ui.new': 'New game', 'ui.continue': 'Continue', 'ui.resume': 'Resume', 'ui.musicOn': 'Music: on', 'ui.musicOff': 'Music: off',

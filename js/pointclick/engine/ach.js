@@ -1,7 +1,7 @@
 /* Succès du jeu, gardés à part de la sauvegarde (ils survivent à « Nouvelle partie »). */
 import { store } from '../../util.js';
 const KEY = 'pc.ach';
-export const BLINDS = ['rue', 'mill', 'meadow'];
+export const BLINDS = ['rue', 'mill', 'meadow', 'market', 'gate', 'house', 'ford', 'wood', 'hall', 'party'];
 export const getAch = () => { const a = store.get(KEY, null); return a && Array.isArray(a.lit) ? a : { lit: [], done: [], reached: a && a.reached || [] }; };
 /* un aveugle de plus éclairé ; renvoie le compte et si « Fiat lux » vient d'être débloqué */
 export function light(id) {

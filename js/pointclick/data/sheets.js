@@ -7,7 +7,13 @@ export const SPR = {
   'dragon.up': 'dragon_up', 'dragon.down': 'dragon_down', 'dragon.mid1': 'dragon_mid1', 'dragon.mid2': 'dragon_mid2',
   'bird.1': 'bird_1', 'bird.2': 'bird_2', 'bird.3': 'bird_3', 'puff': 'puff',
   'giant': 'giant', 'giant.swing': 'giant_swing', 'nazim': 'nazim',
-  'blind.pot': 'blind_pot', 'blind.sack': 'blind_sack', 'blind.hat': 'blind_hat', 'lit.pot': 'lit_pot', 'lit.sack': 'lit_sack', 'lit.hat': 'lit_hat'
+  'blind.pot': 'blind_pot', 'blind.sack': 'blind_sack', 'blind.hat': 'blind_hat', 'lit.pot': 'lit_pot', 'lit.sack': 'lit_sack', 'lit.hat': 'lit_hat',
+  /* scènes 4 à 10 */
+  'farmer': 'farmer', 'cart': 'cart', 'cabbage': 'cabbage', 'arrow': 'arrow', 'mannequin': 'mannequin', 'horseman': 'horseman', 'horseman.pumpkin': 'horseman_pumpkin', 'pumpkin': 'pumpkin',
+  'butterfly': 'butterfly', 'butterfly.2': 'butterfly2', 'follower': 'follower', 'anvil': 'anvil', 'cake': 'cake', 'cake.lit': 'cake_lit',
+  'blind.cabbage': 'blind_cabbage', 'lit.cabbage': 'lit_cabbage', 'blind.helmet': 'blind_helmet', 'lit.helmet': 'lit_helmet', 'blind.basket': 'blind_basket', 'lit.basket': 'lit_basket',
+  'blind.boot': 'blind_boot', 'lit.boot': 'lit_boot', 'blind.mushroom': 'blind_mushroom', 'lit.mushroom': 'lit_mushroom', 'blind.banner': 'blind_banner', 'lit.banner': 'lit_banner',
+  'blind.partyhat': 'blind_partyhat', 'lit.partyhat': 'lit_partyhat'
 };
 f('hero', ['walkA', 'walkP', 'walkB', 'stand', 'talk', 'idle2']); f('merchant', ['idle2', 'talk1', 'talk2']); f('guard', ['idle2', 'talk', 'walkA', 'walkB']);
 f('hen', ['peck', 'walk']); f('horse', ['idle2', 'walkA', 'walkB']); f('giant', ['idle2', 'talk', 'walkA', 'walkB']); f('nazim', ['idle2', 'talk']);
@@ -27,4 +33,4 @@ export const ANIM = {
 };
 /* le héros : marche en 4 temps, debout de profil, face (repos / parole) */
 export const HERO = { walk: ['hero.walkA', 'hero.walkP', 'hero.walkB', 'hero.walkP'], stand: 'hero.stand', idleFront: ['hero.front', 'hero.idle2'], talk: ['hero.front', 'hero.talk'] };
-export const ITEMS = { bucket: { spr: 'bucket' }, honey: { spr: 'honey' }, carrot: { spr: 'carrot' }, cheese: { spr: 'cheese' } };
+export const ITEMS = { bucket: { spr: 'bucket' }, honey: { spr: 'honey' }, carrot: { spr: 'carrot' }, cheese: { spr: 'cheese' }, cabbage: { spr: 'cabbage' }, arrow: { spr: 'arrow' }, pumpkin: { spr: 'pumpkin' }, anvil: { spr: 'anvil' } };

@@ -396,3 +396,23 @@ La sauvegarde automatique (scène, drapeaux, inventaire, position) reste en plac
 - **Décor animé par images** (`tools/gen_regions.py` -> `assets/pointclick/anim/`, type d'ambiance `frames`) : rivières, roues de moulin, mammouth, flammes, herbes et fleurs.
   Oiseaux (`flock`), fumée (`puffs`) et dragon à 4 poses d'ailes sont aussi des sprites (`tools/gen_anim2.sh`). Les anciens effets par déformation de pixels (water, wheel, sway, bob) ne sont plus utilisés.
 - Correctif du détourage : les trous du masque (peau proche du fond magenta) sont comblés, sinon des « nervures » noires apparaissaient.
+
+---
+## Scènes 4 à 10 (12/11/2026) : le jeu fait dix scènes
+
+Le jeu complet compte dix chapitres. Images : `tools/gen_scenes4_10.sh` (décors et personnages FLUX), puis `tools/build_sprites.sh`. Textes : `lang/fr2.js` / `en2.js`
+(fusionnés dans fr.js / en.js). Musiques : générées par `mkTrack` dans `engine/sound.js` (gamme, progression, instruments, rythme, graine fixe).
+Chaque scène a son « aveugle » (Fiat lux = 10 sur 10) et un enchaînement par fondu ; le sélecteur de scène connaît les 10 chapitres.
+
+| # | Scène | Énigme / clin d'œil |
+|---|---|---|
+| 4 | `market` Le marché aux choux | 5 × dix choux dans la petite charrette : tremblement, puis envol de la charrette et pluie de choux (physique des objets empilés) |
+| 5 | `gate` La porte de la ville | Le garde « flèche dans le genou » : on retire la flèche, il repart à l'aventure et en reprend une aussitôt ; la flèche reste dans l'inventaire |
+| 6 | `house` La maison de la veuve | Mannequin d'armure devant la porte : il ne bouge que quand on lui tourne le dos (regarder par la fenêtre) |
+| 7 | `ford` Le gué du cavalier | Cavalier sans tête : une citrouille du champ lui sert de tête, il galope ravi |
+| 8 | `wood` Le bois des papillons | Un papillon géant propulse le héros par-dessus le mur (deux tentatives) |
+| 9 | `hall` La longue salle | Compagne « jurée de porter vos fardeaux » dans l'encadrement de la porte : on lui confie une enclume (coffre) |
+| 10 | `party` La fête des quinze ans | Le dragon allume les quinze bougies ; déclaration d'amour à Skyrim ; fin du jeu (`end10`) |
+
+Aveugles : chou (garçon de ferme), casque (veilleur), panier, botte (barde), champignon (ermite), bannière (servante), chapeau de fête (tambour).
+Limites : un seul sprite par aveugle (pas d'animation de repos ni de danse par images), pas de décor animé par images dans ces scènes (dragon, oiseaux et fumées seulement).

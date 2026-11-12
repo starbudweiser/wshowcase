@@ -6,7 +6,15 @@ const GAGS = {
   /* sac de farine : coup de casque à cornes */
   sack: async (g, e) => { await g.say('hero', 'blind.sack.1'); g.sfx('whoosh'); await g.wait(280); g.sfx('clang'); g.shake(500, 4); await g.wait(200); g.sfx('pop'); await g.say('hero', 'blind.sack.2'); },
   /* chapeau en fourrure : un Cri pour l'envoyer valser */
-  hat: async (g, e) => { await g.say('hero', 'blind.hat.1'); g.sfx('shout'); g.shake(1000, 3.5); await g.say('hero', 'blind.hat.2'); await g.wait(200); g.sfx('pop'); }
+  hat: async (g, e) => { await g.say('hero', 'blind.hat.1'); g.sfx('shout'); g.shake(1000, 3.5); await g.say('hero', 'blind.hat.2'); await g.wait(200); g.sfx('pop'); },
+  /* scènes 4 à 10 : un geste = une phrase du héros, un bruitage, puis la seconde phrase */
+  cabbage: async (g, e) => { await g.say('hero', 'blind.cabbage.1'); g.sfx('pop'); await g.wait(250); g.sfx('pop'); await g.say('hero', 'blind.cabbage.2'); },
+  helmet: async (g, e) => { await g.say('hero', 'blind.helmet.1'); for (let i = 0; i < 3; i++) { g.sfx('clang'); await g.wait(420); } await g.say('hero', 'blind.helmet.2'); g.sfx('pop'); },
+  basket: async (g, e) => { await g.say('hero', 'blind.basket.1'); g.sfx('whoosh'); await g.wait(300); g.sfx('pop'); await g.say('hero', 'blind.basket.2'); },
+  boot: async (g, e) => { await g.say('hero', 'blind.boot.1'); g.sfx('cluck'); await g.wait(300); g.sfx('pop'); await g.say('hero', 'blind.boot.2'); },
+  mushroom: async (g, e) => { await g.say('hero', 'blind.mushroom.1'); g.sfx('pop'); await g.wait(300); await g.say('hero', 'blind.mushroom.2'); },
+  banner: async (g, e) => { await g.say('hero', 'blind.banner.1'); g.sfx('whoosh'); await g.wait(250); g.sfx('clang'); g.shake(400, 3); await g.say('hero', 'blind.banner.2'); g.sfx('pop'); },
+  partyhat: async (g, e) => { await g.say('hero', 'blind.partyhat.1'); g.sfx('pop'); g.sfx('jingle'); await g.wait(400); await g.say('hero', 'blind.partyhat.2'); }
 };
 
 export const blindEnt = c => ({ id: c.id, spr: c.spr, x: c.x, y: c.y, hot: true, at: c.at });
@@ -49,5 +57,12 @@ async function reveal(g, c) {
 export const BLINDS = {
   rue: { id: 'blind_pot', scene: 'rue', spr: 'blind.pot', lit: 'lit.pot', gag: 'pot', sing: 'blind.sing.pot', x: 262, y: 256, at: [240, 262], exit: [150, 330] },
   mill: { id: 'blind_sack', scene: 'mill', spr: 'blind.sack', lit: 'lit.sack', gag: 'sack', sing: 'blind.sing.sack', x: 188, y: 240, at: [166, 246], exit: [100, 330] },
+  market: { id: 'blind_cabbage', scene: 'market', spr: 'blind.cabbage', lit: 'lit.cabbage', gag: 'cabbage', sing: 'blind.sing.cabbage', x: 402, y: 242, at: [378, 246], exit: [470, 330] },
+  gate: { id: 'blind_helmet', scene: 'gate', spr: 'blind.helmet', lit: 'lit.helmet', gag: 'helmet', sing: 'blind.sing.helmet', x: 112, y: 250, at: [138, 254], exit: [-30, 300] },
+  house: { id: 'blind_basket', scene: 'house', spr: 'blind.basket', lit: 'lit.basket', gag: 'basket', sing: 'blind.sing.basket', x: 228, y: 254, at: [254, 258], exit: [-30, 300] },
+  ford: { id: 'blind_boot', scene: 'ford', spr: 'blind.boot', lit: 'lit.boot', gag: 'boot', sing: 'blind.sing.boot', x: 440, y: 254, at: [414, 258], exit: [540, 300] },
+  wood: { id: 'blind_mushroom', scene: 'wood', spr: 'blind.mushroom', lit: 'lit.mushroom', gag: 'mushroom', sing: 'blind.sing.mushroom', x: 120, y: 258, at: [148, 262], exit: [-30, 300] },
+  hall: { id: 'blind_banner', scene: 'hall', spr: 'blind.banner', lit: 'lit.banner', gag: 'banner', sing: 'blind.sing.banner', x: 176, y: 250, at: [202, 254], exit: [-30, 300] },
+  party: { id: 'blind_partyhat', scene: 'party', spr: 'blind.partyhat', lit: 'lit.partyhat', gag: 'partyhat', sing: 'blind.sing.partyhat', x: 176, y: 254, at: [204, 258], exit: [-30, 300] },
   meadow: { id: 'blind_hat', scene: 'meadow', spr: 'blind.hat', lit: 'lit.hat', gag: 'hat', sing: 'blind.sing.hat', x: 336, y: 256, at: [312, 260], exit: [470, 330] }
 };

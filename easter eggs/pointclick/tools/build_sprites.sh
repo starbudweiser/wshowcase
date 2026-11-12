@@ -42,3 +42,20 @@ for f in idle2 talk; do P nazim_$f "$W/an_nazim_$f.png" 0 --like nazim; done
 P blind_pot "$W/blind_pot.png" 84;   P blind_pot2 "$W/an_pot_grope2.png" 0 --like blind_pot;   P lit_pot "$W/lit_pot.png" 0 --like blind_pot;   P lit_pot2 "$W/an_pot_dance2.png" 0 --like blind_pot
 P blind_sack "$W/blind_sack.png" 88; P blind_sack2 "$W/an_sack_grope2.png" 0 --like blind_sack; P lit_sack "$W/lit_sack.png" 0 --like blind_sack; P lit_sack2 "$W/an_sack_dance2.png" 0 --like blind_sack
 P blind_hat "$W/blind_hat.png" 88;   P blind_hat2 "$W/an_hat_grope2.png" 0 --like blind_hat;   P lit_hat "$W/lit_hat.png" 0 --like blind_hat;   P lit_hat2 "$W/an_hat_dance2.png" 0 --like blind_hat
+# scènes 4 à 10 (relancer après tools/gen_scenes4_10.sh) : ne traite que les images déjà calculées
+Q(){ n="$1"; f="$2"; shift 2; [ -f "$W/$f" ] && P "$n" "$W/$f" "$@"; }
+Q farmer ch_farmer.png 90
+Q cart ch_cart.png 56
+Q cabbage item_cabbage.png 22 40
+Q arrow item_arrow.png 22 40
+Q mannequin ch_mannequin.png 100
+Q horseman ch_horseman.png 130
+Q horseman_pumpkin var_horseman_pumpkin.png 0 --like horseman
+Q pumpkin item_pumpkin.png 22 40
+Q butterfly ch_butterfly.png 40
+Q butterfly2 var_butterfly2.png 0 --like butterfly
+Q follower ch_follower.png 98
+Q anvil item_anvil.png 22 40
+Q cake ch_cake.png 76
+Q cake_lit var_cake_lit.png 0 --like cake
+for k in cabbage helmet basket boot mushroom banner partyhat; do Q blind_$k blind_$k.png 86; Q lit_$k lit_$k.png 0 --like blind_$k; done
