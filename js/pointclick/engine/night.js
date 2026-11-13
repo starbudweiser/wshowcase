@@ -52,10 +52,19 @@ export function buildSky(bg) {
       const sc = ok / tot + cx / 5000 - Math.abs(cy - 56) / 900; if (sc > best) { best = sc; moon = [cx, cy]; }
     }
     if (best < 0.1) moon = null;
-    /* partie de la lune réellement visible (le décor proche, nuages peints compris, la masque) : le vélo passe devant elle, visible exactement là où la lune l'est */
-    let moonVis = null;
-    if (moon) { let sx = 0, sy = 0, k = 0; for (let yy = Math.max(0, moon[1] - 30); yy <= Math.min(SKY_H - 1, moon[1] + 30); yy++) for (let xx = moon[0] - 30; xx <= moon[0] + 30; xx++) if ((xx - moon[0]) ** 2 + (yy - moon[1]) ** 2 <= 900 && B.m[yy * W + xx]) { sx += xx; sy += yy; k++; } if (k > 40) moonVis = [sx / k, sy / k]; }
-    return { mask, strip, tmp, occ, stars, moon, moonVis, speed: 3 };
+    /* pleine lune entièrement dégagée : si le ciel lointain contient un disque libre d'au moins 30 px de rayon (aucun arbre, toit, falaise ni
+       nuage peint du décor, et entièrement dans l'image), la lune s'y place, à la plus grande taille possible (36 px au plus). Carte des
+       distances au plus proche obstacle (chanfrein 3-4, bords de l'image compris). Seule une lune dégagée reçoit le passage du vélo. */
+    let moonR = 36, moonClear = false;
+    { const D = new Float32Array(W * SKY_H), INF = 1e9;
+      for (let y = 0; y < SKY_H; y++) for (let x = 0; x < W; x++) D[y * W + x] = B.m[y * W + x] ? INF : 0;
+      const at = (x, y) => (x < 0 || y < 0 || x >= W || y >= SKY_H) ? 0 : D[y * W + x];
+      for (let y = 0; y < SKY_H; y++) for (let x = 0; x < W; x++) { const i = y * W + x; if (!D[i]) continue; D[i] = Math.min(D[i], at(x - 1, y) + 3, at(x, y - 1) + 3, at(x - 1, y - 1) + 4, at(x + 1, y - 1) + 4); }
+      for (let y = SKY_H - 1; y >= 0; y--) for (let x = W - 1; x >= 0; x--) { const i = y * W + x; if (!D[i]) continue; D[i] = Math.min(D[i], at(x + 1, y) + 3, at(x, y + 1) + 3, at(x + 1, y + 1) + 4, at(x - 1, y + 1) + 4); }
+      let bi = -1, bd = 0; for (let i = 0; i < D.length; i++) if (D[i] > bd) { bd = D[i]; bi = i; }
+      const r = Math.floor(bd / 3) - 1;
+      if (r >= 30) { moon = [bi % W, (bi / W) | 0]; moonR = Math.min(36, r); moonClear = true; } }
+    return { mask, strip, tmp, occ, stars, moon, moonR, moonClear, speed: 3 };
   } catch { return null; }
 }
 const hasLeft = (m, y, x) => { for (let k = x; k >= 0; k--) if (m[y * W + k]) return true; return false; };
@@ -82,28 +91,22 @@ function occludeTint(c, sky, x, y, w, h, color) {
   c.drawImage(t, x0, y0, bw, bh, x0, y0, bw, bh);
 }
 
-/* ───── clin d'œil : un petit garçon à vélo avec une petite créature dans le panier passe en volant devant la lune, en ombre chinoise ───── */
-function drawBike(c, x, y, t, sc = 0.8) {
-  c.save(); c.translate(x, y); c.rotate(-0.1); c.scale(sc, sc); c.fillStyle = c.strokeStyle = '#04050e'; c.lineCap = c.lineJoin = 'round';
-  c.lineWidth = 1.5; for (const wx of [-10, 10]) { c.beginPath(); c.arc(wx, 5, 6.6, 0, 7); c.stroke(); c.lineWidth = 0.6; for (let k = 0; k < 4; k++) { const a = t * 10 + k * 0.785; c.beginPath(); c.moveTo(wx + Math.cos(a) * 6.4, 5 + Math.sin(a) * 6.4); c.lineTo(wx - Math.cos(a) * 6.4, 5 - Math.sin(a) * 6.4); c.stroke(); } c.lineWidth = 1.5; }
-  c.lineWidth = 1.6; c.beginPath(); c.moveTo(-10, 5); c.lineTo(-2, 5); c.lineTo(-4, -3); c.lineTo(7, -4); c.lineTo(10, 5); c.moveTo(-2, 5); c.lineTo(7, -4); c.moveTo(-4, -3); c.lineTo(-5, -6); c.moveTo(7, -4); c.lineTo(8, -9); c.lineTo(12, -9); c.stroke();
-  /* le grand panier : un bloc arrondi, plus haut que le torse, posé sur le guidon */
-  c.beginPath(); c.moveTo(9, -8); c.lineTo(8.4, -17); c.quadraticCurveTo(8.2, -25, 13.2, -25); c.quadraticCurveTo(18.4, -25, 18.4, -17); c.lineTo(17.4, -8); c.closePath(); c.fill();
-  /* le garçon : penché en avant, casque, bras tendu vers le guidon, jambes qui pédalent */
-  c.beginPath(); c.moveTo(-7, -6); c.lineTo(-3, -8); c.lineTo(3, -15); c.lineTo(1, -18); c.lineTo(-5, -12); c.closePath(); c.fill();
-  c.beginPath(); c.arc(2.6, -19.6, 3.3, 0, 7); c.fill(); c.beginPath(); c.arc(2.2, -20.4, 3.7, Math.PI * 1.05, Math.PI * 1.95); c.fill();
-  c.lineWidth = 2.2; c.beginPath(); c.moveTo(1.5, -15); c.lineTo(6, -11.5); c.lineTo(9, -9.5); c.stroke();
-  const pa = t * 8; c.lineWidth = 2.4; for (const ph of [0, Math.PI]) { const px = -2 + Math.cos(pa + ph) * 3, py = 5 + Math.sin(pa + ph) * 3; c.beginPath(); c.moveTo(-5, -6); c.lineTo(-1.5 + (px + 2) * 0.35, -1 + (py - 5) * 0.2); c.lineTo(px, py); c.stroke(); }
-  c.restore();
-}
+/* ───── clin d'œil : un petit garçon à vélo, la petite créature dans le panier, passe en volant devant la pleine lune, en ombre chinoise ─────
+   Seulement dans les décors où la lune est entièrement dégagée. Il vole comme un oiseau : il traverse le disque de la lune en montant vers
+   le haut à droite, sur une courbe qui s'élève de plus en plus, avec un léger tangage au rythme du pédalage. Animation pixel art
+   (tools/gen_bike.py) : 8 images par tour de pédalier (12 i/s), 3 inclinaisons pré-dessinées choisies selon la pente de la trajectoire. */
+const BK = { fw: 34, fh: 32, n: 8, tilts: [6, 12, 18], ox: 17.5, oy: 19, dur: 8, half: 130 };
 function flyby(g, c, n, sk) {
-  const e = n.eti; if (!e || !sk || !sk.moon) return false; const u = (g.now - e.t0) / 9; if (u < 0 || u > 1) return false;
-  /* tout petit, très loin : une ligne presque droite qui traverse le ciel et passe pile devant la lune ; dessiné seulement là où l'on voit
-     le ciel lointain (comme la lune), donc jamais par-dessus les arbres, la falaise, les toits ou les nuages peints du décor */
-  const [mx, my] = sk.moonVis || sk.moon, x = -16 + 512 * u, y = my + 1 + (x - mx) * -0.04;   /* +1 : le milieu du dessin (panier compris) passe sur ce point */
+  const e = n.eti; if (!e || !sk || !sk.moon || !sk.moonClear) return false; const u = (g.now - e.t0) / BK.dur; if (u < 0 || u > 1) return false;
+  const im = g.spr('bike.fly'); if (!im) return false;
+  const [mx, my] = sk.moon, dx = -BK.half + 2 * BK.half * u;
+  const slope = -0.22 - 0.001 * dx, ph = (g.now - e.t0) * 12;              /* pente : de -0.09 (arrivée) à -0.35 (départ, il monte de plus en plus) */
+  const x = mx + dx, y = my + 2 - 0.22 * dx - 0.0005 * dx * dx + Math.sin(ph / BK.n * Math.PI * 2) * 0.6;
+  const deg = -Math.atan(slope) * 180 / Math.PI, row = BK.tilts.reduce((b, t, i) => Math.abs(t - deg) < Math.abs(BK.tilts[b] - deg) ? i : b, 0), col = Math.floor(ph) % BK.n;
   if (!e.sung && u > 0.05) { e.sung = true; snd.flyby && snd.flyby(); }
   const t = sk.tmpB || (sk.tmpB = Object.assign(document.createElement('canvas'), { width: W, height: SKY_H })), T = t.getContext('2d');
-  T.globalCompositeOperation = 'source-over'; T.clearRect(0, 0, W, SKY_H); drawBike(T, x, y, g.now, 0.38);
+  T.globalCompositeOperation = 'source-over'; T.clearRect(0, 0, W, SKY_H); T.imageSmoothingEnabled = false;
+  T.drawImage(im, col * BK.fw, row * BK.fh, BK.fw, BK.fh, Math.round(x - BK.ox), Math.round(y - BK.oy), BK.fw, BK.fh);
   T.globalCompositeOperation = 'destination-out'; T.drawImage(sk.occ, 0, 0); c.drawImage(t, 0, 0); return true;
 }
 
@@ -138,7 +141,7 @@ export function updateNight(g, dt) {
       else if (!o.e.goal || o.e.x < -20 || o.e.x > 500) { o.e.goal = null; o.e.visible = false; o.hid = true; o.done = true; }
     }
   }
-  if (!n.eti && t >= 4.5 && g.sky && g.sky.moon) n.eti = { t0: now };
+  if (!n.eti && t >= 4.5 && g.sky && g.sky.moon && g.sky.moonClear) n.eti = { t0: now };
   if (t >= 11 && !n.stunned) { n.stunned = true; h.front = true; h.back = false; h.pose = h.pose || 'hero.fSurprise'; nightSay(g, '', '…?!'); snd.jingle(); n.nextSay = now + 1.8; n.stunEnd = now + 1.6; }
   if (n.stunned && n.say && !n.say.au && now > n.say.end) endSay(g);
   if (n.stunned && n.st === 'fall' && now > n.nextSay) { n.st = 'close'; n.ct0 = now; h.pose = null; n.s0 = g.persp(h.y); n.x0 = h.x; n.y0 = h.y; }
@@ -182,14 +185,14 @@ export function drawNight(g, c) {
   const sk = g.sky, va = Math.min(1, Math.max(0, (a - 0.3) / 0.4));
   if (sk && va > 0) {
     c.save(); c.globalAlpha = va; for (const s of sk.stars) { const tw = 0.6 + 0.4 * Math.sin(t * 2 + s.ph); c.globalAlpha = va * tw; c.fillStyle = '#fff8d8'; c.fillRect(s.x, s.y, s.big ? 2 : 1, s.big ? 2 : 1); }
-    if (sk.moon) { const [mx, my] = sk.moon, R = 36;
+    if (sk.moon) { const [mx, my] = sk.moon, R = sk.moonR || 36;
       const hg = c.createRadialGradient(mx, my, R * 0.8, mx, my, R * 1.9); hg.addColorStop(0, 'rgba(160,200,255,0.42)'); hg.addColorStop(1, 'rgba(160,200,255,0)'); c.globalAlpha = va; c.fillStyle = hg; c.beginPath(); c.arc(mx, my, R * 1.9, 0, 7); c.fill();
       const dg = c.createRadialGradient(mx - R * 0.3, my - R * 0.3, R * 0.1, mx, my, R); dg.addColorStop(0, '#f6faff'); dg.addColorStop(1, '#bcd2ee'); c.fillStyle = dg; c.beginPath(); c.arc(mx, my, R, 0, 7); c.fill();
       c.fillStyle = 'rgba(110,140,185,0.30)'; for (const [fx, fy, fr] of [[-0.35, -0.45, 0.2], [0.2, -0.2, 0.15], [-0.1, 0.25, 0.24], [0.42, 0.3, 0.12], [-0.5, 0.1, 0.1], [0.05, -0.62, 0.1], [0.5, -0.4, 0.09]]) { c.beginPath(); c.arc(mx + fx * R, my + fy * R, fr * R, 0, 7); c.fill(); } }
     c.restore();
   }
   /* le vélo passe dans le ciel, comme la lune : tous deux derrière le décor proche (arbres, falaise, toits), repeint par-dessus */
-  const bike = flyby(g, c, n, sk);
+  flyby(g, c, n, sk);
   if (sk && sk.moon && va > 0) { const tint = `rgb(${255 - a * 215 | 0},${255 - a * 200 | 0},${255 - a * 120 | 0})`; occludeTint(c, sk, sk.moon[0] - 70, sk.moon[1] - 70, 140, 140, tint); }
   const vg = c.createRadialGradient(W / 2, H / 2, 70, W / 2, H / 2, 300); vg.addColorStop(0, 'rgba(0,0,10,0)'); vg.addColorStop(1, `rgba(0,0,10,${a * 0.55})`); c.fillStyle = vg; c.fillRect(0, 0, W, H);
   /* z z z au-dessus des dormeurs */
