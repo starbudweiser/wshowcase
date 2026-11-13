@@ -52,7 +52,10 @@ export function buildSky(bg) {
       const sc = ok / tot + cx / 5000 - Math.abs(cy - 56) / 900; if (sc > best) { best = sc; moon = [cx, cy]; }
     }
     if (best < 0.1) moon = null;
-    return { mask, strip, tmp, occ, stars, moon, speed: 3 };
+    /* partie de la lune réellement visible (le décor proche, nuages peints compris, la masque) : le vélo passe devant elle, visible exactement là où la lune l'est */
+    let moonVis = null;
+    if (moon) { let sx = 0, sy = 0, k = 0; for (let yy = Math.max(0, moon[1] - 30); yy <= Math.min(SKY_H - 1, moon[1] + 30); yy++) for (let xx = moon[0] - 30; xx <= moon[0] + 30; xx++) if ((xx - moon[0]) ** 2 + (yy - moon[1]) ** 2 <= 900 && B.m[yy * W + xx]) { sx += xx; sy += yy; k++; } if (k > 40) moonVis = [sx / k, sy / k]; }
+    return { mask, strip, tmp, occ, stars, moon, moonVis, speed: 3 };
   } catch { return null; }
 }
 const hasLeft = (m, y, x) => { for (let k = x; k >= 0; k--) if (m[y * W + k]) return true; return false; };
@@ -96,12 +99,12 @@ function drawBike(c, x, y, t, sc = 0.8) {
 function flyby(g, c, n, sk) {
   const e = n.eti; if (!e || !sk || !sk.moon) return false; const u = (g.now - e.t0) / 9; if (u < 0 || u > 1) return false;
   /* tout petit, très loin : une ligne presque droite qui traverse le ciel et passe pile devant la lune ; dessiné seulement là où l'on voit
-     le ciel (masque du ciel), donc jamais par-dessus les arbres, la falaise ou les toits */
-  const [mx, my] = sk.moon, x = -16 + 512 * u, y = my - 3 + (x - mx) * -0.06;
+     le ciel lointain (comme la lune), donc jamais par-dessus les arbres, la falaise, les toits ou les nuages peints du décor */
+  const [mx, my] = sk.moonVis || sk.moon, x = -16 + 512 * u, y = my + 1 + (x - mx) * -0.04;   /* +1 : le milieu du dessin (panier compris) passe sur ce point */
   if (!e.sung && u > 0.05) { e.sung = true; snd.flyby && snd.flyby(); }
   const t = sk.tmpB || (sk.tmpB = Object.assign(document.createElement('canvas'), { width: W, height: SKY_H })), T = t.getContext('2d');
   T.globalCompositeOperation = 'source-over'; T.clearRect(0, 0, W, SKY_H); drawBike(T, x, y, g.now, 0.38);
-  T.globalCompositeOperation = 'destination-in'; T.drawImage(sk.mask, 0, 0); c.drawImage(t, 0, 0); return true;
+  T.globalCompositeOperation = 'destination-out'; T.drawImage(sk.occ, 0, 0); c.drawImage(t, 0, 0); return true;
 }
 
 /* ───── mode nuit ───── */
