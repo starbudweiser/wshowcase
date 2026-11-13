@@ -83,3 +83,6 @@ Wk ghost 58; Wk racer 46; Wk tentacle 64; Wk owl 40; Wk troll 48; Q wk_boulder w
 Q hero_pKnock1 hp_knock1.png 0 --like hero_pNeutral --fill; Q hero_pKnock2 hp_knock2.png 0 --like hero_pNeutral --fill
 
 for k in Point Shrug Plead Think Wave Lean; do l=${(L)k}; Q hero_p$k hp_$l.png 0 --like hero_pNeutral --fill; Q hero_p${k}T hp_${l}_t.png 0 --like hero_pNeutral --fill; done
+
+# mains du héros qui nettoient la vitre de l'écran (relancer après tools/gen_hands.sh)
+Q hand_palm hand_palm.png 330 64 --fill; for k in rag leaf duster sleeve finger breath; do Q hand_$k hand_$k.png 0 --like hand_palm --fill; done

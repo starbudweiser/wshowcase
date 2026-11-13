@@ -104,7 +104,7 @@ function flyby(g, c, n, sk) {
 /* ───── mode nuit ───── */
 export function startNight(g) {
   const h = g.hero; g.clearBarks(); g.hushNarr(); g.nq.length = 0;
-  g.night = { t0: g.now, st: 'fall', level: 0, a: 0, hk: 0, ents: [], say: null, nextSay: 0, lineI: 0, cricket: 0, stunned: false, ct0: 0, hid: false, kdone: {} };
+  g.night = { t0: g.now, st: 'fall', level: 0, a: 0, hk: 0, ents: [], say: null, nextSay: 0, lineI: 0, cricket: 0, stunned: false, ct0: 0, hid: false, kdone: {}, mirror: Math.random() < 0.5 };   /* côté vers lequel il se tourne, tiré au sort à chaque nuit */
   g.ents.filter(e => !e.isHero && e.visible !== false && e.hot && !e.noHot && !INANIMATE.has(e.id)).sort((a, b) => a.x - b.x).forEach((e, i) => {
     g.night.ents.push({ e, mode: hash(e.id) % 2 ? 'home' : 'lie', t: 3 + i * 0.9, sx: e.x, sy: e.y, started: false, done: false, hid: false, side: hash(e.id) % 3 === 0 ? -1 : 1 });
   });
@@ -198,7 +198,7 @@ export function drawNight(g, c) {
     const talking = n.say && n.say.au && !n.say.au.paused && !n.say.au.ended, kk = n.knock ? (() => { const tk = t - n.knock.t0; for (const h of n.knock.hits) if (tk >= h && tk < h + 0.17) return 'hero.pKnock1'; return tk > 0.05 ? 'hero.pKnock2' : null; })() : null,
       base = n.pose ? 'hero.p' + n.pose : null,
       pk = !(g.hero && g.spr('hero.pNeutral')) ? null : (kk && g.spr(kk) ? kk : base && g.spr(base) ? (talking && Math.floor(t * 7) % 2 && g.spr(base + 'T') ? base + 'T' : base) : talking && Math.floor(t * 7) % 2 ? 'hero.pTalk' : (t % 3.7 < 0.14 ? 'hero.pBlink' : 'hero.pNeutral')), pi = pk && (g.spr(pk) || g.spr('hero.pNeutral'));
-    if (pi && k > 0.6) { c.globalAlpha = Math.min(1, (k - 0.6) / 0.3); const am = talking ? 1.7 : 1, sc = Math.min(W / pi.width, H / pi.height) * 1.02 * (1 + 0.012 * Math.sin(t * 1.7)), ox = Math.sin(t * 1.3) * 3 * am, oy = Math.sin(t * 2.1) * 2 * am; c.translate(W / 2 + ox, H / 2 + 6 + oy); c.rotate(Math.sin(t * 0.9) * 0.025 * am); c.drawImage(pi, -pi.width * sc / 2, -pi.height * sc / 2, pi.width * sc, pi.height * sc); }
+    if (pi && k > 0.6) { c.globalAlpha = Math.min(1, (k - 0.6) / 0.3); const am = talking ? 1.7 : 1, sc = Math.min(W / pi.width, H / pi.height) * 1.02 * (1 + 0.012 * Math.sin(t * 1.7)), ox = Math.sin(t * 1.3) * 3 * am, oy = Math.sin(t * 2.1) * 2 * am; c.translate(W / 2 + ox, H / 2 + 6 + oy); c.rotate(Math.sin(t * 0.9) * 0.025 * am); if (n.mirror) c.scale(-1, 1); c.drawImage(pi, -pi.width * sc / 2, -pi.height * sc / 2, pi.width * sc, pi.height * sc); }
     c.restore();
   }
   if (n.ring && g.now - n.ring.t0 < 0.55) { const k = (g.now - n.ring.t0) / 0.55; c.save(); c.globalAlpha = (1 - k) * 0.8; c.strokeStyle = '#dfeaff'; c.lineWidth = 2; c.beginPath(); c.ellipse(W * 0.6, H * 0.46, 14 + k * 46, 10 + k * 32, 0, 0, 7); c.stroke(); c.restore(); }

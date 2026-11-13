@@ -104,6 +104,7 @@ export default {
   'use.cliff': 'Climb that on foot? Heroes have knees too. Trust me, I know what happens to knees around here.',
   'take.cliff': 'I can’t take a cliff. Even after clearing inventory space.',
   'talk.cliff': 'I shout “Anybody there?” The echo replies “Take a horse.” Smarter than the guard.',
+  'look.ledge.empty': 'The ledge, way up there. Empty now. The cheese is safe, in my pocket.',
   'look.ledge': 'A ledge, way up there. With a golden cheese wheel sitting on it. Like a gift from a developer.',
   'look.cheese': 'An intact golden cheese wheel. In this world, the most precious item. After honey rolls.',
   'take.cheese.far': 'It’s thirty meters above me. My arm doesn’t do that. Even with the helmet.',

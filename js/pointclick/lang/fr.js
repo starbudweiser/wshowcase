@@ -120,6 +120,7 @@ export default {
   'use.cliff': 'Grimper ça à pied ? Les héros ont aussi des genoux. Je sais de quoi je parle : j’en ai pris une flèche dans un, dans mes rêves.',
   'take.cliff': 'Je ne peux pas emporter une falaise. Même en ayant fait de la place dans l’inventaire.',
   'talk.cliff': 'Je crie : « Y a quelqu’un ? » L’écho répond : « Prends un cheval. » Il est plus malin que le garde.',
+  'look.ledge.empty': 'La corniche, tout là-haut. Vide, désormais. Le fromage est en sécurité, dans ma poche.',
   'look.ledge': 'Une corniche, tout là-haut. Avec une meule de fromage dorée posée dessus. Comme un cadeau d’un développeur.',
   'look.cheese': 'Une meule de fromage dorée, intacte. Dans ce monde, l’objet le plus précieux. Après les rouleaux au miel.',
   'take.cheese.far': 'Elle est à trente mètres au-dessus de moi. Mon bras ne fait pas ça. Même avec le casque.',

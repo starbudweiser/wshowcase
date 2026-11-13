@@ -1,5 +1,7 @@
 /* « La vitre de l'écran » : rarement et au hasard, quelque chose salit l'écran du joueur (mouche posée ou écrasée, éternuement du héros ou d'un personnage,
-   fiente d'oiseau) puis le héros vient le nettoyer, de façon différente à chaque fois (chiffon, feuille de chou, plumeau, manche d'armure). */
+   fiente d'oiseau) puis le héros vient le nettoyer avec sa main gantée (sprites FLUX, tools/gen_hands.sh), de façon différente à chaque fois :
+   paume en cercles, chiffon en zigzag, feuille de chou en éponge, plumeau par petits coups, manche en longs passages, ongle qui gratte,
+   buée soufflée puis frottée. L'avant-bras monte du bas de l'écran et pivote autour du coude, hors champ. */
 import { snd } from './sound.js';
 import { pickPose } from './night.js';
 const W = 480, H = 270, R = (a, b) => a + Math.random() * (b - a), pick = a => a[(Math.random() * a.length) | 0];
@@ -34,20 +36,41 @@ function flyDraw(c, f, t) {
 }
 
 /* ───── le héros derrière la vitre, et ce qui sert à nettoyer ───── */
-function ragDraw(c, rag, t) {
-  c.save(); c.translate(rag.x, rag.y); c.rotate(Math.sin(t * 14) * 0.18);
-  if (rag.kind === 'leaf') { c.fillStyle = '#6fa63c'; c.beginPath(); c.moveTo(-26, 4); c.quadraticCurveTo(-8, -26, 28, -6); c.quadraticCurveTo(8, 20, -26, 4); c.fill(); c.strokeStyle = '#d6efa0'; c.lineWidth = 1.4; c.beginPath(); c.moveTo(-22, 3); c.lineTo(24, -5); c.stroke(); }
-  else if (rag.kind === 'duster') { c.fillStyle = '#7a5434'; c.fillRect(-4, 6, 8, 34); for (let i = 0; i < 14; i++) { const a = -1.1 + i * 0.17; c.strokeStyle = i % 2 ? '#e8e0cc' : '#c9bda0'; c.lineWidth = 2.4; c.beginPath(); c.moveTo(0, 8); c.lineTo(Math.sin(a) * 30, 8 - Math.cos(a) * 26); c.stroke(); } }
-  else if (rag.kind === 'sleeve') { c.fillStyle = '#6b4a2a'; c.beginPath(); c.roundRect(-30, -14, 60, 28, 12); c.fill(); c.fillStyle = '#9a7a52'; for (let i = -24; i < 26; i += 7) c.fillRect(i, -14 + (i % 2 ? 2 : 0), 3, 8); c.fillStyle = '#8c8c94'; c.fillRect(24, -14, 8, 28); }
-  else { c.fillStyle = '#d8d6cc'; c.beginPath(); c.roundRect(-24, -17, 48, 34, 9); c.fill(); c.strokeStyle = '#b4b2a6'; c.lineWidth = 1; for (const x of [-10, 2, 14]) { c.beginPath(); c.moveTo(x, -14); c.lineTo(x + 3, 14); c.stroke(); } }
-  c.restore();
+const ELBOW = [W * 0.44, H + 96];                                   /* le coude du héros, sous le bord de l'écran */
+const KINDS = {   /* sprite de la main, geste, rayon nettoyé, vitesse, point de contact dans le sprite (fraction de sa hauteur) */
+  palm: { spr: 'hand.palm', move: 'circles', r: 30, v: 170, tip: 0.18 }, rag: { spr: 'hand.rag', move: 'zigzag', r: 30, v: 200, tip: 0.15 },
+  leaf: { spr: 'hand.leaf', move: 'zigzag', r: 32, v: 150, tip: 0.15 }, duster: { spr: 'hand.duster', move: 'flicks', r: 26, v: 330, tip: 0.12 },
+  sleeve: { spr: 'hand.sleeve', move: 'strokes', r: 36, v: 230, tip: 0.42 }, finger: { spr: 'hand.finger', move: 'scrape', r: 13, v: 120, tip: 0.04 },
+  breath: { spr: 'hand.breath', move: 'circles', r: 34, v: 150, tip: 0.18 }
+};
+function handDraw(g, c, r, t) {
+  const K = KINDS[r.kind], im = g.spr(K.spr); if (!im) return;
+  const s = (r.s || 1) * 0.82, w = im.width * s, h = im.height * s, ex = r.mirror ? W - ELBOW[0] : ELBOW[0];   /* héros tourné de l'autre côté : l'autre bras */
+  const dx = ex - r.x, dy = ELBOW[1] - r.y, d = Math.hypot(dx, dy), th = Math.atan2(-dx / d, dy / d) + (r.wob || 0);
+  c.save(); c.imageSmoothingEnabled = false; c.translate(Math.round(r.x), Math.round(r.y)); c.rotate(th); if (r.mirror) c.scale(-1, 1);
+  const press = 1 - 0.03 * Math.abs(Math.sin(t * 9));                   /* la main appuie sur la vitre */
+  c.drawImage(im, Math.round(-w / 2), Math.round(-h * K.tip), Math.round(w), Math.round(h * press)); c.restore();
+}
+/* trajet de la main sur les salissures, selon la façon de nettoyer */
+function handPath(kind, S, fog) {
+  const pts = S.map(s => [s.x, s.y]).concat(fog ? [[fog.x, fog.y]] : []), xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
+  const x0 = Math.max(40, Math.min(...xs) - 30), x1 = Math.min(440, Math.max(...xs) + 30), y0 = Math.max(30, Math.min(...ys) - 24), y1 = Math.min(240, Math.max(...ys) + 40), p = [];
+  const big = pts.filter((q, i) => !S[i] || S[i].r > 3.2);                 /* taches principales */
+  const M = KINDS[kind].move;
+  if (M === 'zigzag') { let dir = 1; for (let y = y0; y <= y1 + 1; y += 30) { p.push(dir > 0 ? [x0, y] : [x1, y], dir > 0 ? [x1, y] : [x0, y]); dir = -dir; } }
+  else if (M === 'strokes') { for (let y = y0; y <= y1 + 1; y += 36) p.push([x0 - 20, y], [x1 + 20, y + 6], [x0 - 20, y + 12]); }
+  else if (M === 'circles') { for (let y = y0; y <= y1 + 1; y += 40) for (let x = x0; x <= x1 + 1; x += 44) for (let k = 0; k <= 8; k++) { const a = k / 8 * Math.PI * 2; p.push([x + Math.cos(a) * 18, y + Math.sin(a) * 14]); } }
+  else if (M === 'flicks') { for (const q of (big.length ? big : pts)) for (let k = 0; k < 4; k++) p.push([q[0] - 16, q[1] + (k % 2 ? 8 : -8)], [q[0] + 16, q[1] + (k % 2 ? -8 : 8)]); }
+  else if (M === 'scrape') { for (const q of (big.length ? big : pts).slice(0, 5)) for (let k = 0; k < 3; k++) p.push([q[0] - 10, q[1] - 6 + k * 6], [q[0] + 10, q[1] - 6 + k * 6]); for (let y = y0; y <= y1 + 1; y += 34) p.push([x0, y], [x1, y]); }
+  p.push([ELBOW[0], H + 140]);                                               /* la main repart vers le bas */
+  return p;
 }
 
 function heroFace(g, c, run, k, t) {
   const pose = run.pose, key = { talk: 'hero.pTalk', sleepy: 'hero.pSleepy', knock: 'hero.pKnock1', blink: 'hero.pBlink' }[pose] || 'hero.pNeutral', talking = run.say && run.say.au && !run.say.au.paused && !run.say.au.ended;
   const base = run.p && (pose === 'neutral' || pose === 'talk') ? 'hero.p' + run.p : null, fl = talking && Math.floor(t * 7) % 2;
   const im = (base && g.spr(base) ? g.spr(fl && g.spr(base + 'T') ? base + 'T' : base) : g.spr(fl && pose !== 'sleepy' ? 'hero.pTalk' : key)) || g.spr('hero.pNeutral'); if (!im) return;
-  const am = talking ? 1.7 : 1, sc = 0.82 * (1 + 0.012 * Math.sin(t * 1.7)), y = H * 0.74 + (1 - k) * 180 + Math.sin(t * 2.1) * 2 * am; c.save(); c.imageSmoothingEnabled = false; c.globalAlpha = Math.min(1, k * 1.4); c.translate(W / 2 + Math.sin(t * 1.3) * 3 * am, y); c.rotate(Math.sin(t * 0.9) * 0.025 * am); c.drawImage(im, -im.width * sc / 2, -im.height * sc / 2, im.width * sc, im.height * sc); c.restore();
+  const am = talking ? 1.7 : 1, sc = 0.82 * (1 + 0.012 * Math.sin(t * 1.7)), y = H * 0.74 + (1 - k) * 180 + Math.sin(t * 2.1) * 2 * am; c.save(); c.imageSmoothingEnabled = false; c.globalAlpha = Math.min(1, k * 1.4); c.translate(W / 2 + Math.sin(t * 1.3) * 3 * am, y); c.rotate(Math.sin(t * 0.9) * 0.025 * am); if (run.mirror) c.scale(-1, 1); c.drawImage(im, -im.width * sc / 2, -im.height * sc / 2, im.width * sc, im.height * sc); c.restore();
 }
 
 function say(g, run, key) {
@@ -64,7 +87,7 @@ const SC = {
   flyAway: () => [{ fn: (g, r) => spawnFly(g, 'wander') }, { w: 6 }, { fn: g => landFly(g) }, { w: 2 }, { hero: 'in' }, { say: 'clean.fly.1', pose: 'talk' }, { fn: g => { g.sfx('whoosh'); } }, { w: 0.6 }, { fn: g => { const f = g.gl.fly; if (f) { f.mode = 'off'; f.vx = R(-160, 160); f.vy = R(-200, -80); } } }, { w: 1.2 }, { say: 'clean.fly.4', pose: 'neutral' }, { hero: 'out' }],
   sneezeHero: () => [{ hero: 'in' }, { say: 'clean.sneeze.a', pose: 'sleepy' }, { fn: (g, r) => { r.pose = 'talk'; splat(g.gl, 'snot', R(150, 330), R(50, 120)); g.shake(300, 3.5); } }, { say: 'clean.sneeze.b' }, { w: 0.5 }, { fn: (g, r) => { r.pose = 'neutral'; } }, { say: 'clean.sneeze.2' }, { rag: true }, { say: 'clean.done' }, { hero: 'out' }],
   sneezeNpc: () => [{ fn: (g, r) => { const e = g.ents.filter(x => !x.isHero && x.hot && x.visible !== false && !x.noHot)[0]; r.npc = e && e.id; if (e) g.bark(e.id, 'clean.npc.sneeze', 2200, true); else r.skip = true; } }, { w: 1.8 }, { fn: (g, r) => { splat(g.gl, 'snot', R(130, 350), R(50, 120)); g.shake(300, 3.5); } }, { w: 1.4 }, { hero: 'in' }, { say: 'clean.sneeze.2', pose: 'talk' }, { rag: true }, { say: 'clean.done', pose: 'neutral' }, { hero: 'out' }],
-  bird: () => [{ fn: (g, r) => { r.bird = { t0: g.now, x: R(80, 400), y0: R(30, 80) }; } }, { w: 2.1 }, { fn: (g, r) => { const b = r.bird; splat(g.gl, 'bird', b.x, b.y0 + 10); r.bird = null; g.shake(160, 1.6); } }, { w: 1 }, { hero: 'in' }, { say: 'clean.bird.1', pose: 'talk' }, { rag: 'duster' }, { say: 'clean.done', pose: 'neutral' }, { hero: 'out' }]
+  bird: () => [{ fn: (g, r) => { r.bird = { t0: g.now, x: R(80, 400), y0: R(30, 80) }; } }, { w: 2.1 }, { fn: (g, r) => { const b = r.bird; splat(g.gl, 'bird', b.x, b.y0 + 10); r.bird = null; g.shake(160, 1.6); } }, { w: 1 }, { hero: 'in' }, { say: 'clean.bird.1', pose: 'talk' }, { rag: true }, { say: 'clean.done', pose: 'neutral' }, { hero: 'out' }]
 };
 const IDS = Object.keys(SC);
 
@@ -91,7 +114,7 @@ export function updateGlass(g, dt) {
 }
 function idle(g) { return g.started && !g.titleEl && !g.night && !g.locked && !g.bubbles.length && !g.barks.length && !g.narr && !g.nq.length && !g.hiBusy() && !g.lowBusy(); }
 function start(g, gl, id, orphan) {
-  const run = { id, q: SC[id]().slice(), cur: null, t0: g.now, hk: 0, hdir: 0, pose: 'neutral', say: null, rag: null, kind: id === 'bird' ? 'duster' : pick(['rag', 'rag', 'leaf', 'duster', 'sleeve']), wait: 0 };
+  const run = { id, q: SC[id]().slice(), cur: null, t0: g.now, hk: 0, hdir: 0, pose: 'neutral', say: null, rag: null, mirror: Math.random() < 0.5,   /* il ne se tourne pas toujours du même côté */ kind: id === 'bird' ? pick(['finger', 'duster', 'rag']) : pick(['palm', 'rag', 'leaf', 'duster', 'sleeve', 'finger', 'breath']), wait: 0 };
   if (orphan) { run.q = [{ hero: 'in' }, { say: 'clean.sneeze.2', pose: 'talk' }, { rag: true }, { say: 'clean.done', pose: 'neutral' }, { hero: 'out' }]; }
   gl.run = run;
 }
@@ -108,27 +131,36 @@ function runGlass(g, gl, run, dt) {
   else if (it.say) { if (it.pose) run.pose = it.pose; say(g, run, it.say); }
   else if (it.fn) it.fn(g, run);
   else if (it.rag) { run.kind = typeof it.rag === 'string' ? it.rag : run.kind; run.q.unshift({ rag2: 1 }); say(g, run, 'clean.with.' + run.kind); }
-  else if (it.rag2) { if (!gl.stains.length) { run.rag = null; return; } run.rag = { x: -30, y: 140, kind: run.kind, path: null, i: 0 }; const S = gl.stains; const xs = S.map(s => s.x), ys = S.map(s => s.y); const x0 = Math.max(40, Math.min(...xs) - 30), x1 = Math.min(440, Math.max(...xs) + 30), y0 = Math.max(30, Math.min(...ys) - 24), y1 = Math.min(240, Math.max(...ys) + 40); const p = []; let dir = 1; for (let y = y0; y <= y1 + 1; y += 34) { p.push(dir > 0 ? [x0, y] : [x1, y], dir > 0 ? [x1, y] : [x0, y]); dir = -dir; } p.push([W + 60, 140]); run.rag.path = p; }
+  else if (it.rag2) {
+    if (!gl.stains.length) { run.rag = null; return; }
+    if (run.kind === 'breath' && !gl.fog) { const S = gl.stains, cx = S.reduce((a, q) => a + q.x, 0) / S.length, cy = S.reduce((a, q) => a + q.y, 0) / S.length; gl.fog = { x: cx, y: cy, r: 70, a: 0, grow: 1 }; run.q.unshift({ w: 1.1 }, { rag2: 1 }); snd.whoosh && snd.whoosh(); return; }   /* il souffle d'abord de la buée */
+    const ex = run.mirror ? W - ELBOW[0] : ELBOW[0], path = handPath(run.kind, gl.stains, gl.fog); path[path.length - 1] = [ex, H + 140];
+    run.rag = { x: ex, y: H + 140, kind: run.kind, path, i: 0, mirror: run.mirror };
+  }
   if (run.skip) { run.q.length = 0; }
 }
 function ragStep(g, gl, run, dt) {
-  const r = run.rag, p = r.path[r.i]; if (!p) { run.rag = null; return; }
-  const dx = p[0] - r.x, dy = p[1] - r.y, d = Math.hypot(dx, dy), st = 190 * dt; if (d <= st) { r.x = p[0]; r.y = p[1]; r.i++; snd.squeak && snd.squeak(); } else { r.x += dx / d * st; r.y += dy / d * st; }
-  for (const s of gl.stains) if (Math.hypot(s.x - r.x, s.y - r.y) < 30) s.a = Math.max(0, s.a - dt * 7);
-  for (const q of gl.drips) if (Math.hypot(q.x - r.x, q.y + q.len / 2 - r.y) < 34) q.a = Math.max(0, q.a - dt * 7);
+  const r = run.rag, K = KINDS[r.kind], p = r.path[r.i]; if (!p) { run.rag = null; gl.fog = null; return; }
+  const dx = p[0] - r.x, dy = p[1] - r.y, d = Math.hypot(dx, dy), st = K.v * dt;
+  if (d <= st) { r.x = p[0]; r.y = p[1]; r.i++; if (r.i % 2) snd.squeak && snd.squeak(); } else { r.x += dx / d * st; r.y += dy / d * st; }
+  r.wob = Math.sin(g.now * (K.move === 'flicks' ? 22 : 8)) * (K.move === 'flicks' ? 0.22 : 0.06);
+  for (const s of gl.stains) if (Math.hypot(s.x - r.x, s.y - r.y) < K.r) s.a = Math.max(0, s.a - dt * 7);
+  for (const q of gl.drips) if (Math.hypot(q.x - r.x, q.y + q.len / 2 - r.y) < K.r + 4) q.a = Math.max(0, q.a - dt * 7);
+  if (gl.fog && Math.hypot(gl.fog.x - r.x, gl.fog.y - r.y) < gl.fog.r) gl.fog.a = Math.max(0, gl.fog.a - dt * 0.9);
   gl.stains = gl.stains.filter(s => s.a > 0.02); gl.drips = gl.drips.filter(s => s.a > 0.02);
 }
-function finish(g, gl, run) { gl.run = null; gl.stains = []; gl.drips = []; gl.fly = null; gl.at = g.now + 360 + R(0, 300); if (run.say) run.say.b.remove(); }
+function finish(g, gl, run) { gl.run = null; gl.stains = []; gl.drips = []; gl.fly = null; gl.fog = null; gl.at = g.now + 360 + R(0, 300); if (run.say) run.say.b.remove(); }
 
 export function drawGlass(g, c) {
   const gl = g.gl; if (!gl) return; const t = g.now;
   for (const d of gl.drips) { if (d.len < 1) continue; c.save(); c.globalAlpha = 0.6 * d.a; c.strokeStyle = d.col; c.lineWidth = 2.2; c.lineCap = 'round'; c.beginPath(); c.moveTo(d.x, d.y); c.lineTo(d.x, d.y + d.len); c.stroke(); c.fillStyle = d.col; c.beginPath(); c.arc(d.x, d.y + d.len, 2.4, 0, 7); c.fill(); c.restore(); }
   for (const s of gl.stains) { c.save(); c.globalAlpha = 0.95 * s.a; c.fillStyle = s.col; c.beginPath(); c.arc(s.x, s.y, s.r, 0, 7); c.fill(); c.globalAlpha = 0.55 * s.a; c.fillStyle = '#fff'; c.beginPath(); c.arc(s.x - s.r * 0.35, s.y - s.r * 0.4, Math.max(0.5, s.r * 0.28), 0, 7); c.fill(); c.restore(); }
+  if (gl.fog) { const f = gl.fog; if (f.grow) { f.a = Math.min(0.7, f.a + 0.03); if (f.a >= 0.7) f.grow = 0; } c.save(); const rg = c.createRadialGradient(f.x, f.y, 4, f.x, f.y, f.r); rg.addColorStop(0, `rgba(235,240,245,${f.a})`); rg.addColorStop(1, 'rgba(235,240,245,0)'); c.fillStyle = rg; c.beginPath(); c.ellipse(f.x, f.y, f.r * 1.3, f.r, 0, 0, 7); c.fill(); c.restore(); }   /* buée */
   const run = gl.run;
   if (run && run.hk > 0) heroFace(g, c, run, ease(run.hk), t);
   if (gl.fly) flyDraw(c, gl.fly, t);
   if (run && run.bird) { const b = run.bird, u = (t - b.t0) / 2.1; if (u < 1) { c.save(); c.fillStyle = '#16120e'; const x = -30 + (b.x + 30) * u, y = b.y0 + 10 * u * u - Math.sin(u * 8) * 3, f = Math.sin(t * 30) * 4 * (1 - u); c.translate(x, y); c.scale(1 + u * 1.8, 1 + u * 1.8); c.beginPath(); c.ellipse(0, 0, 5, 2.4, 0, 0, 7); c.fill(); c.beginPath(); c.moveTo(-1, 0); c.lineTo(-7, -6 - f); c.lineTo(2, 0); c.fill(); c.beginPath(); c.moveTo(-1, 0); c.lineTo(-7, 6 + f); c.lineTo(2, 0); c.fill(); c.restore(); } }
-  if (run && run.rag) ragDraw(c, run.rag, t);
+  if (run && run.rag) handDraw(g, c, run.rag, t);
 }
 export function playGlass(g, id) { const gl = g.gl || (g.gl = { stains: [], drips: [], fly: null, run: null, bird: null, at: undefined }); gl.run = null; gl.stains = []; gl.drips = []; gl.fly = null; start(g, gl, id); }
 export const GLASS_IDS = IDS;

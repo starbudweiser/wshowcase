@@ -17,8 +17,17 @@ def key(im, hue=False):
     for y in range(h):
         for x in range(w):
             r, g, b = px[x, y]; d = abs(r - bg[0]) + abs(g - bg[1]) + abs(b - bg[2]) + (2 * abs((b - g) - (bg[2] - bg[1])) if hue else 0)
+            if hue and r - g > 60 and b - g > 4 and abs((b - g) - (bg[2] - bg[1])) < 40: d = 0     # fond rose-magenta éclairé inégalement (dégradé)
             ap[x, y] = 0 if d < 70 else (255 if d > 150 else int((d - 70) / 80 * 255)); dp[x, y] = 255 if d >= 30 else 0
     return im, a, dm
+
+
+def flood_bg(al):
+    """fond = tout ce qui est relié à un des bords (un sujet qui touche deux bords coupe le fond en plusieurs morceaux)"""
+    fl = al.copy(); w, h = fl.size; px = fl.load()
+    for x, y in [(x, 0) for x in range(0, w, 8)] + [(x, h - 1) for x in range(0, w, 8)] + [(0, y) for y in range(0, h, 8)] + [(w - 1, y) for y in range(0, h, 8)]:
+        if px[x, y] == 0: ImageDraw.floodfill(fl, (x, y), 128)
+    return fl
 
 
 def main():
@@ -33,9 +42,9 @@ def main():
     im, al, dm = key(Image.open(src), fill)
     al = al.point(lambda v: 255 if v > 120 else 0)
     # comble les trous du masque (peau proche du fond magenta) : sinon le contour sombre dessine des « nervures » noires dans le corps
-    fl = al.copy(); ImageDraw.floodfill(fl, (0, 0), 128); al = ImageChops.lighter(al, ImageChops.multiply(fl.point(lambda v: 255 if v == 0 else 0), dm))   # seuls les trous qui ne sont pas du fond
+    fl = flood_bg(al); al = ImageChops.lighter(al, ImageChops.multiply(fl.point(lambda v: 255 if v == 0 else 0), dm))   # seuls les trous qui ne sont pas du fond
     if fill:   # portraits : tout ce qui n'est pas relié au bord est le sujet (langue rose, dents...), même de couleur proche du fond
-        fl = al.copy(); ImageDraw.floodfill(fl, (0, 0), 128); al = ImageChops.lighter(al, fl.point(lambda v: 255 if v == 0 else 0))
+        fl = flood_bg(al); al = ImageChops.lighter(al, fl.point(lambda v: 255 if v == 0 else 0))
     al = al.filter(ImageFilter.MinFilter(3))                                                   # rogne la frange magenta
     bb = al.getbbox(); im = im.crop(bb); al = al.crop(bb)
     sc = json.load(open(SC)) if os.path.exists(SC) else {}

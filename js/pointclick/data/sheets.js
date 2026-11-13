@@ -5,7 +5,7 @@ export const SPR = {
   'hero.front': 'hero_front', 'bucket': 'bucket', 'honey': 'honey', 'merchant': 'merchant', 'merchant.bucket': 'merchant_bucket',
   'guard': 'guard', 'hen': 'hen', 'horse': 'horse', 'horse.ride': 'horse_ride', 'carrot': 'carrot', 'cheese': 'cheese',
   'dragon.up': 'dragon_up', 'dragon.down': 'dragon_down', 'dragon.mid1': 'dragon_mid1', 'dragon.mid2': 'dragon_mid2',
-  'bird.1': 'bird_1', 'bird.2': 'bird_2', 'bird.3': 'bird_3', 'puff': 'puff', 'fish': 'fish',
+  'bird.1': 'bird_1', 'bird.2': 'bird_2', 'bird.3': 'bird_3', 'puff': 'puff', 'fish': 'fish', 'hand.palm': 'hand_palm', 'hand.rag': 'hand_rag', 'hand.leaf': 'hand_leaf', 'hand.duster': 'hand_duster', 'hand.sleeve': 'hand_sleeve', 'hand.finger': 'hand_finger', 'hand.breath': 'hand_breath',
   'giant': 'giant', 'giant.swing': 'giant_swing', 'nazim': 'nazim',
   'blind.pot': 'blind_pot', 'blind.sack': 'blind_sack', 'blind.hat': 'blind_hat', 'lit.pot': 'lit_pot', 'lit.sack': 'lit_sack', 'lit.hat': 'lit_hat',
   /* scènes 4 à 10 */

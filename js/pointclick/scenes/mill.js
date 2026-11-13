@@ -35,6 +35,9 @@ export default {
     blindEnt(BL)
   ],
 
+  /* le narrateur ne parle plus de la meule une fois qu'on l'a */
+  idleKey: g => (g.flag('cheese') ? 'nar.mill.idle2' : null),
+
   async enter(g) {
     blindEnter(g, BL);
     const F = k => g.flag(k);
@@ -74,6 +77,7 @@ export default {
         }
         break;
       case 'cliff': case 'ledge':
+        if (verb === 'look' && id === 'ledge' && F('cheese')) { await g.say('hero', 'look.ledge.empty'); return true; }
         if (verb === 'walk') { if (id === 'cliff') { await g.say('hero', 'use.cliff'); return true; } }
         break;
       case 'path':
@@ -108,7 +112,7 @@ export default {
     await g.say('hero', 's2.cheese1'); g.sfx('pop'); g.ents = g.ents.filter(e => e.id !== 'cheese'); g.set('cheese'); g.give('cheese');
     await g.say('hero', 's2.cheese2'); await g.say('horse', 's2.cheese3'); await g.say('hero', 's2.cheese4');
     h.visible = false; horse.visible = false;
-    const r = { id: 'rider', spr: 'horse.ride', x: LEDGE.x - 6, y: LEDGE.y + 18, visible: true, noHot: true, scale: 0.7, z: 300, rot: DOWN }; g.ents.push(r);
+    const r = { id: 'rider', spr: 'horse.ride', x: LEDGE.x - 6, y: LEDGE.y + 18, visible: true, noHot: true, scale: 0.7, z: 300, rot: UP, flip: true };   /* tête en bas, sabots contre la falaise */ g.ents.push(r);
     g.sfx('whoosh'); g.shake(1800, 1.6); await g.walkEnt('rider', BASE[0] - 6, BASE[1] + 2, 80); g.sfx('clang'); g.shake(300, 3);
     g.ents = g.ents.filter(e => e !== r); delete h.scale; h.x = BASE[0] - 12; h.y = BASE[1] + 14; h.visible = true; h.dir = 'l';
     delete horse.scale; horse.x = 252; horse.y = 226; horse.visible = true;
