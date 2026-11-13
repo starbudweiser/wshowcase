@@ -94,11 +94,14 @@ function drawBike(c, x, y, t, sc = 0.8) {
   c.restore();
 }
 function flyby(g, c, n, sk) {
-  const e = n.eti; if (!e || !sk || !sk.moon) return false; const u = (g.now - e.t0) / 8; if (u < 0 || u > 1) return false;
-  /* trajectoire haute : un arc léger qui culmine devant la lune, sans jamais descendre dans le décor */
-  const [mx, my] = sk.moon, um = (mx + 30) / 540, x = -30 + 540 * u, k = (u - um) / Math.max(um, 1 - um), y = Math.min(my + 6 + 22 * k * k, my + 24);
+  const e = n.eti; if (!e || !sk || !sk.moon) return false; const u = (g.now - e.t0) / 9; if (u < 0 || u > 1) return false;
+  /* tout petit, très loin : une ligne presque droite qui traverse le ciel et passe pile devant la lune ; dessiné seulement là où l'on voit
+     le ciel (masque du ciel), donc jamais par-dessus les arbres, la falaise ou les toits */
+  const [mx, my] = sk.moon, x = -16 + 512 * u, y = my - 3 + (x - mx) * -0.06;
   if (!e.sung && u > 0.05) { e.sung = true; snd.flyby && snd.flyby(); }
-  drawBike(c, x, y, g.now, 1.05); return true;
+  const t = sk.tmpB || (sk.tmpB = Object.assign(document.createElement('canvas'), { width: W, height: SKY_H })), T = t.getContext('2d');
+  T.globalCompositeOperation = 'source-over'; T.clearRect(0, 0, W, SKY_H); drawBike(T, x, y, g.now, 0.38);
+  T.globalCompositeOperation = 'destination-in'; T.drawImage(sk.mask, 0, 0); c.drawImage(t, 0, 0); return true;
 }
 
 /* ───── mode nuit ───── */
@@ -184,7 +187,7 @@ export function drawNight(g, c) {
   }
   /* le vélo passe dans le ciel, comme la lune : tous deux derrière le décor proche (arbres, falaise, toits), repeint par-dessus */
   const bike = flyby(g, c, n, sk);
-  if (sk && sk.moon && va > 0) { const tint = `rgb(${255 - a * 215 | 0},${255 - a * 200 | 0},${255 - a * 120 | 0})`; if (bike) occludeTint(c, sk, 0, 0, W, SKY_H, tint); else occludeTint(c, sk, sk.moon[0] - 70, sk.moon[1] - 70, 140, 140, tint); }
+  if (sk && sk.moon && va > 0) { const tint = `rgb(${255 - a * 215 | 0},${255 - a * 200 | 0},${255 - a * 120 | 0})`; occludeTint(c, sk, sk.moon[0] - 70, sk.moon[1] - 70, 140, 140, tint); }
   const vg = c.createRadialGradient(W / 2, H / 2, 70, W / 2, H / 2, 300); vg.addColorStop(0, 'rgba(0,0,10,0)'); vg.addColorStop(1, `rgba(0,0,10,${a * 0.55})`); c.fillStyle = vg; c.fillRect(0, 0, W, H);
   /* z z z au-dessus des dormeurs */
   c.save(); c.font = '12px VT323, monospace'; c.fillStyle = '#dfe8ff';
