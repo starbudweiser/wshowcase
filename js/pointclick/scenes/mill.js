@@ -42,7 +42,7 @@ export default {
     blindEnter(g, BL);
     const F = k => g.flag(k);
     if (F('cheese')) g.ents = g.ents.filter(e => e.id !== 'cheese');
-    if (F('onLedge') && !F('cheese')) { const h = g.hero; h.x = LEDGE.x - 14; h.y = LEDGE.y; h.scale = 0.5; g.addWalk(LEDGE.poly); const hs = g.ent('horse'); hs.x = LEDGE.x + 18; hs.y = LEDGE.y; hs.scale = 0.45; }
+    if (F('onLedge') && !F('cheese')) { const h = g.hero; h.x = LEDGE.x - 14; h.y = LEDGE.y; h.scale = 0.5; g.addWalk(LEDGE.poly); const hs = g.ent('horse'); hs.x = LEDGE.x + 18; hs.y = LEDGE.y; hs.scale = 0.45; hs.at = [LEDGE.x + 4, LEDGE.y]; }
   },
   tick(g) {
     blindTick(g, BL);
@@ -58,6 +58,7 @@ export default {
   async on(g, verb, id, item) {
     const F = k => g.flag(k);
     if (await blindOn(g, BL, verb, id, item)) return true;
+    if (F('onLedge') && !F('cheese') && id === 'horse' && verb === 'use' && !item) { await g.cut(async () => { await g.say('hero', 's2.ledge.down'); await this.rideDown(g); }); return true; }
     if (F('onLedge') && !F('cheese') && id !== 'cheese' && verb !== 'look') { if (id === 'hero' || id === 'ledge') return false; await g.say('hero', 's2.ledge.stuck'); return true; }
     switch (id) {
       case 'horse':
@@ -104,18 +105,23 @@ export default {
     setTimeout(() => g.sfx('step'), 200); setTimeout(() => g.sfx('step'), 700);
     g.say('rider', 's2.ride4'); await climb; g.sfx('clang');
     g.ents = g.ents.filter(e => e !== r);
-    h.visible = true; h.x = LEDGE.x - 14; h.y = LEDGE.y; h.scale = 0.5; h.dir = 'r'; horse.visible = true; horse.x = LEDGE.x + 18; horse.y = LEDGE.y; horse.scale = 0.45;
+    h.visible = true; h.x = LEDGE.x - 14; h.y = LEDGE.y; h.scale = 0.5; h.dir = 'r'; horse.visible = true; horse.x = LEDGE.x + 18; horse.y = LEDGE.y; horse.scale = 0.45; horse.at = [LEDGE.x + 4, LEDGE.y];
     g.set('onLedge'); g.addWalk(LEDGE.poly); await g.wait(400); await g.say('hero', 's2.ride5');
   },
   async takeCheese(g) {
     const h = g.hero, horse = g.ent('horse');
     await g.say('hero', 's2.cheese1'); g.sfx('pop'); g.ents = g.ents.filter(e => e.id !== 'cheese'); g.set('cheese'); g.give('cheese');
     await g.say('hero', 's2.cheese2'); await g.say('horse', 's2.cheese3'); await g.say('hero', 's2.cheese4');
+    await this.rideDown(g);
+  },
+  /* redescente à cheval, tête en bas (avec ou sans le fromage) */
+  async rideDown(g) {
+    const h = g.hero, horse = g.ent('horse');
     h.visible = false; horse.visible = false;
     const r = { id: 'rider', spr: 'horse.ride', x: LEDGE.x - 6, y: LEDGE.y + 18, visible: true, noHot: true, scale: 0.7, z: 300, rot: UP, flip: true };   /* tête en bas, sabots contre la falaise */ g.ents.push(r);
     g.sfx('whoosh'); g.shake(1800, 1.6); await g.walkEnt('rider', BASE[0] - 6, BASE[1] + 2, 80); g.sfx('clang'); g.shake(300, 3);
     g.ents = g.ents.filter(e => e !== r); delete h.scale; h.x = BASE[0] - 12; h.y = BASE[1] + 14; h.visible = true; h.dir = 'l';
-    delete horse.scale; horse.x = 252; horse.y = 226; horse.visible = true;
+    delete horse.scale; horse.x = 252; horse.y = 226; horse.at = [214, 236]; horse.visible = true;
     g.set('onLedge', false); await g.say('hero', 's2.down1');
   }
 };

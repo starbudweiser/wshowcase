@@ -131,6 +131,7 @@ export default {
   'look.post': 'A hitching post. The horse is tied with a sailor’s knot. A thousand-knot knot.', 'use.post': 'Untie the knot? No. It’s more complicated than my skill tree.',
   'look.signpost': 'The sign says “Mill” to the left and “Mill” to the right. A mill of mills, probably.', 'talk.signpost': 'I ask it the way. It points two directions. A sign that hesitates.',
   'look.path': 'The path continues to the meadow, where the giants graze. Nothing to worry about. Today.',
+  's2.ledge.down': 'Without the cheese? Fine. Back down we go. Same thing, in reverse.',
   's2.ledge.stuck': 'I’m stuck on the ledge. Cheese first, descent later.',
   'use.horse.friend2': 'We’re already friends. One more vegetable and he’ll propose.',
   's2.exit.no': 'Not without the golden wheel. The script insists, and so do I.', 's2.exit.yes': 'To the meadow, where giants graze. And trouble.',

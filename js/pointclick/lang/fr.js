@@ -147,6 +147,7 @@ export default {
   'look.post': 'Un poteau d’attache. Le cheval y est lié avec un noeud de marin. Un noeud de mille nœuds.', 'use.post': 'Je défais le noeud ? Non. Il est plus compliqué que mon arbre de compétences.',
   'look.signpost': 'Le panneau indique « Moulin » à gauche et « Moulin » à droite. Un moulin de moulin, sans doute.', 'talk.signpost': 'Je lui demande le chemin. Il m’indique deux directions. Un panneau qui hésite.',
   'look.path': 'Le chemin continue vers la prairie, là où broutent les géants. Rien d’inquiétant. Aujourd’hui.',
+  's2.ledge.down': 'Sans le fromage ? Bon. On redescend. Même chose, en sens inverse.',
   's2.ledge.stuck': 'Je suis coincé sur la corniche. Le fromage d’abord, la descente ensuite.',
   'use.horse.friend2': 'On est déjà amis. Un légume de plus et il me demande en mariage.',
   's2.exit.no': 'Pas sans la meule dorée. Le scénario insiste, et moi aussi.', 's2.exit.yes': 'Direction la prairie, là où broutent les géants. Et les ennuis.',
