@@ -41,7 +41,7 @@ function buildIntro() {
 }
 function powerOn(spaceId) {
   if (powered) return; powered = true; sfx.unlock();
-  const hs = parseHash(); if (spaceId) S.cur = spaceId; else if (hs.space) S.cur = hs.space;
+  const hs = parseHash(); if (spaceId) S.cur = spaceId; else if (hs.space) S.cur = hs.space; else S.cur = 'util';
   const pv = $('#pvscreen'), r = pv.getBoundingClientRect(), to = stageRect();
   const ex = h('div', { class: 'expander' }); Object.assign(ex.style, { left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px' });
   document.body.append(ex);
