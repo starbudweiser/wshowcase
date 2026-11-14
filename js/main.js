@@ -118,4 +118,6 @@ on('lang', async () => {
   $('#ilogo').innerHTML = logoSvg(); $('#boot .blogo').innerHTML = APPLE;
   document.querySelectorAll('#intro [data-go]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); powerOn(a.dataset.go); }));
   document.body.classList.add('ready');
+  /* lien direct (#skyrim, #skyrim/mORTEX…, depuis skyrimtools.com) : le Mac démarre tout seul, sans passer par l'accueil */
+  if (parseHash().space) powerOn();
 })();
