@@ -1,6 +1,7 @@
 /* Ciel animé (nuages qui dérivent, étoiles) et « mode nuit » : si le joueur ne bouge pas la souris pendant une minute, la nuit tombe par paliers,
    les personnages rentrent chez eux ou s'allongent, le héros vient parler au joueur en gros plan ; au moindre mouvement, tout redevient jour. */
 import { snd } from './sound.js';
+import { CASSE } from '../data/sheets.js';
 const W = 480, H = 270, SKY_H = 130, STEPS = [0.2, 0.4, 0.6, 0.78];
 export const IDLE_NIGHT = 60;
 const ease = k => k * k * (3 - 2 * k);
@@ -111,11 +112,78 @@ function flyby(g, c, n, sk) {
 }
 
 /* ───── mode nuit ───── */
+/* coucher image par image : suites de passages de la planche (tools/sleep_frames.py). Nazim sort d'abord de sa fosse (pit1, pit2) : il y est
+   enfoncé de A.pit pixels, coupé sous le rebord, et remonte au fil des images ; au réveil il y redescend par les mêmes passages. */
+const ord = (A, re) => Object.keys(A.seg).filter(n => re.test(n)).sort((a, b) => parseInt(a.replace(/\D/g, ''), 10) - parseInt(b.replace(/\D/g, ''), 10));
+const PIT = A => ord(A, /^pit\d+$/), DOWN = A => [...PIT(A), ...ord(A, /^down\d+$/)], UP = A => [...ord(A, /^up\d+$/), 'end'];
+function frames(A, names) { const fr = []; for (const n of names) { const s = A.seg[n]; if (s) for (let k = 0; k < s[1]; k++) fr.push({ f: s[0] + k, dy: 0 }); } return fr; }
+function pitDepth(fr, n, depth, rise) { for (let j = 0; j < n; j++) { const k = ease(n > 1 ? j / (n - 1) : 1); fr[j].dy = depth * (rise ? 1 - k : k); } }
+function animBegin(g, o, now) {
+  const A = g.sleepIdx[o.k]; o.fr = frames(A, DOWN(A)); o.ph = 'down'; o.t0 = now; o.speed = 1;
+  o.thr = g.sleepConf(o.e).thr ? { st: 'wait' } : null;
+  if (A.pit) pitDepth(o.fr, frames(A, PIT(A)).length, A.pit, true);
+}
+function animWake(g, o, now) {
+  const A = g.sleepIdx[o.k];
+  if (o.ph === 'loop') { o.fr = frames(A, UP(A)); if (A.pit) { const back = frames(A, PIT(A)); pitDepth(back, back.length, A.pit, false); o.fr.push(...back); } o.speed = 1; }
+  else if (o.ph === 'down') {
+    const j = Math.min(o.fr.length - 1, Math.floor((now - o.t0) * A.fps)); o.fr = o.fr.slice(0, j + 1).reverse(); o.speed = 1.6;   /* réveillé avant d'être endormi : il se relève par le même chemin */
+    const T = g.sleepConf(o.e).thr; if (o.thr && o.thr.st !== 'wait' && T && A.seg[T.seg]) { const f0 = A.seg[T.seg][0] + (T.at || 0); o.fr = [...o.fr.filter(fr => fr.f >= f0), ...frames(A, [...(T.back || []), 'end'])]; }
+  }   /* réveillé avant d'être endormi : il se relève par le même chemin */
+  else return;
+  o.ph = 'up'; o.t0 = now;
+}
+/* ───── le géant lance son gourdin (SLEEP.thr) : vol en cloche en tournoyant ; s'il vise un décor intact (CASSE), fracas, nuage de poussière et
+   rondins qui volent, et le coin du décor passe à son état brisé derrière la poussière ; sinon le gourdin sort de l'écran et on entend un fracas lointain ───── */
+function thrLaunch(g, o, now) {
+  const T = g.sleepConf(o.e).thr, e = o.e, s = e.scale ?? g.persp(e.y), tg = T.targets && T.targets[g.st.scene], d = tg && tg.casse && CASSE[tg.casse];
+  const casse = d && !g.st.flags[d.flag] ? tg.casse : null, from = [e.x + T.hand[0] * s, e.y + T.hand[1] * s], to = casse ? tg.to : [-70, from[1] - 150];
+  const dist = Math.hypot(to[0] - from[0], to[1] - from[1]);
+  Object.assign(o.thr, { st: 'fly', t0: now, from, to, s, casse, img: T.img, dur: Math.max(0.55, dist / 330), h: 26 + dist * 0.16 }); snd.whoosh();
+}
+function thrStep(g, o, now) {
+  const c = o.thr; if (!c || c.st === 'wait') return;
+  if (c.st === 'fly' && now - c.t0 >= c.dur) {
+    c.st = 'hit';
+    if (c.casse) {
+      snd.crash(); g.shake(450, 2.6); c.swapAt = now + 0.3; const [x0, y0, x1, y1] = CASSE[c.casse].dust, r = (a, b) => a + Math.random() * (b - a);
+      c.dust = Array.from({ length: 18 }, (_, i) => ({ x: r(x0, x1), y: r(y0 + (y1 - y0) * 0.25, y1), t0: now + i * 0.03, life: r(1.5, 2.4), s0: r(0.6, 0.9), s1: r(1.5, 2.3), vy: r(-14, -5) }));
+      c.logs = Array.from({ length: 8 }, () => ({ x: r(x0 + 15, x1 - 15), y: r(y0, (y0 + y1) / 2), vx: r(-60, 60), vy: r(-90, -30), a: r(0, 6), va: r(-9, 9), w: r(6, 11), t0: now, life: r(0.9, 1.4) }));
+    } else c.farAt = now + 0.5;
+  }
+  if (c.swapAt && now >= c.swapAt) { c.swapAt = 0; g.casseApply(c.casse); }
+  if (c.farAt && now >= c.farAt) { c.farAt = 0; snd.farcrash(); }
+}
+function thrDraw(g, c, o, now) {
+  const t = o.thr; if (!t || t.st === 'wait') return;
+  if (t.st === 'fly') {
+    const im = g.imgs[t.img]; if (!im || !im.width) return; const k = Math.min(1, (now - t.t0) / t.dur);
+    const x = t.from[0] + (t.to[0] - t.from[0]) * k, y = t.from[1] + (t.to[1] - t.from[1]) * k - 4 * t.h * k * (1 - k);
+    c.save(); c.translate(Math.round(x), Math.round(y)); c.rotate(-(now - t.t0) * 15); c.drawImage(im, -im.width / 2 * t.s, -im.height / 2 * t.s, im.width * t.s, im.height * t.s); c.restore();
+  }
+  for (const L of t.logs || []) { const u = now - L.t0; if (u > L.life) continue; c.save(); c.translate(L.x + L.vx * u, L.y + L.vy * u + 160 * u * u); c.rotate(L.a + L.va * u); c.fillStyle = '#5b3a1e'; c.fillRect(-L.w / 2, -1.5, L.w, 3); c.fillStyle = '#2a1a10'; c.fillRect(-L.w / 2, 1.5, L.w, 1); c.restore(); }
+  const pf = g.spr('puff');   /* poussière : les volutes pixel art du jeu (comme la fumée des feux), qui gonflent et s'effacent */
+  if (pf) for (const D of t.dust || []) { const u = (now - D.t0) / D.life; if (u < 0 || u > 1) continue; const k = D.s0 + (D.s1 - D.s0) * Math.sqrt(u), w = pf.width * k, h = pf.height * k; c.globalAlpha = 0.9 * (1 - u) * Math.min(1, u * 8); c.drawImage(pf, Math.round(D.x - w / 2), Math.round(D.y + D.vy * u * D.life - h / 2), Math.round(w), Math.round(h)); }
+  c.globalAlpha = 1;
+}
+function animStep(g, o, now) {
+  const A = g.sleepIdx[o.k], e = o.e; thrStep(g, o, now); if (!o.ph || o.ph === 'over') return;
+  if (o.ph === 'loop') { const s = A.seg.loop; e.sleepF = s[0] + Math.floor((now - o.t0) * (A.lfps || A.fps)) % s[1]; e.sleepDy = 0; e.sleepClip = null; return; }
+  const j = Math.floor((now - o.t0) * A.fps * o.speed);
+  if (j >= o.fr.length) {
+    if (o.ph === 'down' && A.seg.loop) { o.ph = 'loop'; o.t0 = now; o.done = true; return animStep(g, o, now); }
+    o.ph = 'over'; e.sleepF = null; e.sleepDy = 0; e.sleepClip = null; return;
+  }
+  const fr = o.fr[j]; e.sleepF = fr.f; e.sleepDy = fr.dy; e.sleepClip = fr.dy > 0 ? e.y : null;
+  const T = g.sleepConf(e).thr; if (o.thr && o.thr.st === 'wait' && o.ph === 'down' && T && A.seg[T.seg] && fr.f >= A.seg[T.seg][0] + (T.at || 0)) thrLaunch(g, o, now);
+}
 export function startNight(g) {
   const h = g.hero; g.clearBarks(); g.hushNarr(); g.nq.length = 0;
   g.night = { t0: g.now, st: 'fall', level: 0, a: 0, hk: 0, ents: [], say: null, nextSay: 0, lineI: 0, cricket: 0, stunned: false, ct0: 0, hid: false, kdone: {}, mirror: Math.random() < 0.5 };   /* côté vers lequel il se tourne, tiré au sort à chaque nuit */
+  /* tout le monde se couche sur place : animation image par image (planche du coucher) ; à défaut, en attendant sa planche, le sprite pivote */
   g.ents.filter(e => !e.isHero && e.visible !== false && e.hot && !e.noHot && !INANIMATE.has(e.id)).sort((a, b) => a.x - b.x).forEach((e, i) => {
-    g.night.ents.push({ e, mode: hash(e.id) % 2 ? 'home' : 'lie', t: 3 + i * 0.9, sx: e.x, sy: e.y, started: false, done: false, hid: false, side: hash(e.id) % 3 === 0 ? -1 : 1 });
+    const k = g.sleepKey(e);
+    g.night.ents.push({ e, mode: k ? 'anim' : 'lie', k, t: 3 + i * 0.9, sx: e.x, sy: e.y, flip0: e.flip, started: false, done: false, hid: false, side: hash(e.id) % 3 === 0 ? -1 : 1 });
   });
   h.pose = null; snd.music(false);
 }
@@ -135,11 +203,12 @@ export function updateNight(g, dt) {
   const lv = t < 3 ? 1 : t < 6 ? 2 : t < 9 ? 3 : 4; n.level = lv;
   n.a += (STEPS[lv - 1] - n.a) * Math.min(1, dt * 5);
   for (const o of n.ents) {
-    if (!o.started && t >= o.t) { o.started = true; if (o.mode === 'home') o.e.goal = [o.e.x < 240 ? -40 : 520, o.e.y, 44]; }
-    if (o.started && !o.done) {
-      if (o.mode === 'lie') { const k = Math.min(1, (t - o.t) / 1.3); o.e.nrot = o.side * Math.PI / 2 * ease(k); if (k >= 1) o.done = true; }
-      else if (!o.e.goal || o.e.x < -20 || o.e.x > 500) { o.e.goal = null; o.e.visible = false; o.hid = true; o.done = true; }
+    if (!o.started && t >= o.t) {
+      o.started = true;
+      if (o.mode === 'anim') { const at = g.sleepConf(o.e).at && g.sleepConf(o.e).at[o.e.id]; if (at) { o.e.goal = [at[0], at[1], 30]; o.walk = true; } else animBegin(g, o, now); }
     }
+    if (o.started && o.mode === 'anim') { if (o.walk && !o.e.goal) { o.walk = false; o.e.flip = o.flip0; animBegin(g, o, now); } if (!o.walk) animStep(g, o, now); }
+    if (o.started && !o.done && o.mode === 'lie') { const k = Math.min(1, (t - o.t) / 1.3); o.e.nrot = o.side * Math.PI / 2 * ease(k); if (k >= 1) o.done = true; }
   }
   if (!n.eti && t >= 4.5 && g.sky && g.sky.moon && g.sky.moonClear) n.eti = { t0: now };
   if (t >= 11 && !n.stunned) { n.stunned = true; h.front = true; h.back = false; h.pose = h.pose || 'hero.fSurprise'; nightSay(g, '', '…?!'); snd.jingle(); n.nextSay = now + 1.8; n.stunEnd = now + 1.6; }
@@ -162,7 +231,7 @@ export function updateNight(g, dt) {
 export function wakeNight(g) {
   const n = g.night; if (!n || n.st === 'wake') return;
   endSay(g); n.st = 'wake'; n.w0 = g.now; n.hk0 = n.hk; n.a0 = n.a; n.greeted = false; n.barks = 0; snd.music(snd.musicOn !== false);
-  for (const o of n.ents) if (o.hid) { o.e.visible = true; o.e.goal = null; o.e.x = o.sx; o.e.y = o.sy; o.e.nrot = 0; o.mode = 'hid'; o.side = hash(o.e.id) % 2 ? 1 : -1; }
+  for (const o of n.ents) { if (o.mode === 'anim') { if (o.walk) { o.walk = false; o.e.goal = null; o.e.flip = o.flip0; } animWake(g, o, g.now); } }
   g.hero.pose = null;
 }
 function wakeUpdate(g, dt) {
@@ -172,15 +241,18 @@ function wakeUpdate(g, dt) {
   if (n.hid && n.hk < 0.03) { n.hid = false; h.visible = true; h.front = true; h.back = false; }
   if (!n.hid && !n.greeted && tw > 0.6) { n.greeted = true; g.bark('hero', 'night.hero.back', 3600, true); h.front = false; }
   for (const o of n.ents) {
+    if (o.mode === 'anim') { animStep(g, o, g.now); continue; }
     const k = Math.min(1, tw / 1.2), wob = Math.sin(g.now * 9 + o.sx) * 0.1 * (1 - Math.min(1, Math.max(0, (tw - 0.4) / 2.2)));
     if (o.mode === 'lie') o.e.nrot = o.side * Math.PI / 2 * (1 - ease(k)) + wob; else o.e.nrot = wob;
   }
+  const animsOver = n.ents.every(o => o.mode !== 'anim' || !o.ph || o.ph === 'over');
   if (n.greeted && n.barks < 2 && tw > 1.2 && !g.hiBusy() && !g.lowBusy() && g.barks.length === 0) { const c = n.ents.filter(o => o.e.visible !== false && !(g.ent(o.e.id) === null)); const o = c[(hash(String(n.barks)) + c.length) % (c.length || 1)]; if (o) g.bark(o.e.id, 'night.wake', 2800, true); n.barks++; }
-  if (tw > 3 && n.barks >= 2 && !g.lowBusy() || tw > 14) { for (const o of n.ents) o.e.nrot = 0; g.night = null; g.lastMove = g.now; g.lastAct = g.now; h.front = false; }
+  if (tw > 3 && n.barks >= 2 && !g.lowBusy() && animsOver || tw > 16) { for (const o of n.ents) { o.e.nrot = 0; o.e.sleepF = null; o.e.sleepDy = 0; o.e.sleepClip = null; } g.night = null; g.lastMove = g.now; g.lastAct = g.now; h.front = false; }
 }
 
 export function drawNight(g, c) {
   const n = g.night; if (!n) return; const a = n.a, t = g.now;
+  for (const o of n.ents) thrDraw(g, c, o, t);
   c.save(); c.globalCompositeOperation = 'multiply'; c.fillStyle = `rgb(${255 - a * 215 | 0},${255 - a * 200 | 0},${255 - a * 120 | 0})`; c.fillRect(0, 0, W, H); c.restore();
   const sk = g.sky, va = Math.min(1, Math.max(0, (a - 0.3) / 0.4));
   if (sk && va > 0) {
@@ -197,7 +269,11 @@ export function drawNight(g, c) {
   const vg = c.createRadialGradient(W / 2, H / 2, 70, W / 2, H / 2, 300); vg.addColorStop(0, 'rgba(0,0,10,0)'); vg.addColorStop(1, `rgba(0,0,10,${a * 0.55})`); c.fillStyle = vg; c.fillRect(0, 0, W, H);
   /* z z z au-dessus des dormeurs */
   c.save(); c.font = '12px VT323, monospace'; c.fillStyle = '#dfe8ff';
-  for (const o of n.ents) if (o.mode === 'lie' && o.done && o.e.visible !== false) for (let k = 0; k < 3; k++) { const ph = (t * 0.5 + k / 3 + o.sx * 0.01) % 1; c.globalAlpha = Math.sin(ph * Math.PI) * 0.9; c.fillText(k === 1 ? 'Z' : 'z', o.e.x + 4 + ph * 12 + k * 3, o.e.y - 18 - ph * 22); }
+  for (const o of n.ents) {
+    if (o.e.visible === false || !((o.mode === 'lie' && o.done) || o.ph === 'loop')) continue;
+    const z = o.mode === 'anim' && g.sleepConf(o.e).z, s = o.e.scale ?? g.persp(o.e.y), zx = z ? o.e.x + z[0] * s : o.e.x + 4, zy = z ? o.e.y + z[1] * s : o.e.y - 18;
+    for (let k = 0; k < 3; k++) { const ph = (t * 0.5 + k / 3 + o.sx * 0.01) % 1; c.globalAlpha = Math.sin(ph * Math.PI) * 0.9; c.fillText(k === 1 ? 'Z' : 'z', zx + ph * 12 + k * 3, zy - ph * 22); }
+  }
   c.restore();
   /* le héros qui s'approche de l'écran : sprite qui grandit, puis portrait en gros plan */
   if (n.hk > 0.02) {

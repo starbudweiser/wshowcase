@@ -14,7 +14,7 @@ import { loadLang, makeT } from './lang.js';
 import { hasSave, loadSave, writeSave, clearSave } from './save.js';
 import { makeAmbient } from './ambient.js';
 import * as SH from '../data/sheets.js';
-const { SPR, ITEMS } = SH, ANIM = SH.ANIM || {}, HERO = SH.HERO || null;
+const { SPR, ITEMS } = SH, ANIM = SH.ANIM || {}, HERO = SH.HERO || null, SLEEP = SH.SLEEP || {};
 
 export const W = 480, H = 270;
 const VERBS = ['walk', 'take', 'use', 'talk', 'look'];
@@ -38,6 +38,7 @@ export class Game {
     this.build();
     await Promise.all(Object.values(SPR).map(n => this.img(`assets/pointclick/spr/${n}.png`)));
     try { this.animIdx = await (await fetch('assets/pointclick/anim/index.json')).json(); } catch { this.animIdx = {}; }
+    try { this.sleepIdx = await (await fetch('assets/pointclick/sleep/index.json')).json(); } catch { this.sleepIdx = {}; }
     this.ro = new ResizeObserver(() => this.fit()); this.ro.observe(this.root); this.fit();
     this.last = performance.now(); const tick = t => { if (!this.alive) return; this.raf = requestAnimationFrame(tick); const dt = Math.min(0.05, (t - this.last) / 1000); this.last = t; try { this.update(dt); this.draw(); } catch (e) { console.error(e); } };
     this.raf = requestAnimationFrame(tick);
@@ -73,6 +74,15 @@ export class Game {
     this._ld = this._ld || {}; if (!this._ld[p]) { this._ld[p] = 1; Promise.resolve(this.img(p)).catch(() => {}); } return null;
   }
   spr(name) { const i = this.imgs[`assets/pointclick/spr/${SPR[name] || name}.png`]; return i && i.width ? i : null; }
+  /* coucher de nuit : clé de la planche d'animation du personnage (null s'il n'en a pas encore), planche chargée, réglages */
+  sleepKey(e) { const d = SLEEP[e.spr]; return d && this.sleepIdx && this.sleepIdx[d.k] ? d.k : null; }
+  sleepSheet(k) { const i = this.imgs[`assets/pointclick/sleep/${k}.png`]; return i && i.width ? i : null; }
+  sleepConf(e) { return SLEEP[e.spr] || {}; }
+  /* décor brisé (SH.CASSE) : le coin cassé est peint par-dessus le décor ; image prête dès l'arrivée dans la scène */
+  async casseBg(id, bg) { const d = SH.CASSE[id]; if (!d || !bg) return bg; const p = await this.img(d.img); return this.st.flags[d.flag] && p ? this.casseCompose(bg, d, p) : bg; }
+  casseCompose(bg, d, p) { const cv = Object.assign(document.createElement('canvas'), { width: bg.width, height: bg.height }), x = cv.getContext('2d'); x.drawImage(bg, 0, 0); x.drawImage(p, d.x * bg.width / W, d.y * bg.height / H, p.width * bg.width / W, p.height * bg.height / H); return cv; }
+  casseApply(id) { const d = SH.CASSE[id], p = d && this.imgs[d.img]; if (!d) return; this.st.flags[d.flag] = true; this.save(); if (!p || !p.width) return; this.bg = this.casseCompose(this.bg, d, p); if (this.sky && this.sky.occ) this.sky.occ.getContext('2d').drawImage(p, d.x, d.y); }
+
 
   /* ───────── interface HTML ───────── */
   build() {
@@ -209,11 +219,12 @@ export class Game {
   save() { if (this.st && this.started) writeSave({ scene: this.st.scene, flags: this.st.flags, inv: this.st.inv, hero: this.hero ? { x: this.hero.x, y: this.hero.y, dir: this.hero.dir } : null }); }
   async goScene(id, how = {}) {
     const sc = (await import(`../scenes/${id}.js`)).default; this.st.scene = id;
-    const bg = await this.img('assets/pointclick/' + sc.bg); this.scene = sc; this.bg = bg; this.ambNext = this.now + 4; this.wk = null; this.wkAt = Math.max(this.wkAt ?? 0, this.now + 45); this.night = null; this.sky = sc.interior ? null : buildSky(bg); this.lastMove = this.now;
+    const bg = await this.casseBg(id, await this.img('assets/pointclick/' + sc.bg)); this.scene = sc; this.bg = bg; this.ambNext = this.now + 4; this.wk = null; this.wkAt = Math.max(this.wkAt ?? 0, this.now + 45); this.night = null; this.sky = sc.interior ? null : buildSky(bg); this.lastMove = this.now;
     this.walk = new Walk(sc.walk.map(p => p.slice()), W, H);
     this.hot = sc.hot || []; this.amb = makeAmbient(sc.ambient);
     await Promise.all((sc.ambient || []).filter(o => o.type === 'frames' && this.animIdx[o.id]).flatMap(o => Array.from({ length: this.animIdx[o.id].n }, (_, i) => Promise.resolve(this.img(`assets/pointclick/anim/${o.id}_${i}.png`)).catch(() => {}))));
     this.ents = (sc.ents || []).map(e => ({ visible: true, ph: Math.random() * 5, ...e }));
+    this.ents.forEach(e => { const k = this.sleepKey(e), t = this.sleepConf(e).thr; if (k) Promise.resolve(this.img(`assets/pointclick/sleep/${k}.png`)).catch(() => {}); if (k && t) Promise.resolve(this.img(t.img)).catch(() => {}); });   /* planches du coucher de nuit, prêtes bien avant la nuit */
     const st = how.restored && this.st.hero ? this.st.hero : sc.start;
     this.hero = { id: 'hero', who: 'hero', spr: HERO ? HERO.stand : 'hero.side', x: st.x, y: st.y, dir: st.dir || 'r', path: [], walkD: 0, hot: true, isHero: true, visible: true };
     this.ents.push(this.hero);
@@ -441,6 +452,7 @@ export class Game {
     if (this.scaler) this.scaler.render();
   }
   drawEnt(e) {
+    if (e.sleepF != null) { const k = this.sleepKey(e), sh = k && this.sleepSheet(k); if (sh) return this.drawSleep(e, this.sleepIdx[k], sh); }
     const im = this.spr(this.frame(e)) || this.spr(e.spr); if (!im) return; const c = this.ctx, s = e.scale ?? this.persp(e.y), w = im.width * s, h = im.height * s;
     c.save(); if (e.alpha !== undefined) c.globalAlpha = e.alpha; c.translate(Math.round(e.x), Math.round(e.y - (e.bob || 0)));
     if (e.nrot) c.translate(0, Math.min(1, Math.abs(e.nrot) / 1.5708) * Math.max(0, h - w) / 2);
@@ -448,5 +460,13 @@ export class Game {
     if (e.flip) c.scale(-1, 1);
     if (e.talk) c.scale(1, 1 + 0.018 * Math.sin(this.now * 26));
     c.drawImage(im, Math.round(-w / 2), Math.round(-h), Math.round(w), Math.round(h)); c.restore();
+  }
+  /* image e.sleepF de la planche du coucher : cadre fixe ancré au sol (ax, ay) ; e.sleepDy l'enfonce (Nazim dans sa fosse), e.sleepClip coupe sous le rebord */
+  drawSleep(e, A, sh) {
+    const c = this.ctx, s = e.scale ?? this.persp(e.y), i = Math.max(0, Math.min(A.n - 1, e.sleepF | 0)), sx = (i % A.cols) * A.w, sy = Math.floor(i / A.cols) * A.h;
+    c.save(); if (e.alpha !== undefined) c.globalAlpha = e.alpha;
+    if (e.sleepClip != null) { c.beginPath(); c.rect(0, 0, W, Math.round(e.sleepClip)); c.clip(); }
+    c.translate(Math.round(e.x), Math.round(e.y + (e.sleepDy || 0) * s));
+    c.drawImage(sh, sx, sy, A.w, A.h, Math.round(-A.ax * s), Math.round(-A.ay * s), Math.round(A.w * s), Math.round(A.h * s)); c.restore();
   }
 }

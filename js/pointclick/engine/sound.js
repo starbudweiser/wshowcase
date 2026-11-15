@@ -237,6 +237,8 @@ export const snd = {
   coin() { tone({ f: 1320, d: 0.08, g: 0.07 }); tone({ f: 1760, d: 0.22, t: 0.07, g: 0.07 }); },
   cluck() { tone({ f: 620, to: 380, d: 0.09, g: 0.06 }); tone({ f: 560, to: 340, d: 0.09, t: 0.12, g: 0.05 }); },
   flyby() { [392, 494, 587, 784, 988, 784].forEach((f, i) => tone({ f, d: 0.5, t: i * 0.42, g: 0.035, type: 'sine' })); },
+  crash() { tone({ f: 120, to: 40, d: 0.5, g: 0.2, type: 'sine' }); noise({ d: 0.9, f: 900, q: 0.7, g: 0.2, type: 'lowpass' }); for (let i = 0; i < 7; i++) { noise({ d: 0.07, t: 0.08 + i * 0.11 + Math.random() * 0.05, f: 1500 + Math.random() * 1200, q: 3, g: 0.09, type: 'bandpass' }); tone({ f: 180 + Math.random() * 120, to: 70, d: 0.12, t: 0.3 + i * 0.13, g: 0.06, type: 'triangle' }); } },
+  farcrash() { tone({ f: 90, to: 35, d: 0.6, g: 0.08, type: 'sine' }); noise({ d: 1.1, f: 380, q: 0.6, g: 0.08, type: 'lowpass' }); for (let i = 0; i < 4; i++) noise({ d: 0.08, t: 0.15 + i * 0.16, f: 700, q: 2, g: 0.03, type: 'bandpass' }); },
   knock() { tone({ f: 200, to: 85, d: 0.1, g: 0.16, type: 'sine' }); noise({ d: 0.06, f: 800, q: 1, g: 0.1, type: 'lowpass' }); },
   splat() { noise({ d: 0.14, f: 520, q: 0.8, g: 0.16, type: 'lowpass' }); tone({ f: 150, to: 55, d: 0.14, g: 0.12, type: 'sine' }); },
   buzz() { tone({ f: 170 + Math.random() * 50, d: 0.3, g: 0.018, type: 'sawtooth' }); },

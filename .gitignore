@@ -3,3 +3,4 @@ node_modules/
 *.log
 tools/*.log
 easter eggs/pointclick/work/
+__pycache__/

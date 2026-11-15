@@ -238,14 +238,31 @@ const KINDS = {
   }
 };
 
-/* dragon perché (falaise, toit, tour, pont…) : il ne vole pas ; il respire, bouge la tête, étire parfois ses ailes et, de temps en temps, crache du feu */
+/* dragon perché (falaise, toit, tour, pont…) : il ne vole pas ; il respire, bouge la tête, étire parfois ses ailes et, de temps en temps, crache du feu.
+   gone = drapeau de partie qui détruit son perchoir (tour abattue par le gourdin du géant) : quand il passe à vrai sous ses yeux, le dragon
+   s'envole vers le haut à gauche et quitte l'écran ; s'il est déjà vrai à l'arrivée dans le décor, le dragon n'est plus là */
 function perch(o) {
-  const id = o.id || 'dragon', ph = (o.x * 7 + o.y * 3) % 17, every = o.every ?? 26 + (ph % 9), dir = o.dir ?? -1; let pos = null;
+  const id = o.id || 'dragon', ph = (o.x * 7 + o.y * 3) % 17, every = o.every ?? 26 + (ph % 9), dir = o.dir ?? -1; let pos = null, gone0, fly0 = null;
   return {
     id,
     hit(x, y) { return !!pos && x >= pos[0] - pos[2] / 2 && x <= pos[0] + pos[2] / 2 && y >= pos[1] - pos[3] && y <= pos[1]; },
     draw(g, c, t) {
       const K = o.kind && g.spr(o.kind + '.up') ? o.kind + '.' : 'dragon.', P = n => g.spr(K + n); if (!P('up')) return;
+      if (o.gone) {
+        const f = !!(g.st && g.st.flags && g.st.flags[o.gone]); if (gone0 === undefined) gone0 = f;
+        if (gone0) { pos = null; return; }
+        if (f && fly0 === null) { fly0 = t; if (g.sfx) g.sfx('whoosh'); }
+        if (fly0 !== null) {
+          const p = (t - fly0) / 2.6; pos = null; if (p > 1) return;
+          const POSES = ['up', 'mid1', 'down', 'mid2'], ff = (t - fly0) * 7, fi = Math.floor(ff) % 4, fe = ff - Math.floor(ff), im = P(POSES[fi]), im2 = P(POSES[(fi + 1) % 4]); if (!im) return;
+          const sc = (o.scale ?? 0.7) * (1 - 0.35 * p), w = im.width * sc, h = im.height * sc, e = p * p * (3 - 2 * p) * 0.6 + p * 0.4;
+          const x = o.x - e * (o.x + w + 20), y = o.y - h * 0.6 - e * (o.y + h) - Math.sin(p * Math.PI) * 12;
+          c.save(); c.translate(Math.round(x), Math.round(y)); c.rotate(-0.12);
+          c.drawImage(im, Math.round(-w / 2), Math.round(-h / 2), Math.round(w), Math.round(h));
+          if (im2 && im2 !== im) { c.globalAlpha = fe * fe * (3 - 2 * fe); c.drawImage(im2, Math.round(-w / 2), Math.round(-h / 2), Math.round(w), Math.round(h)); }
+          c.restore(); return;
+        }
+      }
       const sc = o.scale ?? 0.7, tt = t + ph, stretch = (tt % 15) / 1.7, fireT = (tt + 7) % every, fire = o.fire !== false && fireT < 2.6;
       let a = 'down', b = 'down', f = 0;
       if (stretch < 1) { const seq = ['down', 'mid2', 'up', 'mid2', 'down'], q = stretch * 4, i = Math.floor(q); a = seq[i]; b = seq[Math.min(4, i + 1)]; f = q - i; }
