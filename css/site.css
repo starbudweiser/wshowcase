@@ -117,7 +117,15 @@ body.portrait .rotate{display:block}
 .di.drag{z-index:40;opacity:.9;cursor:grabbing}.di.drag img{transform:scale(1.12);filter:drop-shadow(0 14px 22px rgba(0,0,0,.45))}
 
 /* Dock */
-#dock{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);display:flex;align-items:flex-end;gap:7px;padding:9px 12px;border-radius:32px;z-index:800;background:var(--glass);backdrop-filter:blur(36px) saturate(1.8);border:1px solid var(--glass-bd);box-shadow:0 14px 40px rgba(0,0,0,.25);animation:dockin .8s cubic-bezier(.2,.9,.3,1.1) backwards .4s}
+#dock{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);display:flex;align-items:flex-end;width:max-content;padding:9px 12px;border-radius:32px;z-index:800;background:var(--glass);backdrop-filter:blur(36px) saturate(1.8);border:1px solid var(--glass-bd);box-shadow:0 14px 40px rgba(0,0,0,.25);animation:dockin .8s cubic-bezier(.2,.9,.3,1.1) backwards .4s}
+/* Dock défilable : la fenêtre masque les côtés, la marge haute laisse la place à la loupe et aux info-bulles */
+#dock .dkv{max-width:1456px;overflow:hidden;padding-top:96px;margin-top:-96px;padding-bottom:12px;margin-bottom:-12px}
+#dock .dkv.ovl{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 34px);mask-image:linear-gradient(90deg,transparent 0,#000 34px)}
+#dock .dkv.ovr{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 34px),transparent 100%);mask-image:linear-gradient(90deg,#000 calc(100% - 34px),transparent 100%)}
+#dock .dkv.ovl.ovr{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 34px,#000 calc(100% - 34px),transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 34px,#000 calc(100% - 34px),transparent 100%)}
+#dock .dkt{display:flex;align-items:flex-end;gap:7px;width:max-content;transition:transform .28s cubic-bezier(.3,.8,.3,1)}
+.dk:focus-visible{outline:0;--m:1.5}
+.dk:focus-visible::after{content:attr(data-label);position:absolute;bottom:calc(56px*var(--m) + 14px);z-index:3;left:50%;transform:translateX(-50%);padding:5px 11px;border-radius:9px;background:var(--glass-s);backdrop-filter:blur(20px);border:1px solid var(--glass-bd);font-size:13px;font-weight:500;white-space:nowrap;color:var(--ink)}
 @keyframes dockin{from{transform:translate(-50%,120px);opacity:0}}
 .dk{--m:1;position:relative;flex:none;width:56px;height:56px;border:0;background:none;padding:0}
 .dk>img,.dk>.svg{position:absolute;left:0;bottom:0;width:56px;height:56px;display:block;pointer-events:none;transform:scale(var(--m));transform-origin:50% 100%;transition:transform .1s linear}.dk .svg svg{width:100%;height:100%;display:block}

@@ -11,16 +11,36 @@ export const SETTINGS_SVG = `<svg viewBox="0 0 100 100"><defs><linearGradient id
 let raf = 0;
 export function renderDock() {
   const d = $('#dock'); d.innerHTML = '';
+  const track = h('div', { class: 'dkt' }), view = h('div', { class: 'dkv' }, track); d.append(view);
   const add = (key, label, content, fn) => {
     const b = h('button', { class: 'dk', 'data-app': key, 'data-label': label, 'aria-label': label,
       onclick: () => { b.classList.remove('bounce'); void b.offsetWidth; b.classList.add('bounce'); fn(); } }, content, h('i', { class: 'dot' }));
-    d.append(b); return b;
+    track.append(b); return b;
   };
   add('finder', 'Finder', h('div', { class: 'svg', html: FINDER_SVG }), () => openFinder());
   S.apps.filter(a => a.space === S.cur).forEach(a => add(a.id, a.id, h('img', { src: icon(a.id), alt: '', draggable: 'false' }), () => launch(a.id)));
-  d.append(h('i', { class: 'sep' }));
+  track.append(h('i', { class: 'sep' }));
   add('settings', t('s.title'), h('div', { class: 'svg', html: SETTINGS_SVG }), () => openSettings());
-  refresh();
+  off = 0; refresh(); requestAnimationFrame(() => scrollTo(0));
+}
+
+/* Défilement du Dock quand il y a plus d'icônes que de place : molette, flèches, Début/Fin, toucher. */
+let off = 0;
+function scrollTo(x) {
+  const view = $('#dock .dkv'), track = $('#dock .dkt'); if (!view) return;
+  const max = Math.max(0, track.scrollWidth - view.clientWidth); off = Math.max(0, Math.min(max, x));
+  track.style.transform = `translateX(${-off}px)`;
+  view.classList.toggle('ovl', off > 1 && max > 0); view.classList.toggle('ovr', off < max - 1);
+}
+function reveal(b) {
+  const view = $('#dock .dkv'), vr = view.getBoundingClientRect(), r = b.getBoundingClientRect(), k = S.scale || 1, pad = 56;
+  if (r.left < vr.left + pad * k) scrollTo(off - (vr.left + pad * k - r.left) / k);
+  else if (r.right > vr.right - pad * k) scrollTo(off + (r.right - (vr.right - pad * k)) / k);
+}
+function step(dir, d) {
+  const all = [...d.querySelectorAll('.dk')], cur = all.indexOf(document.activeElement);
+  const i = cur < 0 ? (dir > 0 ? 0 : all.length - 1) : Math.max(0, Math.min(all.length - 1, cur + dir));
+  all[i].focus({ preventScroll: true }); reveal(all[i]);
 }
 
 export function refresh() {
@@ -29,15 +49,38 @@ export function refresh() {
 
 export function init() {
   const d = $('#dock');
+  let lastX = null, tm = 0;
+  const magnify = x => d.querySelectorAll('.dk').forEach(b => {
+    const r = b.getBoundingClientRect(), dist = Math.abs(x - (r.left + r.width / 2)) / S.scale;
+    const m = 1 + 0.78 * Math.exp(-(dist * dist) / (2 * 66 * 66)); b.style.setProperty('--m', m.toFixed(3)); b.style.zIndex = Math.round(m * 100);
+  });
+  const calm = () => d.querySelectorAll('.dk').forEach(b => { b.style.removeProperty('--m'); b.style.zIndex = ''; });
   d.addEventListener('pointermove', e => {
     if (e.pointerType === 'touch') return;
-    cancelAnimationFrame(raf);
-    raf = requestAnimationFrame(() => d.querySelectorAll('.dk').forEach(b => {
-      const r = b.getBoundingClientRect(), dist = Math.abs(e.clientX - (r.left + r.width / 2)) / S.scale;
-      const m = 1 + 0.78 * Math.exp(-(dist * dist) / (2 * 66 * 66)); b.style.setProperty('--m', m.toFixed(3)); b.style.zIndex = Math.round(m * 100);
-    }));
+    lastX = e.clientX; cancelAnimationFrame(raf); raf = requestAnimationFrame(() => magnify(e.clientX));
   });
-  d.addEventListener('pointerleave', () => d.querySelectorAll('.dk').forEach(b => { b.style.removeProperty('--m'); b.style.zIndex = ''; }));
+  /* pendant le défilement la loupe est coupée, puis recalculée sous le pointeur une fois l'animation finie */
+  const afterScroll = () => { calm(); clearTimeout(tm); tm = setTimeout(() => { if (over && lastX != null) magnify(lastX); }, 300); };
+  d.addEventListener('wheel', e => {
+    const dx = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY, view = $('#dock .dkv'), track = $('#dock .dkt');
+    if (!dx || track.scrollWidth <= view.clientWidth + 1) return;
+    e.preventDefault(); scrollTo(off + dx * (e.deltaMode === 1 ? 24 : 1.1)); afterScroll();
+  }, { passive: false });
+  /* flèches : actives quand le pointeur est sur le Dock ou qu'une de ses icônes a le focus (sans modificateur : ⌥← ⌥→ changent de bureau) */
+  var over = false; d.addEventListener('pointerenter', () => { over = true; }); d.addEventListener('pointerleave', () => { over = false; });
+  addEventListener('keydown', e => {
+    if (e.altKey || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    const inDock = d.contains(document.activeElement), t = e.target;
+    if (!inDock && (!over || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName) || t.isContentEditable)) return;
+    const all = [...d.querySelectorAll('.dk')]; if (!all.length) return;
+    if (e.key === 'ArrowRight') step(1, d); else if (e.key === 'ArrowLeft') step(-1, d);
+    else if (e.key === 'Home') { all[0].focus({ preventScroll: true }); reveal(all[0]); } else if (e.key === 'End') { const l = all[all.length - 1]; l.focus({ preventScroll: true }); reveal(l); }
+    else return;
+    e.preventDefault(); e.stopPropagation();
+  }, true);
+  d.addEventListener('focusin', e => { const b = e.target.closest && e.target.closest('.dk'); if (b) reveal(b); });
+  addEventListener('resize', () => scrollTo(off));
+  d.addEventListener('pointerleave', calm);
   S.rectOf = appId => {
     const b = d.querySelector(`.dk[data-app="${CSS.escape(appId || 'finder')}"]`); if (!b) return null;
     const r = b.getBoundingClientRect(), s = $('#stage').getBoundingClientRect();
