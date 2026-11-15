@@ -1,7 +1,7 @@
 /* Ciel animé (nuages qui dérivent, étoiles) et « mode nuit » : si le joueur ne bouge pas la souris pendant une minute, la nuit tombe par paliers,
    les personnages rentrent chez eux ou s'allongent, le héros vient parler au joueur en gros plan ; au moindre mouvement, tout redevient jour. */
 import { snd } from './sound.js';
-import { CASSE } from '../data/sheets.js';
+import { CASSE, HERO_N } from '../data/sheets.js';
 const W = 480, H = 270, SKY_H = 130, STEPS = [0.2, 0.4, 0.6, 0.78];
 export const IDLE_NIGHT = 60;
 const ease = k => k * k * (3 - 2 * k);
@@ -238,7 +238,7 @@ export function wakeNight(g) {
 function wakeUpdate(g, dt) {
   const n = g.night, h = g.hero, tw = g.now - n.w0;
   const lvl = Math.max(0, Math.ceil(4 * (1 - tw / 1.4))); n.a += ((lvl ? STEPS[lvl - 1] : 0) - n.a) * Math.min(1, dt * 7);
-  n.hk = n.hk0 * (1 - ease(Math.min(1, tw / 0.9)));
+  n.hk = n.hk0 * (1 - ease(Math.min(1, tw / (g.spr('hero.nNeutral') ? 1.6 : 0.9))));   /* vue de face : il recule pendant 1,6 s */
   if (n.hid && n.hk < 0.03) { n.hid = false; h.visible = true; h.front = true; h.back = false; }
   if (!n.hid && !n.greeted && tw > 0.6) { n.greeted = true; g.bark('hero', 'night.hero.back', 3600, true); h.front = false; }
   for (const o of n.ents) {
@@ -276,16 +276,36 @@ export function drawNight(g, c) {
     for (let k = 0; k < 3; k++) { const ph = (t * 0.5 + k / 3 + o.sx * 0.01) % 1; c.globalAlpha = Math.sin(ph * Math.PI) * 0.9; c.fillText(k === 1 ? 'Z' : 'z', zx + ph * 12 + k * 3, zy - ph * 22); }
   }
   c.restore();
-  /* le héros qui s'approche de l'écran : sprite qui grandit, puis portrait en gros plan */
+  /* le héros qui s'approche de l'écran. Vue de face (15/11, tools/hero_nuit_sprites.py) : travelling avant fait d'images entières à chaque distance
+     (sprite du jeu, en pied, aux genoux, à la taille, puis portrait), chacune réduite ou agrandie en continu et relayée par la suivante à taille de
+     visage égale ; au réveil, le même travelling à l'envers (il recule). Sans ces images : ancien sprite agrandi puis fondu vers le portrait. */
   if (n.hk > 0.02) {
-    const h = g.hero, k = n.hk, im = g.spr(h.pose || (n.stunned && n.st !== 'wake' ? 'hero.fSurprise' : 'hero.front')) || g.spr('hero.front');
-    c.save(); c.imageSmoothingEnabled = false; const S = n.s0 || 1;
-    if (im) { const s = S + (5.4 - S) * k, x = (n.x0 ?? h.x) + (240 - (n.x0 ?? h.x)) * k, y = (n.y0 ?? h.y) + (532 - (n.y0 ?? h.y)) * k; c.globalAlpha = k > 0.62 && g.spr('hero.pNeutral') ? Math.max(0, 1 - (k - 0.62) / 0.3) : 1; c.drawImage(im, x - im.width * s / 2, y - im.height * s, im.width * s, im.height * s); }
-    const talking = n.say && n.say.au && !n.say.au.paused && !n.say.au.ended, kk = n.knock ? (() => { const tk = t - n.knock.t0; for (const h of n.knock.hits) if (tk >= h && tk < h + 0.17) return 'hero.pKnock1'; return tk > 0.05 ? 'hero.pKnock2' : null; })() : null,
-      base = n.pose ? 'hero.p' + n.pose : null,
-      pk = !(g.hero && g.spr('hero.pNeutral')) ? null : (kk && g.spr(kk) ? kk : base && g.spr(base) ? (talking && Math.floor(t * 7) % 2 && g.spr(base + 'T') ? base + 'T' : base) : talking && Math.floor(t * 7) % 2 ? 'hero.pTalk' : (t % 3.7 < 0.14 ? 'hero.pBlink' : 'hero.pNeutral')), pi = pk && (g.spr(pk) || g.spr('hero.pNeutral'));
-    if (pi && k > 0.6) { c.globalAlpha = Math.min(1, (k - 0.6) / 0.3); const am = talking ? 1.7 : 1, sc = Math.min(W / pi.width, H / pi.height) * 1.02 * (1 + 0.012 * Math.sin(t * 1.7)), ox = Math.sin(t * 1.3) * 3 * am, oy = Math.sin(t * 2.1) * 2 * am; c.translate(W / 2 + ox, H / 2 + 6 + oy); c.rotate(Math.sin(t * 0.9) * 0.025 * am); if (n.mirror) c.scale(-1, 1); c.drawImage(pi, -pi.width * sc / 2, -pi.height * sc / 2, pi.width * sc, pi.height * sc); }
+    const h = g.hero, k = n.hk, NF = g.spr('hero.nNeutral') ? 'hero.n' : null, P = NF || 'hero.p', mx = n.mirror ? -1 : 1;
+    c.save(); c.imageSmoothingEnabled = false;
+    const im0 = g.spr(h.pose || (n.stunned && n.st !== 'wake' ? 'hero.fSurprise' : 'hero.front')) || g.spr('hero.front'), S = n.s0 || 1;
+    const talking = n.say && n.say.au && !n.say.au.paused && !n.say.au.ended, base = n.pose ? P + n.pose : null;
+    if (base !== n.pb) { n.pp = n.pb; n.pb = base; n.pbT = t; }
+    const src = base || n.pp, inter = NF && src && t - (n.pbT ?? -9) < 0.14 && g.spr(src + 'A') ? src + 'A' : null;   /* geste : image intermédiaire à l'aller et au retour */
+    let kk = null;
+    if (n.knock) { const tk = t - n.knock.t0;
+      if (NF) { kk = P + 'KnockA'; for (const hh of n.knock.hits) { if (tk >= hh && tk < hh + 0.07) kk = P + 'KnockB'; else if (tk >= hh + 0.07 && tk < hh + 0.22) kk = P + 'KnockC'; } }   /* élan, coup, poing contre la vitre */
+      else { for (const hh of n.knock.hits) if (tk >= hh && tk < hh + 0.17) kk = 'hero.pKnock1'; if (!kk && tk > 0.05) kk = 'hero.pKnock2'; } }
+    const pk = !g.spr(P + 'Neutral') ? null : (kk && g.spr(kk) ? kk : inter || (base && g.spr(base) ? (talking && Math.floor(t * 7) % 2 && g.spr(base + 'T') ? base + 'T' : base) : talking && Math.floor(t * 7) % 2 ? P + 'Talk' : (t % 3.7 < 0.14 ? P + 'Blink' : P + 'Neutral'))), pi = pk && (g.spr(pk) || g.spr(P + 'Neutral'));
+    const ne = g.spr(P + 'Neutral') || pi, scP = ne ? Math.min(W / ne.width, H / ne.height) * 1.02 : 1;
+    if (NF && k < 1 && im0) {
+      const fp = HERO_N.nNeutral, Fp = fp[2] * scP, Px = W / 2 + mx * (fp[0] - ne.width / 2) * scP, Py = H / 2 + 6 + (fp[1] - ne.height / 2) * scP;
+      const f0 = [im0.width / 2, 16, 10], F0 = f0[2] * S, X0 = n.x0 ?? h.x, Y0 = (n.y0 ?? h.y) - (im0.height - f0[1]) * S;
+      const Fk = F0 * Math.pow(Fp / F0, k), u = (Fk - F0) / (Fp - F0), fx = X0 + (Px - X0) * u, fy = Y0 + (Py - Y0) * u + Math.abs(Math.sin(t * 7)) * Fk * 0.05 * (1 - k);
+      const L = [[im0, f0], [g.spr('hero.nAp1'), HERO_N.nAp1], [g.spr('hero.nAp2'), HERO_N.nAp2], [g.spr('hero.nAp3'), HERO_N.nAp3], [ne, fp]], i = k < 0.3 ? 0 : k < 0.55 ? 1 : k < 0.75 ? 2 : k < 0.9 ? 3 : 4;
+      const [im, [cx, cy, fw]] = L[i][0] ? L[i] : L[0], s = Fk / fw;
+      c.save(); c.translate(Math.round(fx), Math.round(fy)); if (n.mirror && i > 0) c.scale(-1, 1); c.drawImage(im, -cx * s, -cy * s, im.width * s, im.height * s); c.restore();
+    } else if (!NF && im0) { const s = S + (5.4 - S) * k, x = (n.x0 ?? h.x) + (240 - (n.x0 ?? h.x)) * k, y = (n.y0 ?? h.y) + (532 - (n.y0 ?? h.y)) * k; c.globalAlpha = k > 0.62 && pi ? Math.max(0, 1 - (k - 0.62) / 0.3) : 1; c.drawImage(im0, x - im0.width * s / 2, y - im0.height * s, im0.width * s, im0.height * s); }
+    if (pi && (NF ? k >= 1 : k > 0.6)) {
+      c.globalAlpha = NF ? 1 : Math.min(1, (k - 0.6) / 0.3); const am = talking ? 1.7 : 1, sc = scP * (1 + 0.012 * Math.sin(t * 1.7)), ox = Math.sin(t * 1.3) * 3 * am, oy = Math.sin(t * 2.1) * 2 * am;
+      if (NF) n.ringXY = [W / 2 + ox + mx * (0.37 - 0.5) * ne.width * sc, H / 2 + 6 + oy + (0.7 - 0.5) * ne.height * sc];   /* le poing contre la vitre */
+      c.translate(W / 2 + ox, H / 2 + 6 + oy); c.rotate(Math.sin(t * 0.9) * 0.025 * am); if (n.mirror) c.scale(-1, 1); c.drawImage(pi, -pi.width * sc / 2, -pi.height * sc / 2, pi.width * sc, pi.height * sc);
+    }
     c.restore();
   }
-  if (n.ring && g.now - n.ring.t0 < 0.55) { const k = (g.now - n.ring.t0) / 0.55; c.save(); c.globalAlpha = (1 - k) * 0.8; c.strokeStyle = '#dfeaff'; c.lineWidth = 2; c.beginPath(); c.ellipse(W * 0.6, H * 0.46, 14 + k * 46, 10 + k * 32, 0, 0, 7); c.stroke(); c.restore(); }
+  if (n.ring && g.now - n.ring.t0 < 0.55) { const k = (g.now - n.ring.t0) / 0.55; c.save(); c.globalAlpha = (1 - k) * 0.8; c.strokeStyle = '#dfeaff'; c.lineWidth = 2; const [rx, ry] = n.ringXY || [W * 0.6, H * 0.46]; c.beginPath(); c.ellipse(rx, ry, 14 + k * 46, 10 + k * 32, 0, 0, 7); c.stroke(); c.restore(); }
 }
