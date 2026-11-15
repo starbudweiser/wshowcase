@@ -65,7 +65,7 @@ def board(ch, out, spr, scene, x, y, scale, items):
             if f not in files: files.append(f)
     bb = union(files)
     tmp = tempfile.mkdtemp()
-    subprocess.run([sys.executable, '-I', os.path.join(T, 'sleep_pixelize.py'), spr, d, tmp, 'f'] + files, check=True, capture_output=True)
+    subprocess.run([sys.executable, '-I', os.path.join(T, 'sleep_pixelize.py'), '--holes', spr, d, tmp, 'f'] + files, check=True, capture_output=True)
     meta = json.load(open(os.path.join(tmp, 'f.json')))
     bg = Image.open(os.path.join(R, 'assets', 'pointclick', scene + '.png')).convert('RGBA')
     p = PERSP[scene]; s = float(scale) if scale != '-' else max(min(p[1], p[3]) * .8, min(max(p[1], p[3]), p[1] + (p[3] - p[1]) * (y - p[0]) / (p[2] - p[0])))

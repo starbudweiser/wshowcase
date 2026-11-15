@@ -116,7 +116,8 @@ function flyby(g, c, n, sk) {
    enfoncé de A.pit pixels, coupé sous le rebord, et remonte au fil des images ; au réveil il y redescend par les mêmes passages. */
 const ord = (A, re) => Object.keys(A.seg).filter(n => re.test(n)).sort((a, b) => parseInt(a.replace(/\D/g, ''), 10) - parseInt(b.replace(/\D/g, ''), 10));
 const PIT = A => ord(A, /^pit\d+$/), DOWN = A => [...PIT(A), ...ord(A, /^down\d+$/)], UP = A => [...ord(A, /^up\d+$/), 'end'];
-function frames(A, names) { const fr = []; for (const n of names) { const s = A.seg[n]; if (s) for (let k = 0; k < s[1]; k++) fr.push({ f: s[0] + k, dy: 0 }); } return fr; }
+/* planches simplifiées des secondaires (tools/sleep_simple.py) : 4-5 poses par étape, chacune tenue A.hold[passage][k] images du moteur */
+function frames(A, names) { const fr = []; for (const n of names) { const s = A.seg[n], h = A.hold && A.hold[n]; if (s) for (let k = 0; k < s[1]; k++) for (let r = h ? h[k] || 1 : 1; r > 0; r--) fr.push({ f: s[0] + k, dy: 0 }); } return fr; }
 function pitDepth(fr, n, depth, rise) { for (let j = 0; j < n; j++) { const k = ease(n > 1 ? j / (n - 1) : 1); fr[j].dy = depth * (rise ? 1 - k : k); } }
 function animBegin(g, o, now) {
   const A = g.sleepIdx[o.k]; o.fr = frames(A, DOWN(A)); o.ph = 'down'; o.t0 = now; o.speed = 1;

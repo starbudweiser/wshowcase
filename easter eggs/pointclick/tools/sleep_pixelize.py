@@ -43,7 +43,7 @@ def unspill(im, al, bg, loose=None):
     A = np.asarray(im).astype(np.float32); sn = ch / np.linalg.norm(ch); C = A - A.mean(2, keepdims=True)
     cn = np.linalg.norm(C, axis=2); pr = (C * sn).sum(2)
     k, sat = 0.92, 25
-    if loose and np.abs(B - np.array(loose[1], np.float32)).sum() < 90: k, sat = loose[0], 14
+    if loose and (loose[1] is None or np.abs(B - np.array(loose[1], np.float32)).sum() < 90): k, sat = loose[0], 14
     r = (np.asarray(al) > 0) & (pr > k * cn) & (cn > sat)          # même direction de couleur que le fond, assez saturée
     lab, nl = nd.label(r)                                           # seulement les zones étendues (fond enfermé, ombre portée) : un pixel
     if nl:                                                          # isolé verdâtre dans l'ombre d'un vêtement (bruit ToonCrafter) reste au
@@ -78,13 +78,19 @@ def mass_x(al):
 
 
 def main():
-    a = sys.argv[1:]; force = None
+    a = sys.argv[1:]; force = None; holes = '--holes' in a
+    if holes: a.remove('--holes')
     if '--scale' in a: i = a.index('--scale'); force = float(a[i + 1]); del a[i:i + 2]
     name, gdir, out, pre = a[:4]; srcs = a[4:]
     gj = json.load(open(os.path.join(gdir, 'guide.json'))); G = gj['ground']
     f = force or json.load(open(SC))[name] / gj['k']                 # pixels du jeu par pixel de la toile guide
-    _, gal = key(Image.open(os.path.join(gdir, 'guide.png'))); AX = mass_x(gal)
-    ims = [key(Image.open(s)) for s in srcs]
+    gim = Image.open(os.path.join(gdir, 'guide.png')).convert('RGB'); _, gal = key(gim); AX = mass_x(gal)
+    loose = None
+    if holes:   # --holes : retire aussi les petits trous fermés teintés du fond (entre doigts et rênes), avec la tolérance propre au personnage
+        global MIN_BG; MIN_BG = 6; px = gim.load(); w, h = gim.size
+        bgc = tuple(sum(px[x, y][i] for x, y in ((2, 2), (w - 3, 2), (2, h - 3), (w - 3, h - 3))) // 4 for i in range(3))
+        loose = (safe_k(gim, gal, bgc), None)
+    ims = [key(Image.open(s), loose) for s in srcs]
     bb = None
     for _, al in ims:
         b = al.getbbox(); bb = b if bb is None else (min(bb[0], b[0]), min(bb[1], b[1]), max(bb[2], b[2]), max(bb[3], b[3]))
