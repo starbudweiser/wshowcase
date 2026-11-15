@@ -17,10 +17,10 @@
   {
    "id": "util",
    "name": {
-    "fr": "Utilitaires",
-    "en": "Utilities",
-    "es": "Utilidades",
-    "it": "Utility"
+    "fr": "DESKTOP MAC TOOLKIT",
+    "en": "DESKTOP MAC TOOLKIT",
+    "es": "DESKTOP MAC TOOLKIT",
+    "it": "DESKTOP MAC TOOLKIT"
    },
    "tint": [
     "#0a84ff",
@@ -273,7 +273,7 @@
    "demo": "hERALD",
    "shots": 0,
    "download": true,
-   "version": "1.6.0",
+   "version": "1.11.2",
    "tag": {
     "fr": "Prépare et suit vos campagnes de communication, sans rien publier à votre place.",
     "en": "Plans and tracks your communication campaigns, never posts for you.",
@@ -525,7 +525,7 @@
    "demo": "mSIZER",
    "shots": 0,
    "download": true,
-   "version": "1.2.0",
+   "version": "1.3.3",
    "tag": {
     "fr": "Redimensionne, recadre et retouche des centaines de photos d'un coup.",
     "en": "Resize, crop and retouch hundreds of photos at once.",
@@ -673,12 +673,66 @@
    "demo": "engine",
    "shots": 0,
    "download": true,
-   "version": "1.0.3",
+   "version": "1.0.5",
    "tag": {
     "fr": "Vos clouds comme des disques dans le Finder.",
     "en": "Your clouds as drives in the Finder.",
     "es": "Tus nubes como discos en el Finder.",
     "it": "I tuoi cloud come dischi nel Finder."
+   }
+  },
+  {
+   "id": "mPDF",
+   "space": "util",
+   "repo": "mPDF",
+   "accent": "#f9514c",
+   "kind": "app",
+   "desk": true,
+   "demo": "mPDF",
+   "shots": 1,
+   "download": true,
+   "version": "1.1.8",
+   "tag": {
+    "fr": "Un lecteur et éditeur PDF rapide et léger, pour lire d'abord et remplir vite.",
+    "en": "A fast, lightweight PDF reader and editor, for reading first and filling in fast.",
+    "es": "Un lector y editor de PDF rápido y ligero, para leer primero y rellenar rápido.",
+    "it": "Un lettore ed editor PDF veloce e leggero, per leggere prima e compilare in fretta."
+   }
+  },
+  {
+   "id": "mPIE",
+   "space": "util",
+   "repo": "mPIE",
+   "accent": "#ffca24",
+   "kind": "menubar",
+   "desk": false,
+   "demo": "mPIE",
+   "shots": 1,
+   "download": false,
+   "version": "",
+   "tag": {
+    "fr": "Un menu circulaire sous le pointeur pour lancer, basculer et piloter vos applis et votre musique.",
+    "en": "A ring menu under your pointer to launch, switch and control your apps and music.",
+    "es": "Un menú circular bajo el puntero para abrir, cambiar y controlar tus apps y tu música.",
+    "it": "Un menu circolare sotto il puntatore per aprire, passare e controllare app e musica."
+   }
+  },
+  {
+   "id": "SOCiALS",
+   "space": "util",
+   "repo": "SOCiALS",
+   "accent": "#15a4ed",
+   "kind": "app",
+   "desk": true,
+   "demo": "SOCiALS",
+   "shots": 1,
+   "download": false,
+   "version": "",
+   "tag": {
+    "fr": "Toutes vos messageries et réseaux sociaux dans une seule fenêtre, une session isolée par compte.",
+    "en": "All your messaging apps and social networks in one window, an isolated session per account.",
+    "es": "Todas tus mensajerías y redes sociales en una sola ventana, una sesión aislada por cuenta.",
+    "it": "Tutte le tue messaggerie e i social in una sola finestra, una sessione isolata per account."
    }
   }
  ]
