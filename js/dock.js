@@ -1,7 +1,7 @@
 /* Dock : icônes de l'espace courant, loupe, info-bulles, rebond au lancement, pastille d'appli ouverte. */
 import { S, on, icon } from './core.js';
 import { h, $ } from './util.js';
-import { t } from './i18n.js';
+import { t, lang } from './i18n.js';
 import { isRunning } from './wm.js';
 import { launch, openFinder, openSettings } from './apps.js';
 
@@ -18,10 +18,48 @@ export function renderDock() {
     track.append(b); return b;
   };
   add('finder', 'Finder', h('div', { class: 'svg', html: FINDER_SVG }), () => openFinder());
-  S.apps.filter(a => a.space === S.cur).forEach(a => add(a.id, a.id, h('img', { src: icon(a.id), alt: '', draggable: 'false' }), () => launch(a.id)));
+  closePop();
+  const mine = S.apps.filter(a => a.space === S.cur), sp = S.spaces.find(x => x.id === S.cur), seen = new Set();
+  const loose = a => add(a.id, a.id, h('img', { src: icon(a.id), alt: '', draggable: 'false' }), () => launch(a.id));
+  ((sp && sp.folders) || []).forEach(f => {
+    const list = f.apps.map(id => mine.find(a => a.id === id)).filter(Boolean); if (!list.length) return; list.forEach(a => seen.add(a.id));
+    const label = f.name[lang()] || f.name.en, b = add('folder:' + f.id, label, h('div', { class: 'fi' }, list.slice(0, 4).map(a => h('img', { src: icon(a.id), alt: '', draggable: 'false' }))), () => {});
+    b.classList.add('fold'); b.dataset.apps = list.map(a => a.id).join('|'); b.setAttribute('aria-haspopup', 'dialog');
+    b.onclick = e => { b.classList.remove('bounce'); void b.offsetWidth; b.classList.add('bounce'); pop && pop.dataset.f === f.id ? closePop() : openPop(b, f, label, list, e.detail === 0); };
+  });
+  mine.filter(a => !seen.has(a.id)).forEach(loose);
+  track.classList.toggle('fld', seen.size > 0);
   track.append(h('i', { class: 'sep' }));
   add('settings', t('s.title'), h('div', { class: 'svg', html: SETTINGS_SVG }), () => openSettings());
   off = 0; refresh(); requestAnimationFrame(() => scrollTo(0));
+}
+
+/* Dossiers du Dock : une grille d'icônes s'ouvre au-dessus du Dock (clic, Entrée), flèches pour se déplacer, Échap ou clic ailleurs pour fermer. */
+let pop = null;
+function closePop() {
+  if (pop) { pop.remove(); pop = null; }
+  document.querySelectorAll('#dock .dk.fold.open').forEach(b => b.classList.remove('open'));
+}
+function openPop(btn, f, label, list, byKey) {
+  closePop(); btn.classList.add('open');
+  const cols = Math.min(list.length, 4);
+  const p = h('div', { class: 'dkpop', role: 'dialog', 'aria-label': label, 'data-f': f.id },
+    h('div', { class: 'dkph' }, label),
+    h('div', { class: 'dkpg', style: { '--c': cols } }, list.map(a => h('button', { class: 'dkpi', 'data-app': a.id, onclick: () => { closePop(); launch(a.id); } },
+      h('img', { src: icon(a.id), alt: '', draggable: 'false' }), h('span', {}, a.id)))));
+  $('#stage').append(p); pop = p;
+  const st = $('#stage').getBoundingClientRect(), k = S.scale || 1, br = btn.getBoundingClientRect(), dr = $('#dock').getBoundingClientRect(), w = p.offsetWidth;
+  const cx = (br.left + br.width / 2 - st.left) / k;
+  p.style.left = Math.max(w / 2 + 16, Math.min(1600 - w / 2 - 16, cx)) + 'px';
+  p.style.bottom = ((st.bottom - dr.top) / k + 14) + 'px';
+  p.style.transformOrigin = `${50 + (cx - parseFloat(p.style.left)) / w * 100}% 100%`;
+  if (byKey) p.querySelector('.dkpi').focus();
+  p.addEventListener('keydown', e => {
+    const all = [...p.querySelectorAll('.dkpi')], i = all.indexOf(document.activeElement);
+    const mv = { ArrowRight: 1, ArrowLeft: -1, ArrowDown: cols, ArrowUp: -cols }[e.key];
+    if (mv !== undefined) { all[Math.max(0, Math.min(all.length - 1, (i < 0 ? 0 : i + mv)))].focus(); e.preventDefault(); e.stopPropagation(); }
+    else if (e.key === 'Escape') { closePop(); btn.focus({ preventScroll: true }); e.preventDefault(); e.stopPropagation(); }
+  });
 }
 
 /* Défilement du Dock quand il y a plus d'icônes que de place : molette, flèches, Début/Fin, toucher. */
@@ -38,13 +76,15 @@ function reveal(b) {
   else if (r.right > vr.right - pad * k) scrollTo(off + (r.right - (vr.right - pad * k)) / k);
 }
 function step(dir, d) {
+  closePop();
   const all = [...d.querySelectorAll('.dk')], cur = all.indexOf(document.activeElement);
   const i = cur < 0 ? (dir > 0 ? 0 : all.length - 1) : Math.max(0, Math.min(all.length - 1, cur + dir));
   all[i].focus({ preventScroll: true }); reveal(all[i]);
 }
 
 export function refresh() {
-  document.querySelectorAll('#dock .dk').forEach(b => b.classList.toggle('run', isRunning(b.dataset.app) || S.extras.has(b.dataset.app)));
+  const on = id => isRunning(id) || S.extras.has(id);
+  document.querySelectorAll('#dock .dk').forEach(b => b.classList.toggle('run', b.dataset.apps ? b.dataset.apps.split('|').some(on) : on(b.dataset.app)));
 }
 
 export function init() {
@@ -52,7 +92,7 @@ export function init() {
   let lastX = null, tm = 0;
   const magnify = x => d.querySelectorAll('.dk').forEach(b => {
     const r = b.getBoundingClientRect(), dist = Math.abs(x - (r.left + r.width / 2)) / S.scale;
-    const m = 1 + 0.78 * Math.exp(-(dist * dist) / (2 * 66 * 66)); b.style.setProperty('--m', m.toFixed(3)); b.style.zIndex = Math.round(m * 100);
+    const m = 1 + (d.querySelector('.dkt.fld') ? 0.5 : 0.78) * Math.exp(-(dist * dist) / (2 * 66 * 66)); b.style.setProperty('--m', m.toFixed(3)); b.style.zIndex = Math.round(m * 100);
   });
   const calm = () => d.querySelectorAll('.dk').forEach(b => { b.style.removeProperty('--m'); b.style.zIndex = ''; });
   d.addEventListener('pointermove', e => {
@@ -70,6 +110,7 @@ export function init() {
   var over = false; d.addEventListener('pointerenter', () => { over = true; }); d.addEventListener('pointerleave', () => { over = false; });
   addEventListener('keydown', e => {
     if (e.altKey || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    if (pop && pop.contains(document.activeElement)) return;
     const inDock = d.contains(document.activeElement), t = e.target;
     if (!inDock && (!over || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName) || t.isContentEditable)) return;
     const all = [...d.querySelectorAll('.dk')]; if (!all.length) return;
@@ -79,10 +120,13 @@ export function init() {
     e.preventDefault(); e.stopPropagation();
   }, true);
   d.addEventListener('focusin', e => { const b = e.target.closest && e.target.closest('.dk'); if (b) reveal(b); });
-  addEventListener('resize', () => scrollTo(off));
+  addEventListener('resize', () => { scrollTo(off); closePop(); });
+  addEventListener('pointerdown', e => { if (pop && !pop.contains(e.target) && !e.target.closest('#dock .dk.fold')) closePop(); }, true);
+  addEventListener('keydown', e => { if (e.key === 'Escape' && pop) closePop(); });
+  d.addEventListener('wheel', closePop, { passive: true });
   d.addEventListener('pointerleave', calm);
   S.rectOf = appId => {
-    const b = d.querySelector(`.dk[data-app="${CSS.escape(appId || 'finder')}"]`); if (!b) return null;
+    const b = d.querySelector(`.dk[data-app="${CSS.escape(appId || 'finder')}"]`) || [...d.querySelectorAll('.dk.fold')].find(x => x.dataset.apps.split('|').includes(appId)); if (!b) return null;
     const r = b.getBoundingClientRect(), s = $('#stage').getBoundingClientRect();
     return { x: (r.left - s.left) / S.scale, y: (r.top - s.top) / S.scale, w: r.width / S.scale };
   };

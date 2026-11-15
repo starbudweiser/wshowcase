@@ -12,6 +12,56 @@
    "tint": [
     "#f59e0b",
     "#e0523a"
+   ],
+   "folders": [
+    {
+     "id": "mods",
+     "name": {
+      "fr": "Mods",
+      "en": "Mods",
+      "es": "Mods",
+      "it": "Mod"
+     },
+     "apps": [
+      "mORTEX",
+      "mABBAJACK",
+      "mO2FLATTENER",
+      "fOMODSIM",
+      "mTRANSLATOR"
+     ]
+    },
+    {
+     "id": "plugins",
+     "name": {
+      "fr": "Plugins et fichiers",
+      "en": "Plugins and files",
+      "es": "Plugins y archivos",
+      "it": "Plugin e file"
+     },
+     "apps": [
+      "pLUGINSLENS",
+      "eSLIFY",
+      "mBAE",
+      "fCLEANER",
+      "fOLDERFUSE"
+     ]
+    },
+    {
+     "id": "diag",
+     "name": {
+      "fr": "Diagnostic et suivi",
+      "en": "Diagnostics and tracking",
+      "es": "Diagnóstico y seguimiento",
+      "it": "Diagnostica e monitoraggio"
+     },
+     "apps": [
+      "sKYCRASH",
+      "csSETTINGS",
+      "kEYKODES",
+      "nEXUSWATCH",
+      "hERALD"
+     ]
+    }
    ]
   },
   {
@@ -25,6 +75,76 @@
    "tint": [
     "#0a84ff",
     "#7a5af8"
+   ],
+   "folders": [
+    {
+     "id": "sys",
+     "name": {
+      "fr": "Système et barre des menus",
+      "en": "System and menu bar",
+      "es": "Sistema y barra de menús",
+      "it": "Sistema e barra dei menu"
+     },
+     "apps": [
+      "mCLEAN",
+      "mSILENCE",
+      "mDESK",
+      "mSPACES",
+      "mTAB",
+      "mPIE",
+      "mLINKS"
+     ]
+    },
+    {
+     "id": "files",
+     "name": {
+      "fr": "Disque et fichiers",
+      "en": "Disk and files",
+      "es": "Disco y archivos",
+      "it": "Disco e file"
+     },
+     "apps": [
+      "hdCLEANER",
+      "ARCHiVES",
+      "mBACKUP",
+      "mCLOUD",
+      "qLOOKS",
+      "mPDF"
+     ]
+    },
+    {
+     "id": "media",
+     "name": {
+      "fr": "Images et médias",
+      "en": "Images and media",
+      "es": "Imágenes y medios",
+      "it": "Immagini e media"
+     },
+     "apps": [
+      "MiCONE",
+      "iCONIQ",
+      "mSIZER",
+      "kYNEDIT",
+      "mSTAGRAM"
+     ]
+    },
+    {
+     "id": "daily",
+     "name": {
+      "fr": "Au quotidien",
+      "en": "Everyday",
+      "es": "Día a día",
+      "it": "Ogni giorno"
+     },
+     "apps": [
+      "wCLAUDE",
+      "SOCiALS",
+      "qNOTES",
+      "mSTICK",
+      "CAREERDeSK",
+      "HORIZONs"
+     ]
+    }
    ]
   }
  ],
