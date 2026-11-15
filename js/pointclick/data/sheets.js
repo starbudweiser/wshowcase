@@ -68,7 +68,8 @@ export const SLEEP = {
   'nazim': { k: 'nazim', z: [-70, -26] },
   /* secondaires, version simple (tools/sleep_simple.py) : le garde (rue, porte, fête), la fermière, le cheval du moulin, la poule, le cavalier du gué */
   'guard': { k: 'guard', z: [44, -26] }, 'farmer': { k: 'farmer', z: [-42, -26] }, 'horse': { k: 'horse', z: [40, -30] },
-  'hen': { k: 'hen', z: [2, -24] }, 'horseman': { k: 'horseman', z: [10, -84] }
+  'hen': { k: 'hen', z: [2, -24] }, 'horseman': { k: 'horseman', z: [10, -84] },
+  'horseman.pumpkin': { k: 'horseman_pumpkin', z: [14, -66] }   /* fête : il pose sa citrouille sur la crinière pour dormir */
 };
 /* décor brisé par le gourdin du géant (tools/decor_casse.py) : la tour de guet de la prairie s'effondre ; reste détruite pour toute la partie
    (drapeau sauvegardé) ; les nuits suivantes, le géant lance son gourdin hors écran */
