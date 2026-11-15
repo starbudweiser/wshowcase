@@ -404,7 +404,7 @@ function start(app) {
   function about() {
     aboutWin(app, { h: 460, version: () => T('Version 1.0.0', 'Version 1.0.0'), lines: () => [
       [T('Un menu circulaire pour lancer, changer d’appli et piloter vos applis et votre musique.', 'A pie menu to launch, switch and control your apps and your music.')],
-      [T('DESKTOP MAC TOOLKIT', 'DESKTOP MAC TOOLKIT'), 'au'],
+      [T('Desktop Mac Toolkit', 'Desktop Mac Toolkit'), 'au'],
       [T('Inspirée de Pieoneer (App ahead), sans lien avec ses auteurs.', 'Inspired by Pieoneer (App ahead), not affiliated with its authors.'), 'mut'],
       [T('Licence MIT. © 2026 Starbudweiser.', 'MIT License. © 2026 Starbudweiser.'), 'mut'], [T('Fournie telle quelle, sans garantie.', 'Provided as is, without warranty.'), 'mut']] });
   }

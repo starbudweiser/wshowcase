@@ -17,10 +17,10 @@
   {
    "id": "util",
    "name": {
-    "fr": "DESKTOP MAC TOOLKIT",
-    "en": "DESKTOP MAC TOOLKIT",
-    "es": "DESKTOP MAC TOOLKIT",
-    "it": "DESKTOP MAC TOOLKIT"
+    "fr": "Desktop Mac Toolkit",
+    "en": "Desktop Mac Toolkit",
+    "es": "Desktop Mac Toolkit",
+    "it": "Desktop Mac Toolkit"
    },
    "tint": [
     "#0a84ff",
