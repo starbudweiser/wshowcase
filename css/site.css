@@ -26,7 +26,7 @@ a{color:var(--accent)}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
 /* ================= Page d'accueil ================= */
-#intro{min-height:100vh;display:flex;flex-direction:column;align-items:center;padding-bottom:8px}
+#intro{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding-bottom:8px}
 .inav{width:100%;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 max(20px,env(safe-area-inset-left));border-bottom:1px solid var(--sep);position:sticky;top:0;background:color-mix(in srgb,var(--page) 82%,transparent);backdrop-filter:blur(20px) saturate(1.8);z-index:5}
 .brand{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;font-size:16px;letter-spacing:-.01em}
 .ilogo{width:26px;height:26px;display:block}.ilogo svg{width:100%;height:100%}
@@ -34,8 +34,8 @@ a{color:var(--accent)}
 .pill{border:0;border-radius:999px;background:var(--accent);color:#fff;font-weight:600;font-size:17px;padding:13px 28px;transition:transform .2s,filter .2s}
 .pill:hover{filter:brightness(1.1);transform:scale(1.03)}.pill:active{transform:scale(.98)}
 .lnk{font-size:16px;text-decoration:none}.lnk:hover{text-decoration:underline}
-.pvwrap{width:100%;flex:1;display:flex;justify-content:center;align-items:center;padding:12px 16px}
-.pvbezel{width:min(1900px,100%,max(560px,calc((100vh - 176px)*1.7778 + 20px)));padding:10px;border-radius:28px;background:#1d1d1f;box-shadow:0 0 0 1px #3a3a3c,0 50px 100px rgba(0,0,0,.3);transition:transform .5s cubic-bezier(.2,.8,.3,1)}
+.pvwrap{position:absolute;inset:0;display:flex;justify-content:center;align-items:center;padding:0 16px;pointer-events:none}.pvbezel{pointer-events:auto}
+.pvbezel{width:min(1900px,100%,max(560px,calc((100vh - 164px)*1.7778 + 20px)));padding:10px;border-radius:28px;background:#1d1d1f;box-shadow:0 0 0 1px #3a3a3c,0 50px 100px rgba(0,0,0,.3);transition:transform .5s cubic-bezier(.2,.8,.3,1)}
 .pvbezel:hover{transform:translateY(-4px) scale(1.01)}
 #pvscreen{position:relative;aspect-ratio:16/9;border-radius:18px;overflow:hidden;container-type:inline-size;background:#222}
 .pvwp{position:absolute;inset:0;background:url(../assets/wallpapers/aurore_sombre.jpg) center/cover,linear-gradient(135deg,#0b1030,#3a2a6a)}
@@ -56,7 +56,7 @@ a{color:var(--accent)}
 #intro footer{margin-top:auto;padding:12px 20px 0;font-size:12px;color:var(--ink3);text-align:center}
 .rotate{display:none;font-size:12.5px;color:var(--ink3);text-align:center;padding:0 20px}
 body.portrait .rotate{display:block}
-@media(max-width:720px){.inav nav a:not([data-go]){display:none}.inav nav{gap:12px}.inav nav a{white-space:nowrap;font-size:12px}.brand b{display:none}#pvscreen{aspect-ratio:auto;min-height:calc(100vh - 190px);min-height:calc(100svh - 190px)}.hero{width:calc(100% - 24px);padding:22px 16px}.pvbezel{width:100%}.pvdock{display:none}}
+@media(max-width:720px){.inav nav a:not([data-go]){display:none}.inav nav{gap:12px}.inav nav a{white-space:nowrap;font-size:12px}.brand b{display:none}#pvscreen{aspect-ratio:auto;min-height:calc(100vh - 190px);min-height:calc(100svh - 190px)}.hero{width:calc(100% - 24px);padding:22px 16px}.pvbezel{width:100%}.pvdock{display:none}.pvwrap{position:static;padding:16px}}
 
 /* ================= Démarrage ================= */
 .expander{position:fixed;z-index:3000;background:url(../assets/wallpapers/aurore_sombre.jpg) center/cover;overflow:hidden;pointer-events:none}
