@@ -68,7 +68,7 @@ export const ITEMS = { bucket: { spr: 'bucket' }, honey: { spr: 'honey' }, carro
    thr : le géant lance son gourdin avant de dormir (planche : il le lâche à l'image thr.at du passage thr.seg) ; hand = sa main à cet instant, en pixels
    de la planche depuis le point d'ancrage ; back = passages joués si on le réveille après le lancer (il sort un gourdin de son dos) ; par décor, to = point d'impact et casse = décor qui se brise (CASSE), sinon il le lance hors écran */
 export const SLEEP = {
-  'giant': { k: 'giant', z: [-60, -34], thr: { seg: 'down2', at: 3, back: ['up11', 'up12', 'up13'], hand: [-82, -192], img: 'assets/pointclick/sleep/gourdin.png', targets: { meadow: { to: [70, 92], casse: 'meadow' } } } },
+  'giant': { k: 'giant', z: [-80, -45], thr: { seg: 'down1', at: 2, back: [], hand: [-86, -152], img: 'assets/pointclick/sleep/gourdin.png', targets: { meadow: { to: [70, 92], casse: 'meadow' } } } },
   'nazim': { k: 'nazim', z: [-38, -20] },
   /* secondaires, version simple (tools/sleep_simple.py) : le garde (rue, porte, fête), la fermière, le cheval du moulin, la poule, le cavalier du gué */
   'guard': { k: 'guard', z: [44, -26] }, 'farmer': { k: 'farmer', z: [-42, -26] }, 'horse': { k: 'horse', z: [40, -30] },

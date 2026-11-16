@@ -40,6 +40,16 @@ if os.path.exists(NZ):
                      [(c['sleep'], 4), (c['sit'], 12), (c['rise'], 9), ('guide.png', 6)])
     PIT['nazim'] = ([('guide.png', 4), (c['climb'], 10), ('guide.png', 3)], c.get('pit', 67.4))
 
+# géant (16/11) : poses de la série m_ (sans gourdin), lancer recalculé à sa taille (tools/gen_giant_simple.sh) ; le moteur lance le gourdin
+# sur l'image « jet » (SLEEP giant.thr : seg down1, at 2). Choix dans work/sleep/giant/choix.json
+GC = os.path.join(W, 'giant', 'choix.json')
+if os.path.exists(GC):
+    c = json.load(open(GC))
+    CONF['giant'] = ('giant', 'giant', [('guide.png', 3), (c['elan'], 8), (c['jet'], 10), (c['yawn'], 12), (c['sit'], 9), (c['settle'], 9), (c['sleep'], 6)],
+                     [(c['sleep'], 4), (c['wake'], 12), (c['rise'], 9), ('guide.png', 6)])
+
+NOHOLES = {'giant'}
+
 
 def build(key):
     spr, sub, down, up = CONF[key]; d = os.path.join(W, sub)
@@ -48,7 +58,8 @@ def build(key):
     for f, _ in seq:
         if f not in files: files.append(f)
     tmp = tempfile.mkdtemp()
-    subprocess.run([sys.executable, '-I', os.path.join(T, 'sleep_pixelize.py'), '--holes', spr, d, tmp, 'f'] + [os.path.join(d, f) for f in files], check=True)
+    hl = [] if key in NOHOLES else ['--holes']   # le géant : l'intérieur rose de sa bouche a la teinte du fond magenta, ne pas le retirer
+    subprocess.run([sys.executable, '-I', os.path.join(T, 'sleep_pixelize.py')] + hl + [spr, d, tmp, 'f'] + [os.path.join(d, f) for f in files], check=True)
     meta = json.load(open(os.path.join(tmp, 'f.json'))); w, h = meta['w'], meta['h']
     sheet = Image.new('RGBA', (w * len(seq), h), (0, 0, 0, 0))
     for i, (f, _) in enumerate(seq): sheet.paste(Image.open(os.path.join(tmp, f'f_{files.index(f)}.png')), (i * w, 0))
