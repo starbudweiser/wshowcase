@@ -827,7 +827,7 @@
    "kind": "menubar",
    "desk": false,
    "demo": "mPIE",
-   "shots": 1,
+   "shots": 4,
    "download": false,
    "version": "",
    "tag": {
@@ -845,7 +845,7 @@
    "kind": "app",
    "desk": true,
    "demo": "SOCiALS",
-   "shots": 1,
+   "shots": 4,
    "download": false,
    "version": "",
    "tag": {
