@@ -31,9 +31,20 @@ if os.path.exists(PK):
                                 [(c['sleep'], 4), (c['fold'], 9), (c['kneel'], 8), ('guide.png', 6)])
 
 
+# Nazim sort d'abord de sa fosse (pit1 : il y est enfoncé de PIT_DEPTH pixels du jeu et remonte au fil de ces images) ; poses recalculées
+# le 16/11 à la taille de son sprite (tools/gen_nazim_simple.sh), choix dans work/sleep/nazim/choix.json
+NZ = os.path.join(W, 'nazim', 'choix.json'); PIT = {}
+if os.path.exists(NZ):
+    c = json.load(open(NZ))
+    CONF['nazim'] = ('nazim', 'nazim', [('guide.png', 3), (c['yawn'], 12), (c['sit'], 9), (c['settle'], 9), (c['sleep'], 6)],
+                     [(c['sleep'], 4), (c['sit'], 12), (c['rise'], 9), ('guide.png', 6)])
+    PIT['nazim'] = ([('guide.png', 4), (c['climb'], 10), ('guide.png', 3)], c.get('pit', 67.4))
+
+
 def build(key):
     spr, sub, down, up = CONF[key]; d = os.path.join(W, sub)
-    seq = down + up; files = []
+    pit, depth = PIT.get(key, ([], 0))
+    seq = pit + down + up; files = []
     for f, _ in seq:
         if f not in files: files.append(f)
     tmp = tempfile.mkdtemp()
@@ -42,10 +53,11 @@ def build(key):
     sheet = Image.new('RGBA', (w * len(seq), h), (0, 0, 0, 0))
     for i, (f, _) in enumerate(seq): sheet.paste(Image.open(os.path.join(tmp, f'f_{files.index(f)}.png')), (i * w, 0))
     sheet.save(os.path.join(OUT, key + '.png'), optimize=True)
-    nd = len(down); sl = Image.open(os.path.join(tmp, f'f_{files.index(down[-1][0])}.png')).getbbox()   # pose « dort » : pour placer les z z z
+    nd = len(down); np_ = len(pit); sl = Image.open(os.path.join(tmp, f'f_{files.index(down[-1][0])}.png')).getbbox()   # pose « dort » : pour placer les z z z
     ent = {'w': w, 'h': h, 'ax': meta['ax'], 'ay': meta['ay'], 'cols': len(seq), 'n': len(seq), 'fps': FPS,
-           'seg': {'down1': [0, nd], 'loop': [nd - 1, 1], 'up1': [nd, len(up)]},
+           'seg': {'down1': [np_, nd], 'loop': [np_ + nd - 1, 1], 'up1': [np_ + nd, len(up)]},
            'hold': {'down1': [t for _, t in down], 'up1': [t for _, t in up]}}
+    if pit: ent['seg']['pit1'] = [0, np_]; ent['hold']['pit1'] = [t for _, t in pit]; ent['pit'] = depth
     ip = os.path.join(OUT, 'index.json'); idx = json.load(open(ip)); idx[key] = ent
     json.dump(idx, open(ip, 'w'), indent=1, ensure_ascii=False)
     print(key, f'{len(seq)} images {w}x{h}', 'dort : boîte', sl, 'ancrage', (meta['ax'], meta['ay']),
