@@ -4,7 +4,7 @@ import { h, clamp } from './util.js';
 import { sfx } from './audio.js';
 export const wins = new Map();
 let z = 30, cascade = 0;
-const MB = 30, DOCK = 104;
+const MB = 30, DOCK = 82;
 const spEl = id => document.getElementById('sp-' + id);
 
 export function lights(w) {

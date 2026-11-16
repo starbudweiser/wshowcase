@@ -9,7 +9,7 @@ export const FINDER_SVG = `<svg viewBox="0 0 100 100"><defs><linearGradient id="
 export const SETTINGS_SVG = `<svg viewBox="0 0 100 100"><defs><linearGradient id="sg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b9bec7"/><stop offset="1" stop-color="#6a707a"/></linearGradient><linearGradient id="sg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#c9ced6"/></linearGradient></defs><rect width="100" height="100" rx="23" fill="url(#sg1)"/><path d="M45.5,21.4 L46.7,13.1 L53.3,13.1 L54.5,21.4 L60.4,22.9 L65.6,16.4 L71.3,19.7 L68.3,27.5 L72.5,31.7 L80.3,28.7 L83.6,34.4 L77.1,39.6 L78.6,45.5 L86.9,46.7 L86.9,53.3 L78.6,54.5 L77.1,60.4 L83.6,65.6 L80.3,71.3 L72.5,68.3 L68.3,72.5 L71.3,80.3 L65.6,83.6 L60.4,77.1 L54.5,78.6 L53.3,86.9 L46.7,86.9 L45.5,78.6 L39.6,77.1 L34.4,83.6 L28.7,80.3 L31.7,72.5 L27.5,68.3 L19.7,71.3 L16.4,65.6 L22.9,60.4 L21.4,54.5 L13.1,53.3 L13.1,46.7 L21.4,45.5 L22.9,39.6 L16.4,34.4 L19.7,28.7 L27.5,31.7 L31.7,27.5 L28.7,19.7 L34.4,16.4 L39.6,22.9Z" fill="url(#sg2)" stroke="#4a4f58" stroke-opacity=".35" stroke-width="1" stroke-linejoin="round"/><circle cx="50" cy="50" r="14" fill="#7c828c"/><circle cx="50" cy="50" r="10.5" fill="#565b64"/></svg>`;
 
 /* ---- Dock refondu : ressorts physiques, les voisins s'écartent au lieu de se chevaucher, dossiers en éventail ---- */
-const BASE = 64, GAIN = 0.62, SIGMA = 72, FOCUS_M = 1.45;
+const BASE = 48, GAIN = 0.7, SIGMA = 56, FOCUS_M = 1.45;
 const mem = new WeakMap();
 let raf = 0, ptr = null, last = 0, pop = null, over = false;
 const kids = () => [...document.querySelectorAll('#dock .dkt > *')];
