@@ -124,7 +124,6 @@
       "MiCONE",
       "iCONIQ",
       "mSIZER",
-      "kYNEDIT",
       "mSTAGRAM"
      ]
     },
@@ -138,14 +137,25 @@
      },
      "apps": [
       "wCLAUDE",
-      "SOCiALS",
       "qNOTES",
-      "mSTICK",
-      "CAREERDeSK",
-      "HORIZONs"
+      "mSTICK"
      ]
     }
    ]
+  },
+  {
+   "id": "pro",
+   "name": {
+    "fr": "Pro Mac Toolkit",
+    "en": "Pro Mac Toolkit",
+    "es": "Pro Mac Toolkit",
+    "it": "Pro Mac Toolkit"
+   },
+   "tint": [
+    "#34c759",
+    "#0a84ff"
+   ],
+   "folders": []
   }
  ],
  "apps": [
@@ -655,7 +665,7 @@
   },
   {
    "id": "kYNEDIT",
-   "space": "util",
+   "space": "pro",
    "repo": "kynedit",
    "accent": "#ff9f0a",
    "kind": "app",
@@ -745,7 +755,7 @@
   },
   {
    "id": "CAREERDeSK",
-   "space": "util",
+   "space": "pro",
    "repo": "CAREERDeSK",
    "accent": "#f8b820",
    "kind": "app",
@@ -765,7 +775,7 @@
   },
   {
    "id": "HORIZONs",
-   "space": "util",
+   "space": "pro",
    "repo": "HORIZONs",
    "accent": "#f59e0b",
    "kind": "app",
@@ -839,7 +849,7 @@
   },
   {
    "id": "SOCiALS",
-   "space": "util",
+   "space": "pro",
    "repo": "SOCiALS",
    "accent": "#15a4ed",
    "kind": "app",

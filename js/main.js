@@ -25,7 +25,7 @@ const stageRect = () => { const s = S.scale; return { left: (innerWidth - 1600 *
 /* ---------- liens profonds : #skyrim, #util, #skyrim/mTRANSLATOR ---------- */
 function parseHash() {
   const [a, b] = decodeURIComponent(location.hash.slice(1)).split('/');
-  const sp = ({ skyrim: 'skyrim', toolkit: 'skyrim', util: 'util', desktop: 'util', utilitaires: 'util', utilities: 'util' })[(a || '').toLowerCase()];
+  const sp = ({ skyrim: 'skyrim', toolkit: 'skyrim', util: 'util', pro: 'pro', desktop: 'util', utilitaires: 'util', utilities: 'util' })[(a || '').toLowerCase()];
   const app = S.apps.find(x => x.id.toLowerCase() === (b || a || '').toLowerCase());
   return { space: sp || (app && app.space) || null, app: app && (b || !sp) ? app.id : null };
 }
