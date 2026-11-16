@@ -34,11 +34,10 @@ function parseHash() {
 
 /* ---------- page d'accueil ---------- */
 function buildIntro() {
-  const pv = $('#pvscreen'); pv.innerHTML = '';
-  const dk = S.apps.filter(a => a.space === 'skyrim').slice(0, 11);
-  pv.append(h('div', { class: 'pvwp' }), h('div', { class: 'pvmb' }, h('i', { html: APPLE }), h('b', {}, 'Finder'), h('span', {}, '9:41')),
-    h('div', { class: 'pvwin' }, h('img', { src: `assets/shots/${lang() === 'en' ? 'en' : 'fr'}/mABBAJACK_1.webp`, alt: '', draggable: 'false' })),
-    h('div', { class: 'pvdock' }, dk.map(a => h('img', { src: `assets/icons/${a.id}.png`, alt: '', draggable: 'false' }))));
+  const pv = $('#pvscreen'); pv.querySelectorAll('.pvgen').forEach(x => x.remove());
+  const dk = [{ svg: dock.FINDER_SVG }, { id: 'mCLEAN' }, { id: 'mPDF' }, { svg: dock.SETTINGS_SVG }];
+  pv.prepend(h('div', { class: 'pvwp pvgen' }), h('div', { class: 'pvmb pvgen' }, h('i', { html: APPLE }), h('b', {}, 'Finder'), h('span', {}, '9:41')),
+    h('div', { class: 'pvdock pvgen' }, dk.map(a => a.svg ? h('span', { html: a.svg }) : h('img', { src: `assets/icons/${a.id}.png`, alt: '', draggable: 'false' }))));
   $('#intro .eyebrow').textContent = t('l.eyebrow', { n: S.apps.length });
 }
 function powerOn(spaceId) {
