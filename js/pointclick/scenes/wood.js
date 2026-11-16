@@ -1,6 +1,7 @@
 /* Scène 8 : le bois des papillons. Le mur est trop haut ; un papillon géant, bug de collision à ailes, propulse le héros par-dessus. */
 import { BLINDS, blindEnt, blindEnter, blindTick, blindOn } from './blind.js';
 const BL = BLINDS.wood;
+const PERCH = [160, 114];   /* chapeau du petit champignon où le papillon dort (coordonnées du jeu, vérifiées en jeu le 16/11) */
 
 export default {
   id: 'wood', bg: 'wood.png', persp: [200, 0.64, 268, 1.0],
@@ -25,7 +26,15 @@ export default {
   async enter(g) { blindEnter(g, BL); },
   tick(g) {
     blindTick(g, BL);
-    const b = g.ent('butterfly'); if (b && b.visible) { b.x = 230 + Math.sin(g.now * 0.7) * 46; b.y = 140 + Math.sin(g.now * 1.3) * 16; b.spr = Math.floor(g.now * 3.5) % 2 ? 'butterfly' : 'butterfly.2'; }
+    const b = g.ent('butterfly'); if (!b || !b.visible) return;
+    /* la nuit, il va se poser sur le chapeau du petit champignon (PERCH) avant de se coucher ; il ne revole qu'après son réveil */
+    const n = g.night, perch = n && (n.st !== 'wake' || b.sleepF != null);
+    let tx = 230 + Math.sin(g.now * 0.7) * 46, ty = 140 + Math.sin(g.now * 1.3) * 16;
+    if (perch) { tx = PERCH[0]; ty = PERCH[1]; }
+    const k = perch || b.glide ? Math.min(1, (g.now - (b.gt ?? g.now)) * 2.2) : 1;
+    b.gt = g.now; b.glide = perch || (b.glide && Math.hypot(tx - b.x, ty - b.y) > 1.5);
+    b.x += (tx - b.x) * k; b.y += (ty - b.y) * k;
+    if (b.sleepF == null) b.spr = Math.floor(g.now * 3.5) % 2 ? 'butterfly' : 'butterfly.2';
   },
 
   async intro(g) {

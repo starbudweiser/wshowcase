@@ -127,6 +127,15 @@ for n, (who, sx, obj) in BLIND.items():
 CHARS['blind_cabbage']['boxes'] = dict(BL_BOX, sit=(.27, .27, .40), rise=(.24, .24, .52))
 
 
+# papillon géant (bois, 16/11) : il se pose sur un chapeau de champignon, s'enveloppe dans ses ailes et dort ; vue de face comme son sprite
+BF_BOX = {'land': (.42, .42, .90), 'fold': (.40, .40, .80), 'sleep': (.34, .34, .70), 'stretch': (.55, .55, 1.0)}
+BF = " Same front view, same size as in the reference picture: its body is exactly as big as in the reference."
+CHARS['butterfly'] = dict(src='ch_butterfly.png', kind='ani', boxes=BF_BOX, poses={
+  'land': "The giant butterfly lands, seen from the front: its wings half raised and drawn up above its body, its thin legs stretched down to touch the ground, big cute eyes half closed, sleepy." + BF,
+  'fold': "The giant butterfly sits on the ground seen from the front, its wings lowered and drooping down on both sides of its body like a cloak, yawning with its mouth wide open, eyes half closed, antennae bent." + BF,
+  'sleep': "The giant butterfly sleeps sitting on the ground seen from the front, its wings wrapped around its body like a blanket, eyes closed, antennae drooping, peaceful smile." + BF,
+  'stretch': "The giant butterfly stretches, seen from the front: its wings spread wide open and raised high, yawning, blinking its big cute eyes." + BF})
+
 def main():
     a = sys.argv[1:]; only = None; out = 'jobs.tsv'
     if '--poses' in a: i = a.index('--poses'); only = a[i + 1].split(','); del a[i:i + 2]

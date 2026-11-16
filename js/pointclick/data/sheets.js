@@ -86,7 +86,9 @@ export const SLEEP = {
   'blind.boot': { k: 'blind_boot', z: [-36, -31] },
   'blind.mushroom': { k: 'blind_mushroom', z: [-31, -28] },
   'blind.banner': { k: 'blind_banner', z: [-33, -28] },
-  'blind.partyhat': { k: 'blind_partyhat', z: [-34, -29] }
+  'blind.partyhat': { k: 'blind_partyhat', z: [-34, -29] },
+  // papillon géant du bois : il se pose sur son champignon (scenes/wood.js) ; ses deux images de vol mènent à la même planche
+  'butterfly': { k: 'butterfly', z: [8, -26] }, 'butterfly.2': { k: 'butterfly', z: [8, -26] }
 };
 /* décor brisé par le gourdin du géant (tools/decor_casse.py) : la tour de guet de la prairie s'effondre ; reste détruite pour toute la partie
    (drapeau sauvegardé) ; les nuits suivantes, le géant lance son gourdin hors écran */

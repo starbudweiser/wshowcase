@@ -6,7 +6,7 @@ const W = 480, H = 270, SKY_H = 130, STEPS = [0.2, 0.4, 0.6, 0.78];
 export const IDLE_NIGHT = 60;
 const ease = k => k * k * (3 - 2 * k);
 const hash = s => { let h = 7; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; };
-const INANIMATE = new Set(['handcart', 'cake', 'mannequin', 'butterfly', 'cheese', 'crate']);
+const INANIMATE = new Set(['handcart', 'cake', 'mannequin', 'cheese', 'crate']);
 
 /* ───── ciel : zone de ciel déduite du décor (parcours depuis le bord haut) ─────
    `strip` = ciel seul (les arbres, falaises et toits sont remplacés par le ciel voisin) que l'on fait défiler en miroir à l'intérieur du masque réduit ;

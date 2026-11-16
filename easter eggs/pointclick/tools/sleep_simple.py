@@ -64,6 +64,13 @@ for n in ('pot', 'sack', 'hat', 'cabbage', 'helmet', 'basket', 'boot', 'mushroom
     CONF[key] = (key, key, [('guide.png', 3), (c['yawn'], 12), (c['sit'], 9), (c['sleep'], 6)],
                  [(c['sleep'], 4), (c['sit'], 12), (c['rise'], 9), ('guide.png', 6)])
 
+# papillon géant (bois, 16/11) : il se pose (le moteur l'amène sur son champignon, scenes/wood.js PERCH), baisse les ailes, dort emmitouflé
+BC = os.path.join(W, 'butterfly', 'choix.json')
+if os.path.exists(BC):
+    c = json.load(open(BC))
+    CONF['butterfly'] = ('butterfly', 'butterfly', [('guide.png', 3), (c['land'], 9), (c['fold'], 12), (c['sleep'], 6)],
+                         [(c['sleep'], 4), (c['stretch'], 12), ('guide.png', 6)])
+
 NOHOLES = {'giant'}
 
 
