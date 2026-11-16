@@ -46,10 +46,10 @@ h1{margin:10px 0 18px;font-size:clamp(40px,7vw,76px);line-height:1.04;letter-spa
 .pvbezel{width:min(1120px,100%);padding:10px;border-radius:28px;background:#1d1d1f;box-shadow:0 0 0 1px #3a3a3c,0 50px 100px rgba(0,0,0,.3);transition:transform .5s cubic-bezier(.2,.8,.3,1)}
 .pvbezel:hover{transform:translateY(-4px) scale(1.01)}
 #pvscreen{position:relative;aspect-ratio:16/9;border-radius:18px;overflow:hidden;cursor:pointer;container-type:inline-size;background:#222}
-.pvwp{position:absolute;inset:0;background:url(../assets/wallpapers/aurore.jpg) center/cover,linear-gradient(135deg,#c9defc,#f0cffa)}
-.pvmb{position:absolute;left:0;right:0;top:0;height:3.2cqw;display:flex;align-items:center;gap:1.8cqw;padding:0 1.4cqw;font-size:1.15cqw;color:#111;background:rgba(255,255,255,.3);backdrop-filter:blur(8px)}
+.pvwp{position:absolute;inset:0;background:url(../assets/wallpapers/aurore_sombre.jpg) center/cover,linear-gradient(135deg,#0b1030,#3a2a6a)}
+.pvmb{position:absolute;left:0;right:0;top:0;height:3.2cqw;display:flex;align-items:center;gap:1.8cqw;padding:0 1.4cqw;font-size:1.15cqw;color:#f5f5f7;background:rgba(20,20,40,.35);backdrop-filter:blur(8px)}
 .pvmb i{display:block;width:1.3cqw;height:1.3cqw}.pvmb i svg{width:100%;height:100%}.pvmb span{margin-left:auto}
-.pvwin{position:absolute;left:12cqw;top:8cqw;width:56cqw;border-radius:2cqw;overflow:hidden;box-shadow:0 3cqw 7cqw rgba(10,14,30,.4);background:#16181c;line-height:0}
+.pvwin{position:absolute;left:19cqw;top:6.4cqw;width:62cqw;border-radius:2cqw;overflow:hidden;box-shadow:0 3cqw 7cqw rgba(10,14,30,.4);background:#16181c;line-height:0}
 .pvwin img{width:100%;display:block}
 .pvdock{position:absolute;bottom:1.3cqw;left:50%;transform:translateX(-50%);display:flex;gap:.8cqw;padding:.9cqw 1.2cqw;border-radius:2.6cqw;background:rgba(255,255,255,.38);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.5)}
 .pvdock img{width:5cqw;height:5cqw;display:block}
@@ -59,7 +59,7 @@ body.portrait .rotate{display:block}
 @media(max-width:720px){.inav nav a:not([data-go]){display:none}.inav nav{gap:16px}}
 
 /* ================= Démarrage ================= */
-.expander{position:fixed;z-index:3000;background:url(../assets/wallpapers/aurore.jpg) center/cover;overflow:hidden;pointer-events:none}
+.expander{position:fixed;z-index:3000;background:url(../assets/wallpapers/aurore_sombre.jpg) center/cover;overflow:hidden;pointer-events:none}
 #boot{position:fixed;inset:0;background:#000;z-index:2000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:60px;transition:opacity .9s ease}
 #boot.out{opacity:0;pointer-events:none}
 .blogo svg{width:96px;height:96px;color:#fff;display:block}

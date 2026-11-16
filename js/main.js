@@ -1,7 +1,7 @@
 /* Point d'entrée : page d'accueil, démarrage du Mac (son compris), bureau, extinction. */
 import { S, loadData, applyTheme, on, emit, spaceById, appById } from './core.js';
 import { $, h, store, wait, reduced, APPLE, brand } from './util.js';
-import { initLang, t, applyStatic, tag, sname } from './i18n.js';
+import { initLang, t, applyStatic, tag, sname, lang } from './i18n.js';
 import { sfx } from './audio.js';
 import * as wm from './wm.js';
 import * as spaces from './spaces.js';
@@ -35,7 +35,7 @@ function buildIntro() {
   const pv = $('#pvscreen'); pv.innerHTML = '';
   const dk = S.apps.filter(a => a.space === 'skyrim').slice(0, 11);
   pv.append(h('div', { class: 'pvwp' }), h('div', { class: 'pvmb' }, h('i', { html: APPLE }), h('b', {}, 'Finder'), h('span', {}, '9:41')),
-    h('div', { class: 'pvwin' }, h('img', { src: 'assets/shots/fr/sKYCRASH_1.webp', alt: '', draggable: 'false' })),
+    h('div', { class: 'pvwin' }, h('img', { src: `assets/shots/${lang() === 'en' ? 'en' : 'fr'}/mABBAJACK_1.webp`, alt: '', draggable: 'false' })),
     h('div', { class: 'pvdock' }, dk.map(a => h('img', { src: `assets/icons/${a.id}.png`, alt: '', draggable: 'false' }))));
   $('#intro .eyebrow').textContent = t('l.eyebrow', { n: S.apps.length });
 }

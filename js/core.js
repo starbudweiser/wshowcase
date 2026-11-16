@@ -24,6 +24,7 @@ export const WALLS = [
   { id: 'pro_ciel', cat: 'pro', n: { fr: 'Ciel', en: 'Sky' } },
   { id: 'pro_aube', cat: 'pro', n: { fr: 'Aube', en: 'Dawn' } },
   { id: 'aurore', cat: 'gen', n: { fr: 'Aurore', en: 'Aurora' } },
+  { id: 'aurore_sombre', cat: 'gen', n: { fr: 'Aurore sombre', en: 'Dark aurora' } },
   { id: 'dune', cat: 'gen', n: { fr: 'Dune', en: 'Dune' } },
   { id: 'brume', cat: 'gen', n: { fr: 'Brume', en: 'Mist' } },
   { id: 'ocean', cat: 'gen', n: { fr: 'Océan', en: 'Ocean' } },
