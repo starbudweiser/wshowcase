@@ -56,6 +56,14 @@ for key in ('merchant', 'follower'):
     dn = [('guide.png', 3), (c['yawn'], 12), (c['sit'], 9)] + ([(c['settle'], 9)] if 'settle' in c else []) + [(c['sleep'], 6)]
     CONF[key] = (key, key, dn, [(c['sleep'], 4), (c['sit'], 12), (c['rise'], 9), ('guide.png', 6)])
 
+# lot 3 (16/11) : les 10 clins d'œil « Pourquoi il fait si sombre ? », objet gardé sur les yeux ; pas de pose « settle »
+for n in ('pot', 'sack', 'hat', 'cabbage', 'helmet', 'basket', 'boot', 'mushroom', 'banner', 'partyhat'):
+    key = 'blind_' + n; f = os.path.join(W, key, 'choix.json')
+    if not os.path.exists(f): continue
+    c = json.load(open(f))
+    CONF[key] = (key, key, [('guide.png', 3), (c['yawn'], 12), (c['sit'], 9), (c['sleep'], 6)],
+                 [(c['sleep'], 4), (c['sit'], 12), (c['rise'], 9), ('guide.png', 6)])
+
 NOHOLES = {'giant'}
 
 

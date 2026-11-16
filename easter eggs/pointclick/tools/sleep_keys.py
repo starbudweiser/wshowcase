@@ -101,6 +101,32 @@ CHARS['follower'] = dict(src='ch_follower.png', kind='hum', body=.80, boxes=FOL_
     'rise': "The armored woman gets up from the ground: she kneels on one knee, one hand pushing on her raised knee, her huge overloaded backpack on her back with all its swords, the cheese wheel and the hen, groggy face." + HSF})
 
 
+# lot 3 (16/11/2026) : les 10 clins d'œil « Pourquoi il fait si sombre ? » (scenes/blind.js) ; ils gardent leur objet sur les yeux pour dormir
+BL_BOX = dict(HUM_BOX, sit=(.44, .44, .64), rise=(.40, .40, .86), sleep=(.58, .58, .30))
+BLIND = {  # clé : (qui, il/elle, objet gardé)
+  'pot': ("The stocky villager in brown clothes", 'm', "the big dented iron cooking pot still pulled down over his whole face"),
+  'sack': ("The peasant woman in a grey dress and apron", 'f', "the burlap sack still pulled down over her head and eyes"),
+  'hat': ("The bearded hunter in furs", 'm', "his huge shaggy fur hat still pulled down over his eyes, his spear laid on the ground beside him (exactly one spear)"),
+  'cabbage': ("The villager in brown clothes", 'm', "his whole head still hidden inside the giant cabbage"),
+  'helmet': ("The man in a brown leather coat", 'm', "the iron helmet still pulled down over his whole face"),
+  'basket': ("The stout man in a white shirt", 'm', "the wicker basket still upside down over his head and eyes"),
+  'boot': ("The ragged jester bard in colorful patched clothes", 'm', "the old leather boot still stuck over his head, his lute still on his back"),
+  'mushroom': ("The old bearded man in a green robe", 'm', "the giant red spotted mushroom cap still pulled down over his eyes"),
+  'banner': ("The woman in a long white dress", 'f', "the long red embroidered banner still draped over her head"),
+  'partyhat': ("The laughing man in a blue jacket", 'm', "the striped party hat still pulled down over his eyes, his drum still strapped at his side"),
+}
+for n, (who, sx, obj) in BLIND.items():
+    his, he = ('her', 'she') if sx == 'f' else ('his', 'he')
+    hs = f" {his.capitalize()} head is exactly the same size as in the reference picture: {he} is not closer to the camera. Keep {obj}."
+    CHARS['blind_' + n] = dict(src=f'blind_{n}.png', kind='hum', body=.95, boxes=BL_BOX, poses={
+      'yawn': f"{who} stands and stretches, both arms raised high above {his} head, mouth wide open in a big yawn." + hs,
+      'sit': f"{who} sits down on the ground, legs stretched forward, both hands resting on {his} knees, nodding off." + hs,
+      'sleep': f"{who} lies asleep on {his} back on the ground, {his} body horizontal across the picture with {his} head on the left and {his} feet on the right, hands folded on {his} belly, snoring." + hs,
+      'rise': f"{who} gets up from the ground: {he} kneels on one knee, one hand on {his} raised knee, groggy." + hs})
+# le chou : FLUX le grossit assis et à genoux (1er passage) -> boîtes réduites de 40 %
+CHARS['blind_cabbage']['boxes'] = dict(BL_BOX, sit=(.27, .27, .40), rise=(.24, .24, .52))
+
+
 def main():
     a = sys.argv[1:]; only = None; out = 'jobs.tsv'
     if '--poses' in a: i = a.index('--poses'); only = a[i + 1].split(','); del a[i:i + 2]

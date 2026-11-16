@@ -75,7 +75,18 @@ export const SLEEP = {
   'hen': { k: 'hen', z: [2, -24] }, 'horseman': { k: 'horseman', z: [10, -84] },
   'horseman.pumpkin': { k: 'horseman_pumpkin', z: [14, -66] },   /* fête : il pose sa citrouille sur la crinière pour dormir */
   /* lot 2 (16/11) : le marchand (rue, fête), la compagne d'armes de la grande salle (elle dort assise contre son sac) */
-  'merchant': { k: 'merchant', z: [-38, -26] }, 'follower': { k: 'follower', z: [-4, -48] }
+  'merchant': { k: 'merchant', z: [-38, -26] }, 'follower': { k: 'follower', z: [-4, -48] },
+  // lot 3 : les 10 clins d'œil « Pourquoi il fait si sombre ? » (tête à gauche, objet gardé sur les yeux)
+  'blind.pot': { k: 'blind_pot', z: [-28, -28] },
+  'blind.sack': { k: 'blind_sack', z: [-28, -29] },
+  'blind.hat': { k: 'blind_hat', z: [-39, -28] },
+  'blind.cabbage': { k: 'blind_cabbage', z: [-40, -54] },
+  'blind.helmet': { k: 'blind_helmet', z: [-35, -29] },
+  'blind.basket': { k: 'blind_basket', z: [-30, -37] },
+  'blind.boot': { k: 'blind_boot', z: [-36, -31] },
+  'blind.mushroom': { k: 'blind_mushroom', z: [-31, -28] },
+  'blind.banner': { k: 'blind_banner', z: [-33, -28] },
+  'blind.partyhat': { k: 'blind_partyhat', z: [-34, -29] }
 };
 /* décor brisé par le gourdin du géant (tools/decor_casse.py) : la tour de guet de la prairie s'effondre ; reste détruite pour toute la partie
    (drapeau sauvegardé) ; les nuits suivantes, le géant lance son gourdin hors écran */
