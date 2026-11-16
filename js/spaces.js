@@ -37,6 +37,7 @@ export function init() {
     if (Math.abs(dx) > 90) step(dx < 0 ? 1 : -1);
   }, { passive: true });
   on('lang', () => { renderBar(); renderDesk(); });
+  on('fit', () => renderDesk());
 }
 
 export function go(id, { instant = false } = {}) {
@@ -59,7 +60,9 @@ export function renderBar() {
 
 /* Icônes du bureau : grille de cases, glisser-déposer avec aimantation, positions mémorisées. */
 const CW = 120, CH = 124, X0 = 20, Y0 = 52, COLS = 13, ROWS = 6;
-const cell = (c, r) => ({ left: X0 + c * CW, top: Y0 + r * CH });
+/* colonnes 0-2 ancrées à gauche, les autres à droite : le bureau suit la largeur de la fenêtre */
+const cell = (c, r) => ({ left: c < 3 ? X0 + c * CW : S.W - 140 - (COLS - 1 - c) * CW, top: Y0 + r * CH });
+const colAt = x => { const l = Math.round((x - X0) / CW); return x < S.W / 2 ? l : COLS - 1 - Math.round((S.W - 140 - x) / CW); };
 const key = p => p[0] + ',' + p[1];
 function layout(spaceId, reset) {
   const saved = reset ? {} : store.get('desk', {});
@@ -106,7 +109,7 @@ function dragIcon(e, d, a, el, pos) {
   const sx = e.clientX, sy = e.clientY, ol = parseFloat(d.style.left), ot = parseFloat(d.style.top); let moved = false, ghost = null, tgt = null;
   /* case visée : la plus proche, libre (comme le Finder, qui aimante l'icône sur la grille) */
   const target = () => {
-    let c = Math.max(0, Math.min(COLS - 1, Math.round((parseFloat(d.style.left) - X0) / CW))), r = Math.max(0, Math.min(ROWS - 1, Math.round((parseFloat(d.style.top) - Y0) / CH)));
+    let c = Math.max(0, Math.min(COLS - 1, colAt(parseFloat(d.style.left)))), r = Math.max(0, Math.min(ROWS - 1, Math.round((parseFloat(d.style.top) - Y0) / CH)));
     const taken = new Set(Object.entries(pos).filter(([id]) => id !== a.id).map(([, p]) => key(p)));
     if (taken.has(key([c, r]))) {
       let best = null, bd = 1e9;
@@ -122,7 +125,7 @@ function dragIcon(e, d, a, el, pos) {
       all(el, '.di.sel').forEach(x => x.classList.remove('sel')); d.classList.add('sel'); sfx.tick();
       ghost = h('i', { class: 'dghost' }); el.insertBefore(ghost, d);
     }
-    d.style.left = Math.max(0, Math.min(1600 - 112, ol + dx)) + 'px'; d.style.top = Math.max(34, Math.min(780, ot + dy)) + 'px';
+    d.style.left = Math.max(0, Math.min(S.W - 112, ol + dx)) + 'px'; d.style.top = Math.max(34, Math.min(S.H - 120, ot + dy)) + 'px';
     const t2 = target(); if (!tgt || t2[0] !== tgt[0] || t2[1] !== tgt[1]) { tgt = t2; const p = cell(...t2); ghost.style.left = p.left + 'px'; ghost.style.top = p.top + 'px'; }
   };
   const up = () => {

@@ -9,6 +9,12 @@ import * as tour from './tour.js';
 
 let VIEW = store.get('fview', 'gallery');
 const finders = new Set();
+addEventListener('keydown', e => {
+  if (e.altKey || e.metaKey || e.ctrlKey || e.shiftKey || e.defaultPrevented) return;
+  const t = e.target; if (t && (/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName) || t.isContentEditable)) return;
+  if (document.querySelector('.dkpop')) return;
+  const w = [...finders].find(f => f.el && f.el.classList.contains('active')); if (w && w.onKey) w.onKey(e);
+});
 export const view = () => VIEW;
 export function setView(v) { VIEW = v; store.set('fview', v); sfx.tick(); finders.forEach(f => f.render()); }
 
@@ -89,14 +95,21 @@ export function open(o = {}) {
         root.append(renderInsp(app, launchSel));
         if (hadFocus) { const i = root.querySelector('.fsearch input'); i.focus({ preventScroll: true }); i.setSelectionRange(i.value.length, i.value.length); }
       };
-      root.addEventListener('keydown', e => {
-        if (e.target.tagName === 'INPUT') return;
+      /* flèches et Entrée : actives dès que ce Finder est la fenêtre active (pas besoin de cliquer dedans d'abord) */
+      w.onKey = e => {
         const list = items(), i = list.findIndex(a => a.id === st.sel);
-        const next = d => { const n = list[Math.max(0, Math.min(list.length - 1, i + d))]; if (n) { e.preventDefault(); select(n.id); root.focus({ preventScroll: true }); } };
+        const next = d => { const n = list[Math.max(0, Math.min(list.length - 1, (i < 0 ? 0 : i + d)))]; if (n) { e.preventDefault(); select(n.id); } };
         if (e.key === 'ArrowRight') next(1); else if (e.key === 'ArrowLeft') next(-1);
         else if (e.key === 'ArrowDown') next(VIEW === 'icons' ? 6 : 1); else if (e.key === 'ArrowUp') next(VIEW === 'icons' ? -6 : -1);
-        else if (e.key === 'Enter') launchSel();
-      });
+        else if (e.key === 'Home') next(-9999); else if (e.key === 'End') next(9999);
+        else if (e.key === 'Enter') { e.preventDefault(); launchSel(); }
+      };
+      /* molette sur la bande d'aperçus : défilement horizontal */
+      root.addEventListener('wheel', e => {
+        const s = e.target.closest && e.target.closest('.strip'); if (!s || s.scrollWidth <= s.clientWidth + 1) return;
+        const dx = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY; if (!dx) return;
+        e.preventDefault(); s.scrollLeft += dx * (e.deltaMode === 1 ? 24 : 1);
+      }, { passive: false });
       finders.add(w); w.render();
       return root;
     } });

@@ -1,7 +1,7 @@
 /* Point d'entrée : page d'accueil, démarrage du Mac (son compris), bureau, extinction. */
 import { S, loadData, applyTheme, on, emit, spaceById, appById } from './core.js';
 import { $, h, store, wait, reduced, APPLE, brand } from './util.js';
-import { initLang, t, applyStatic, tag, sname } from './i18n.js';
+import { initLang, t, applyStatic, tag, sname, lang } from './i18n.js';
 import { sfx } from './audio.js';
 import * as wm from './wm.js';
 import * as spaces from './spaces.js';
@@ -17,39 +17,42 @@ let macReady = false, powered = false;
 /* ---------- échelle 16:9 ---------- */
 function fit() {
   const s = Math.min(innerWidth / 1600, innerHeight / 900); S.scale = s;
-  $('#stage').style.transform = `translate(${(innerWidth - 1600 * s) / 2}px,${(innerHeight - 900 * s) / 2}px) scale(${s})`;
+  S.W = Math.round(innerWidth / s); S.H = Math.round(innerHeight / s);
+  const st = $('#stage'); st.style.width = S.W + 'px'; st.style.height = S.H + 'px'; st.style.transform = `scale(${s})`;
+  emit('fit');
   document.body.classList.toggle('portrait', innerHeight > innerWidth);
 }
-const stageRect = () => { const s = S.scale; return { left: (innerWidth - 1600 * s) / 2, top: (innerHeight - 900 * s) / 2, width: 1600 * s, height: 900 * s }; };
+const stageRect = () => ({ left: 0, top: 0, width: innerWidth, height: innerHeight });
 
 /* ---------- liens profonds : #skyrim, #util, #skyrim/mTRANSLATOR ---------- */
 function parseHash() {
   const [a, b] = decodeURIComponent(location.hash.slice(1)).split('/');
-  const sp = ({ skyrim: 'skyrim', toolkit: 'skyrim', util: 'util', utilitaires: 'util', utilities: 'util' })[(a || '').toLowerCase()];
+  const sp = ({ skyrim: 'skyrim', toolkit: 'skyrim', util: 'util', pro: 'pro', desktop: 'util', utilitaires: 'util', utilities: 'util' })[(a || '').toLowerCase()];
   const app = S.apps.find(x => x.id.toLowerCase() === (b || a || '').toLowerCase());
   return { space: sp || (app && app.space) || null, app: app && (b || !sp) ? app.id : null };
 }
 
 /* ---------- page d'accueil ---------- */
 function buildIntro() {
-  const pv = $('#pvscreen'); pv.innerHTML = '';
-  const dk = S.apps.filter(a => a.space === 'skyrim').slice(0, 11);
-  pv.append(h('div', { class: 'pvwp' }), h('div', { class: 'pvmb' }, h('i', { html: APPLE }), h('b', {}, 'Finder'), h('span', {}, '9:41')),
-    h('div', { class: 'pvwin' }, h('img', { src: 'assets/shots/fr/sKYCRASH_1.webp', alt: '', draggable: 'false' })),
-    h('div', { class: 'pvdock' }, dk.map(a => h('img', { src: `assets/icons/${a.id}.png`, alt: '', draggable: 'false' }))));
+  const pv = $('#pvscreen'); pv.querySelectorAll('.pvgen').forEach(x => x.remove());
+  const dk = [{ svg: dock.FINDER_SVG }, { id: 'mCLEAN' }, { id: 'mPDF' }, { svg: dock.SETTINGS_SVG }];
+  pv.prepend(h('div', { class: 'pvwp pvgen' }), h('div', { class: 'pvmb pvgen' }, h('i', { html: APPLE }), h('b', {}, 'Finder'), h('span', {}, '9:41')),
+    h('div', { class: 'pvdock pvgen' }, dk.map(a => a.svg ? h('span', { html: a.svg }) : h('img', { src: `assets/icons/${a.id}.png`, alt: '', draggable: 'false' }))));
   $('#intro .eyebrow').textContent = t('l.eyebrow', { n: S.apps.length });
 }
 function powerOn(spaceId) {
   if (powered) return; powered = true; sfx.unlock();
-  const hs = parseHash(); if (spaceId) S.cur = spaceId; else if (hs.space) S.cur = hs.space;
-  const pv = $('#pvscreen'), r = pv.getBoundingClientRect(), to = stageRect();
-  const ex = h('div', { class: 'expander' }); Object.assign(ex.style, { left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px' });
-  document.body.append(ex);
+  const hs = parseHash(); if (spaceId) S.cur = spaceId; else if (hs.space) S.cur = hs.space; else S.cur = 'util';
+  /* transition franche : un iris noir jaillit du bouton et couvre la page, puis l'écran de démarrage */
+  const btn = $('#cta').getBoundingClientRect(), bt = $('#boot');
+  const ox = Math.round(btn.left + btn.width / 2) + 'px', oy = Math.round(btn.top + btn.height / 2) + 'px';
   $('#mac').hidden = false; $('#mac').classList.add('off');
-  const anim = reduced() ? null : ex.animate([{ left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px', borderRadius: '14px' },
-    { left: to.left + 'px', top: to.top + 'px', width: to.width + 'px', height: to.height + 'px', borderRadius: '0px' }], { duration: 900, easing: 'cubic-bezier(.65,0,.2,1)', fill: 'forwards' });
+  $('#boot .blogo').style.opacity = 0; $('#boot .bbar i').style.width = '0%';
+  bt.hidden = false; bt.classList.remove('out'); bt.style.clipPath = `circle(0px at ${ox} ${oy})`;
+  const R = Math.ceil(Math.hypot(Math.max(+ox.slice(0, -2), innerWidth - +ox.slice(0, -2)), Math.max(+oy.slice(0, -2), innerHeight - +oy.slice(0, -2)))) + 8;
+  const anim = reduced() ? null : bt.animate([{ clipPath: `circle(0px at ${ox} ${oy})` }, { clipPath: `circle(${R}px at ${ox} ${oy})` }], { duration: 520, easing: 'cubic-bezier(.75,0,.25,1)', fill: 'forwards' });
   (anim ? anim.finished : Promise.resolve()).then(async () => {
-    $('#boot').hidden = false; $('#boot').classList.remove('out'); ex.remove(); $('#intro').hidden = true; document.body.classList.add('mac-on');
+    bt.style.clipPath = ''; if (anim) anim.cancel(); $('#intro').hidden = true; document.body.classList.add('mac-on');
     await boot(); arrive(hs);
   });
 }
@@ -118,4 +121,6 @@ on('lang', async () => {
   $('#ilogo').innerHTML = logoSvg(); $('#boot .blogo').innerHTML = APPLE;
   document.querySelectorAll('#intro [data-go]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); powerOn(a.dataset.go); }));
   document.body.classList.add('ready');
+  /* lien direct (#skyrim, #skyrim/mORTEX…, depuis skyrimtools.com) : le Mac démarre tout seul, sans passer par l'accueil */
+  if (parseHash().space) powerOn();
 })();

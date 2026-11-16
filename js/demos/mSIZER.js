@@ -1,6 +1,7 @@
 /* mSIZER : réplique interactive de l'éditeur de photos par lots. Mêmes panneaux, mêmes opérations et mêmes libellés que l'appli :
-   préréglages, redimensionner, recadrer (rapport ou manuel à poignées), rotation, retouches, filigrane, format, métadonnées, renommer, destination.
-   Les photos d'exemple sont celles du site ; tout le traitement se fait dans le navigateur, aucun fichier n'est lu. */
+   préréglages, redimensionner, recadrer (rapport ou manuel à poignées), rotation, retouches, filigrane, format, métadonnées, renommer, destination,
+   plus le module RAW → DNG (v1.3) : dérushage (grille, visionneuse, étoiles, retenue/rejet), conversion par lots sans perte, RAW incorporé, corbeille des rejetées.
+   Les photos d'exemple sont celles du site ; les RAW sont factices (aperçus dessinés) ; tout le traitement se fait dans le navigateur, aucun fichier n'est lu. */
 import { h, brand, T, css, toast, icon, sfx, wm, download, clamp, reduced, wait, num } from './kit.js';
 import { t, lang } from '../i18n.js';
 
@@ -143,6 +144,55 @@ function estimateBytes(item, s) {
 const fmtBytes = n => { const u = lang() === 'fr' ? ['o', 'Ko', 'Mo', 'Go'] : ['B', 'KB', 'MB', 'GB']; let i = 0, v = n; while (v >= 1000 && i < 3) { v /= 1000; i++; } return (i < 2 ? Math.round(v) : (Math.round(v * 10) / 10).toLocaleString(lang() === 'fr' ? 'fr-FR' : 'en-US')) + ' ' + u[i]; };
 const dims = (w, hh) => `${num(w)} × ${num(hh)}`;
 
+
+/* ---------- module RAW → DNG : fichiers RAW factices, aperçus peints en canvas ---------- */
+// nom, boîtier, objectif, ISO, vitesse, ouverture, focale, date, largeur, hauteur, Mo, scène, graine
+const RAWS = [
+  ['IMG_0123.CR3', 'Canon EOS R6 Mark II', 'RF 24-105mm F4 L IS USM', 100, '1/250', 8, 35, '2026-09-14T18:42', 6000, 4000, 27.4, 'dusk', 1],
+  ['IMG_0124.CR3', 'Canon EOS R6 Mark II', 'RF 24-105mm F4 L IS USM', 100, '1/250', 8, 35, '2026-09-14T18:43', 6000, 4000, 27.6, 'dusk', 2],
+  ['IMG_0127.CR3', 'Canon EOS R6 Mark II', 'RF 24-105mm F4 L IS USM', 400, '1/125', 5.6, 70, '2026-09-14T19:05', 6000, 4000, 28.9, 'forest', 3],
+  ['DSC_4567.NEF', 'Nikon Z 6II', 'NIKKOR Z 24-70mm f/4 S', 3200, '20 s', 4, 24, '2026-10-02T22:17', 6048, 4024, 33.1, 'night', 4],
+  ['DSC_4568.NEF', 'Nikon Z 6II', 'NIKKOR Z 24-70mm f/4 S', 3200, '20 s', 4, 24, '2026-10-02T22:18', 6048, 4024, 33.3, 'night', 5],
+  ['DSC_4571.NEF', 'Nikon Z 6II', 'NIKKOR Z 24-70mm f/4 S', 100, '1/500', 8, 50, '2026-10-03T09:26', 4024, 6048, 31.8, 'snow', 6],
+  ['DSC04217.ARW', 'Sony ILCE-7M4', 'FE 24-70mm F2.8 GM', 100, '1/1000', 11, 28, '2026-08-21T12:08', 7008, 4672, 51.2, 'ocean', 7],
+  ['DSC04218.ARW', 'Sony ILCE-7M4', 'FE 24-70mm F2.8 GM', 100, '1/1000', 11, 28, '2026-08-21T12:08', 7008, 4672, 51.0, 'ocean', 8],
+  ['DSC04230.ARW', 'Sony ILCE-7M4', 'FE 24-70mm F2.8 GM', 1600, '1/60', 2.8, 35, '2026-08-21T21:14', 7008, 4672, 52.3, 'city', 9],
+  ['DSC04236.ARW', 'Sony ILCE-7M4', 'FE 24-70mm F2.8 GM', 800, '1/80', 2.8, 70, '2026-08-21T21:31', 7008, 4672, 51.7, 'bokeh', 10],
+  ['P1020345.RW2', 'Panasonic DC-S5', 'LUMIX S 20-60mm F3.5-5.6', 100, '1/800', 9, 24, '2026-07-09T16:20', 6000, 4000, 38.5, 'desert', 11],
+  ['P1020351.RW2', 'Panasonic DC-S5', 'LUMIX S 20-60mm F3.5-5.6', 200, '1/200', 5.6, 40, '2026-07-09T17:02', 6000, 4000, 38.9, 'forest', 12],
+  ['DSCF1234.RAF', 'FUJIFILM X-T5', 'XF16-80mmF4 R OIS WR', 125, '1/320', 8, 23, '2026-10-11T18:55', 7728, 5152, 57.4, 'dusk', 13],
+  ['DSCF1240.RAF', 'FUJIFILM X-T5', 'XF16-80mmF4 R OIS WR', 1250, '1/50', 4, 16, '2026-10-11T20:12', 7728, 5152, 58.1, 'city', 14],
+  ['P3170012.ORF', 'OM Digital OM-1', 'M.Zuiko 12-40mm F2.8 PRO', 200, '1/640', 7.1, 25, '2026-03-17T10:44', 5240, 3912, 22.4, 'snow', 15],
+  ['IMG_5620.CR2', 'Canon EOS 5D Mark IV', 'EF 24-70mm f/2.8L II USM', 100, '1/400', 10, 35, '2026-06-02T14:31', 6720, 4480, 31.6, 'ocean', 16],
+  ['IMG_5622.CR2', 'Canon EOS 5D Mark IV', 'EF 24-70mm f/2.8L II USM', 100, '1/500', 10, 50, '2026-06-02T14:37', 6720, 4480, 31.4, 'desert', 17],
+  ['L1004567.DNG', 'Leica Q2', 'Summilux 28 f/1.7 ASPH.', 640, '1/100', 1.7, 28, '2026-09-28T19:48', 8368, 5584, 46.9, 'bokeh', 18]];
+function rng(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+/** Peint une « photo » factice (paysage, nuit, ville…) dans le canvas, de façon déterministe. */
+function paintScene(c, kind, seed) {
+  const W = c.width, H = c.height, x = c.getContext('2d'), r = rng(seed * 7919 + kind.length * 31), land = W >= H;
+  const grad = (stops, y0, y1) => { const g = x.createLinearGradient(0, y0 ?? 0, 0, y1 ?? H); stops.forEach(([o, col]) => g.addColorStop(o, col)); return g; };
+  const glow = (cx, cy, rad, col) => { const g = x.createRadialGradient(cx, cy, 0, cx, cy, rad); g.addColorStop(0, col); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(cx - rad, cy - rad, rad * 2, rad * 2); };
+  const ridge = (base, amp, col, rough, ph) => { x.fillStyle = col; x.beginPath(); x.moveTo(0, H); const st = Math.max(2, W / 140); for (let i = 0; i <= W + st; i += st) { const t = i / W; x.lineTo(i, (base + Math.sin(t * rough * 6 + ph) * amp + Math.sin(t * rough * 15 + ph * 2) * amp * .4 + Math.sin(t * rough * 37 + ph * 3) * amp * .15) * H); } x.lineTo(W, H); x.closePath(); x.fill(); };
+  const pines = (base, size, col, n) => { x.fillStyle = col; for (let i = 0; i < n; i++) { const px = r() * W, hh = size * H * (.6 + r() * .8), ww = hh * .32; x.beginPath(); x.moveTo(px, base * H - hh); x.lineTo(px + ww, base * H); x.lineTo(px - ww, base * H); x.closePath(); x.fill(); } x.fillRect(0, base * H - 1, W, H); };
+  if (kind === 'dusk') { x.fillStyle = grad([[0, '#2a1f5c'], [.55, '#d9546b'], [1, '#ffb36b']]); x.fillRect(0, 0, W, H); const sx = W * (.3 + r() * .4), sy = H * .56; glow(sx, sy, H * .5, 'rgba(255,214,150,.85)'); x.fillStyle = '#fff3d6'; x.beginPath(); x.arc(sx, sy, H * .07, 0, 7); x.fill(); ridge(.66, .04, '#6b3d6e', 1, r() * 6); ridge(.75, .035, '#3d2850', 1.4, r() * 6); ridge(.86, .03, '#1d1530', 2, r() * 6); }
+  else if (kind === 'ocean') { const hz = H * .55; x.fillStyle = grad([[0, '#3f8fd8'], [1, '#d6ecff']], 0, hz); x.fillRect(0, 0, W, hz); for (let i = 0; i < 7; i++) { glow(r() * W, r() * hz * .6 + 10, W * (.08 + r() * .1), 'rgba(255,255,255,.55)'); } x.fillStyle = grad([[0, '#2d7fb8'], [1, '#0b3560']], hz, H); x.fillRect(0, hz, W, H - hz); const sx = W * (.4 + r() * .3); for (let i = 0; i < 26; i++) { x.fillStyle = `rgba(255,255,255,${.5 - i * .017})`; const ww = W * (.02 + r() * .05) * (1 + i * .12); x.fillRect(sx - ww / 2, hz + 4 + i * (H - hz) / 28, ww, Math.max(1.5, H * .004)); } }
+  else if (kind === 'night') { x.fillStyle = grad([[0, '#04061a'], [1, '#26407a']]); x.fillRect(0, 0, W, H); for (let i = 0; i < 160; i++) { x.fillStyle = `rgba(255,255,255,${.25 + r() * .75})`; const rr = Math.max(.6, r() * W / 700); x.beginPath(); x.arc(r() * W, r() * H * .75, rr, 0, 7); x.fill(); } const mx = W * (.2 + r() * .6), my = H * (.18 + r() * .15); glow(mx, my, H * .3, 'rgba(190,210,255,.55)'); x.fillStyle = '#eef3ff'; x.beginPath(); x.arc(mx, my, H * .045, 0, 7); x.fill(); ridge(.78, .03, '#0a1020', 1, r() * 6); pines(.9, .1, '#05080f', land ? 16 : 9); }
+  else if (kind === 'forest') { x.fillStyle = grad([[0, '#dcebd6'], [1, '#8fb89a']]); x.fillRect(0, 0, W, H); glow(W * .7, H * .25, H * .6, 'rgba(255,255,230,.7)'); pines(.62, .22, 'rgba(94,140,106,.75)', 22); pines(.74, .3, 'rgba(56,102,74,.85)', 18); pines(.88, .42, 'rgba(26,62,44,.95)', 12); x.fillStyle = '#10281c'; x.fillRect(0, H * .9, W, H * .1); }
+  else if (kind === 'city') { x.fillStyle = grad([[0, '#0b1236'], [.6, '#5a4a8a'], [1, '#f0907a']]); x.fillRect(0, 0, W, H); for (let l = 0; l < 2; l++) { let px = -10; const col = l ? '#0c0a1c' : '#2a2150'; while (px < W) { const bw = W * (.04 + r() * .07), bh = H * (.2 + r() * (l ? .42 : .3)); x.fillStyle = col; x.fillRect(px, H - bh, bw, bh); if (l) { for (let wy = H - bh + 8; wy < H - 8; wy += Math.max(7, H * .028)) for (let wx = px + 5; wx < px + bw - 6; wx += Math.max(7, W * .014)) if (r() > .55) { x.fillStyle = r() > .5 ? '#ffd98a' : '#ffefc0'; x.fillRect(wx, wy, Math.max(2, W * .005), Math.max(3, H * .012)); } } px += bw + 2; } } }
+  else if (kind === 'snow') { x.fillStyle = grad([[0, '#86b0de'], [1, '#eef5fc']]); x.fillRect(0, 0, W, H); ridge(.5, .12, '#e6eff9', 1.1, r() * 6); ridge(.64, .09, '#bccfe5', 1.6, r() * 6); ridge(.8, .07, '#8da9c9', 2.2, r() * 6); x.fillStyle = '#f7fbff'; x.fillRect(0, H * .92, W, H * .08); pines(.93, .09, '#3b5675', land ? 10 : 6); }
+  else if (kind === 'desert') { x.fillStyle = grad([[0, '#f2a64e'], [1, '#ffe6b8']]); x.fillRect(0, 0, W, H); glow(W * .7, H * .3, H * .5, 'rgba(255,248,214,.8)'); x.fillStyle = '#fff6d8'; x.beginPath(); x.arc(W * .7, H * .3, H * .06, 0, 7); x.fill(); ridge(.58, .06, '#e0954a', .8, r() * 6); ridge(.72, .06, '#c4733a', 1.1, r() * 6); ridge(.86, .05, '#8c4a2a', 1.5, r() * 6); }
+  else { x.fillStyle = grad([[0, '#1d1233'], [1, '#6b2c5a']]); x.fillRect(0, 0, W, H); for (let i = 0; i < 46; i++) { const cx = r() * W, cy = r() * H, rr = H * (.03 + r() * .1), hue = [38, 330, 200, 280, 20][Math.floor(r() * 5)]; const g = x.createRadialGradient(cx, cy, 0, cx, cy, rr); g.addColorStop(0, `hsla(${hue},90%,70%,.75)`); g.addColorStop(.85, `hsla(${hue},90%,60%,.5)`); g.addColorStop(1, `hsla(${hue},90%,60%,0)`); x.fillStyle = g; x.beginPath(); x.arc(cx, cy, rr, 0, 7); x.fill(); } }
+  const v = x.createRadialGradient(W / 2, H / 2, Math.min(W, H) * .4, W / 2, H / 2, Math.max(W, H) * .75); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,.38)'); x.fillStyle = v; x.fillRect(0, 0, W, H);
+}
+function histOf(c) { const k = 192 / Math.max(c.width, c.height), t = mk(c.width * k, c.height * k), x = t.getContext('2d', { willReadFrequently: true }); x.drawImage(c, 0, 0, t.width, t.height); const d = x.getImageData(0, 0, t.width, t.height).data, H = { r: new Array(256).fill(0), g: new Array(256).fill(0), b: new Array(256).fill(0), sh: 0, hi: 0 }, n = d.length / 4;
+  for (let i = 0; i < d.length; i += 4) { H.r[d[i]]++; H.g[d[i + 1]]++; H.b[d[i + 2]]++; if (Math.min(d[i], d[i + 1], d[i + 2]) <= 2) H.sh++; if (Math.max(d[i], d[i + 1], d[i + 2]) >= 253) H.hi++; } H.sh /= n; H.hi /= n; return H; }
+const star = (on, s = 12) => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="${on ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="m12 2.6 2.9 6 6.5.9-4.7 4.6 1.1 6.5L12 17.5l-5.8 3.1 1.1-6.5-4.7-4.6 6.5-.9z"/></svg>`;
+const flagI = (on, s = 14) => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="${on ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V4s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></svg>`;
+const xcI = (on, s = 15) => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="${on ? 'currentColor' : 'none'}"/><path d="m15 9-6 6M9 9l6 6" stroke="${on ? '#101018' : 'currentColor'}"/></svg>`;
+const okI = s => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="m8 12.5 2.7 2.7L16 9.5" stroke="#101018" stroke-width="2.4"/></svg>`;
+const skI = s => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M8 13l4-4 4 4M12 9v7" stroke="#101018" stroke-width="2.2" transform="rotate(90 12 12)"/></svg>`;
+const RFILTERS = ['all', 'picks', 'unflagged', 'rejects'];
+
 export async function open(app) {
   await sheetReady('css/demos/mSIZER.css');
   return wm.open({ id: 'app:' + app.id, appId: app.id, title: app.id, w: 1100, h: 700, x: 250, y: 84, minw: 960, minh: 560, bare: true, cls: 'socle msizer', onclose: w => { w.dead = true; }, build: w => build(app, w) });
@@ -150,7 +200,7 @@ export async function open(app) {
 
 function build(app, w) {
   const alive = () => !w.dead && w.el.isConnected;
-  let s = DEF(); const mine = []; let items = [], selId = null, showAfter = true, proc = false, cancelled = false, progress = 0, summary = '', summaryWarn = false, done = false, pgen = 0, nextBatch = 0;
+  let mode = 'photos'; let s = DEF(); const mine = []; let items = [], selId = null, showAfter = true, proc = false, cancelled = false, progress = 0, summary = '', summaryWarn = false, done = false, pgen = 0, nextBatch = 0;
   const fo = { format: false, meta: false, output: false };
   const root = h('div', { class: 'msizer-root', tabindex: '-1' });
   let popEl = null, popOff = null, sheetEl = null, holding = false;
@@ -314,6 +364,7 @@ function build(app, w) {
   /* --- traitement par lots --- */
   const bottom = h('footer', { class: 'msizer-bottom' });
   function drawBottom() {
+    if (mode === 'raw') return drawRawBottom();
     bottom.innerHTML = '';
     if (proc) return bottom.append(h('div', { class: 'msizer-pb' }, h('i', { style: { width: progress * 100 + '%' } })), h('span', { class: 'msizer-pct' }, Math.round(progress * 100) + ' %'), btn(T('ANNULER', 'CANCEL'), () => { cancelled = true; }, 'w160'));
     bottom.append(...[h('span', { class: 'msizer-sum' + (summaryWarn ? ' wn' : summary ? ' ok' : '') }, summary), done ? btn(T('Afficher dans le Finder', 'Show in Finder'), () => { sfx.click(); toast({ icon: icon(app.id), title: 'Finder', body: s.outputMode === 'replace' ? T('Les originaux ont été remplacés par leurs nouvelles versions.', 'The originals were replaced by their new versions.') : s.outputMode === 'folder' ? (s.outputFolder || '~/Pictures/Export') : T('Sous-dossier « mSIZER » à côté de chaque photo.', '“mSIZER” subfolder next to each photo.') }); }, 'w200') : null,
@@ -336,15 +387,205 @@ function build(app, w) {
   function closeSheet() { sheetEl && sheetEl.remove(); sheetEl = null; }
   function sheet(title, body, foot, width = 440) { closeMenu(); closeSheet(); const card = h('div', { class: 'msizer-sheet', style: { width: width + 'px' }, role: 'dialog', 'aria-label': title }, h('h3', {}, title), body, h('div', { class: 'msizer-foot' }, foot)); sheetEl = h('div', { class: 'msizer-scrim', onpointerdown: e => { if (e.target === sheetEl) closeSheet(); } }, card); root.append(sheetEl); card.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: reduced() ? 1 : 180, easing: 'ease-out' }); const f = card.querySelector('input'); f && requestAnimationFrame(() => f.focus({ preventScroll: true })); }
   let auto = true;
-  function settingsSheet() { const st = h('p', { class: 'msizer-hint' }, T('Version installée : 1.2.0', 'Installed version: 1.2.0'));
-    sheet(T('Réglages', 'Settings'), h('div', { class: 'msizer-sbody' }, h('section', { class: 'msizer-card' }, h('h4', {}, T('Mises à jour', 'Updates')), checkRow(T('Installer automatiquement les mises à jour', 'Install updates automatically'), () => auto, v => { auto = v; settingsSheet(); }), btn(T('Rechercher une mise à jour', 'Check for updates'), () => { sfx.done(); st.textContent = T('mSIZER est à jour (version 1.2.0).', 'mSIZER is up to date (version 1.2.0).'); }), st),
+  function settingsSheet() { const st = h('p', { class: 'msizer-hint' }, T('Version installée : 1.3.3', 'Installed version: 1.3.3'));
+    sheet(T('Réglages', 'Settings'), h('div', { class: 'msizer-sbody' }, h('section', { class: 'msizer-card' }, h('h4', {}, T('Mises à jour', 'Updates')), checkRow(T('Installer automatiquement les mises à jour', 'Install updates automatically'), () => auto, v => { auto = v; settingsSheet(); }), btn(T('Rechercher une mise à jour', 'Check for updates'), () => { sfx.done(); st.textContent = T('mSIZER est à jour (version 1.3.3).', 'mSIZER is up to date (version 1.3.3).'); }), st),
       h('p', { class: 'msizer-hint' }, T('Moteur : 8 photos en parallèle sur les cœurs performance, filtres sur le GPU (Metal).', 'Engine: 8 photos in parallel on the performance cores, filters on the GPU (Metal).')), btn(T('À propos de mSIZER', 'About mSIZER'), aboutSheet, '')), [btn(T('FERMER', 'CLOSE'), closeSheet, 'pri w130')], 520); }
-  function aboutSheet() { sheet(T('À propos', 'About'), h('div', { class: 'msizer-about' }, h('img', { src: icon(app.id), alt: '' }), h('b', { html: brand('mSIZER', BRAND) }), h('span', { class: 'msizer-hint' }, T('Version 1.2.0', 'Version 1.2.0')),
+  function aboutSheet() { sheet(T('À propos', 'About'), h('div', { class: 'msizer-about' }, h('img', { src: icon(app.id), alt: '' }), h('b', { html: brand('mSIZER', BRAND) }), h('span', { class: 'msizer-hint' }, T('Version 1.3.3', 'Version 1.3.3')),
     h('p', {}, T('Redimensionnez, recadrez, filigranez et convertissez vos photos par lots, en quelques clics.', 'Resize, crop, watermark and convert your photos in batches, in a few clicks.')), h('p', {}, h('b', {}, 'Starbudweiser & Claude Code (Anthropic)')), h('p', {}, T('Licence MIT. © 2026 Starbudweiser.', 'MIT License. © 2026 Starbudweiser.')),
     h('p', { class: 'msizer-hint' }, T('Fourni en l’état, sans garantie. Gardez une copie de vos originaux avant de les remplacer.', 'Provided as is, without warranty. Keep a copy of your originals before replacing them.')), h('p', { class: 'msizer-hint' }, T('Inspiré de Photo Bulk Editor, sans lien avec ce logiciel.', 'Inspired by Photo Bulk Editor, not affiliated with it.'))), [btn(T('FERMER', 'CLOSE'), closeSheet, 'pri w130')], 380); }
 
+  /* --- module RAW → DNG : dérushage et conversion (mêmes réglages, libellés et raccourcis que l'appli) --- */
+  const R = { items: [], set: { compressed: true, previewMax: 1600, verify: false, embedRating: true, embedOriginal: false, dest: 'subfolder', folder: '~/Pictures/DNG', conflict: 'number', scope: 'kept', autoAdvance: true },
+    view: 'grid', filter: 'all', stars: 0, sort: 'name', cur: null, sel: new Set(), anchor: null, zoom: false, info: true, scanning: false, converting: false, cancelled: false, progress: 0, trashing: false, trashProgress: 0, summary: '', warn: false, last: false, next: 0 };
+  const bigs = new Map(), histC = new Map();
+  const bigOf = it => { if (!bigs.has(it.id)) { const k = 1400 / Math.max(it.w, it.h), c = mk(it.w * k, it.h * k); paintScene(c, it.kind, it.seed); bigs.set(it.id, c); if (bigs.size > 6) bigs.delete(bigs.keys().next().value); } return bigs.get(it.id); };
+  const rmatch = (it, f, n) => f === 'all' ? true : f === 'picks' ? it.flag === 'pick' : f === 'unflagged' ? it.flag === '' : f === 'rejects' ? it.flag === 'reject' : (it.rating >= n && it.flag !== 'reject');
+  const rcount = f => R.items.filter(i => rmatch(i, f)).length;
+  const rvisible = () => { const f = R.stars ? 'stars' : R.filter, l = R.items.filter(i => rmatch(i, f, R.stars)); const nm = (a, b) => a.name.localeCompare(b.name, undefined, { numeric: true });
+    return l.sort(R.sort === 'name' ? nm : R.sort === 'date' ? (a, b) => a.date - b.date : (a, b) => b.rating - a.rating || nm(a, b)); };
+  const rcur = () => R.items.find(i => i.id === R.cur) || null;
+  const rtargets = () => R.sel.size > 1 ? R.items.filter(i => R.sel.has(i.id)) : (rcur() ? [rcur()] : []);
+  const rscope = () => { const sc = R.set.scope; return sc === 'kept' ? R.items.filter(i => i.flag !== 'reject') : sc === 'picks' ? R.items.filter(i => i.flag === 'pick') : sc === 'visible' ? rvisible() : R.items.filter(i => R.sel.has(i.id)); };
+  const rrejected = () => R.items.filter(i => i.flag === 'reject').length;
+  const destKey = () => R.set.dest + (R.set.dest === 'folder' ? R.set.folder : '');
+  const dngBytes = it => { const st = R.set; if (it.isDNG) return it.bytes; let b = it.mb * (st.compressed ? .61 : .98) + { 0: 0, 1024: .18, 1600: .45, 2560: 1.1 }[st.previewMax]; if (st.embedOriginal) b += it.mb; return Math.round(b * (1 + ((it.seed % 7) - 3) / 220) * 1e6); };
+  const rdate = it => new Intl.DateTimeFormat(lang() === 'fr' ? 'fr-FR' : 'en-US', { dateStyle: 'medium', timeStyle: 'short' }).format(it.date);
+  const rcolumns = () => { const g = rawWork.querySelector('.msizer-rgrid'); return g ? Math.max(1, getComputedStyle(g).gridTemplateColumns.split(' ').length) : 4; };
+  const rawWork = h('div', { class: 'msizer-work msizer-rawwork' });
+  const rawSettings = h('div', { class: 'msizer-settings' });
+  const rset = patch => { Object.assign(R.set, patch); R.summary = ''; drawRawSettings(); drawBottom(); };
+  const rcard = (title, ...kids) => h('section', { class: 'msizer-card' }, h('h4', {}, title), ...kids);
+  const ctr = t => h('p', { class: 'msizer-hint ctr' }, t);
+  function drawRawSettings() {
+    const keep = rawSettings.scrollTop, st = R.set, n = rscope().length; rawSettings.innerHTML = '';
+    const dng = rcard(T('Conversion DNG', 'DNG conversion'),
+      checkRow(T('Compression sans perte', 'Lossless compression'), () => st.compressed, v => rset({ compressed: v }), T('Environ 40 % plus léger, sans toucher aux pixels. Désactivée : écriture encore plus rapide, fichiers plus gros.', 'About 40% smaller without touching the pixels. Off: even faster writing, larger files.')),
+      h('div', { class: 'msizer-sl' }, h('span', { class: 'msizer-lbl' }, T('Aperçu intégré', 'Embedded preview')), choice([[0, T('Aucun', 'None')], [1024, '1024 px'], [1600, '1600 px'], [2560, '2560 px']], () => st.previewMax, v => rset({ previewMax: v }), 64)),
+      checkRow(T('Inclure les étoiles dans le DNG', 'Include the star ratings in the DNG'), () => st.embedRating, v => rset({ embedRating: v }), T('Lues par Lightroom, Bridge et Camera Raw. Une photo rejetée reçoit la note −1.', 'Read by Lightroom, Bridge and Camera Raw. A rejected photo gets the rating −1.')),
+      checkRow(T('Incorporer le RAW d’origine', 'Embed the original RAW'), () => st.embedOriginal, v => rset({ embedOriginal: v }), T('Comme l’option du convertisseur Adobe : le DNG contient aussi le fichier d’origine, extractible plus tard. Le fichier pèse presque le double.', 'Like Adobe’s converter option: the DNG also contains the original file, which can be extracted later. The file is almost twice as large.')),
+      checkRow(T('Vérifier chaque DNG après écriture', 'Verify each DNG after writing'), () => st.verify, v => rset({ verify: v }), T('Relit le DNG et compare chaque pixel au RAW d’origine (un peu plus lent).', 'Reads the DNG back and compares every pixel with the original RAW (slightly slower).')),
+      h('p', { class: 'msizer-hint' }, T('Les fichiers déjà au format DNG sont copiés tels quels.', 'Files that are already DNG are copied as they are.')));
+    const dest = rcard(T('Destination', 'Destination'), choice([['subfolder', T('Sous-dossier « DNG »', '“DNG” subfolder')], ['beside', T('À côté du RAW', 'Next to the RAW')], ['folder', T('Autre dossier', 'Other folder')]], () => st.dest, v => rset({ dest: v }), 110),
+      ...(st.dest === 'subfolder' ? [h('p', { class: 'msizer-hint' }, T('Créé à côté de chaque RAW d’origine.', 'Created next to each original RAW.'))] : st.dest === 'folder' ? [h('div', { class: 'msizer-logo' }, h('span', { class: 'msizer-mono' }, st.folder), btn(T('Choisir…', 'Choose…'), () => { const L = ['~/Pictures/DNG', '~/Desktop/Archive DNG', '~/Documents/Mariage 2026']; rset({ folder: L[(L.indexOf(st.folder) + 1) % L.length] }); }, 'inl'))] : []),
+      h('span', { class: 'msizer-lbl' }, T('Si le fichier existe', 'If the file exists')), choice([['number', T('Numéroter', 'Number it')], ['skip', T('Ignorer', 'Skip')], ['overwrite', T('Remplacer', 'Replace')]], () => st.conflict, v => rset({ conflict: v }), 90));
+    const scope = rcard(T('À convertir', 'To convert'), choice([['kept', T('Tout sauf rejetées', 'All but rejected')], ['picks', T('Retenues', 'Picks')], ['visible', T('Affichées', 'Shown')], ['selection', T('Sélection', 'Selection')]], () => st.scope, v => { st.scope = v; drawRawSettings(); drawBottom(); }, 110),
+      h('span', { class: 'msizer-val' }, n === 1 ? T('1 fichier RAW', '1 RAW file') : T(`${n} fichiers RAW`, `${n} RAW files`)));
+    const trashBtn = btn(T('Rejetées à la corbeille…', 'Rejected to Trash…'), askTrash, '', !rrejected() || R.converting || R.trashing);
+    const view = rcard(T('Visionneuse', 'Viewer'), checkRow(T('Passer à la suivante après notation', 'Go to the next one after rating'), () => st.autoAdvance, v => { st.autoAdvance = v; drawRawSettings(); }), trashBtn,
+      R.trashing ? h('div', { class: 'msizer-trashp' }, h('div', { class: 'msizer-pb' }, h('i', { style: { width: R.trashProgress * 100 + '%' } })), h('span', { class: 'msizer-pct' }, Math.round(R.trashProgress * 100) + ' %')) : null,
+      ctr(T('← → naviguer · 1–5 étoiles · P retenir · X rejeter · U effacer · Espace zoom 100 %', '← → browse · 1–5 stars · P pick · X reject · U clear · Space 100% zoom')));
+    rawSettings.append(dng, dest, scope, view, ctr(T('Décodage RAW : LibRaw (licence CDDL 1.0).', 'RAW decoding: LibRaw (CDDL 1.0 license).'))); rawSettings.scrollTop = keep;
+  }
+  function askTrash() { const n = rrejected(); if (!n) return; sheet(T(`Mettre ${n} fichiers rejetés à la corbeille ?`, `Move ${n} rejected files to the Trash?`), h('p', { class: 'msizer-hint' }, T('Les RAW d’origine rejetés sont déplacés dans la corbeille : vous pourrez les récupérer.', 'The rejected original RAW files are moved to the Trash: you can get them back.')), [btn(T('ANNULER', 'CANCEL'), closeSheet, 'ter'), btn(T('Mettre à la corbeille', 'Move to Trash'), () => { closeSheet(); trashRejected(); }, 'pri')], 420); }
+  async function trashRejected() {
+    const rej = R.items.filter(i => i.flag === 'reject'); if (R.trashing || !rej.length) return; R.trashing = true; R.trashProgress = 0; drawRawSettings();
+    for (let i = 0; i < rej.length; i++) { await wait(reduced() ? 0 : 150); if (!alive()) return; R.trashProgress = (i + 1) / rej.length; sfx.tick(); const b = rawSettings.querySelector('.msizer-trashp'); if (b) { b.firstChild.firstChild.style.width = R.trashProgress * 100 + '%'; b.lastChild.textContent = Math.round(R.trashProgress * 100) + ' %'; } }
+    const gone = new Set(rej.map(i => i.id)); R.items = R.items.filter(i => !gone.has(i.id)); R.sel = new Set([...R.sel].filter(i => !gone.has(i))); if (!R.items.find(i => i.id === R.cur)) { const v = rvisible(); R.cur = v[0] ? v[0].id : null; R.sel = new Set(R.cur ? [R.cur] : []); if (!R.cur) R.view = 'grid'; }
+    R.trashing = false; R.trashProgress = 0; sfx.done(); toast({ icon: icon(app.id), title: 'Finder', body: T(`${rej.length} RAW rejetés placés dans la corbeille.`, `${rej.length} rejected RAW files moved to the Trash.`) }); drawRawSettings(); drawRaw(); drawBottom();
+  }
+
+  /* notation, retenue / rejet, navigation (même logique que l'appli) */
+  function afterMark() {
+    const keep = R.cur, v0 = rvisible(), pos = keep ? v0.findIndex(i => i.id === keep) : -1; const adv = R.set.autoAdvance && R.sel.size <= 1, v = rvisible();
+    if (keep && !v.find(i => i.id === keep) && pos >= 0) { const n = v.length ? v[Math.min(pos, v.length - 1)] : null; R.cur = n ? n.id : null; R.sel = new Set(n ? [n.id] : []); } else if (adv) rmove(1, true);
+    if (!R.cur) R.view = 'grid'; drawRawSettings(); drawRaw(); drawBottom();
+  }
+  function setRating(r) { const t = rtargets(); if (!t.length) return; t.forEach(i => { i.rating = r; if (r > 0 && i.flag === 'reject') i.flag = ''; }); sfx.tick(); afterMark(); }
+  function setFlag(f) { const t = rtargets(); if (!t.length) return; t.forEach(i => { i.flag = (i.flag === f && f) ? '' : f; }); sfx.tick(); afterMark(); }
+  function rmove(d, quiet) { const v = rvisible(); if (!v.length) return; const i = Math.max(0, v.findIndex(q => q.id === R.cur)), n = v[clamp(i + d, 0, v.length - 1)]; R.cur = n.id; R.sel = new Set([n.id]); R.anchor = n.id; if (!quiet) { drawRaw(); } }
+  function rclick(it, meta, shift) { const v = rvisible(); if (shift && R.anchor) { const a = v.findIndex(q => q.id === R.anchor), b = v.findIndex(q => q.id === it.id); if (a >= 0 && b >= 0) R.sel = new Set(v.slice(Math.min(a, b), Math.max(a, b) + 1).map(q => q.id)); } else if (meta) { R.sel.has(it.id) ? R.sel.delete(it.id) : R.sel.add(it.id); R.anchor = it.id; } else { R.sel = new Set([it.id]); R.anchor = it.id; } R.cur = it.id; sfx.tick(); if (R.sel.size > 1 || R.view === 'loupe') drawRaw(); else syncThumbs(); drawRawSettings(); }
+  function ropen(id) { R.cur = id; R.sel = new Set([id]); R.view = 'loupe'; drawRaw(); }
+
+  /* vignettes : un canvas redessiné par élément, badges (drapeau, état, étoiles) en surimpression */
+  function thumbEl(it, hgt, wid) {
+    const c = h('canvas', { class: 'msizer-rtc', width: it.th ? it.th.width : 1, height: it.th ? it.th.height : 1 }); if (it.th) c.getContext('2d').drawImage(it.th, 0, 0);
+    const el = h('div', { class: 'msizer-rt', 'data-rid': it.id, style: { height: hgt + 'px', width: wid ? wid + 'px' : '' } }, it.th ? c : h('i', { class: 'msizer-sk', style: { width: '100%', height: '100%' } }), h('div', { class: 'msizer-rtb' })); fillThumb(el, it); return el;
+  }
+  function fillThumb(el, it) {
+    el.classList.toggle('sel', R.sel.has(it.id)); el.classList.toggle('rej', it.flag === 'reject'); const b = el.querySelector('.msizer-rtb'); if (!b) return;
+    const st = it.state ? (it.state.k === 'done' ? `<span class="ok">${okI(14)}</span>` : it.state.k === 'skip' ? `<span class="wn">${skI(14)}</span>` : '') : '';
+    b.innerHTML = `<div class="top"><span class="fl">${it.flag === 'pick' ? `<em class="ok">${flagI(true)}</em>` : it.flag === 'reject' ? `<em class="dg">${xcI(true)}</em>` : ''}</span>${st}</div>${it.rating ? `<div class="stars">${star(true, 10).repeat(it.rating)}${star(false, 10).repeat(5 - it.rating).replace(/currentColor/g, 'currentColor')}</div>` : ''}`;
+    const sv = b.querySelector('.stars'); if (sv) [...sv.children].forEach((q, i) => q.style.color = i < it.rating ? '#f5a524' : 'rgba(255,255,255,.28)');
+  }
+  const syncThumbs = () => rawWork.querySelectorAll('.msizer-rt').forEach(el => { const it = R.items.find(i => i.id === el.dataset.rid); if (it) fillThumb(el, it); });
+  const seeIn = (box, el, axis) => { if (!box || !el) return; const a = box.getBoundingClientRect(), b = el.getBoundingClientRect(); if (axis === 'x') { box.scrollLeft += (b.left + b.width / 2) - (a.left + a.width / 2); } else { if (b.top < a.top) box.scrollTop += b.top - a.top - 8; else if (b.bottom > a.bottom) box.scrollTop += b.bottom - a.bottom + 8; } };
+
+  /* barre d'outils */
+  function rmenu(list, anchor) { popEl ? closeMenu() : menu(list, anchor); }
+  function rtool() {
+    const v = rvisible(), cur = rcur(), segF = R.stars ? 'all' : R.filter;
+    const seg = (opts, on, set, cls) => h('div', { class: 'msizer-seg ' + (cls || '') }, opts.map(([k, l]) => h('button', { class: on === k ? 'on' : '', 'aria-pressed': on === k, onclick: () => set(k) }, l)));
+    const rate = h('div', { class: 'msizer-rate' + (cur ? '' : ' off') },
+      ...[1, 2, 3, 4, 5].map(i => h('button', { 'aria-label': i + ' ★', title: String(i), style: { color: i <= (cur ? cur.rating : 0) ? '#f5a524' : '' }, onclick: () => setRating(cur && cur.rating === i ? 0 : i), html: star(i <= (cur ? cur.rating : 0), 14) })),
+      h('button', { class: 'sp' + (cur && cur.flag === 'pick' ? ' pk' : ''), title: T('Retenue', 'Picked') + ' (P)', 'aria-label': T('Retenue', 'Picked'), onclick: () => setFlag('pick'), html: flagI(cur && cur.flag === 'pick') }),
+      h('button', { class: cur && cur.flag === 'reject' ? 'rj' : '', title: T('Rejetée', 'Rejected') + ' (X)', 'aria-label': T('Rejetée', 'Rejected'), onclick: () => setFlag('reject'), html: xcI(cur && cur.flag === 'reject', 16) }));
+    const sorts = [['name', T('Nom', 'Name')], ['date', T('Date de prise de vue', 'Capture date')], ['rating', T('Note', 'Rating')]];
+    const sortB = h('button', { class: 'msizer-pill', onclick: () => rmenu(sorts.map(([k, l]) => ({ l, on: R.sort === k, fn: () => { R.sort = k; drawRaw(); } })), sortB) }, sorts.find(q => q[0] === R.sort)[1]);
+    const starB = h('button', { class: 'msizer-pill', onclick: () => rmenu([1, 2, 3, 4, 5].map(n => ({ l: `★ ${n}+`, on: R.stars === n, fn: () => { R.stars = n; fixCur(); drawRaw(); drawRawSettings(); drawBottom(); } })), starB) }, R.stars ? `★ ${R.stars}+` : '★');
+    return h('div', { class: 'msizer-rtool' },
+      seg([['grid', T('Grille', 'Grid')], ['loupe', T('Visionneuse', 'Viewer')]], R.view, k => { if (k === 'loupe' && !R.cur) return; R.view = k; sfx.tick(); drawRaw(); }),
+      seg(RFILTERS.map(k => [k, `${{ all: T('Tout', 'All'), picks: T('Retenues', 'Picks'), unflagged: T('Non triées', 'Unsorted'), rejects: T('Rejetées', 'Rejected') }[k]} ${rcount(k)}`]), segF, k => { R.filter = k; R.stars = 0; sfx.tick(); fixCur(); drawRaw(); drawRawSettings(); drawBottom(); }, 'soft'), starB,
+      h('span', { class: 'msizer-gap' }), rate, h('i', { class: 'msizer-sep' }), sortB,
+      h('button', { class: 'msizer-btn inl', onclick: () => addRaw(), disabled: false }, T('Ajouter des RAW', 'Add RAW files')), h('button', { class: 'msizer-btn ter inl', disabled: R.converting, onclick: clearRaw }, T('Vider la liste', 'Clear list')));
+  }
+  function fixCur() { const v = rvisible(); if (R.cur && !v.find(i => i.id === R.cur)) { R.cur = v[0] ? v[0].id : null; R.sel = new Set(R.cur ? [R.cur] : []); if (!R.cur) R.view = 'grid'; } }
+
+  /* grille, visionneuse, bande d'aperçus, informations */
+  function rgrid() {
+    const v = rvisible(), g = h('div', { class: 'msizer-rgrid' });
+    if (!v.length) g.append(h('p', { class: 'msizer-none msizer-nomatch' }, T('Aucune photo ne correspond au filtre.', 'No photo matches the filter.')));
+    v.forEach(it => { const t = thumbEl(it, 130), cell = h('div', { class: 'msizer-rc', ondblclick: () => ropen(it.id), onclick: e => rclick(it, e.metaKey || e.ctrlKey, e.shiftKey), oncontextmenu: e => { e.preventDefault(); const ids = () => { R.cur = it.id; if (!R.sel.has(it.id)) R.sel = new Set([it.id]); };
+        menu([{ l: T('Visionneuse', 'Viewer'), fn: () => ropen(it.id) }, '-', ...[1, 2, 3, 4, 5].map(n => ({ l: '★ ' + n, fn: () => { ids(); setRating(n); } })), { l: T('Retenue', 'Picked'), fn: () => { ids(); setFlag('pick'); } }, { l: T('Rejetée', 'Rejected'), fn: () => { ids(); setFlag('reject'); } }], cell); } }, t, h('small', {}, it.name)); g.append(cell); });
+    return g;
+  }
+  let loupeEl = null, loupeCv = null;
+  function fitLoupe() { if (!loupeEl || !loupeCv) return; const cw = loupeCv.width, ch = loupeCv.height; if (R.zoom) { loupeCv.style.width = cw + 'px'; loupeCv.style.height = ch + 'px'; return; } const k = Math.min((loupeEl.clientWidth - 24) / cw, (loupeEl.clientHeight - 24) / ch); loupeCv.style.width = Math.max(40, Math.floor(cw * k)) + 'px'; loupeCv.style.height = Math.max(40, Math.floor(ch * k)) + 'px'; }
+  function rloupe() {
+    const it = rcur(), box = h('div', { class: 'msizer-loupe' + (R.zoom ? ' zoom' : ''), onclick: () => { R.zoom = !R.zoom; drawRaw(); } }); loupeEl = box; loupeCv = null;
+    if (!it) { box.append(h('p', { class: 'msizer-none' }, T('Aucun aperçu intégré dans ce fichier.', 'This file has no embedded preview.'))); return box; }
+    const big = bigOf(it), cv = h('canvas', { width: big.width, height: big.height }); cv.getContext('2d').drawImage(big, 0, 0); loupeCv = cv; box.append(cv);
+    box.append(h('div', { class: 'msizer-lov' }, h('span', { class: 'msizer-mono' }, it.name), it.rating ? h('span', { class: 'msizer-stars', html: star(true, 12).repeat(it.rating) }) : null, it.flag === 'pick' ? h('em', { class: 'ok', html: flagI(true) }) : null, it.flag === 'reject' ? h('em', { class: 'dg', html: xcI(true) }) : null));
+    return box;
+  }
+  function rfilm() { const v = rvisible(), f = h('div', { class: 'msizer-film' }); v.forEach(it => { const t = thumbEl(it, 78, 104); t.onclick = () => { rclick(it, false, false); }; f.append(t); }); return f; }
+  function rinfo() {
+    const it = rcur(), p = h('aside', { class: 'msizer-info2' }); if (!it) return p;
+    const hs = histC.get(it.id) || (histC.set(it.id, histOf(bigOf(it))), histC.get(it.id)), cv = h('canvas', { class: 'msizer-histo', width: 492, height: 180 }), x = cv.getContext('2d'); x.fillStyle = '#0b0c12'; x.fillRect(0, 0, 492, 180);
+    const peak = Math.max(1, ...Array.from({ length: 254 }, (_, i) => Math.max(hs.r[i + 1], hs.g[i + 1], hs.b[i + 1]))); x.globalCompositeOperation = 'lighter';
+    [[hs.r, '#ff4040'], [hs.g, '#38d65c'], [hs.b, '#4a7dff']].forEach(([bins, col]) => { x.beginPath(); x.moveTo(0, 180); bins.forEach((v, i) => x.lineTo(492 * i / 255, 180 * (1 - Math.min(1, v / peak)))); x.lineTo(492, 180); x.closePath(); x.globalAlpha = .55; x.fillStyle = col; x.fill(); });
+    const pct = v => (Math.round(v * 1000) / 10).toLocaleString(lang() === 'fr' ? 'fr-FR' : 'en-US', { minimumFractionDigits: 1 }) + ' %';
+    const row = (k, v) => v ? h('div', { class: 'msizer-ir' }, h('small', {}, k), h('span', {}, v)) : null;
+    const state = it.state ? (it.state.k === 'done' ? h('p', { class: 'msizer-okt' }, `✓ ${T('Converti', 'Converted')} · ${fmtBytes(it.state.b)}`) : it.state.k === 'skip' ? h('p', { class: 'msizer-wnt' }, it.state.m) : null) : null;
+    p.append(h('h5', {}, T('Histogramme', 'Histogram')), cv, h('p', { class: 'msizer-clip' + (hs.sh > .02 ? ' wn' : '') }, `${T('Ombres bouchées', 'Clipped shadows')} ${pct(hs.sh)}`), h('p', { class: 'msizer-clip' + (hs.hi > .02 ? ' wn' : '') }, `${T('Hautes lumières brûlées', 'Clipped highlights')} ${pct(hs.hi)}`), h('hr', {}), h('h5', {}, T('Informations', 'Information')),
+      row(T('Fichier', 'File'), it.name), row(T('Boîtier', 'Camera'), it.cam), row(T('Objectif', 'Lens'), it.lens), row('ISO', String(it.iso)), row(T('Vitesse', 'Shutter'), it.shutter + ' s'), row(T('Ouverture', 'Aperture'), 'f/' + it.ap.toFixed(1)), row(T('Focale', 'Focal length'), it.focal + ' mm'), row(T('Prise de vue', 'Captured'), rdate(it)), row(T('Dimensions', 'Size'), `${dims(it.w, it.h)} · ${fmtBytes(it.bytes)}`), state);
+    return p;
+  }
+  /** Reconstruit la zone de droite (outils + grille ou visionneuse) en gardant les positions de défilement. */
+  function drawRaw() {
+    const g0 = rawWork.querySelector('.msizer-rgrid'), keepG = g0 ? g0.scrollTop : 0; rawWork.innerHTML = '';
+    if (!R.items.length && !R.scanning) {
+      const dz = h('div', { class: 'msizer-empty', ondragover: e => { e.preventDefault(); dz.classList.add('on'); }, ondragleave: () => dz.classList.remove('on'), ondrop: e => { e.preventDefault(); dz.classList.remove('on'); toast({ icon: icon(app.id), title: app.id, body: T('Démo : aucun fichier de votre Mac n’est lu. Voici des RAW d’exemple.', 'Demo: no file from your Mac is read. Here are sample RAW files.') }); addRaw(); } },
+        h('div', { class: 'msizer-emp' }, h('span', { class: 'msizer-bigmark', html: MARK }), h('h2', {}, T('Déposez vos fichiers RAW ici', 'Drop your RAW files here')), h('p', {}, T('RW2 (Panasonic), CR2, CR3, NEF, ARW, RAF, ORF, PEF et plus de 1 000 boîtiers, ou des dossiers entiers. Vos RAW d’origine ne sont jamais modifiés.', 'RW2 (Panasonic), CR2, CR3, NEF, ARW, RAF, ORF, PEF and over 1,000 cameras, or whole folders. Your original RAW files are never modified.')), h('button', { class: 'sbtn act msizer-add', onclick: () => addRaw() }, T('AJOUTER DES RAW', 'ADD RAW FILES'))));
+      rawWork.append(dz); return;
+    }
+    const col = h('div', { class: 'msizer-rcol' }, rtool());
+    if (R.view === 'loupe' && R.cur) { const left = h('div', { class: 'msizer-rleft' }, rloupe(), rfilm()); col.append(h('div', { class: 'msizer-rbody' }, left, R.info ? rinfo() : null)); }
+    else { R.view = 'grid'; col.append(rgrid()); }
+    rawWork.append(col);
+    const g = rawWork.querySelector('.msizer-rgrid'); if (g) { g.scrollTop = keepG; const c = g.querySelector('.msizer-rt.sel'); if (c && R.cur) seeIn(g, c.parentElement); }
+    const f = rawWork.querySelector('.msizer-film'); if (f) { const c = f.querySelector('.msizer-rt.sel'); seeIn(f, c, 'x'); }
+    fitLoupe();
+  }
+  const ro2 = new ResizeObserver(() => { if (!alive()) return ro2.disconnect(); fitLoupe(); }); ro2.observe(rawWork);
+  async function addRaw() {
+    if (R.converting || R.scanning) return; const batch = RAWS.slice(R.next, R.next + (R.next === 0 ? 12 : 6)); if (!batch.length) return toast({ icon: icon(app.id), title: app.id, body: T('Les 18 RAW d’exemple sont déjà dans la liste.', 'The 18 sample RAW files are already in the list.') });
+    R.next += batch.length; R.scanning = true; R.summary = ''; sfx.pop();
+    const fresh = batch.map(r => ({ id: 'r' + r[0], name: r[0], cam: r[1], lens: r[2], iso: r[3], shutter: r[4], ap: r[5], focal: r[6], date: new Date(r[7]), w: r[8], h: r[9], mb: r[10], bytes: Math.round(r[10] * 1e6), kind: r[11], seed: r[12], isDNG: /\.dng$/i.test(r[0]), rating: 0, flag: '', state: null, th: null, convKey: '' }));
+    R.items.push(...fresh); if (!R.cur) { const v = rvisible(); R.cur = v[0].id; R.sel = new Set([R.cur]); R.anchor = R.cur; } drawRaw(); drawRawSettings(); drawBottom();
+    for (const [k, it] of fresh.entries()) { await wait(reduced() ? 0 : 70); if (!alive()) return; const q = 340 / Math.max(it.w, it.h), c = mk(it.w * q, it.h * q); paintScene(c, it.kind, it.seed); it.th = c; sfx.tick();
+      rawWork.querySelectorAll(`.msizer-rt[data-rid="${it.id}"]`).forEach(el => { const n = thumbEl(it, parseInt(el.style.height), parseInt(el.style.width) || 0); el.replaceWith(n); }); }
+    R.scanning = false; if (alive()) { drawRaw(); drawBottom(); }
+  }
+  function clearRaw() { if (R.converting) return; R.items = []; R.cur = null; R.sel = new Set(); R.view = 'grid'; R.filter = 'all'; R.stars = 0; R.next = 0; R.summary = ''; R.last = false; bigs.clear(); histC.clear(); sfx.close(); drawRaw(); drawRawSettings(); drawBottom(); }
+
+  /* conversion par lots : barre de progression, taille du DNG selon les options, conflits de noms */
+  async function rawConvert() {
+    const list = rscope(); if (R.converting || !list.length) return; R.converting = true; R.cancelled = false; R.progress = 0; R.summary = ''; R.warn = false; R.last = false; list.forEach(i => { i.state = null; }); syncThumbs(); drawRawSettings(); drawBottom(); sfx.click();
+    const st = { ...R.set }, key = destKey(); let n = 0, written = 0, skipped = 0, a = 0, b = 0;
+    for (const it of list) {
+      if (R.cancelled || !alive()) break; await wait(reduced() ? 0 : 90 + (st.verify ? 70 : 0) + (st.compressed ? 20 : 0) + (it.mb > 40 ? 40 : 0)); if (!alive()) return;
+      if (it.convKey === key && st.conflict === 'skip') { it.state = { k: 'skip', m: T('Existe déjà : ignoré', 'Already exists: skipped') }; skipped++; }
+      else { const o = dngBytes(it); it.state = { k: 'done', b: o }; it.convKey = key; written++; a += it.bytes; b += o; }
+      n++; R.progress = n / list.length; sfx.tick(); const el = rawWork.querySelectorAll(`.msizer-rt[data-rid="${it.id}"]`); el.forEach(e => fillThumb(e, it)); drawBottom();
+      if (R.view === 'loupe' && R.cur === it.id) drawRaw();
+    }
+    R.converting = false; R.progress = 0; const rate = (st.compressed ? 31 : 38) * (st.verify ? .55 : 1) * (st.embedOriginal ? .8 : 1), dt = n / rate, real = written / dt; const f1 = v => v.toFixed(1).replace('.', lang() === 'fr' ? ',' : '.');
+    const parts = R.cancelled ? [T(`Interrompu après ${n} fichiers.`, `Stopped after ${n} files.`)] : [T(`${written} DNG écrits en ${f1(dt)} s · ${f1(real)} par seconde`, `${written} DNG written in ${f1(dt)} s · ${f1(real)} per second`)];
+    if (skipped) parts.push(T(`${skipped} ignorés`, `${skipped} skipped`)); R.summary = parts.join(' · '); R.warn = R.cancelled; R.last = written > 0;
+    if (!R.cancelled) { sfx.done(); if (written) toast({ icon: icon(app.id), title: app.id, body: T(`${fmtBytes(a)} de RAW convertis en ${fmtBytes(b)} de DNG.`, `${fmtBytes(a)} of RAW converted to ${fmtBytes(b)} of DNG.`) }); }
+    drawRawSettings(); drawBottom(); if (R.view === 'loupe') drawRaw();
+  }
+  function drawRawBottom() {
+    bottom.innerHTML = ''; if (R.converting) return bottom.append(h('div', { class: 'msizer-pb' }, h('i', { style: { width: R.progress * 100 + '%' } })), h('span', { class: 'msizer-pct' }, Math.round(R.progress * 100) + ' %'), btn(T('ANNULER', 'CANCEL'), () => { R.cancelled = true; }, 'w160'));
+    const n = rscope().length;
+    bottom.append(...[h('span', { class: 'msizer-sum' + (R.warn ? ' wn' : R.summary ? ' ok' : '') }, R.scanning ? T('Chargement…', 'Loading…') : R.summary),
+      R.last ? btn(T('Afficher dans le Finder', 'Show in Finder'), () => { sfx.click(); toast({ icon: icon(app.id), title: 'Finder', body: R.set.dest === 'folder' ? R.set.folder : R.set.dest === 'beside' ? T('À côté de chaque RAW d’origine.', 'Next to each original RAW.') : T('Sous-dossier « DNG » à côté de chaque RAW.', '“DNG” subfolder next to each RAW.') }); }, 'w200') : null,
+      h('button', { class: 'sbtn act msizer-go wide', disabled: n === 0, onclick: rawConvert }, T(`CONVERTIR ${n} EN DNG`, `CONVERT ${n} TO DNG`))].filter(Boolean));
+  }
+  /* --- bascule Photos / RAW → DNG --- */
+  const modeSeg = h('div', { class: 'msizer-seg msizer-mode' });
+  const main = h('div', { class: 'msizer-main' });
+  function drawModeSeg() { modeSeg.innerHTML = ''; [['photos', T('Photos', 'Photos')], ['raw', 'RAW → DNG']].forEach(([k, l]) => modeSeg.append(h('button', { class: mode === k ? 'on' : '', 'aria-pressed': mode === k, onclick: () => setMode(k) }, l))); }
+  function setMode(k) { if (k === mode) return; closeMenu(); closeSheet(); mode = k; sfx.tick(); drawMode(); }
+  function drawMode() {
+    drawModeSeg(); main.innerHTML = '';
+    if (mode === 'raw') { drawRawSettings(); main.append(rawSettings, h('div', { class: 'msizer-vl' }), rawWork); drawRaw(); drawBottom(); }
+    else { main.append(settings, h('div', { class: 'msizer-vl' }), work); drawAll(); }
+  }
+
   /* --- assemblage --- */
-  const bar = h('div', { class: 'sbar msizer-bar', 'data-drag': '' }, wm.lights(w), h('b', { html: brand('mSIZER', BRAND) }), h('span', { class: 'msizer-gap' }), h('button', { class: 'sbtn', onclick: () => download(app), disabled: !app.download }, t('f.download')),
+  const dlb = h('button', { class: 'sbtn', onclick: () => download(app), disabled: !app.download }, t('f.download'));
+  const bar = h('div', { class: 'sbar msizer-bar', 'data-drag': '' }, wm.lights(w), h('b', { html: brand('mSIZER', BRAND) }), modeSeg, h('span', { class: 'msizer-gap' }), dlb,
     h('button', { class: 'msizer-ib', 'aria-label': T('Réglages…', 'Settings…'), title: T('Réglages…', 'Settings…'), onclick: settingsSheet, html: svg(GEAR) }));
   const work = h('div', { class: 'msizer-work' });
   function drawAll() {
@@ -358,15 +599,26 @@ function build(app, w) {
   }
   const onKey = e => {
     if (!alive()) { document.removeEventListener('keydown', onKey); document.removeEventListener('keyup', onUp); return; } if (!w.el.classList.contains('active')) return;
-    if (e.key === 'Escape') { if (sheetEl) closeSheet(); else closeMenu(); return; }
+    if (e.key === 'Escape' && (sheetEl || popEl || mode !== 'raw')) { if (sheetEl) closeSheet(); else closeMenu(); return; }
+    const mod = e.metaKey || e.ctrlKey;
+    if (mode === 'raw') {
+      if (mod && e.key.toLowerCase() === 'o') { e.preventDefault(); return addRaw(); } if (mod && e.key === 'Enter') { e.preventDefault(); return rawConvert(); }
+      if (mod || e.altKey || sheetEl || e.target.matches('input,textarea') || !R.items.length) return; const k = e.key, lk = k.toLowerCase(), hit = () => { e.preventDefault(); if (e.target.matches('button')) e.target.blur(); };
+      if (k === 'ArrowLeft') { hit(); rmove(-1); } else if (k === 'ArrowRight') { hit(); rmove(1); } else if (k === 'ArrowUp') { hit(); rmove(R.view === 'grid' ? -rcolumns() : -1); } else if (k === 'ArrowDown') { hit(); rmove(R.view === 'grid' ? rcolumns() : 1); }
+      else if (k === ' ') { hit(); if (e.repeat) return; R.zoom = !R.zoom; if (R.view === 'grid' && R.cur) ropen(R.cur); else drawRaw(); } else if (k === 'Enter') { hit(); if (R.cur) ropen(R.cur); } else if (k === 'Escape') { if (R.view === 'loupe') { R.view = 'grid'; drawRaw(); } }
+      else if (/^[0-5]$/.test(k)) { hit(); setRating(+k); } else if (lk === 'p') { hit(); setFlag('pick'); } else if (lk === 'x') { hit(); setFlag('reject'); } else if (lk === 'u') { hit(); rtargets().forEach(i => { i.flag = ''; i.rating = 0; }); sfx.tick(); afterMark(); }
+      else if (lk === 'g') { hit(); R.view = 'grid'; drawRaw(); } else if (lk === 'e') { hit(); if (R.cur) { R.view = 'loupe'; drawRaw(); } } else if (lk === 'i') { hit(); R.info = !R.info; drawRaw(); }
+      return;
+    }
     if (e.code === 'Space' && !e.repeat && !e.target.matches('input,textarea,button') && items.length && showAfter && !holdBefore) { e.preventDefault(); holdBefore = true; schedule(); }
-    const mod = e.metaKey || e.ctrlKey; if (mod && e.key.toLowerCase() === 'o') { e.preventDefault(); addPhotos(); } else if (mod && e.key === 'Enter') { e.preventDefault(); start(); }
+    if (mod && e.key.toLowerCase() === 'o') { e.preventDefault(); addPhotos(); } else if (mod && e.key === 'Enter') { e.preventDefault(); start(); }
     if ((e.key === 'ArrowDown' || e.key === 'ArrowUp') && items.length && !e.target.matches('input,textarea')) { e.preventDefault(); const i = items.findIndex(q => q.id === selId), n = clamp(i + (e.key === 'ArrowDown' ? 1 : -1), 0, items.length - 1); selId = items[n].id; drawList(); schedule(); }
   };
   const onUp = e => { if (e.code === 'Space' && holdBefore) { holdBefore = false; schedule(); } };
   document.addEventListener('keydown', onKey); document.addEventListener('keyup', onUp);
   drawSettings();
-  root.append(bar, h('div', { class: 'msizer-main' }, settings, h('div', { class: 'msizer-vl' }), work), bottom);
-  drawAll();
+  root.append(bar, main, bottom);
+  drawMode();
+  w.render = () => { closeMenu(); closeSheet(); drawSettings(); drawMode(); dlb.textContent = t('f.download'); };
   return root;
 }

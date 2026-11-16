@@ -12,20 +12,150 @@
    "tint": [
     "#f59e0b",
     "#e0523a"
+   ],
+   "folders": [
+    {
+     "id": "mods",
+     "name": {
+      "fr": "Mods",
+      "en": "Mods",
+      "es": "Mods",
+      "it": "Mod"
+     },
+     "apps": [
+      "mORTEX",
+      "mABBAJACK",
+      "mO2FLATTENER",
+      "fOMODSIM",
+      "mTRANSLATOR"
+     ]
+    },
+    {
+     "id": "plugins",
+     "name": {
+      "fr": "Plugins et fichiers",
+      "en": "Plugins and files",
+      "es": "Plugins y archivos",
+      "it": "Plugin e file"
+     },
+     "apps": [
+      "pLUGINSLENS",
+      "eSLIFY",
+      "mBAE",
+      "fCLEANER",
+      "fOLDERFUSE"
+     ]
+    },
+    {
+     "id": "diag",
+     "name": {
+      "fr": "Diagnostic et suivi",
+      "en": "Diagnostics and tracking",
+      "es": "Diagnóstico y seguimiento",
+      "it": "Diagnostica e monitoraggio"
+     },
+     "apps": [
+      "sKYCRASH",
+      "csSETTINGS",
+      "kEYKODES",
+      "nEXUSWATCH",
+      "hERALD"
+     ]
+    }
    ]
   },
   {
    "id": "util",
    "name": {
-    "fr": "Utilitaires",
-    "en": "Utilities",
-    "es": "Utilidades",
-    "it": "Utility"
+    "fr": "Desktop Mac Toolkit",
+    "en": "Desktop Mac Toolkit",
+    "es": "Desktop Mac Toolkit",
+    "it": "Desktop Mac Toolkit"
    },
    "tint": [
     "#0a84ff",
     "#7a5af8"
+   ],
+   "folders": [
+    {
+     "id": "sys",
+     "name": {
+      "fr": "Système et barre des menus",
+      "en": "System and menu bar",
+      "es": "Sistema y barra de menús",
+      "it": "Sistema e barra dei menu"
+     },
+     "apps": [
+      "mCLEAN",
+      "mSILENCE",
+      "mDESK",
+      "mSPACES",
+      "mTAB",
+      "mPIE",
+      "mLINKS"
+     ]
+    },
+    {
+     "id": "files",
+     "name": {
+      "fr": "Disque et fichiers",
+      "en": "Disk and files",
+      "es": "Disco y archivos",
+      "it": "Disco e file"
+     },
+     "apps": [
+      "hdCLEANER",
+      "ARCHiVES",
+      "mBACKUP",
+      "mCLOUD",
+      "qLOOKS",
+      "mPDF"
+     ]
+    },
+    {
+     "id": "media",
+     "name": {
+      "fr": "Images et médias",
+      "en": "Images and media",
+      "es": "Imágenes y medios",
+      "it": "Immagini e media"
+     },
+     "apps": [
+      "MiCONE",
+      "iCONIQ",
+      "mSIZER",
+      "mSTAGRAM"
+     ]
+    },
+    {
+     "id": "daily",
+     "name": {
+      "fr": "Au quotidien",
+      "en": "Everyday",
+      "es": "Día a día",
+      "it": "Ogni giorno"
+     },
+     "apps": [
+      "wCLAUDE",
+      "qNOTES",
+      "mSTICK"
+     ]
+    }
    ]
+  },
+  {
+   "id": "pro",
+   "name": {
+    "fr": "Pro Mac Toolkit",
+    "en": "Pro Mac Toolkit",
+    "es": "Pro Mac Toolkit",
+    "it": "Pro Mac Toolkit"
+   },
+   "tint": [
+    "#34c759",
+    "#0a84ff"
+   ],
+   "folders": []
   }
  ],
  "apps": [
@@ -71,7 +201,7 @@
    "repo": "mTRANSLATOR",
    "accent": "#4285f4",
    "kind": "app",
-   "desk": true,
+   "desk": false,
    "demo": "mTRANSLATOR",
    "shots": 3,
    "download": true,
@@ -107,7 +237,7 @@
    "repo": "nEXUSWATCH",
    "accent": "#ffb340",
    "kind": "app",
-   "desk": true,
+   "desk": false,
    "demo": "nEXUSWATCH",
    "shots": 3,
    "download": true,
@@ -273,7 +403,7 @@
    "demo": "hERALD",
    "shots": 0,
    "download": true,
-   "version": "1.6.0",
+   "version": "1.11.2",
    "tag": {
     "fr": "Prépare et suit vos campagnes de communication, sans rien publier à votre place.",
     "en": "Plans and tracks your communication campaigns, never posts for you.",
@@ -395,7 +525,7 @@
    "repo": "mLINKS",
    "accent": "#32ade6",
    "kind": "menubar",
-   "desk": true,
+   "desk": false,
    "demo": "mLINKS",
    "shots": 0,
    "download": true,
@@ -525,30 +655,12 @@
    "demo": "mSIZER",
    "shots": 0,
    "download": true,
-   "version": "1.2.0",
+   "version": "1.3.3",
    "tag": {
     "fr": "Redimensionne, recadre et retouche des centaines de photos d'un coup.",
     "en": "Resize, crop and retouch hundreds of photos at once.",
     "es": "Redimensiona, recorta y retoca cientos de fotos a la vez.",
     "it": "Ridimensiona, ritaglia e ritocca centinaia di foto in un colpo."
-   }
-  },
-  {
-   "id": "kYNEDIT",
-   "space": "util",
-   "repo": "kynedit",
-   "accent": "#ff9f0a",
-   "kind": "app",
-   "desk": false,
-   "demo": "kYNEDIT",
-   "shots": 0,
-   "download": false,
-   "version": "",
-   "tag": {
-    "fr": "Explorateur média et transcodeur rapide, export vers DaVinci Resolve.",
-    "en": "Fast media browser and transcoder, export to DaVinci Resolve.",
-    "es": "Explorador multimedia y transcodificador rápido, con exportación a DaVinci Resolve.",
-    "it": "Browser multimediale e transcoder veloce, con export verso DaVinci Resolve."
    }
   },
   {
@@ -575,7 +687,7 @@
    "repo": "mSTICK",
    "accent": "#ffd60a",
    "kind": "app",
-   "desk": true,
+   "desk": false,
    "demo": "mSTICK",
    "shots": 0,
    "download": false,
@@ -593,7 +705,7 @@
    "repo": "qNOTES",
    "accent": "#bf5af2",
    "kind": "app",
-   "desk": true,
+   "desk": false,
    "demo": "qNOTES",
    "shots": 0,
    "download": true,
@@ -611,7 +723,7 @@
    "repo": "mTAB",
    "accent": "#38bdf8",
    "kind": "menubar",
-   "desk": true,
+   "desk": false,
    "demo": "mTAB",
    "shots": 3,
    "download": true,
@@ -625,7 +737,7 @@
   },
   {
    "id": "CAREERDeSK",
-   "space": "util",
+   "space": "pro",
    "repo": "CAREERDeSK",
    "accent": "#f8b820",
    "kind": "app",
@@ -645,7 +757,7 @@
   },
   {
    "id": "HORIZONs",
-   "space": "util",
+   "space": "pro",
    "repo": "HORIZONs",
    "accent": "#f59e0b",
    "kind": "app",
@@ -673,12 +785,84 @@
    "demo": "engine",
    "shots": 0,
    "download": true,
-   "version": "1.0.3",
+   "version": "1.0.5",
    "tag": {
     "fr": "Vos clouds comme des disques dans le Finder.",
     "en": "Your clouds as drives in the Finder.",
     "es": "Tus nubes como discos en el Finder.",
     "it": "I tuoi cloud come dischi nel Finder."
+   }
+  },
+  {
+   "id": "mPDF",
+   "space": "util",
+   "repo": "mPDF",
+   "accent": "#f9514c",
+   "kind": "app",
+   "desk": true,
+   "demo": "mPDF",
+   "shots": 3,
+   "download": true,
+   "version": "1.1.8",
+   "tag": {
+    "fr": "Un lecteur et éditeur PDF rapide et léger, pour lire d'abord et remplir vite.",
+    "en": "A fast, lightweight PDF reader and editor, for reading first and filling in fast.",
+    "es": "Un lector y editor de PDF rápido y ligero, para leer primero y rellenar rápido.",
+    "it": "Un lettore ed editor PDF veloce e leggero, per leggere prima e compilare in fretta."
+   }
+  },
+  {
+   "id": "mPIE",
+   "space": "util",
+   "repo": "mPIE",
+   "accent": "#ffca24",
+   "kind": "menubar",
+   "desk": false,
+   "demo": "mPIE",
+   "shots": 4,
+   "download": false,
+   "version": "",
+   "tag": {
+    "fr": "Un menu circulaire sous le pointeur pour lancer, basculer et piloter vos applis et votre musique.",
+    "en": "A ring menu under your pointer to launch, switch and control your apps and music.",
+    "es": "Un menú circular bajo el puntero para abrir, cambiar y controlar tus apps y tu música.",
+    "it": "Un menu circolare sotto il puntatore per aprire, passare e controllare app e musica."
+   }
+  },
+  {
+   "id": "SOCiALS",
+   "space": "pro",
+   "repo": "SOCiALS",
+   "accent": "#15a4ed",
+   "kind": "app",
+   "desk": true,
+   "demo": "SOCiALS",
+   "shots": 4,
+   "download": false,
+   "version": "",
+   "tag": {
+    "fr": "Toutes vos messageries et réseaux sociaux dans une seule fenêtre, une session isolée par compte.",
+    "en": "All your messaging apps and social networks in one window, an isolated session per account.",
+    "es": "Todas tus mensajerías y redes sociales en una sola ventana, una sesión aislada por cuenta.",
+    "it": "Tutte le tue messaggerie e i social in una sola finestra, una sessione isolata per account."
+   }
+  },
+  {
+   "id": "kYNEDIT",
+   "space": "pro",
+   "repo": "kynedit",
+   "accent": "#ff9f0a",
+   "kind": "app",
+   "desk": false,
+   "demo": "kYNEDIT",
+   "shots": 4,
+   "download": false,
+   "version": "",
+   "tag": {
+    "fr": "Explorateur média et transcodeur rapide, export vers DaVinci Resolve.",
+    "en": "Fast media browser and transcoder, export to DaVinci Resolve.",
+    "es": "Explorador multimedia y transcodificador rápido, con exportación a DaVinci Resolve.",
+    "it": "Browser multimediale e transcoder veloce, con export verso DaVinci Resolve."
    }
   }
  ]
