@@ -96,7 +96,7 @@ function openPop(btn, f, label, list, byKey) {
       h('img', { src: icon(a.id), alt: '', draggable: 'false' }), h('span', {}, a.id)))));
   $('#stage').append(p); pop = p;
   const st = $('#stage').getBoundingClientRect(), k = S.scale || 1, br = btn.getBoundingClientRect(), dr = $('#dock').getBoundingClientRect(), w = p.offsetWidth;
-  const bx = (br.left + br.width / 2 - st.left) / k, left = Math.max(w / 2 + 16, Math.min(1600 - w / 2 - 16, bx));
+  const bx = (br.left + br.width / 2 - st.left) / k, left = Math.max(w / 2 + 16, Math.min(S.W - w / 2 - 16, bx));
   p.style.left = left + 'px'; p.style.bottom = ((st.bottom - dr.top) / k + 16) + 'px';
   p.style.transformOrigin = `${(bx - left) + w / 2}px 100%`;
   if (!reduced()) {

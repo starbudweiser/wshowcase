@@ -15,7 +15,7 @@ export function open(o) {
   if (wins.has(o.id)) { const w = wins.get(o.id); if (w.min) restore(o.id); focus(o.id); return w; }
   const sp = o.space || S.cur, W = o.w || 760, H = o.h || 500;
   cascade = (cascade + 1) % 6;
-  const x = o.x ?? Math.round((1600 - W) / 2 + (cascade - 3) * 26), y = o.y ?? Math.max(88, Math.round(MB + (860 - MB - H) / 2 - 20 + (cascade - 3) * 20));
+  const x = o.x ?? Math.round((S.W - W) / 2 + (cascade - 3) * 26), y = o.y ?? Math.max(88, Math.round(MB + (S.H - 40 - MB - H) / 2 - 20 + (cascade - 3) * 20));
   const w = { id: o.id, appId: o.appId, title: o.title, space: sp, x, y, w: W, h: H, min: false, max: false, o };
   const body = h('div', { class: 'wbody' });
   const el = h('div', { class: 'win' + (o.cls ? ' ' + o.cls : ''), role: 'dialog', 'aria-label': o.title, tabindex: '-1' });
@@ -51,8 +51,8 @@ function drag(e, w, mode) {
   const sx = e.clientX, sy = e.clientY, ox = w.x, oy = w.y, ow = w.w, oh = w.h, s = S.scale, o = w.o;
   const mv = ev => {
     const dx = (ev.clientX - sx) / s, dy = (ev.clientY - sy) / s;
-    if (mode === 'mv') { w.x = clamp(ox + dx, -w.w + 140, 1600 - 140); w.y = clamp(oy + dy, MB, 900 - 60); }
-    else { w.w = clamp(ow + dx, o.minw || 380, 1600 - w.x); w.h = clamp(oh + dy, o.minh || 260, 900 - w.y - 20); }
+    if (mode === 'mv') { w.x = clamp(ox + dx, -w.w + 140, S.W - 140); w.y = clamp(oy + dy, MB, S.H - 60); }
+    else { w.w = clamp(ow + dx, o.minw || 380, S.W - w.x); w.h = clamp(oh + dy, o.minh || 260, S.H - w.y - 20); }
     place(w);
   };
   const up = () => { removeEventListener('pointermove', mv); removeEventListener('pointerup', up); w.el.classList.remove('moving'); };
@@ -92,7 +92,7 @@ export function toggleMax(id) {
   const w = wins.get(id); if (!w) return;
   w.el.classList.add('anim');
   if (w.max) { Object.assign(w, w.prev); w.max = false; }
-  else { w.prev = { x: w.x, y: w.y, w: w.w, h: w.h }; Object.assign(w, { x: 0, y: MB, w: 1600, h: 900 - MB - DOCK + 14 }); w.max = true; }
+  else { w.prev = { x: w.x, y: w.y, w: w.w, h: w.h }; Object.assign(w, { x: 0, y: MB, w: S.W, h: S.H - MB - DOCK + 14 }); w.max = true; }
   place(w); setTimeout(() => w.el.classList.remove('anim'), 400); sfx.click();
 }
 function topmost() {
@@ -102,3 +102,5 @@ function topmost() {
 export const byApp = appId => [...wins.values()].filter(w => w.appId === appId);
 export const isRunning = appId => wins.size && byApp(appId).length > 0;
 on('space', topmost);
+/* fenêtre agrandie : suit la taille de la fenêtre du navigateur */
+on('fit', () => wins.forEach(w => { if (w.max) { Object.assign(w, { x: 0, y: MB, w: S.W, h: S.H - MB - DOCK + 14 }); place(w); } }));

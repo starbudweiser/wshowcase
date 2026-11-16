@@ -1,5 +1,5 @@
 import { store } from './util.js';
-export const S = { apps: [], spaces: [], owner: 'starbudweiser', cur: 'skyrim', scale: 1, active: null, rectOf: () => null, extras: new Map() };
+export const S = { apps: [], spaces: [], owner: 'starbudweiser', cur: 'skyrim', scale: 1, W: 1600, H: 900, active: null, rectOf: () => null, extras: new Map() };
 export const bus = new EventTarget();
 export const emit = (n, d) => bus.dispatchEvent(new CustomEvent(n, { detail: d }));
 export const on = (n, f) => bus.addEventListener(n, e => f(e.detail));

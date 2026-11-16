@@ -17,10 +17,12 @@ let macReady = false, powered = false;
 /* ---------- échelle 16:9 ---------- */
 function fit() {
   const s = Math.min(innerWidth / 1600, innerHeight / 900); S.scale = s;
-  $('#stage').style.transform = `translate(${(innerWidth - 1600 * s) / 2}px,${(innerHeight - 900 * s) / 2}px) scale(${s})`;
+  S.W = Math.round(innerWidth / s); S.H = Math.round(innerHeight / s);
+  const st = $('#stage'); st.style.width = S.W + 'px'; st.style.height = S.H + 'px'; st.style.transform = `scale(${s})`;
+  emit('fit');
   document.body.classList.toggle('portrait', innerHeight > innerWidth);
 }
-const stageRect = () => { const s = S.scale; return { left: (innerWidth - 1600 * s) / 2, top: (innerHeight - 900 * s) / 2, width: 1600 * s, height: 900 * s }; };
+const stageRect = () => ({ left: 0, top: 0, width: innerWidth, height: innerHeight });
 
 /* ---------- liens profonds : #skyrim, #util, #skyrim/mTRANSLATOR ---------- */
 function parseHash() {

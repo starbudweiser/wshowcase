@@ -61,7 +61,7 @@ export function showMenu(anchor, items, align = 'left') {
   $('#layer').append(m);
   const r = anchor.getBoundingClientRect(), s = $('#stage').getBoundingClientRect();
   const x = (r.left - s.left) / S.scale, y = (r.bottom - s.top) / S.scale + 2, mw = m.offsetWidth;
-  m.style.left = (align === 'right' ? Math.min(1600 - mw - 8, x + r.width / S.scale - mw) : x) + 'px'; m.style.top = y + 'px';
+  m.style.left = (align === 'right' ? Math.min(S.W - mw - 8, x + r.width / S.scale - mw) : x) + 'px'; m.style.top = y + 'px';
   anchor.classList.add('open'); open = { anchor, m };
   setTimeout(() => addEventListener('pointerdown', away, { once: true, capture: true }), 0);
 }
