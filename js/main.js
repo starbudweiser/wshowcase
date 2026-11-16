@@ -43,14 +43,16 @@ function buildIntro() {
 function powerOn(spaceId) {
   if (powered) return; powered = true; sfx.unlock();
   const hs = parseHash(); if (spaceId) S.cur = spaceId; else if (hs.space) S.cur = hs.space; else S.cur = 'util';
-  const pv = $('#pvscreen'), r = pv.getBoundingClientRect(), to = stageRect();
-  const ex = h('div', { class: 'expander' }); Object.assign(ex.style, { left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px' });
-  document.body.append(ex);
+  /* transition franche : un iris noir jaillit du bouton et couvre la page, puis l'écran de démarrage */
+  const btn = $('#cta').getBoundingClientRect(), bt = $('#boot');
+  const ox = Math.round(btn.left + btn.width / 2) + 'px', oy = Math.round(btn.top + btn.height / 2) + 'px';
   $('#mac').hidden = false; $('#mac').classList.add('off');
-  const anim = reduced() ? null : ex.animate([{ left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px', borderRadius: '14px' },
-    { left: to.left + 'px', top: to.top + 'px', width: to.width + 'px', height: to.height + 'px', borderRadius: '0px' }], { duration: 900, easing: 'cubic-bezier(.65,0,.2,1)', fill: 'forwards' });
+  $('#boot .blogo').style.opacity = 0; $('#boot .bbar i').style.width = '0%';
+  bt.hidden = false; bt.classList.remove('out'); bt.style.clipPath = `circle(0px at ${ox} ${oy})`;
+  const R = Math.ceil(Math.hypot(Math.max(+ox.slice(0, -2), innerWidth - +ox.slice(0, -2)), Math.max(+oy.slice(0, -2), innerHeight - +oy.slice(0, -2)))) + 8;
+  const anim = reduced() ? null : bt.animate([{ clipPath: `circle(0px at ${ox} ${oy})` }, { clipPath: `circle(${R}px at ${ox} ${oy})` }], { duration: 520, easing: 'cubic-bezier(.75,0,.25,1)', fill: 'forwards' });
   (anim ? anim.finished : Promise.resolve()).then(async () => {
-    $('#boot').hidden = false; $('#boot').classList.remove('out'); ex.remove(); $('#intro').hidden = true; document.body.classList.add('mac-on');
+    bt.style.clipPath = ''; if (anim) anim.cancel(); $('#intro').hidden = true; document.body.classList.add('mac-on');
     await boot(); arrive(hs);
   });
 }
