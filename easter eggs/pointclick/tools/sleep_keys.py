@@ -83,6 +83,24 @@ CHARS = {
 SEEDS = (1, 2, 3)
 
 
+# lot 2 (16/11/2026), version simple : le marchand (rue, fête) et la compagne d'armes de la grande salle ; tête de même taille que debout
+HS = " His head is exactly the same size as in the reference picture: he is not closer to the camera."
+HSF = " Her head is exactly the same size as in the reference picture: she is not closer to the camera."
+FOL_BOX = {'yawn': (.40, .40, 1.18), 'sit': (.46, .46, .60), 'sleep': (.46, .46, .56), 'rise': (.40, .40, .80)}
+MER_BOX = dict(HUM_BOX, sit=(.46, .46, .70), rise=(.40, .40, .90), sleep=(.60, .60, .30))   # assis et à genoux sortaient trop petits (tête 0,8 fois celle de debout)
+CHARS['merchant'] = dict(src='ch2_merchant.png', kind='hum', body=.95, boxes=MER_BOX, poses={
+    'yawn': "The stout bald merchant stands and stretches, both arms raised high above his head, his mouth wide open in a huge yawn under his big moustache, eyes squeezed shut, his round belly pushed forward." + HS,
+    'sit': "The stout bald merchant sits down on the ground, legs stretched forward, his fur-trimmed coat and leather apron spread around him, both hands patting his round belly, drowsy half-closed eyes." + HS,
+    'settle': "The stout bald merchant lies down on his back on the ground, his body horizontal across the picture with his head on the left and his boots on the right, propped up on one elbow, heavy drooping eyelids." + HS,
+    'sleep': "The stout bald merchant lies asleep on his back on the ground, his body horizontal across the picture with his head on the left and his boots on the right, both hands folded on his round belly, his big moustache fluttering, eyes closed, mouth open snoring." + HS,
+    'rise': "The stout bald merchant gets up from the ground: he kneels on one knee, one hand on his raised knee, the other rubbing the small of his back, grumpy face." + HS})
+CHARS['follower'] = dict(src='ch_follower.png', kind='hum', body=.80, boxes=FOL_BOX, poses={
+    'yawn': "The armored woman stands and stretches, both arms raised high above her head, her mouth wide open in a big yawn, eyes squeezed shut, her huge overloaded backpack still on her back with all its swords, the cheese wheel and the hen." + HSF,
+    'sit': "The armored woman sits down on the ground, legs stretched forward, leaning back against her huge overloaded backpack which stands upright on the ground behind her, with all its swords, the cheese wheel and the hen, arms crossed, drowsy half-closed eyes." + HSF,
+    'sleep': "The armored woman sleeps sitting on the ground, legs stretched forward, slumped back against her huge overloaded backpack which stands upright on the ground behind her, with all its swords, the cheese wheel and the hen asleep on top, her chin dropped on her chest, arms crossed, eyes closed, mouth open snoring." + HSF,
+    'rise': "The armored woman gets up from the ground: she kneels on one knee, one hand pushing on her raised knee, her huge overloaded backpack on her back with all its swords, the cheese wheel and the hen, groggy face." + HSF})
+
+
 def main():
     a = sys.argv[1:]; only = None; out = 'jobs.tsv'
     if '--poses' in a: i = a.index('--poses'); only = a[i + 1].split(','); del a[i:i + 2]

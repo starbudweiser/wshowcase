@@ -48,6 +48,14 @@ if os.path.exists(GC):
     CONF['giant'] = ('giant', 'giant', [('guide.png', 3), (c['elan'], 8), (c['jet'], 10), (c['yawn'], 12), (c['sit'], 9), (c['settle'], 9), (c['sleep'], 6)],
                      [(c['sleep'], 4), (c['wake'], 12), (c['rise'], 9), ('guide.png', 6)])
 
+# lot 2 (16/11) : le marchand (rue, fête) et la compagne d'armes (grande salle), poses de tools/sleep_keys.py choisies sur planche
+for key in ('merchant', 'follower'):
+    f = os.path.join(W, key, 'choix.json')
+    if not os.path.exists(f): continue
+    c = json.load(open(f))
+    dn = [('guide.png', 3), (c['yawn'], 12), (c['sit'], 9)] + ([(c['settle'], 9)] if 'settle' in c else []) + [(c['sleep'], 6)]
+    CONF[key] = (key, key, dn, [(c['sleep'], 4), (c['sit'], 12), (c['rise'], 9), ('guide.png', 6)])
+
 NOHOLES = {'giant'}
 
 
