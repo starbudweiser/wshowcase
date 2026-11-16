@@ -664,24 +664,6 @@
    }
   },
   {
-   "id": "kYNEDIT",
-   "space": "pro",
-   "repo": "kynedit",
-   "accent": "#ff9f0a",
-   "kind": "app",
-   "desk": false,
-   "demo": "kYNEDIT",
-   "shots": 0,
-   "download": false,
-   "version": "",
-   "tag": {
-    "fr": "Explorateur média et transcodeur rapide, export vers DaVinci Resolve.",
-    "en": "Fast media browser and transcoder, export to DaVinci Resolve.",
-    "es": "Explorador multimedia y transcodificador rápido, con exportación a DaVinci Resolve.",
-    "it": "Browser multimediale e transcoder veloce, con export verso DaVinci Resolve."
-   }
-  },
-  {
    "id": "mSTAGRAM",
    "space": "util",
    "repo": "mSTAGRAM",
@@ -863,6 +845,24 @@
     "en": "All your messaging apps and social networks in one window, an isolated session per account.",
     "es": "Todas tus mensajerías y redes sociales en una sola ventana, una sesión aislada por cuenta.",
     "it": "Tutte le tue messaggerie e i social in una sola finestra, una sessione isolata per account."
+   }
+  },
+  {
+   "id": "kYNEDIT",
+   "space": "pro",
+   "repo": "kynedit",
+   "accent": "#ff9f0a",
+   "kind": "app",
+   "desk": false,
+   "demo": "kYNEDIT",
+   "shots": 4,
+   "download": false,
+   "version": "",
+   "tag": {
+    "fr": "Explorateur média et transcodeur rapide, export vers DaVinci Resolve.",
+    "en": "Fast media browser and transcoder, export to DaVinci Resolve.",
+    "es": "Explorador multimedia y transcodificador rápido, con exportación a DaVinci Resolve.",
+    "it": "Browser multimediale e transcoder veloce, con export verso DaVinci Resolve."
    }
   }
  ]
