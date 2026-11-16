@@ -295,7 +295,10 @@ export function drawNight(g, c) {
     if (NF && k < 1 && im0) {
       const fp = HERO_N.nNeutral, Fp = fp[2] * scP, Px = W / 2 + mx * (fp[0] - ne.width / 2) * scP, Py = H / 2 + 6 + (fp[1] - ne.height / 2) * scP;
       const f0 = [im0.width / 2, 16, 10], F0 = f0[2] * S, X0 = n.x0 ?? h.x, Y0 = (n.y0 ?? h.y) - (im0.height - f0[1]) * S;
-      const Fk = F0 * Math.pow(Fp / F0, k), u = (Fk - F0) / (Fp - F0), fx = X0 + (Px - X0) * u, fy = Y0 + (Py - Y0) * u + Math.abs(Math.sin(t * 7)) * Fk * 0.05 * (1 - k);
+      const Fk = F0 * Math.pow(Fp / F0, k), u = (Fk - F0) / (Fp - F0), fx = X0 + (Px - X0) * u, py = Y0 + (Py - Y0) * u, kc = ease(Math.min(1, Math.max(0, (k - 0.3) / 0.25)));
+      /* images coupées en bas (genoux, taille, portrait : bord à 2,6 largeurs de visage sous le visage, ou plus) : le visage descend juste assez pour que ce bord
+         reste toujours sous le bas de l'écran, comme une vraie caméra qui le cadre de plus en plus serré ; raccord progressif pendant l'image en pied */
+      const fy = py + kc * Math.max(0, H + 2 - 2.6 * Fk - py) + Math.abs(Math.sin(t * 7)) * Fk * 0.05 * (1 - k);
       const L = [[im0, f0], [g.spr('hero.nAp1'), HERO_N.nAp1], [g.spr('hero.nAp2'), HERO_N.nAp2], [g.spr('hero.nAp3'), HERO_N.nAp3], [ne, fp]], i = k < 0.3 ? 0 : k < 0.55 ? 1 : k < 0.75 ? 2 : k < 0.9 ? 3 : 4;
       const [im, [cx, cy, fw]] = L[i][0] ? L[i] : L[0], s = Fk / fw;
       c.save(); c.translate(Math.round(fx), Math.round(fy)); if (n.mirror && i > 0) c.scale(-1, 1); c.drawImage(im, -cx * s, -cy * s, im.width * s, im.height * s); c.restore();
