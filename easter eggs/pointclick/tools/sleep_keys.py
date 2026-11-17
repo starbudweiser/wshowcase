@@ -136,6 +136,18 @@ CHARS['butterfly'] = dict(src='ch_butterfly.png', kind='ani', boxes=BF_BOX, pose
   'sleep': "The giant butterfly sleeps sitting on the ground seen from the front, its wings wrapped around its body like a blanket, eyes closed, antennae drooping, peaceful smile." + BF,
   'stretch': "The giant butterfly stretches, seen from the front: its wings spread wide open and raised high, yawning, blinking its big cute eyes." + BF})
 
+# dragons perchés (17/11) : ils replient leurs ailes, se couchent sur leur perchoir et dorment enroulés ; profil gauche comme leurs sprites
+DR_BOX = {'yawn': (.40, .40, 1.0), 'curl': (.46, .46, .62), 'sleep': (.42, .42, .52)}
+DRS = " Same side profile facing left, same size as in the reference picture: its head is exactly as big as in the reference."
+for k in ('ember', 'frost', 'moss', 'gold'):
+    CHARS['dragon_' + k] = dict(src=f'dr_{k}_down.png', kind='ani', boxes=DR_BOX, poses={
+      'yawn': "The dragon is perched standing on its four legs, its wings folded against its sides, head raised, yawning with its jaws wide open, sleepy." + DRS,
+      'curl': "The dragon lies down on its belly, legs tucked under its body, wings folded flat along its back, head lowered towards its front paws, eyes half closed." + DRS,
+      'sleep': "The dragon sleeps lying on its belly, curled up, wings folded flat along its back, its tail curled around its body, its chin resting on its front paws, eyes closed." + DRS})
+# braise : au 1er passage, ailes restées déployées couché -> consigne plus stricte (ailes fermées)
+WF = " Its tattered wings are completely closed and folded tight against its body, wing tips pointing back, not spread, not raised."
+CHARS['dragon_ember']['poses'] = dict(CHARS['dragon_ember']['poses'], curl=CHARS['dragon_ember']['poses']['curl'] + WF, sleep=CHARS['dragon_ember']['poses']['sleep'] + WF)
+
 def main():
     a = sys.argv[1:]; only = None; out = 'jobs.tsv'
     if '--poses' in a: i = a.index('--poses'); only = a[i + 1].split(','); del a[i:i + 2]

@@ -71,6 +71,14 @@ if os.path.exists(BC):
     CONF['butterfly'] = ('butterfly', 'butterfly', [('guide.png', 3), (c['land'], 9), (c['fold'], 12), (c['sleep'], 6)],
                          [(c['sleep'], 4), (c['stretch'], 12), ('guide.png', 6)])
 
+# dragons perchés (17/11) : joués par ambient.js perchSleep (pas des entités) ; réveil = bâillement puis pose de vol « ailes basses »
+for k in ('ember', 'frost', 'moss', 'gold'):
+    f = os.path.join(W, 'dragon_' + k, 'choix.json')
+    if not os.path.exists(f): continue
+    c = json.load(open(f))
+    CONF['dragon_' + k] = (f'dragon_{k}_down', 'dragon_' + k, [('guide.png', 3), (c['yawn'], 12), (c['curl'], 9), (c['sleep'], 6)],
+                           [(c['sleep'], 4), (c['yawn'], 10), ('guide.png', 6)])
+
 NOHOLES = {'giant'}
 
 

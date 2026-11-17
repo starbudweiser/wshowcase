@@ -141,11 +141,17 @@ const KINDS = {
   /* oiseaux en sprites : 3 poses d'ailes (bird.1 à bird.3), qui traversent le ciel */
   flock(o) {
     const n = o.n ?? 4, R = rnd(o.seed || 5), bs = Array.from({ length: n }, () => ({ y: (o.y0 ?? 18) + R() * ((o.y1 ?? 70) - (o.y0 ?? 18)), sp: (o.speed ?? 14) * (0.8 + R() * 0.5), off: R() * 600, ph: R() * 6, dir: R() > 0.5 ? 1 : -1, sc: 0.5 + R() * 0.4 }));
+    let t0 = null;
     return {
       draw(g, c, t) {
+        /* la nuit, ils filent se coucher hors de l'écran (3 fois plus vite) et ne reviennent qu'après le réveil, en entrant par le bord */
+        const dt = t0 === null ? 0 : Math.max(0, Math.min(0.2, t - t0)); t0 = t; const night = !!g.night && g.night.st !== 'wake';
         bs.forEach(b => {
-          const im = g.spr('bird.' + ([1, 2, 3, 2][Math.floor(t * 7 + b.ph) % 4])); if (!im) return;
-          const x = ((t * b.sp + b.off) % 560) - 40, X = b.dir > 0 ? x : 480 - x, Y = Math.round(b.y + Math.sin(t * 0.8 + b.ph) * 4), w = im.width * b.sc, h = im.height * b.sc;
+          b.p = (b.p ?? b.off) + dt * b.sp * (night ? 3 : 1);
+          const x = (b.p % 560) - 40, off = x < -24 || x > 504;
+          if (off) b.hide = night; if (b.hide) return;
+          const im = g.spr('bird.' + ([1, 2, 3, 2][Math.floor(t * (night ? 12 : 7) + b.ph) % 4])); if (!im) return;
+          const X = b.dir > 0 ? x : 480 - x, Y = Math.round(b.y + Math.sin(t * 0.8 + b.ph) * 4), w = im.width * b.sc, h = im.height * b.sc;
           c.save(); c.translate(Math.round(X), Y); if (b.dir < 0) c.scale(-1, 1); c.drawImage(im, Math.round(-w / 2), Math.round(-h / 2), Math.round(w), Math.round(h)); c.restore();
         });
       }
@@ -166,6 +172,7 @@ const KINDS = {
     return {
       draw(g, c, t) {
         const im = g.spr('fish');
+        if (g.night && g.night.st !== 'wake') next = Math.max(next, t + 2 + R() * 3);   /* la nuit, les poissons dorment : plus de sauts */
         if (t > next) { const sp = spots[(R() * spots.length) | 0]; jumps.push({ t0: t, x: sp[0], y: sp[1], s: sp[2] ?? 1, dir: sp[3] ?? (R() > 0.5 ? 1 : -1), L: 14 + R() * 8, H: 11 + R() * 7 }); next = t + (o.every ?? 4) + R() * (o.spread ?? 5); }
         for (let i = jumps.length - 1; i >= 0; i--) {
           const j = jumps[i], k = (t - j.t0) / D, s = j.s;
@@ -263,6 +270,7 @@ function perch(o) {
           c.restore(); return;
         }
       }
+      if (perchSleep(g, c, o, dir, ph)) { pos = null; return; }
       const sc = o.scale ?? 0.7, tt = t + ph, stretch = (tt % 15) / 1.7, fireT = (tt + 7) % every, fire = o.fire !== false && fireT < 2.6;
       let a = 'down', b = 'down', f = 0;
       if (stretch < 1) { const seq = ['down', 'mid2', 'up', 'mid2', 'down'], q = stretch * 4, i = Math.floor(q); a = seq[i]; b = seq[Math.min(4, i + 1)]; f = q - i; }
@@ -280,5 +288,30 @@ function perch(o) {
       if (o.occ && g.sky && g.sky.occ) occlude(c, g.sky, o.x - w / 2 - 10, o.y - h - 10, w + 20, h + 20);
     }
   };
+}
+/* la nuit, le dragon perché se couche sur son perchoir (planche assets/pointclick/sleep/dragon_<espèce>.png, tools/sleep_simple.py) :
+   coucher image par image, pose « dort » tenue avec ses z z z, réveil ; réveillé avant d'être couché, il se relève par le même chemin */
+const DZ = { ember: [-35, -48], frost: [-27, -34], moss: [-30, -36], gold: [-17, -22] };   /* z z z : au-dessus de la tête (à gauche), pixels de la planche */
+function perchSleep(g, c, o, dir, ph) {
+  const st = o._sl, n = g.night, k = 'dragon_' + (o.kind || ''), A = g.sleepIdx && g.sleepIdx[k], sh = A && g.sleepSheet(k);
+  if (A && !sh && !o._ld) { o._ld = 1; Promise.resolve(g.img(`assets/pointclick/sleep/${k}.png`)).catch(() => {}); }   /* planche chargée dès l'arrivée */
+  if (!n || !sh) { o._sl = null; return false; }
+  const now = g.now, fr = names => { const out = []; for (const m of names) { const s = A.seg[m], h = A.hold && A.hold[m]; if (s) for (let i = 0; i < s[1]; i++) for (let r = h ? h[i] || 1 : 1; r > 0; r--) out.push(s[0] + i); } return out; };
+  let S = st;
+  if (!S) S = o._sl = { ph: 'down', t0: n.t0 + 3.5 + (ph % 3) * 0.6, fr: fr(['down1']) };
+  if (n.st === 'wake' && S.ph !== 'up' && S.ph !== 'over') {
+    if (S.ph === 'loop') S.fr = fr(['up1']); else { const j = Math.max(0, Math.min(S.fr.length - 1, Math.floor((now - S.t0) * A.fps))); S.fr = now < S.t0 ? [] : S.fr.slice(0, j + 1).reverse(); }
+    S.ph = 'up'; S.t0 = now;
+  }
+  if (now < S.t0 || S.ph === 'over') return false;
+  let f;
+  if (S.ph === 'loop') f = A.seg.loop[0];
+  else { const j = Math.floor((now - S.t0) * A.fps); if (j >= S.fr.length) { if (S.ph === 'down') { S.ph = 'loop'; f = A.seg.loop[0]; } else { S.ph = 'over'; return false; } } else f = S.fr[j]; }
+  const sc = o.scale ?? 0.7, sx = (f % A.cols) * A.w, sy = Math.floor(f / A.cols) * A.h;
+  c.save(); c.translate(Math.round(o.x), Math.round(o.y + 2)); if (dir > 0) c.scale(-1, 1);
+  c.drawImage(sh, sx, sy, A.w, A.h, Math.round(-A.ax * sc), Math.round(-A.ay * sc), Math.round(A.w * sc), Math.round(A.h * sc)); c.restore();
+  const Z = DZ[o.kind]; if (S.ph === 'loop' && Z) (g.zExtra = g.zExtra || []).push([o.x + Z[0] * sc * (dir > 0 ? -1 : 1), o.y + Z[1] * sc]);   /* z z z : dessinés par night.js */
+  if (o.occ && g.sky && g.sky.occ) occlude(c, g.sky, o.x - A.w * sc / 2 - 10, o.y - A.h * sc - 10, A.w * sc + 20, A.h * sc + 20);
+  return true;
 }
 export function makeAmbient(list) { return (list || []).map(o => KINDS[o.type](o)).filter(Boolean); }

@@ -275,6 +275,8 @@ export function drawNight(g, c) {
     const z = o.mode === 'anim' && g.sleepConf(o.e).z, s = o.e.scale ?? g.persp(o.e.y), zx = z ? o.e.x + z[0] * s : o.e.x + 4, zy = z ? o.e.y + z[1] * s : o.e.y - 18;
     for (let k = 0; k < 3; k++) { const ph = (t * 0.5 + k / 3 + o.sx * 0.01) % 1; c.globalAlpha = Math.sin(ph * Math.PI) * 0.9; c.fillText(k === 1 ? 'Z' : 'z', zx + ph * 12 + k * 3, zy - ph * 22); }
   }
+  for (const [zx, zy] of g.zExtra || []) for (let k = 0; k < 3; k++) { const ph = (t * 0.5 + k / 3 + zx * 0.01) % 1; c.globalAlpha = Math.sin(ph * Math.PI) * 0.9; c.fillText(k === 1 ? 'Z' : 'z', zx + ph * 10 + k * 3, zy - ph * 18); }
+  g.zExtra = [];   /* dragons perchés endormis (ambient.js perchSleep) */
   c.restore();
   /* le héros qui s'approche de l'écran. Vue de face (15/11, tools/hero_nuit_sprites.py) : travelling avant fait d'images entières à chaque distance
      (sprite du jeu, en pied, aux genoux, à la taille, puis portrait), chacune réduite ou agrandie en continu et relayée par la suivante à taille de
