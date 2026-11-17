@@ -1,6 +1,9 @@
 /* Moteur du jeu d'aventure : scènes, déplacements, verbes, inventaire, dialogues, scripts, sauvegarde.
-   Canvas 2D 480×270 mis à l'échelle par le navigateur ; interface (verbes, inventaire, bulles) en HTML par-dessus. */
+   Canvas 2D 480×270 (16:9) mis à l'échelle ; l'interface se pose PAR-DESSUS la scène, sans bandeau : pièce des verbes (appui long,
+   dessinée en pixel art sur un canvas d'interface à la même résolution), besace et tiroir d'inventaire, étiquette sous le curseur,
+   bulles en HTML. Clic court = aller, clic maintenu = pièce des verbes, clic droit = besace (ou reposer l'objet tenu). */
 import { Scaler } from './scaler.js';
+import { COIN, drawCoin, coinSector, drawCharge, crossCursor, itemCursor, bagCanvas } from './coin.js';
 import { updateWinks, drawWinks } from './winks.js';
 import { updateGlass, drawGlass } from './glass.js';
 import { buildSky, drawSky, startNight, updateNight, drawNight, wakeNight, IDLE_NIGHT } from './night.js';
@@ -17,7 +20,7 @@ import * as SH from '../data/sheets.js';
 const { SPR, ITEMS } = SH, ANIM = SH.ANIM || {}, HERO = SH.HERO || null, SLEEP = SH.SLEEP || {};
 
 export const W = 480, H = 270;
-const VERBS = ['walk', 'take', 'use', 'talk', 'look'];
+const HOLD_S = 0.32, CHARGE_S = 0.09, DRAWER_H = 46;   // appui long avant la pièce, délai avant l'anneau de chargement, hauteur du tiroir
 const COLORS = { hero: '#ffe08a', rider: '#ffe08a', merchant: '#ffa45c', guard: '#9ad0ff', horse: '#f0c890', hen: '#ffffff', blind_pot: '#e6e0a0', blind_sack: '#e6e0a0', blind_hat: '#e6e0a0', giant: '#ffb070', nazim: '#c9a8ff', farmer: '#9fe08a', pmerchant: '#ffa45c', pguard: '#9ad0ff', pgiant: '#ffb070', phorseman: '#ff9a5c', gguard: '#9ad0ff', horseman: '#ff9a5c', follower: '#ffb0c8', butterfly: '#9ad8ff', blind_cabbage: '#e6e0a0', blind_helmet: '#e6e0a0', blind_basket: '#e6e0a0', blind_boot: '#e6e0a0', blind_mushroom: '#e6e0a0', blind_banner: '#e6e0a0', blind_partyhat: '#e6e0a0', narr: '#cfe0ff' };
 class Cancel {}
 const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
@@ -27,7 +30,7 @@ const AMB = { rue: ['village', 0.5], mill: ['mill', 0.55], meadow: ['camp', 0.5]
 export class Game {
   constructor(root) {
     this.root = root; this.imgs = {}; this.st = null; this.scene = null; this.ents = []; this.hot = []; this.waiters = [];
-    this.verb = 'walk'; this.sel = null; this.hover = null; this.tok = 0; this.runTok = 0; this.locked = false; this.now = 0; this.fx = {};
+    this.sel = null; this.hover = null; this.hoverItem = null; this.coin = null; this.press = null; this.invOpen = false; this.tok = 0; this.runTok = 0; this.locked = false; this.now = 0; this.fx = {};
     this.wk = null; this.night = null; this.sky = null; this.lastMove = 0; this._mx = null; this._my = null; this.nq = []; this.narr = null; this.lastNarr = -99; this.lastAct = 0; this.idleN = 0; this.sayAu = null; this.voiceOn = store.get('pc.voice', true);
     this.bubbles = []; this.barks = []; this.choice = null; this.skip = false; this.alive = true; this.started = false; this.nextBlip = 0; this.mouse = [0, 0];
   }
@@ -89,59 +92,95 @@ export class Game {
     const r = this.root; r.innerHTML = ''; r.classList.add('pc');
     this.stage = el('div', 'pc-stage'); this.view = this.stage;
     this.cv = el('canvas'); this.cv.width = W; this.cv.height = H; this.ctx = this.cv.getContext('2d'); this.ctx.imageSmoothingEnabled = false;
-    this.ov = el('div', 'pc-ov'); this.askEl = el('div', 'pc-ask'); this.popEl = el('div', 'pc-pop'); this.popEl.hidden = true;
+    this.ov = el('div', 'pc-ov'); this.askEl = el('div', 'pc-ask');
     this.out = el('canvas', 'pc-out'); this.scaler = Scaler.create(this.cv, this.out); this.filter = store.get('pc.filter', 'sharp'); if (this.scaler) { this.scaler.mode = this.filter; this.cv.classList.add('pc-src'); }
     this.ambient = el('canvas', 'pc-ambient'); this.ambient.width = 48; this.ambient.height = 27; this.actx = this.ambient.getContext('2d'); this.ambT = 0;
-    this.stage.append(...(this.scaler ? [this.out] : []), this.cv, this.ov, this.askEl, this.popEl);
-    this.panel = el('div', 'pc-panel'); this.lineEl = el('div', 'pc-line'); this.verbsEl = el('div', 'pc-verbs'); this.invEl = el('div', 'pc-inv');
+    /* canvas d'interface à la résolution du jeu (pièce des verbes, anneau de l'appui long), au-dessus du tiroir */
+    this.uiCv = el('canvas', 'pc-ui'); this.uiCv.width = W; this.uiCv.height = H; this.uctx = this.uiCv.getContext('2d'); this.uctx.imageSmoothingEnabled = false; this.uiDirty = false;
+    this.labelEl = el('div', 'pc-label'); this.labelEl.hidden = true;
+    /* tiroir d'inventaire (monte du bas) : 8 emplacements + boutons système */
+    this.drawer = el('div', 'pc-drawer'); this.invEl = el('div', 'pc-inv'); const sys = el('div', 'pc-sys');
     this.menuBtn = el('button', 'pc-menu', '≡'); this.menuBtn.title = 'Menu'; this.menuBtn.onclick = () => this.showTitle(true);
     this.musicBtn = el('button', 'pc-menu pc-music', '♪'); this.musicBtn.onclick = () => this.setMusic(snd.musicOn === false);
     this.voiceBtn = el('button', 'pc-menu pc-voice', '❝'); this.voiceBtn.onclick = () => this.setVoice(!this.voiceOn);
     this.fsBtn = el('button', 'pc-menu pc-fs', '⛶'); this.fsBtn.onclick = () => this.toggleFullscreen();
     this.ambBtn = el('button', 'pc-menu pc-amb', '≈'); this.ambBtn.onclick = () => this.setAmbience(!this.ambOn);
-    this.panel.append(this.lineEl, this.verbsEl, this.invEl, this.menuBtn, this.musicBtn, this.voiceBtn, this.fsBtn, this.ambBtn); this.setVoice(this.voiceOn, true); this.ambOn = store.get('pc.amb', true); this.setAmbience(this.ambOn, true); this.ambNext = 0; this.ambT = 0;
+    sys.append(this.voiceBtn, this.musicBtn, this.ambBtn, this.fsBtn, this.menuBtn); this.drawer.append(this.invEl, sys);
+    /* besace (coin bas gauche) et menu (coin haut droit), discrets, masqués pendant les cinématiques */
+    this.bagBtn = el('button', 'pc-bag'); const bc = el('canvas'); bc.width = 16; bc.height = 16; bc.getContext('2d').drawImage(bagCanvas(), 0, 0); this.bagBtn.append(bc);
+    this.bagBtn.onclick = () => { snd.unlock(); if (this.sel && !this.invOpen) { this.toggleInv(true); return; } this.toggleInv(); };
+    this.cornerBtn = el('button', 'pc-corner', '≡'); this.cornerBtn.onclick = () => this.showTitle(true);
+    this.stage.append(...(this.scaler ? [this.out] : []), this.cv, this.ov, this.askEl, this.drawer, this.bagBtn, this.cornerBtn, this.uiCv, this.labelEl);
+    this.setVoice(this.voiceOn, true); this.ambOn = store.get('pc.amb', true); this.setAmbience(this.ambOn, true); this.ambNext = 0; this.ambT = 0;
     this._mv = e => { const d = this._mx === null ? 0 : Math.hypot(e.clientX - this._mx, e.clientY - this._my); this._mx = e.clientX; this._my = e.clientY; if (d > 2) { this.lastMove = this.now; if (this.night) wakeNight(this); } };
     this._pd = () => { this.lastMove = this.now; if (this.night) wakeNight(this); };
     document.addEventListener('pointermove', this._mv); document.addEventListener('pointerdown', this._pd); document.addEventListener('keydown', this._pd); this.setMusic(store.get('pc.music', true), true);
-    r.append(this.ambient, this.stage, this.panel);
+    r.append(this.ambient, this.stage);
     this.renderPanel();
-    const cv = this.cv;
-    cv.addEventListener('pointermove', e => { this.mouse = this.pos(e); this.setHover(this.pick(...this.mouse)); });
-    cv.addEventListener('pointerleave', () => this.setHover(null));
+    const cv = this.cv, st = this.stage;
+    cv.addEventListener('pointermove', e => { this.mouse = this.pos(e); if (!this.coinOpen() && !this.press) this.setHover(this.pick(...this.mouse)); });
     cv.addEventListener('pointerdown', e => this.onDown(e));
-    cv.addEventListener('contextmenu', e => { e.preventDefault(); const p = this.pos(e), tg = this.pick(...p); if (tg) this.input(() => this.act('look', tg)); });
+    /* pièce restée ouverte (relâchée sans viser) : le clic suivant choisit un verbe ou la referme, sans rien déclencher dessous */
+    st.addEventListener('pointerdown', e => { if (!this.coinOpen() || this.press) return; e.stopPropagation(); e.preventDefault(); this.mouse = this.pos(e); const v = e.button === 2 ? null : coinSector(this.coin, ...this.mouse); if (v) this.coinPick(v); else this.closeCoin(); }, true);
+    st.addEventListener('pointermove', e => { this.mouse = this.pos(e); if (this.coinOpen()) this.coinMove(); else if (this.invOpen && this.sel && this.mouse[1] < H - DRAWER_H - 12) this.toggleInv(false); this.placeLabel(); });
+    st.addEventListener('pointerup', e => this.onUp(e)); st.addEventListener('pointercancel', e => this.onUp(e));
+    st.addEventListener('pointerleave', () => { if (this.press) return; this.hoverItem = null; this.setHover(null); this.renderLine(); });
+    st.addEventListener('contextmenu', e => { e.preventDefault(); this.onRight(); });
     this.ov.addEventListener('pointerdown', () => { this.skip = true; });
     /* un balayage dans le jeu ne doit pas changer de bureau du faux Mac */
     ['touchstart', 'touchend'].forEach(n => this.root.addEventListener(n, e => e.stopPropagation(), { passive: true }));
   }
   fit() {
     const rw = this.root.clientWidth, rh = this.root.clientHeight; if (!rw || !rh) return;
-    const w = Math.min(rw, rh / (9 / 16 + 66 / 480)), u = w / W;
+    const w = Math.min(rw, rh * 16 / 9), u = w / W;
     this.root.style.setProperty('--u', u.toFixed(4)); this.stage.style.width = w + 'px'; this.stage.style.height = (w * 9 / 16) + 'px';
-    this.panel.style.width = w + 'px'; this.panel.style.height = (66 * u) + 'px'; if (this.scaler) this.scaler.resize(w, w * 9 / 16);
+    if (this.scaler) this.scaler.resize(w, w * 9 / 16);
+    const k = clamp(Math.round(u), 1, 4); if (k !== this.curK) { this.curK = k; this.updCursor(); }
   }
   pos(e) { const r = this.stage.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * W, (e.clientY - r.top) / r.height * H]; }
-  renderPanel() {
-    this.verbsEl.innerHTML = '';
-    VERBS.forEach((v, i) => { const b = el('button', 'pc-v' + (this.verb === v ? ' on' : ''), `${this.T('v.' + v)}<i>${i + 1}</i>`); b.onclick = () => this.setVerb(v); this.verbsEl.append(b); });
-    this.renderInv();
-  }
+  renderPanel() { this.renderInv(); this.bagBtn.title = this.T('ui.inv'); this.cornerBtn.title = this.menuBtn.title = this.T('ui.menu'); }
   renderInv() {
     this.invEl.innerHTML = ''; const inv = this.st ? this.st.inv : [];
     for (let i = 0; i < 8; i++) {
-      const id = inv[i], b = el('button', 'pc-slot' + (id && this.sel === id ? ' on' : '')); b.disabled = !id;
-      if (id) { const c = document.createElement('canvas'); c.width = 40; c.height = 34; const im = this.spr(ITEMS[id].spr); if (im) { const k = Math.min(38 / im.width, 32 / im.height); const w = im.width * k, h = im.height * k; const x = c.getContext('2d'); x.imageSmoothingEnabled = false; x.drawImage(im, (40 - w) / 2, 34 - h - 1, w, h); } b.append(c); b.title = this.T('n.' + id); b.onclick = () => this.onItem(id); }
+      const id = inv[i], b = el('button', 'pc-slot' + (id && this.sel === id ? ' held' : '')); b.disabled = !id;
+      if (id) {
+        const c = document.createElement('canvas'); c.width = 40; c.height = 34; const im = this.spr(ITEMS[id].spr); if (im) { const k = Math.min(38 / im.width, 32 / im.height); const w = im.width * k, h = im.height * k; const x = c.getContext('2d'); x.imageSmoothingEnabled = false; x.drawImage(im, (40 - w) / 2, 34 - h - 1, w, h); } b.append(c);
+        b.addEventListener('pointerdown', e => { e.preventDefault(); this.slotDown(e, id); });
+        b.addEventListener('pointerenter', () => { this.hoverItem = id; this.renderLine(); });
+        b.addEventListener('pointerleave', () => { if (this.hoverItem === id) { this.hoverItem = null; this.renderLine(); } });
+      }
       this.invEl.append(b);
     }
   }
-  renderLine() {
-    const T = this.T, v = this.verb; let s = T('v.' + v);
-    if (v === 'use' && this.sel) s += ' ' + T('n.' + this.sel) + ' ' + T('ui.with');
-    if (this.hover) s += ' ' + T(this.hover.name || 'n.' + this.hover.id);
-    this.lineEl.textContent = this.locked ? '' : s;
+  toggleInv(open = !this.invOpen) {
+    if (open === this.invOpen) return; this.invOpen = open; snd.click();
+    this.drawer.classList.toggle('open', open); this.bagBtn.classList.toggle('on', open); if (!open) this.hoverItem = null; this.renderLine();
   }
-  setVerb(v) { this.verb = v; if (v !== 'use') this.sel = null; snd.click(); this.renderPanel(); this.renderLine(); }
-  setHover(t) { const k = t ? t.id : null; if ((this.hover && this.hover.id) === k) return; this.hover = t; this.cv.classList.toggle('hot', !!t); this.renderLine(); }
+  /* objet tenu : le curseur devient l'objet ; null = le reposer dans la besace */
+  setSel(id) { this.sel = id; this.root.classList.toggle('holding', !!id); this.renderInv(); this.updCursor(); this.renderLine(); }
+  updCursor() {
+    const k = this.curK || 2, it = this.sel && ITEMS[this.sel];
+    this.stage.style.cursor = it ? itemCursor(this.spr(it.spr), this.sel, k) : crossCursor(!!this.hover, k);
+  }
+  /* étiquette sous le curseur : nom de ce qu'on survole, « Utiliser X avec Y », ou le verbe visé sur la pièce */
+  renderLine() {
+    const T = this.T, L = this.labelEl; if (!L || !T) return;
+    const c = this.coinOpen() ? this.coin : null; let s = '';
+    if (this.locked || this.titleEl || this.askEl.childElementCount || this.night) s = '';
+    else if (c) { const nm = c.item ? T('n.' + c.item) : T(c.tg.name || 'n.' + c.tg.id); s = c.hi ? T('v.' + c.hi) + ' ' + nm : nm; }
+    else {
+      const nm = this.hoverItem ? T('n.' + this.hoverItem) : this.hover ? T(this.hover.name || 'n.' + this.hover.id) : '';
+      s = this.sel ? T('v.use') + ' ' + T('n.' + this.sel) + ' ' + T('ui.with') + (nm && this.hoverItem !== this.sel ? ' ' + nm : '') : nm;
+    }
+    L.textContent = s; L.hidden = !s; if (s) this.placeLabel();
+  }
+  placeLabel() {
+    const L = this.labelEl; if (!L || L.hidden) return; const sw = this.stage.clientWidth, k = sw / W, c = this.coinOpen() ? this.coin : null;
+    let x = c ? c.cx : this.mouse[0], y = c ? c.cy - COIN.R - 3 : this.mouse[1] - 9;
+    if (y < 13) y = c ? c.cy + COIN.R + 14 : this.mouse[1] + 24;
+    L.style.left = clamp(x * k, L.offsetWidth / 2 + 4, sw - L.offsetWidth / 2 - 4) + 'px'; L.style.top = y * k + 'px';
+  }
+  setHover(t) { const k = t ? t.id : null; if ((this.hover && this.hover.id) === k) return; this.hover = t; if (!this.sel) this.updCursor(); this.renderLine(); }
 
   /* ───────── écran-titre et menu (composants Socle) ───────── */
   showTitle(inGame) {
@@ -190,7 +229,7 @@ export class Game {
     const n = this.narr;
     if (n && (this.bubbles.length || this.locked || this.hiBusy())) { this.hushNarr(); return; }
     if (n) { const playing = n.au && !n.au.ended && !n.au.error && !n.au.paused; if (this.now > n.end && !playing) { n.b.remove(); this.narr = null; this.lastNarr = this.now; } return; }
-    if (!this.started || this.titleEl || this.locked || this.bubbles.length || this.barks.length || this.hiBusy() || this.lowBusy()) return;
+    if (!this.started || this.titleEl || this.locked || this.coinOpen() || this.bubbles.length || this.barks.length || this.hiBusy() || this.lowBusy()) return;
     if (!this.nq.length && this.now - this.lastAct > 45) { this.lastAct = this.now; const k = (this.scene && this.scene.idleKey && this.scene.idleKey(this)) || 'nar.' + this.st.scene + '.idle'; this.narrate(this.idleN++ % 3 === 2 || !this.T.has(k) ? 'nar.idle' : k); }
     const q = this.nq[0]; if (!q || this.now < q.t || (!q.force && this.now - this.lastNarr < 8)) return; this.nq.shift();
     const text = this.T(q.key), idx = this.T.idx, b = el('div', 'pc-b pc-narr', text); b.style.color = COLORS.narr; this.ov.append(b); this.placeBubble(b, W / 2, 46);
@@ -242,8 +281,8 @@ export class Game {
   set(k, v = true) { this.st.flags[k] = v; this.save(); if (v === true) this.narrate('nar.' + this.st.scene + '.' + k); }
   count(k, d = 1) { this.st.flags[k] = (this.st.flags[k] || 0) + d; this.save(); return this.st.flags[k]; }
   has(id) { return this.st.inv.includes(id); }
-  give(id) { if (!this.has(id)) this.st.inv.push(id); this.renderInv(); this.save(); }
-  drop(id) { this.st.inv = this.st.inv.filter(x => x !== id); if (this.sel === id) this.sel = null; this.renderInv(); this.save(); }
+  give(id) { if (!this.has(id)) { this.st.inv.push(id); const b = this.bagBtn; b.classList.remove('pulse'); void b.offsetWidth; b.classList.add('pulse'); } this.renderInv(); this.save(); }
+  drop(id) { this.st.inv = this.st.inv.filter(x => x !== id); if (this.sel === id) this.setSel(null); this.renderInv(); this.save(); }
   ent(id) { return this.ents.find(e => e.id === id); }
   addWalk(poly) { this.walk.add(poly); }
   sfx(n, ...a) { snd[n] && snd[n](...a); }
@@ -287,14 +326,14 @@ export class Game {
   clearBubbles() { this.bubbles.forEach(b => b.remove()); this.bubbles = []; }
   /* réplique lancée en passant, sans bloquer le jeu (les aveugles qui répètent « Pourquoi il fait si sombre ? ») */
   bark(who, key, ms = 2800, force = false) {
-    const e = this.ent(who); if (!e || (this.locked && !force) || this.titleEl || this.hiBusy() || this.lowBusy() || this.narr) return;
+    const e = this.ent(who); if (!e || (this.locked && !force) || this.titleEl || this.coinOpen() || this.hiBusy() || this.lowBusy() || this.narr) return;
     const b = el('div', 'pc-b', this.T(key)); b.style.color = COLORS[who] || '#fff'; this.ov.append(b);
     const [ax, ay] = this.headPos(e); this.placeBubble(b, ax, ay); const au = this.voicePlay(key, this.T.idx), bk = { b, who, end: this.now + ms / 1000, au }; this.barks.push(bk); if (au) au.addEventListener('loadedmetadata', () => { bk.end = Math.max(bk.end, this.now + au.duration + 0.2); });
   }
   clearBarks() { this.barks.forEach(k => { k.b.remove(); if (k.au) k.au.pause(); }); this.barks = []; }
-  toast(title, text) {
+  toast(title, text, ms = 4200) {
     const t = el('div', 'pc-toast'); t.append(el('b', '', title), el('span', '', text)); this.stage.append(t); snd.jingle();
-    setTimeout(() => t.classList.add('out'), 4200); setTimeout(() => t.remove(), 4800);
+    setTimeout(() => t.classList.add('out'), ms); setTimeout(() => t.remove(), ms + 600);
   }
   /* un aveugle a retrouvé la lumière : compte, toast, succès */
   lightUp(sceneId) {
@@ -304,8 +343,8 @@ export class Game {
   }
   /* choix de dialogue : renvoie l'indice choisi */
   async ask(keys) {
-    this.chk(); this.askEl.innerHTML = ''; this.choice = null; this.sel = null;
-    keys.forEach((k, i) => { const b = el('button', 'pc-opt', this.T(k)); b.onclick = () => { this.choice = i; }; this.askEl.append(b); });
+    this.chk(); this.askEl.innerHTML = ''; this.choice = null; if (this.sel) this.setSel(null); this.toggleInv(false); this.closeCoin();
+    keys.forEach((k, i) => { const b = el('button', 'pc-opt', this.T(k)); b.onclick = () => { this.choice = i; }; this.askEl.append(b); }); this.renderLine();
     await this.until(() => this.choice !== null); const c = this.choice; this.choice = null; this.askEl.innerHTML = ''; this.chk(); return c;
   }
   shake(ms = 500, amp = 3) { this.fx.shake = { end: this.now + ms / 1000, amp }; }
@@ -356,28 +395,79 @@ export class Game {
     return null;
   }
   entRect(e) { const im = this.spr(e.spr); if (!im) return null; const s = e.scale ?? this.persp(e.y), w = im.width * s, h = im.height * s; return [e.x - w / 2, e.y - h, e.x + w / 2, e.y]; }
+  /* clic sur la scène : sol = aller (tout de suite) ; objet tenu = l'utiliser ; sinon on attend : relâché vite = aller vers,
+     maintenu = pièce des verbes */
   onDown(e) {
     /* pendant une réplique, un clic ne fait que la passer (et seulement après un court délai de lecture) : il ne lance pas une autre action */
     if (this.bubbles.length && !this.titleEl && e.button !== 2) { if (this.now - (this.sayT0 || 0) > 0.6) this.skip = true; return; }
     if (e.button === 2 || this.locked || this.titleEl) { if (this.locked) this.skip = true; return; }
-    this.popEl.hidden = true; snd.unlock();
-    const p = this.pos(e), tg = this.pick(...p);
-    if (e.pointerType === 'touch' && tg && !(this.verb === 'use' && this.sel)) return this.showPop(e, tg);
+    snd.unlock(); this.mouse = this.pos(e);
+    if (this.night) { wakeNight(this); return; }
+    if (!this.started) return;
+    const p = this.mouse, tg = this.pick(...p);
+    if (this.invOpen) this.toggleInv(false);
     this.setHover(tg);
-    if (!tg) { this.sel = null; this.renderInv(); return this.input(() => this.walkTo(p[0], p[1])); }
-    if (tg.id === 'hero' && this.verb === 'use' && !this.sel) return this.input(() => this.act('look', tg));
-    this.input(() => this.act(this.verb, tg, this.verb === 'use' ? this.sel : null));
+    if (this.sel) { if (!tg) return this.input(() => this.walkTo(p[0], p[1])); const it = this.sel; this.setSel(null); return this.input(() => this.act('use', tg, it)); }
+    if (!tg) return this.input(() => this.walkTo(p[0], p[1]));
+    this.startPress(e, tg, null);
   }
-  showPop(e, tg) {
-    const p = this.popEl; p.innerHTML = ''; const r = this.stage.getBoundingClientRect();
-    VERBS.slice(1).forEach(v => { const b = el('button', '', this.T('v.' + v)); b.onclick = ev => { ev.stopPropagation(); p.hidden = true; this.input(() => this.act(v, tg)); }; p.append(b); });
-    p.style.left = clamp(e.clientX - r.left, 60, r.width - 60) + 'px'; p.style.top = clamp(e.clientY - r.top, 70, r.height - 10) + 'px'; p.hidden = false; this.setHover(tg);
+  /* clic sur un emplacement du tiroir : objet tenu = « utiliser avec » (ou le reposer) ; sinon relâché vite = le prendre en main,
+     maintenu = pièce des verbes de l'objet */
+  slotDown(e, id) {
+    if (e.button === 2 || this.locked || !this.started || this.titleEl) return; snd.unlock();
+    if (this.night) { wakeNight(this); return; }
+    if (this.sel) return this.onItem(id);
+    this.startPress(e, null, id, this.slotCenter(e.currentTarget));
+  }
+  slotCenter(b) { const r = this.stage.getBoundingClientRect(), q = b.getBoundingClientRect(); return [(q.left + q.width / 2 - r.left) / r.width * W, (q.top + q.height / 2 - r.top) / r.height * H]; }
+  startPress(e, tg, item, anchor) {
+    try { e.target.setPointerCapture(e.pointerId); } catch {}
+    const p = this.pos(e); this.press = { id: e.pointerId, t0: this.now, tg, item, touch: e.pointerType === 'touch', anchor: anchor || p };
+    if (this.press.touch) this.openCoin();                    // au doigt, pas d'attente : la pièce s'ouvre au toucher et reste ouverte
+  }
+  coinOpen() { return !!this.coin && this.coin.closeT == null; }
+  openCoin() {
+    const pr = this.press; if (!pr || this.coinOpen()) return; const m = COIN.R + 3, [ax, ay] = pr.anchor;
+    this.coin = { cx: clamp(Math.round(ax), m, W - m), cy: clamp(Math.round(ay), m, H - m), t0: this.now, tg: pr.tg, item: pr.item, hi: null, armed: false, ox: this.mouse[0], oy: this.mouse[1] };
+    this.clearBarks(); this.hushNarr(); snd.coin(); this.renderLine();
+  }
+  /* le verbe visé ne s'allume qu'une fois le curseur déplacé depuis l'ouverture (pièce recentrée près d'un bord : pas de choix involontaire) */
+  coinMove() {
+    const c = this.coin, [x, y] = this.mouse; if (!c.armed && Math.hypot(x - c.ox, y - c.oy) >= 3) c.armed = true;
+    const v = c.armed ? coinSector(c, x, y) : null; if (v !== c.hi) { c.hi = v; if (v) snd.click(); this.renderLine(); }
+  }
+  onUp(e) {
+    const pr = this.press; if (!pr || pr.id !== e.pointerId) return; this.press = null;
+    if (this.coinOpen()) { const c = this.coin; if (c.hi && e.type !== 'pointercancel') return this.coinPick(c.hi); if (!c.armed) return; return this.closeCoin(); }
+    if (e.type === 'pointercancel' || this.locked || this.titleEl) return;
+    if (pr.item) return this.onItem(pr.item);
+    this.quick(pr.tg);
+  }
+  /* clic court sur une zone : y aller ; sur le héros ou sur un élément lointain (ciel, montagne), le regarder */
+  quick(tg) {
+    if (!tg) return;
+    if (tg.id === 'hero' || (!tg.at && !tg.isEnt)) return this.input(() => this.act('look', tg));
+    this.input(() => this.act('walk', tg));
+  }
+  coinPick(v) {
+    const c = this.coin; if (!c) return; this.closeCoin();
+    if (c.item) { if (v === 'use') { this.setSel(c.item); return; } return this.input(() => this.act(v, { id: c.item, name: 'n.' + c.item, isItem: true })); }
+    const tg = c.tg; this.input(() => this.act(tg.id === 'hero' && v === 'use' ? 'look' : v, tg));
+  }
+  closeCoin() { if (this.coinOpen()) { this.coin.closeT = this.now; this.coin.hi = null; } this.renderLine(); }
+  /* clic droit : refermer la pièce, sinon reposer l'objet tenu, sinon ouvrir / fermer la besace */
+  onRight() {
+    if (this.coinOpen()) return this.closeCoin();
+    if (this.locked || this.titleEl || !this.started || this._noUi) { if (this.locked) this.skip = true; return; }
+    if (this.sel) return this.setSel(null);
+    this.toggleInv();
   }
   onItem(id) {
     snd.click();
     if (this.locked) return;
-    if (this.verb === 'use') { if (!this.sel) { this.sel = id; this.renderInv(); this.renderLine(); return; } if (this.sel === id) { this.sel = null; this.renderInv(); this.renderLine(); return; } const it = this.sel; this.sel = null; this.renderInv(); return this.input(() => this.act('use', { id, name: 'n.' + id, isItem: true }, it)); }
-    this.input(() => this.act(this.verb === 'walk' ? 'look' : this.verb, { id, name: 'n.' + id, isItem: true }));
+    if (!this.sel) return this.setSel(id);                    // le tiroir reste ouvert : il se referme quand le curseur remonte dans la scène
+    if (this.sel === id) return this.setSel(null);
+    const it = this.sel; this.setSel(null); this.input(() => this.act('use', { id, name: 'n.' + id, isItem: true }, it));
   }
   faceTg(tg) { const e = tg.isEnt && this.ent(tg.id); if (e) this.face(e.x, e.y - 24); else if (tg.cx !== undefined) this.face(tg.cx, tg.cy); else if (tg.at) this.face(tg.at[0] + (tg.dir === 'l' ? -9 : 9)); }
   async act(verb, tg, item) {
@@ -401,11 +491,15 @@ export class Game {
   }
   key(e) {
     if (this.titleEl) return;
-    if (e.key >= '1' && e.key <= '5') this.setVerb(VERBS[+e.key - 1]);
-    else if (e.key === ' ' || e.key === 'Enter') { this.skip = true; e.preventDefault(); }
-    else if (e.key === 'f' || e.key === 'F') this.toggleFullscreen();
-    else if (e.key === 'g' || e.key === 'G') this.cycleFilter();
-    else if (e.key === 'Escape') { if (!(document.fullscreenElement || document.webkitFullscreenElement)) this.showTitle(true); }
+    const k = e.key;
+    if (k === ' ' || k === 'Enter') { this.skip = true; e.preventDefault(); }
+    else if (k === 'i' || k === 'I' || k === 'Tab') { e.preventDefault(); if (!this._noUi) this.toggleInv(); }
+    else if (k === 'f' || k === 'F') this.toggleFullscreen();
+    else if (k === 'g' || k === 'G') this.cycleFilter();
+    else if (k === 'Escape') {
+      if (this.coinOpen()) this.closeCoin(); else if (this.sel) this.setSel(null); else if (this.invOpen) this.toggleInv(false);
+      else if (!(document.fullscreenElement || document.webkitFullscreenElement)) this.showTitle(true);
+    }
   }
 
   /* ───────── mise à jour et rendu ───────── */
@@ -432,11 +526,26 @@ export class Game {
     if (this.scene && this.scene.tick) this.scene.tick(this, dt);
     updateWinks(this, dt); updateGlass(this, dt); this.updateAmbience();
     if (this.night) updateNight(this, dt); else if (this.started && !this.titleEl && this.alive) { if (this.locked || this.bubbles.length || this.barks.length || this.narr) this.lastMove = Math.max(this.lastMove, this.now - IDLE_NIGHT + 25); else if (this.now - this.lastMove > IDLE_NIGHT && !(this.gl && this.gl.run) && document.visibilityState === 'visible' && this.hero) startNight(this); }
-    this.pumpNarr();
+    this.pumpNarr(); this.updateUi();
     for (let i = this.waiters.length - 1; i >= 0; i--) { const w = this.waiters[i]; if (w.cond()) { this.waiters.splice(i, 1); w.res(); } }
     const f = this.fx.fade; if (f) { const t = clamp((this.now - f.t0) / f.ms, 0, 1); f.a = f.from + (f.to - f.from) * t; if (t >= 1) { f.a = f.to; if (f.to === 0) delete this.fx.fade; } }
   }
+  /* interface par-dessus la scène : masquée hors du jeu libre ; appui long -> pièce ; astuce de la pièce à la première prise en main */
+  updateUi() {
+    const no = !this.started || this.locked || !!this.titleEl || this.askEl.childElementCount > 0 || !!this.night || !!(this.gl && this.gl.run);
+    if (no !== this._noUi) { this._noUi = no; this.root.classList.toggle('pc-noui', no); if (no) { this.toggleInv(false); this.closeCoin(); this.press = null; } this.renderLine(); }
+    if (this.press && !this.coinOpen() && this.now - this.press.t0 >= HOLD_S) this.openCoin();
+    if (!no && this.scene && !this.tipDone) { this.tipDone = true; if (!store.get('pc.coinTip', false)) { store.set('pc.coinTip', true); setTimeout(() => { if (this.alive && !this.titleEl) this.toast(this.T('ui.coin.title'), this.T('ui.coin.tip'), 8000); }, 900); } }
+  }
+  drawUi() {
+    const u = this.uctx, charging = this.press && !this.coin && !this.press.touch && this.now - this.press.t0 > CHARGE_S;
+    if (!this.coin && !charging) { if (this.uiDirty) { u.clearRect(0, 0, W, H); this.uiDirty = false; } return; }
+    u.clearRect(0, 0, W, H); this.uiDirty = true;
+    if (charging) drawCharge(u, this.press.anchor[0], this.press.anchor[1], clamp((this.now - this.press.t0 - CHARGE_S) / (HOLD_S - CHARGE_S), 0, 1));
+    if (this.coin && !drawCoin(u, this.coin, this.now)) { this.coin = null; this.renderLine(); }
+  }
   draw() {
+    this.drawUi();
     const c = this.ctx; if (!c || !this.scene || !this.bg || !this.bg.width) { if (c) { c.fillStyle = '#000'; c.fillRect(0, 0, W, H); if (this.scaler) this.scaler.render(); } return; }
     c.save(); const sh = this.fx.shake; if (sh && this.now < sh.end) c.translate(Math.round((Math.random() - .5) * sh.amp * 2), Math.round((Math.random() - .5) * sh.amp * 2));
     if (this.bg) c.drawImage(this.bg, 0, 0, W, H);
