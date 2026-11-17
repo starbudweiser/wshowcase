@@ -128,13 +128,12 @@ function wsfx(g, n) {
   else if (n === 'owl') snd.owl && snd.owl(); else if (n === 'click') g.sfx('step'); else if (n === 'boom') g.sfx('clang'); else g.sfx(n);
 }
 
-/* la nuit tombe pendant la scénette : les créatures (fantôme, tentacule, troll, hibou, rocher, bolide) disparaissent dans un « pouf »
-   de fumée (choix de Stéphan, 17/11) au lieu de se coucher ; les autres acteurs quittent la scène comme avant */
-const POUF = ['wk.ghost', 'wk.tentacle', 'wk.troll', 'wk.owl', 'wk.boulder', 'wk.racer'];
+/* la nuit tombe pendant la scénette : tous ses acteurs visibles (créatures et personnages) disparaissent dans un « pouf » de fumée
+   au lieu de se coucher (choix de Stéphan, 17/11) */
 function pouf(g, r) {
   let any = false;
   for (const { e, c } of r.ents) {
-    if (!e.visible || e.x < -10 || e.x > 490 || !POUF.some(p => c.spr === p || c.spr.startsWith(p + '.'))) continue;
+    if (!e.visible || e.x < -10 || e.x > 490 || (e.alpha ?? 1) < 0.2) continue;
     const im = g.spr(e.spr), s = e.scale ?? g.persp(e.y), h = im ? im.height * s : 30, w = im ? im.width * s : 30;
     (g.poufs = g.poufs || []).push({ t0: g.now, x: e.x, y: e.y - (e.bob || 0) - h / 2, r: Math.max(w, h) }); any = true;
   }
