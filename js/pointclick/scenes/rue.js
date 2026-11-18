@@ -53,29 +53,62 @@ export default {
     await g.say('hero', 's.intro1'); await g.say('hero', 's.intro2'); await g.say('hero', 's.intro3'); await g.say('hero', 's.intro4'); hero.front = false;
   },
 
-  /* fin de l'intro (intro.js) : la charrette des prisonniers entre de derrière l'étal, pile, éjecte le héros et repart par le pont */
+  /* fin de l'intro (intro.js) : la charrette des prisonniers sort de derrière l'étal, pile, éjecte le héros, puis s'éloigne en perspective
+     par la route du pont (le garde s'écarte), roule sur le tablier derrière le parapet et sort à droite */
   async cartArrival(g) {
-    const hero = g.hero, Y = 257, K = 1, LAND = [166, 262];
-    const cart = { id: 'driver', spr: 'intro.cart', x: -80, y: Y, scale: K, visible: true, noHot: true, solid: false };
-    const riders = [['icomp', 'intro.comp_s', -80, 22, K, 1.3], ['ithief', 'intro.thief_s', -52, 22, K, 0.4], ['ihero', 'hero.pNeutral', -108, 58, K * 0.17, 2.1]]
-      .map(([id, spr, dx, dy, scale, ph]) => ({ id, spr, dx, dy, ph, x: cart.x + dx * K, y: Y - dy * K, scale, visible: true, noHot: true, solid: false }));
-    const puffs = [], gone = new Set();
-    const follow = () => { for (const r of riders) { r.x = cart.x + r.dx * K; r.y = cart.y - r.dy * K; r.bob = cart.goal ? Math.abs(Math.sin(g.now * 6.2 + r.ph)) * 1.2 : 0; } return false; };
-    const clean = () => { g.ents = g.ents.filter(e => e !== cart && !riders.includes(e) && !puffs.includes(e)); hero.visible = true; hero.pose = null; hero.x = LAND[0]; hero.y = LAND[1]; hero.front = true; };
-    g.cineEnd = clean; hero.visible = false; g.ents.push(...riders, cart);
+    const hero = g.hero, Y = 257, LAND = [166, 262], k = () => g.persp(cart.y);
+    const cart = { id: 'driver', spr: 'intro.cart', x: -80, y: Y, visible: true, noHot: true, solid: false };
+    const riders = [['icomp', 'intro.comp_s', -80, 22, 1, 1.3], ['ithief', 'intro.thief_s', -52, 22, 1, 0.4], ['ihero', 'hero.pNeutral', -108, 58, 0.17, 2.1]]
+      .map(([id, spr, dx, dy, k0, ph]) => ({ id, spr, dx, dy, k0, ph, x: cart.x, y: Y, scale: k0, visible: true, noHot: true, solid: false }));
+    const fence = this.fenceEnt(g), puffs = [];
+    const follow = () => { const s = k(); for (const r of riders) { r.scale = r.k0 * s; r.x = cart.x + r.dx * s; r.y = cart.y - r.dy * s; r.bob = cart.goal ? Math.abs(Math.sin(g.now * 6.2 + r.ph)) * 1.2 * s : 0; } return false; };
+    const guard = g.ent('guard'), hen = g.ent('hen');
+    const drop = () => { g.ents = g.ents.filter(e => e !== cart && e !== fence && !riders.includes(e)); };
+    const clean = () => { drop(); g.ents = g.ents.filter(e => !puffs.includes(e)); hero.visible = true; hero.pose = null; hero.x = LAND[0]; hero.y = LAND[1]; hero.front = true;
+      if (guard) { guard.goal = null; guard.x = GUARD_SPOT[0]; guard.y = GUARD_SPOT[1]; guard.flip = false; } if (hen) hen.goal = null; };
+    g.cineEnd = clean; hero.visible = false; follow(); g.ents.push(...riders, cart); if (fence) g.ents.push(fence);
     try {
-      g.sfx('creak'); cart.goal = [262, Y, 62]; await g.until(() => { follow(); return !cart.goal; }); g.chk();
+      g.sfx('creak'); cart.goal = [262, Y, 58]; await g.until(() => { follow(); return !cart.goal; }); g.chk();
       g.sfx('screech'); g.shake(260, 1.5);
       await g.say('driver', 'intro.driver1');
-      const hr = riders[2]; g.ents = g.ents.filter(e => e !== hr); riders.pop();
-      g.sfx('whoosh'); await g.fly('hero.fSurprise', [cart.x - 108 * K, Y - 70 * K], LAND, 760, 58, -6.28, 0.95);
+      const hr = riders.pop(), s = k(); g.ents = g.ents.filter(e => e !== hr);
+      g.sfx('whoosh'); await g.fly('hero.fSurprise', [cart.x - 108 * s, Y - 70 * s], LAND, 760, 58, -6.28, 0.95);
       g.sfx('splat'); g.shake(320, 2.5);
       for (let i = 0; i < 14; i++) { const a = (i / 14) * Math.PI * 2; puffs.push({ id: 'puff' + i, spr: 'puff', x: LAND[0] + Math.cos(a) * 12, y: LAND[1] + 3 + Math.sin(a) * 3, vx: Math.cos(a) * (30 + (i % 4) * 7), k0: 0.6 + (i % 3) * 0.2, scale: 0.6, alpha: 0.75, visible: true, noHot: true, solid: false, z: 2 }); }
       g.ents.push(...puffs); hero.visible = true; hero.x = LAND[0]; hero.y = LAND[1]; hero.front = true; hero.pose = 'hero.fShrug';
-      (async () => { for (const p of [[330, 238], [392, 208], [530, 196]]) { cart.goal = [p[0], p[1], 58]; await g.until(() => { follow(); return !cart.goal || !g.ents.includes(cart); }); } g.ents = g.ents.filter(e => e !== cart && !riders.includes(e)); })();
+      this.cartLeave(g, cart, follow, drop, guard, hen);
       const t0 = g.now; await g.until(() => { const t = g.now - t0; for (const p of puffs) { p.x += p.vx * 0.016 * (1 - Math.min(1, t)); p.scale = p.k0 + t * 1.2; p.alpha = Math.max(0, 0.75 - t * 0.6); } return t > 1.25; });
       g.ents = g.ents.filter(e => !puffs.includes(e)); await g.wait(500); hero.pose = null;
     } finally { if (g.cineEnd === clean) g.cineEnd = null; }
+  },
+  /* le départ continue pendant que le héros parle : route du pont (la poule s'enfuit, le garde s'écarte), tablier, sortie à droite */
+  async cartLeave(g, cart, follow, drop, guard, hen) {
+    const on = () => g.ents.includes(cart), go = async (x, y, sp) => { cart.goal = [x, y, sp]; await g.until(() => { follow(); return !cart.goal || !on(); }); };
+    if (hen) { g.sfx('cluck'); hen.goal = [326, 260, 70]; }
+    await go(290, 222, 52); if (!on()) return;
+    if (guard) guard.goal = [378, 213, 32];
+    await go(330, 196, 40); if (!on()) return;
+    await go(352, 188, 30); if (!on()) return;
+    await go(420, 184, 26); if (!on()) return;
+    if (guard) guard.goal = [GUARD_SPOT[0], GUARD_SPOT[1], 32];
+    if (hen) hen.goal = [288, 242, 30];
+    await go(545, 177, 26);
+    drop();
+  },
+  /* parapet du pont : calque tiré du décor lui-même (poteaux et lisses sombres, les jours entre eux restent transparents) ;
+     il se dessine devant la charrette quand elle roule sur le tablier */
+  fenceEnt(g) {
+    const bg = g.bg; if (!bg || !bg.width) return null;
+    const P = [[344, 172], [480, 163], [480, 194], [344, 199]], X0 = 344, Y0 = 163, X1 = 480, Y1 = 199;
+    const c = document.createElement('canvas'); c.width = X1 - X0; c.height = Y1 - Y0; const x = c.getContext('2d');
+    x.drawImage(bg, 0, 0, bg.width, bg.height, -X0, -Y0, 480, 270);
+    const d = x.getImageData(0, 0, c.width, c.height), inP = (px, py) => { let o = false; for (let i = 0, j = P.length - 1; i < P.length; j = i++) { const [xi, yi] = P[i], [xj, yj] = P[j]; if ((yi > py) !== (yj > py) && px < (xj - xi) * (py - yi) / (yj - yi) + xi) o = !o; } return o; };
+    for (let py = 0; py < c.height; py++) for (let px = 0; px < c.width; px++) {
+      const i = (py * c.width + px) * 4, r = d.data[i], gg = d.data[i + 1], b = d.data[i + 2];
+      if (!inP(px + X0, py + Y0) || Math.max(r, gg, b) >= 125 || b >= r + 25) d.data[i + 3] = 0;
+    }
+    x.putImageData(d, 0, 0); g.imgs['assets/pointclick/spr/__rue_fence.png'] = c;
+    return { id: 'ifence', spr: '__rue_fence', x: (X0 + X1) / 2, y: Y1, scale: 1, visible: true, noHot: true, solid: false };
   },
 
   async on(g, verb, id, item) {

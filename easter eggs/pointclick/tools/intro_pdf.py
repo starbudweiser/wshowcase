@@ -129,17 +129,25 @@ def f_p5c(c):
 V['p5c'] = shot('p5c', with_b(f_p5c, (300, 30, FR['intro.hero2'], COL['hero'])))
 RUE = img('rue.png')
 def f_p6a(c):
-    c.alpha_composite(RUE.resize((W, H)), (0, 0)); riders(c, 262, 257, 1, 'pNeutral'); put(c, CART[0], 262, 257, 1)
+    c.alpha_composite(RUE.resize((W, H)), (0, 0)); riders(c, 262, 257, 0.92, 'pNeutral'); put(c, CART[0], 262, 257, 0.92)
 V['p6a'] = shot('p6a', with_b(f_p6a, (262, 140, FR['intro.driver1'], COL['driver'])))
 def f_p6b(c):
-    c.alpha_composite(RUE.resize((W, H)), (0, 0)); riders(c, 262, 257, 1, None); put(c, CART[0], 262, 257, 1)
+    c.alpha_composite(RUE.resize((W, H)), (0, 0)); riders(c, 262, 257, 0.92, None); put(c, CART[0], 262, 257, 0.92)
     put(c, hero('fSurprise'), 205, 205, 0.95, rot=120)
 V['p6b'] = shot('p6b', with_b(f_p6b))
+def fence_layer():
+    bg = RUE.resize((W, H)); px = bg.load(); out = Image.new('RGBA', (W, H)); op = out.load(); m = Image.new('L', (W, H)); ImageDraw.Draw(m).polygon([(344, 172), (480, 163), (480, 194), (344, 199)], fill=255); mp = m.load()
+    for y in range(163, 200):
+        for x in range(344, 480):
+            r, g, b, a = px[x, y]
+            if mp[x, y] and max(r, g, b) < 125 and b < r + 25: op[x, y] = (r, g, b, 255)
+    return out
 def f_p6c(c):
     c.alpha_composite(RUE.resize((W, H)), (0, 0)); random.seed(3)
     put(c, hero('fShrug'), 166, 262, 1.0)
-    for i in range(9): a = i / 9 * math.tau; put(c, img('spr/puff.png'), 166 + math.cos(a) * 26, 266 + math.sin(a) * 4, 2.2, alpha=0.6)
-    riders(c, 392, 208, 0.9, None); put(c, CART[5], 392, 208, 0.9)
+    for i in range(14): a = i / 14 * math.tau; put(c, img('spr/puff.png'), 166 + math.cos(a) * (20 + i % 4 * 5), 266 + math.sin(a) * 3, 1.0 + (i % 3) * 0.25, alpha=0.5)
+    riders(c, 425, 184, 0.4, None); put(c, CART[5], 425, 184, 0.4)
+    c.alpha_composite(fence_layer(), (0, 0))   # parapet du pont devant les roues (même règle que fenceEnt dans scenes/rue.js)
 V['p6c'] = shot('p6c', with_b(f_p6c))
 TB, TL = img('title/bg.png'), img('title/logo_fr.png')
 def f_t(c):
@@ -165,7 +173,7 @@ PL = [
      'Le héros hausse les épaules, le compagnon résume quinze ans de Bordeciel et parle du rouleau au miel ; le héros réfléchit, puis zoom éclair : il pointe le doigt.', [('hero', 'intro.hero1'), ('comp', 'intro.comp3'), ('comp', 'intro.comp4'), ('hero', 'intro.hero2')],
      'Fondu au noir après la réplique.'),
     ('P6', '≈ 8 s', 'Plan d’ensemble de la rue de Rivebois · fixe (la vraie scène du jeu, animée)', ['p6a', 'p6b', 'p6c'],
-     'La charrette sort de derrière l’étal et pile. Le cocher annonce le terminus ; le héros est éjecté en vol plané, atterrit dans un nuage de poussière ; la charrette repart par le pont. La partie commence : le héros marche et dit son monologue sur le rouleau au miel.', [('driver', 'intro.driver1')],
+     'La charrette sort de derrière l’étal et pile. Le cocher annonce le terminus ; le héros est éjecté en vol plané, atterrit dans un nuage de poussière. La charrette repart en perspective par la route du pont (la poule s’enfuit, le garde s’écarte puis reprend son poste), roule sur le tablier derrière le parapet et sort à droite. La partie commence : le héros marche et dit son monologue sur le rouleau au miel.', [('driver', 'intro.driver1')],
      'Musique : celle de la rue.'),
 ]
 WHO = {'hero': 'Héros', 'comp': 'Compagnon', 'thief': 'Voleur', 'driver': 'Cocher', 'narr': 'Narrateur'}
