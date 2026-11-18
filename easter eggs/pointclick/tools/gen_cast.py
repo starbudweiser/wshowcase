@@ -17,6 +17,7 @@ V, BD, BDB, BDS, blind_style = NS['V'], NS['BD'], NS['BDB'], NS['BDS'], NS['blin
 ALIAS = {'pmerchant': 'merchant', 'gguard': 'guard', 'pguard': 'guard', 'pgiant': 'giant', 'phorseman': 'horseman'}
 REFS = os.path.join(R, 'easter eggs', 'pointclick', 'work', 'refs_vd', lang); os.makedirs(REFS, exist_ok=True)
 OUT = os.path.join(R, 'assets', 'pointclick', 'voice', lang)
+TRACKED = os.path.join(R, 'easter eggs', 'pointclick', 'voix_ref', lang)
 items = [o for o in json.load(open(os.path.join(R, 'easter eggs', 'pointclick', 'work', 'voices.json'))) if o['lang'] == lang and o['who'] != 'narr']
 fname = lambda o: o['key'] + ('' if o['idx'] < 0 else f".v{o['idx']}") + '.mp3'
 
@@ -101,7 +102,9 @@ def generate():
     m = None
     for o in items:
         if only and o['who'] != only: continue
-        dst = os.path.join(OUT, fname(o)); w = ALIAS.get(o['who'], o['who']); ref = os.path.join(REFS, w + '.wav')
+        dst = os.path.join(OUT, fname(o)); w = ALIAS.get(o['who'], o['who'])
+        ref = os.path.join(TRACKED, w + '.wav')                  # voix rangée dans le dépôt (héros conçu dans Flow), sinon work/refs_vd
+        if not os.path.exists(ref): ref = os.path.join(REFS, w + '.wav')
         if not os.path.exists(ref): print('sans référence', w); continue
         if os.path.exists(dst) and not force: continue
         if m is None: m = load_model('mlx-community/chatterbox-fp16')

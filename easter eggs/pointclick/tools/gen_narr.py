@@ -8,7 +8,10 @@ import os, sys, json, subprocess, tempfile
 import numpy as np, soundfile as sf
 R = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 lang = sys.argv[1]; force = '--force' in sys.argv
-REF = os.path.expanduser('~/.claude/skills/voix-locale/voix/narrateur_theatre.wav')
+# Depuis le 18/11/2026 : voix conçue dans Google Flow (narrateur gouailleur façon jeu d'aventure des années 90), une par langue,
+# rangée dans le dépôt (voix_ref/<langue>/narr.wav) ; l'ancienne voix « comédien de théâtre » ne sert plus que de secours.
+REF = os.path.join(R, 'easter eggs', 'pointclick', 'voix_ref', lang, 'narr.wav')
+if not os.path.exists(REF): REF = os.path.expanduser('~/.claude/skills/voix-locale/voix/narrateur_theatre.wav')
 MODEL = 'mlx-community/chatterbox-fp16'
 
 
