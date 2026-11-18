@@ -51,6 +51,7 @@ export default {
         break;
       case 'crate':
         if (verb === 'take' || (verb === 'use' && !item)) {
+          if (g.flag('cartGone')) return false;   /* la charrette est partie : plus de chou à prendre (il restait à vie dans la besace) */
           if (g.has('cabbage')) { await g.say('hero', 's4.take.have'); return true; }
           await g.cut(async () => { await g.say('hero', 's4.take1'); g.sfx('pop'); g.give('cabbage'); }); return true;
         }

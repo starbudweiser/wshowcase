@@ -9,7 +9,7 @@ export default {
   start: { x: 250, y: 232, dir: 'r' },
   hot: [
     { id: 'hdoorway', rect: [328, 68, 398, 158], at: [362, 176] }, { id: 'hthrone', rect: [92, 84, 182, 212], at: [204, 228], dir: 'l' },
-    { id: 'hbanner', rect: [100, 20, 262, 132] }, { id: 'htorch', rect: [28, 68, 64, 162], at: [78, 232], dir: 'l' },
+    { id: 'hbanner', rect: [100, 20, 262, 132] }, { id: 'htorch', rect: [28, 68, 64, 162], at: [84, 258], dir: 'l' },
     { id: 'hrug', rect: [200, 190, 410, 268], at: [300, 250] }, { id: 'hchest', rect: [22, 206, 88, 262], at: [104, 248], dir: 'l' }
   ],
   ambient: [

@@ -245,7 +245,7 @@ export class Game {
 
   /* ───────── parties ───────── */
   async newGame() {
-    this.hideTitle(); clearSave(); this.cancelAll(); this.locked = false; this.sel = null; this.fx = {};
+    this.hideTitle(); clearSave(); this.cancelAll(); this.cutN = 0; this.saveLater = false; this.locked = false; this.sel = null; this.fx = {};
     this.st = { scene: 'rue', flags: {}, inv: [], hero: null }; this.started = true;
     /* intro « Quinze ans plus tard » (intro.js) : aucune scène chargée pendant qu'elle se joue */
     this.scene = null; this.bg = null; this.ents = []; this.hero = null; this.hot = []; this.amb = null; this.night = null; this.ambId = null; snd.ambStop(); this.clearBarks(); this.hushNarr(); this.renderPanel(); this.renderLine();
@@ -260,16 +260,17 @@ export class Game {
   }
   /* sélecteur de scène : repart au début d'un chapitre déjà atteint, avec l'état attendu à son entrée */
   async startAt(ch) {
-    this.hideTitle(); clearSave(); this.cancelAll(); this.locked = false; this.sel = null; this.fx = {};
+    this.hideTitle(); clearSave(); this.cancelAll(); this.cutN = 0; this.saveLater = false; this.locked = false; this.sel = null; this.fx = {};
     this.st = { scene: ch.id, flags: { ...ch.flags }, inv: [...ch.inv], hero: null }; snd.music(snd.musicOn !== false, ch.id); this.started = true;
     await this.goScene(ch.id, { intro: true });
   }
   async continueGame() {
     const s = loadSave(); if (!s) return this.newGame();
-    this.hideTitle(); this.cancelAll(); this.locked = false; this.sel = null; this.fx = {}; this.st = { scene: s.scene, flags: s.flags || {}, inv: s.inv || [], hero: s.hero || null };
+    this.hideTitle(); this.cancelAll(); this.cutN = 0; this.saveLater = false; this.locked = false; this.sel = null; this.fx = {}; this.st = { scene: s.scene, flags: s.flags || {}, inv: s.inv || [], hero: s.hero || null };
     snd.music(snd.musicOn !== false); this.started = true; await this.goScene(s.scene, { restored: true });
   }
-  save() { if (this.st && this.started) writeSave({ scene: this.st.scene, flags: this.st.flags, inv: this.st.inv, hero: this.hero ? { x: this.hero.x, y: this.hero.y, dir: this.hero.dir } : null }); }
+  /* jamais de sauvegarde au milieu d'une cinématique (objet retiré, drapeau pas encore posé : partie bloquée après rechargement) : elle attend la fin */
+  save() { if (this.cutN > 0) { this.saveLater = true; return; } if (this.st && this.started) writeSave({ scene: this.st.scene, flags: this.st.flags, inv: this.st.inv, hero: this.hero ? { x: this.hero.x, y: this.hero.y, dir: this.hero.dir } : null }); }
   async goScene(id, how = {}) {
     const sc = (await import(`../scenes/${id}.js`)).default; this.st.scene = id;
     const bg = await this.casseBg(id, await this.img('assets/pointclick/' + sc.bg)); this.scene = sc; this.bg = bg; this.ambNext = this.now + 4; this.wk = null; this.wkAt = Math.max(this.wkAt ?? 0, this.now + 45); this.night = null; this.sky = sc.interior ? null : buildSky(bg); this.lastMove = this.now;
@@ -303,7 +304,7 @@ export class Game {
   chk() { if (this.runTok !== this.tok) throw new Cancel(); }
   until(cond) { return new Promise(res => this.waiters.push({ cond, res })); }
   async wait(ms) { this.chk(); const end = this.now + ms / 1000; await this.until(() => this.now >= end); this.chk(); }
-  async cut(fn) { this.locked = true; this.renderLine(); try { await fn(); } finally { this.locked = false; this.renderLine(); } }
+  async cut(fn) { this.cutN = (this.cutN || 0) + 1; this.locked = true; this.renderLine(); try { await fn(); } finally { if (--this.cutN <= 0) { this.cutN = 0; this.locked = false; this.renderLine(); if (this.saveLater) { this.saveLater = false; this.save(); } } } }
   cancelAll() { this.tok++; if (this.sayAu) { this.sayAu.pause(); this.sayAu = null; } this.waiters.splice(0).forEach(w => w.res()); this.clearBubbles(); if (this.hero) this.hero.path = []; this.askEl.innerHTML = ''; this.choice = null; }
   async run(fn) {
     const tok = ++this.tok; this.runTok = tok;
@@ -485,10 +486,39 @@ export class Game {
     const it = this.sel; this.setSel(null); this.input(() => this.act('use', { id, name: 'n.' + id, isItem: true }, it));
   }
   faceTg(tg) { const e = tg.isEnt && this.ent(tg.id); if (e) this.face(e.x, e.y - 24); else if (tg.cx !== undefined) this.face(tg.cx, tg.cy); else if (tg.at) this.face(tg.at[0] + (tg.dir === 'l' ? -9 : 9)); }
+  /* masque d'opacité d'une image (mis en cache) */
+  mask(im) { const c = this.mcache || (this.mcache = new Map()); let m = c.get(im); if (m) return m;
+    const cv = document.createElement('canvas'); cv.width = im.width; cv.height = im.height; const x = cv.getContext('2d'); x.drawImage(im, 0, 0);
+    const d = x.getImageData(0, 0, im.width, im.height).data, a = new Uint8Array(im.width * im.height); for (let i = 0; i < a.length; i++) a[i] = d[i * 4 + 3] > 128 ? 1 : 0;
+    m = { w: im.width, h: im.height, a }; c.set(im, m); return m; }
+  /* part du corps du héros, debout en p, que recouvre le personnage e (au pixel près, d'après la transparence réelle des deux images) */
+  cover(p, e) {   /* -> [part du corps, part des pieds (bas du corps)] */
+    const hi = this.spr(HERO ? HERO.stand : 'hero.side'), ei = this.spr(this.frame(e)) || this.spr(e.spr); if (!hi || !ei) return [0, 0];
+    const hs = this.persp(p[1]), es = e.scale ?? this.persp(e.y), Hm = this.mask(hi), Em = this.mask(ei);
+    const hx0 = p[0] - hi.width * hs / 2, hy0 = p[1] - hi.height * hs, ex0 = e.x - ei.width * es / 2, ey0 = e.y - (e.bob || 0) - ei.height * es, fy = p[1] - hi.height * hs * 0.2;
+    let n = 0, k = 0, nf = 0, kf = 0;
+    for (let y = hy0; y < p[1]; y += 1.5) for (let x = hx0; x < hx0 + hi.width * hs; x += 1.5) {
+      const u = Math.floor((x - hx0) / hs), v = Math.floor((y - hy0) / hs); if (!Hm.a[v * Hm.w + u]) continue; n++; const foot = y >= fy; if (foot) nf++;
+      let eu = Math.floor((x - ex0) / es); const ev = Math.floor((y - ey0) / es); if (e.flip) eu = Em.w - 1 - eu;
+      if (eu >= 0 && ev >= 0 && eu < Em.w && ev < Em.h && Em.a[ev * Em.w + eu]) { k++; if (foot) kf++; } }
+    return [n ? k / n : 0, nf ? kf / nf : 0];
+  }
+  /* où se placer pour agir : le point prévu, sauf si le héros y serait caché par un personnage (plus bas à l'écran, donc dessiné devant lui)
+     ou fondu dans son corps (même profondeur) ; alors le point libre le plus proche, sur la zone de marche */
+  approach(tg) {
+    const at = tg.at; if (!at) return at;
+    const others = this.ents.filter(e => !e.isHero && e.visible !== false && !e.noHot && e.spr);
+    /* gêne visuelle en p : caché par un personnage devant lui (jambes et pieds comptent double), ou fondu dans un personnage juste derrière */
+    const over = p => others.reduce((t, e) => { const [f, ff] = this.cover(p, e); return t + (e.y >= p[1] ? f * 3 + ff * 2 : e.y > p[1] - 20 ? f * 1.5 : 0); }, 0);
+    if (over(at) < 0.04) return at;
+    let best = at, bc = 600 * over(at);
+    for (let dy = -8; dy <= 12; dy += 4) for (let dx = -72; dx <= 72; dx += 4) { const p = [at[0] + dx, at[1] + dy], d = Math.abs(dx) + Math.abs(dy) * 2; if (d >= bc || p[0] < 10 || p[0] > W - 10 || !this.walk.inside(p[0], p[1])) continue; const c = d + 600 * over(p); if (c < bc) { bc = c; best = p; } }
+    return best;
+  }
   async act(verb, tg, item) {
     if (!tg.at && !tg.isItem && !tg.isEnt && verb !== 'look' && verb !== 'walk') { const done = this.scene.on && await this.scene.on(this, verb, tg.id, item); if (!done) await this.fallbackFar(verb, tg); return; }
-    if (verb === 'walk') { if (!tg.at) { await this.say('hero', 'def.far'); return; } await this.walkTo(...tg.at); this.faceTg(tg); if (this.scene.on) await this.scene.on(this, 'walk', tg.id); return; }
-    if (verb !== 'look' && !tg.isItem && tg.at) { await this.walkTo(...tg.at); this.faceTg(tg); if ((verb === 'take' || verb === 'use') && this.spr('hero.sReach') && !this.hero.back) { this.hero.pose = 'hero.sReach'; setTimeout(() => { if (this.hero) this.hero.pose = null; }, 1100); } } else if (verb === 'look' && !tg.isItem) this.faceTg(tg);
+    if (verb === 'walk') { if (!tg.at) { await this.say('hero', 'def.far'); return; } await this.walkTo(...(tg.isEnt ? this.approach(tg) : tg.at));   /* une sortie : on va jusqu'à la porte */ this.faceTg(tg); if (this.scene.on) await this.scene.on(this, 'walk', tg.id); return; }
+    if (verb !== 'look' && !tg.isItem && tg.at) { await this.walkTo(...this.approach(tg)); this.faceTg(tg); if ((verb === 'take' || verb === 'use') && this.spr('hero.sReach') && !this.hero.back) { this.hero.pose = 'hero.sReach'; setTimeout(() => { if (this.hero) this.hero.pose = null; }, 1100); } } else if (verb === 'look' && !tg.isItem) this.faceTg(tg);
     const sc = this.scene; let done = false;
     if (sc.on) done = await sc.on(this, verb, tg.id, item);
     if (!done) await this.fallback(verb, tg, item);

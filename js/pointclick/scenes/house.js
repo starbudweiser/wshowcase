@@ -4,11 +4,11 @@ const BL = BLINDS.house, MAN = [392, 240], AWAY = [146, 250];
 
 export default {
   id: 'house', interior: true, bg: 'house.png', persp: [205, 1.1, 268, 1.6],
-  walk: [[[96, 268], [124, 226], [200, 208], [340, 208], [404, 226], [432, 268]]],
+  walk: [[[122, 268], [146, 222], [200, 208], [340, 208], [404, 226], [432, 268]]],   /* le bord gauche longe l'âtre et le panier à bûches (on ne marche plus dans la cheminée) */
   fg: [],
-  start: { x: 120, y: 256, dir: 'r' },
+  start: { x: 136, y: 258, dir: 'r' },
   hot: [
-    { id: 'hhearth', rect: [0, 40, 128, 214], at: [142, 236], dir: 'l' }, { id: 'htable', rect: [138, 138, 202, 202], at: [190, 214] },
+    { id: 'hhearth', rect: [0, 40, 128, 214], at: [150, 238], dir: 'l' }, { id: 'htable', rect: [138, 138, 202, 202], at: [190, 214] },
     { id: 'hbed', rect: [188, 124, 312, 186], at: [250, 208] }, { id: 'hwindow', rect: [212, 82, 260, 124], at: [236, 208] },
     { id: 'hshelf', rect: [326, 78, 382, 210], at: [352, 224] }, { id: 'hdoor', rect: [384, 56, 456, 232], at: [414, 240] }
   ],
@@ -55,7 +55,7 @@ export default {
   /* on tourne le dos à l'armure : elle se déplace */
   async lookWindow(g) {
     if (g.flag('armorMoved')) { await g.say('hero', 's6.win.again'); return; }
-    await g.walkTo(236, 210); g.face(236); g.hero.dir = 'r';
+    await g.walkTo(...g.approach({ at: [236, 210] })); g.face(236);   /* pas caché derrière l'homme au baquet */ g.hero.dir = 'r';
     await g.say('hero', 's6.win.1'); g.sfx('clang'); await g.wait(400); g.sfx('clang'); g.sfx('step');
     await g.say('hero', 's6.win.2');
     const m = g.ent('mannequin'); m.x = AWAY[0]; m.y = AWAY[1]; m.at = [AWAY[0] + 40, AWAY[1] + 8]; g.sfx('clang'); g.set('armorMoved');

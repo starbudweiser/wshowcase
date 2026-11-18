@@ -11,7 +11,7 @@ export default {
   hot: [
     { id: 'mountain', rect: [322, 8, 450, 110] }, { id: 'mammoth', rect: [388, 130, 418, 160] }, { id: 'mill', rect: [425, 130, 475, 168] },
     { id: 'house', rect: [0, 20, 100, 135] }, { id: 'inn', rect: [100, 60, 215, 150] }, { id: 'sign', rect: [135, 86, 178, 112] },
-    { id: 'door', rect: [158, 150, 182, 195], at: [176, 210] },
+    { id: 'door', rect: [158, 150, 182, 195], at: [176, 222] },
     { id: 'stall', rect: [4, 138, 128, 262], at: [136, 240], dir: 'l' },
     { id: 'cart', rect: [128, 182, 160, 228], at: [170, 228], dir: 'l' },
     { id: 'flowers', rect: [372, 222, 480, 268], at: [362, 244] },

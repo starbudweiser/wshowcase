@@ -17,7 +17,7 @@ export default {
     { id: 'river', rect: [270, 178, 480, 232], at: [338, 222] },
     { id: 'garden', rect: [0, 184, 116, 214], at: [114, 234], dir: 'l' },
     { id: 'signpost', rect: [30, 122, 100, 183], at: [112, 232], dir: 'l' },
-    { id: 'path', rect: [250, 238, 350, 268], at: [300, 262] }
+    { id: 'path', rect: [250, 238, 350, 268], at: [266, 262] }   /* sortie à gauche de la vieille femme, pas à travers elle */
   ],
   ambient: [
     { type: 'dragon', mode: 'perch', kind: 'frost', x: 139, y: 61, dir: 1, scale: 0.6 },
@@ -42,7 +42,7 @@ export default {
     blindEnter(g, BL);
     const F = k => g.flag(k);
     if (F('cheese')) g.ents = g.ents.filter(e => e.id !== 'cheese');
-    if (F('onLedge') && !F('cheese')) { const h = g.hero; h.x = LEDGE.x - 14; h.y = LEDGE.y; h.scale = 0.5; g.addWalk(LEDGE.poly); const hs = g.ent('horse'); hs.x = LEDGE.x + 18; hs.y = LEDGE.y; hs.scale = 0.45; hs.at = [LEDGE.x + 4, LEDGE.y]; }
+    if (F('onLedge')) { const h = g.hero; h.x = LEDGE.x - 14; h.y = LEDGE.y; h.scale = 0.5; g.addWalk(LEDGE.poly); const hs = g.ent('horse'); hs.x = LEDGE.x + 18; hs.y = LEDGE.y; hs.scale = 0.45; hs.at = [LEDGE.x + 4, LEDGE.y]; }
   },
   tick(g) {
     blindTick(g, BL);
@@ -58,12 +58,13 @@ export default {
   async on(g, verb, id, item) {
     const F = k => g.flag(k);
     if (await blindOn(g, BL, verb, id, item)) return true;
-    if (F('onLedge') && !F('cheese') && id === 'horse' && verb === 'use' && !item) { await g.cut(async () => { await g.say('hero', 's2.ledge.down'); await this.rideDown(g); }); return true; }
-    if (F('onLedge') && !F('cheese') && id !== 'cheese' && verb !== 'look') { if (id === 'hero' || id === 'ledge') return false; await g.say('hero', 's2.ledge.stuck'); return true; }
+    if (F('onLedge') && id === 'horse' && verb === 'use' && !item) { await g.cut(async () => { await g.say('hero', 's2.ledge.down'); await this.rideDown(g); }); return true; }
+    if (F('onLedge') && id !== 'cheese' && verb !== 'look') { if (id === 'hero' || id === 'ledge') return false; await g.say('hero', 's2.ledge.stuck'); return true; }
     switch (id) {
       case 'horse':
         if (verb === 'use' && !item) {
           if (!F('friend')) { await g.say('hero', 'use.horse.nocarrot'); return true; }
+          if (F('cheese')) { await g.say('hero', 'talk.horse'); return true; }   /* le fromage est pris : plus de raison de remonter (sinon il restait coincé là-haut) */
           await g.cut(() => this.rideUp(g)); return true;
         }
         if (verb === 'use' && item === 'carrot') { if (F('friend')) { await g.say('hero', 'use.horse.friend2'); return true; } await g.cut(() => this.feedHorse(g)); return true; }
@@ -82,7 +83,7 @@ export default {
         if (verb === 'walk') { if (id === 'cliff') { await g.say('hero', 'use.cliff'); return true; } }
         break;
       case 'path':
-        if (verb === 'walk' || verb === 'use') { if (!F('cheese')) { await g.say('hero', 's2.exit.no'); return true; } await g.cut(async () => { await g.say('hero', 's2.exit.yes'); await g.walkTo(300, 270); await g.fade(1, 900); setTimeout(() => g.goScene('meadow', { intro: true }), 0); }); return true; }
+        if (verb === 'walk' || verb === 'use') { if (!F('cheese')) { await g.say('hero', 's2.exit.no'); return true; } await g.cut(async () => { await g.say('hero', 's2.exit.yes'); await g.walkTo(266, 270); await g.fade(1, 900); setTimeout(() => g.goScene('meadow', { intro: true }), 0); }); return true; }
         break;
     }
     return false;
@@ -94,10 +95,11 @@ export default {
   },
 
   /* le cheval gravit la falaise à 90 degrés */
+  /* le cheval monté est trié par profondeur comme tout le monde (au pied de la falaise, il passe derrière la vieille femme, plus près de nous) */
   async rideUp(g) {
     const h = g.hero, horse = g.ent('horse');
     await g.say('hero', 's2.ride1'); h.visible = false; horse.visible = false;
-    const r = { id: 'rider', spr: 'horse.ride', x: horse.x, y: horse.y, visible: true, noHot: true, scale: 0.7, z: 300 }; g.ents.push(r);
+    const r = { id: 'rider', spr: 'horse.ride', x: horse.x, y: horse.y, visible: true, noHot: true, scale: 0.7 }; g.ents.push(r);
     await g.walkEnt('rider', BASE[0] - 6, BASE[1] + 4, 80); r.y = BASE[1] + 4;
     await g.say('horse', 's2.ride2'); await g.say('rider', 's2.ride3');
     g.sfx('whoosh'); r.rot = UP; g.shake(2600, 1.4);
@@ -118,9 +120,9 @@ export default {
   async rideDown(g) {
     const h = g.hero, horse = g.ent('horse');
     h.visible = false; horse.visible = false;
-    const r = { id: 'rider', spr: 'horse.ride', x: LEDGE.x - 6, y: LEDGE.y + 18, visible: true, noHot: true, scale: 0.7, z: 300, rot: UP, flip: true };   /* tête en bas, sabots contre la falaise */ g.ents.push(r);
+    const r = { id: 'rider', spr: 'horse.ride', x: LEDGE.x - 6, y: LEDGE.y + 18, visible: true, noHot: true, scale: 0.7, rot: UP, flip: true };   /* tête en bas, sabots contre la falaise */ g.ents.push(r);
     g.sfx('whoosh'); g.shake(1800, 1.6); await g.walkEnt('rider', BASE[0] - 6, BASE[1] + 2, 80); g.sfx('clang'); g.shake(300, 3);
-    g.ents = g.ents.filter(e => e !== r); delete h.scale; h.x = BASE[0] - 12; h.y = BASE[1] + 14; h.visible = true; h.dir = 'l';
+    g.ents = g.ents.filter(e => e !== r); delete h.scale; [h.x, h.y] = g.approach({ at: [BASE[0] - 12, BASE[1] + 14] }); h.visible = true; h.dir = 'l';   /* pas caché derrière la vieille femme */
     delete horse.scale; horse.x = 252; horse.y = 226; horse.at = [214, 236]; horse.visible = true;
     g.set('onLedge', false); await g.say('hero', 's2.down1');
   }
