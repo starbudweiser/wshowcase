@@ -7,6 +7,48 @@ const rnd = (seed) => { let s = seed * 9301 + 49297; return () => ((s = (s * 930
 const bbox = p => { const xs = p.map(q => q[0]), ys = p.map(q => q[1]); return [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)]; };
 const clipPoly = (c, p) => { c.beginPath(); p.forEach(([x, y], i) => (i ? c.lineTo(x, y) : c.moveTo(x, y))); c.closePath(); c.clip(); };
 
+/* Eau d'une rivière lue dans le décor (pour les sauts de poissons) : dans la zone de recherche `roi` [x0, y0, x1, y1], pixels bleutés
+   (ni verts, ni neige claire), fermeture puis ouverture morphologiques 3×3, plus grande nappe d'un seul tenant. Pour chaque point d'eau :
+   la colonne d'eau qui le contient (hauteur, position relative) et le test de l'éclaboussure (ellipse 11·s × 3,8·s entièrement dans l'eau).
+   Départs : colonne haute (≥ 16·s), près du milieu ; retombées : colonne ≥ 11·s, moins centrées. s = k × perspective de la scène. */
+function waterMap(g, roi, k) {
+  const [x0, y0, x1, y1] = roi, w = x1 - x0, h = y1 - y0, N = w * h;
+  const cv = document.createElement('canvas'); cv.width = 480; cv.height = 270; const cx = cv.getContext('2d', { willReadFrequently: true });
+  cx.drawImage(g.bg, 0, 0, 480, 270); const px = cx.getImageData(x0, y0, w, h).data;
+  let m = new Uint8Array(N);
+  for (let i = 0; i < N; i++) { const r = px[i * 4], gr = px[i * 4 + 1], b = px[i * 4 + 2]; m[i] = b - r >= 8 && b >= gr - 6 && Math.max(r, gr, b) <= 175 ? 1 : 0; }
+  const morph = (src, grow) => {                        /* dilatation (grow) ou érosion 3×3, hors zone = sec */
+    const o = new Uint8Array(N);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      let any = 0, all = 1;
+      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { const X = x + dx, Y = y + dy, v = X >= 0 && Y >= 0 && X < w && Y < h ? src[Y * w + X] : 0; any |= v; all &= v; }
+      o[y * w + x] = grow ? any : all;
+    }
+    return o;
+  };
+  m = morph(morph(morph(morph(m, 1), 1), 0), 0);       /* fermeture : bouche l'écume et les reflets */
+  m = morph(morph(m, 0), 1);                            /* ouverture : enlève les miettes */
+  const lab = new Int32Array(N); let best = 0, bestN = 0, id = 0;   /* plus grande nappe (4-connexité) */
+  for (let i = 0; i < N; i++) {
+    if (!m[i] || lab[i]) continue; id++; let n = 0; const st = [i]; lab[i] = id;
+    while (st.length) { const q = st.pop(), x = q % w, y = (q / w) | 0; n++; for (const [X, Y] of [[x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]]) { if (X < 0 || Y < 0 || X >= w || Y >= h) continue; const j = Y * w + X; if (m[j] && !lab[j]) { lab[j] = id; st.push(j); } } }
+    if (n > bestN) { bestN = n; best = id; }
+  }
+  for (let i = 0; i < N; i++) m[i] = lab[i] === best && best ? 1 : 0;
+  const wet = (x, y) => { x -= x0; y -= y0; return x >= 0 && y >= 0 && x < w && y < h && m[y * w + x] === 1; };
+  const top = new Int16Array(N), bot = new Int16Array(N);
+  for (let x = 0; x < w; x++) for (let y = 0; y < h;) { if (!m[y * w + x]) { y++; continue; } let e = y; while (e < h && m[e * w + x]) e++; for (let q = y; q < e; q++) { top[q * w + x] = y; bot[q * w + x] = e - 1; } y = e; }
+  const land = new Uint8Array(N), starts = [], A = Array.from({ length: 16 }, (_, i) => [Math.cos(i * Math.PI / 8), Math.sin(i * Math.PI / 8)]);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const i = y * w + x; if (!m[i]) continue;
+    const gx = x + x0, gy = y + y0, s = k * g.persp(gy), run = bot[i] - top[i] + 1, rel = 1 - Math.abs((y - top[i]) - (bot[i] - y)) / run;
+    if (run < 11 * s || rel < 0.3) continue;
+    if (!A.every(([c, d]) => wet(Math.round(gx + c * 11 * s), Math.round(gy + d * 3.8 * s)))) continue;
+    land[i] = 1; if (run >= 16 * s && rel >= 0.5) starts.push([gx, gy]);
+  }
+  return { wet, land: (x, y) => { x -= x0; y -= y0; return x >= 0 && y >= 0 && x < w && y < h && land[y * w + x] === 1; }, starts };
+}
+
 const KINDS = {
   /* rivière : chaque ligne du décor glisse un peu de côté (ondulation) + éclats de lumière */
   water(o) {
@@ -157,11 +199,21 @@ const KINDS = {
       }
     };
   },
-  /* poissons qui sautent : de temps en temps, un saumon jaillit d'un des points d'eau `spots` ([x, y, échelle]), décrit un arc en suivant
-     sa trajectoire et replonge ; ce qui est sous la surface est caché, éclaboussures et ronds dans l'eau au départ et à l'arrivée */
+  /* poissons qui sautent : de temps en temps, un saumon jaillit en pleine rivière, décrit un arc en suivant sa trajectoire et replonge ;
+     ce qui est sous la surface est caché, éclaboussures et ronds dans l'eau au départ et à l'arrivée. Départ et retombée sont tirés dans
+     l'eau lue sur le décor (`water` : zone de recherche, `k` : échelle × perspective), au milieu du courant, jamais contre les rochers. */
   fish(o) {
-    const R = rnd(o.seed || 21), spots = o.spots, D = 0.95, jumps = [];
-    let next = 1.5 + R() * 3;
+    const R = rnd(o.seed || 21), D = 0.95, jumps = [];
+    let next = 1.5 + R() * 3, wm = null;
+    const pick = g => {
+      for (let n = 0; n < 40 && wm.starts.length; n++) {
+        const [x, y] = wm.starts[(R() * wm.starts.length) | 0], s = (o.k ?? 1) * g.persp(y), dir = R() > 0.5 ? 1 : -1, L = 14 + R() * 8, H = 11 + R() * 7;
+        if (!wm.land(Math.round(x + dir * L * s), y)) continue;
+        let ok = true; for (let f = 0; f <= 11; f++) if (!wm.wet(Math.round(x + dir * L * s * f / 11), y)) { ok = false; break; }
+        if (ok) return { x, y, s, dir, L, H };
+      }
+      return null;
+    };
     const splash = (c, x, y, s, k) => {
       /* rond dans l'eau qui s'élargit, puis gouttes qui retombent */
       const a = 1 - k; if (a <= 0) return;
@@ -173,7 +225,8 @@ const KINDS = {
       draw(g, c, t) {
         const im = g.spr('fish');
         if (g.night && g.night.st !== 'wake') next = Math.max(next, t + 2 + R() * 3);   /* la nuit, les poissons dorment : plus de sauts */
-        if (t > next) { const sp = spots[(R() * spots.length) | 0]; jumps.push({ t0: t, x: sp[0], y: sp[1], s: sp[2] ?? 1, dir: sp[3] ?? (R() > 0.5 ? 1 : -1), L: 14 + R() * 8, H: 11 + R() * 7 }); next = t + (o.every ?? 4) + R() * (o.spread ?? 5); }
+        if (!wm && g.bg && g.bg.width) wm = waterMap(g, o.water, o.k ?? 1);
+        if (t > next && wm) { const j = pick(g); if (j) jumps.push({ t0: t, ...j }); next = t + (o.every ?? 4) + R() * (o.spread ?? 5); }
         for (let i = jumps.length - 1; i >= 0; i--) {
           const j = jumps[i], k = (t - j.t0) / D, s = j.s;
           if (k > 1.8) { jumps.splice(i, 1); continue; }
