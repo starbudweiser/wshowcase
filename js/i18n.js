@@ -6,8 +6,8 @@ let L = 'fr';
 const D = {
   fr: {
     'l.eyebrow': '{n} applications pour Mac', 'l.h1a': 'Essayez-les ici.', 'l.h1b': 'Installez-les ensuite.',
-    'l.lead': 'Un Mac complet dans votre navigateur, avec deux bureaux. Ouvrez une appli, servez-vous-en, puis téléchargez-la si elle vous convient.',
-    'l.cta': 'Allumer le Mac', 'l.skyrimlink': 'Vous venez de skyrimtools.com ? Bureau Skyrim ›', 'l.nav1': 'Skyrim Mac Toolkit', 'l.nav2': 'Utilitaires',
+    'l.lead': 'Un Mac complet dans votre navigateur, avec trois bureaux. Ouvrez une appli, servez-vous-en, puis téléchargez-la si elle vous convient.',
+    'l.cta': 'Allumer le Mac', 'l.skyrimlink': 'Vous venez de skyrimtools.com ? Bureau Skyrim ›', 'l.nav1': 'Skyrim Mac Toolkit', 'l.nav2': 'Desktop Mac Toolkit', 'l.nav3': 'Pro Mac Toolkit', 'l.nav3': 'Pro Mac Toolkit',
     'l.tip': 'Son activé : montez le volume pour le démarrage.', 'l.rotate': 'Pour une meilleure expérience, utilisez un ordinateur ou tournez votre appareil.',
     'l.foot': 'Fait par Starbudweiser et Claude Code (Anthropic). Licence MIT.', 'b.skip': 'Cliquez ou appuyez sur une touche pour passer',
     'm.aboutApp': 'À propos de wSHOWCASE', 'm.about': 'À propos de {app}', 'm.aboutFinder': 'À propos de wSHOWCASE', 'm.settings': 'Réglages système…', 'm.wallpaper': 'Fond d’écran…',
@@ -43,8 +43,8 @@ const D = {
   },
   en: {
     'l.eyebrow': '{n} Mac apps', 'l.h1a': 'Try them here.', 'l.h1b': 'Install them after.',
-    'l.lead': 'A full Mac in your browser, with two desktops. Open an app, use it, then download it if you like it.',
-    'l.cta': 'Turn on the Mac', 'l.skyrimlink': 'Coming from skyrimtools.com? Skyrim desktop ›', 'l.nav1': 'Skyrim Mac Toolkit', 'l.nav2': 'Utilities',
+    'l.lead': 'A full Mac in your browser, with three desktops. Open an app, use it, then download it if you like it.',
+    'l.cta': 'Turn on the Mac', 'l.skyrimlink': 'Coming from skyrimtools.com? Skyrim desktop ›', 'l.nav1': 'Skyrim Mac Toolkit', 'l.nav2': 'Desktop Mac Toolkit', 'l.nav3': 'Pro Mac Toolkit',
     'l.tip': 'Sound on: turn your volume up for the startup.', 'l.rotate': 'For the best experience, use a computer or rotate your device.',
     'l.foot': 'Made by Starbudweiser and Claude Code (Anthropic). MIT license.', 'b.skip': 'Click or press any key to skip',
     'm.aboutApp': 'About wSHOWCASE', 'm.about': 'About {app}', 'm.aboutFinder': 'About wSHOWCASE', 'm.settings': 'System Settings…', 'm.wallpaper': 'Wallpaper…',

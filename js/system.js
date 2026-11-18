@@ -11,7 +11,7 @@ export const logoSvg = (id = 'lg' + Math.random().toString(36).slice(2, 7)) => `
 /* ---- fonds d'écran : un par bureau, qui glisse avec lui ---- */
 const walls = () => store.get('walls', {});
 const toneCache = {};
-const DEFAULTS = { skyrim: 'dragon' };
+const DEFAULTS = { skyrim: 'dragon', pro: 'pro_horizon' };
 export function curWall(space = S.cur) {
   const w = walls()[space]; if (w) return w;
   if (DEFAULTS[space]) return DEFAULTS[space];
@@ -95,7 +95,7 @@ export function openSettings(tab = 'wall') {
         if (id === 'wall') {
           const sec = (title, cat) => [h('h4', {}, title), h('div', { class: 'wg' }, WALLS.filter(x => x.cat === cat).map(x => h('button', { class: 'wc' + (curWall() === x.id ? ' on' : ''), onclick: () => { setWall(x.id, { user: true }); draw('wall'); } },
             h('i', { style: { backgroundImage: `url(assets/wallpapers/thumbs/${x.id}.jpg)` } }), h('span', {}, x.n[lang()]))))];
-          main.append(h('h3', {}, t('s.wall')), h('p', { class: 'hint' }, t('s.wallFor', { s: sname(spaceById(S.cur)) })), ...sec(t('s.wallTes'), 'tes'), ...sec(t('s.wallGen'), 'gen'));
+          main.append(h('h3', {}, t('s.wall')), h('p', { class: 'hint' }, t('s.wallFor', { s: sname(spaceById(S.cur)) })), ...sec(t('s.wallTes'), 'tes'), ...sec('Pro', 'pro'), ...sec(t('s.wallGen'), 'gen'));
         } else if (id === 'look') {
           main.append(h('h3', {}, t('s.look')), h('div', { class: 'lg' }, [['light', t('cc.light')], ['dark', t('cc.dark')], ['auto', t('cc.auto')]].map(([v, l]) =>
             h('button', { class: 'lk lk-' + v + (themeMode() === v ? ' on' : ''), onclick: () => { applyTheme(v); sfx.click(); draw('look'); } }, h('i'), h('span', {}, l)))));

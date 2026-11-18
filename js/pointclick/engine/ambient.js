@@ -7,6 +7,48 @@ const rnd = (seed) => { let s = seed * 9301 + 49297; return () => ((s = (s * 930
 const bbox = p => { const xs = p.map(q => q[0]), ys = p.map(q => q[1]); return [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)]; };
 const clipPoly = (c, p) => { c.beginPath(); p.forEach(([x, y], i) => (i ? c.lineTo(x, y) : c.moveTo(x, y))); c.closePath(); c.clip(); };
 
+/* Eau d'une rivière lue dans le décor (pour les sauts de poissons) : dans la zone de recherche `roi` [x0, y0, x1, y1], pixels bleutés
+   (ni verts, ni neige claire), fermeture puis ouverture morphologiques 3×3, plus grande nappe d'un seul tenant. Pour chaque point d'eau :
+   la colonne d'eau qui le contient (hauteur, position relative) et le test de l'éclaboussure (ellipse 11·s × 3,8·s entièrement dans l'eau).
+   Départs : colonne haute (≥ 16·s), près du milieu ; retombées : colonne ≥ 11·s, moins centrées. s = k × perspective de la scène. */
+function waterMap(g, roi, k) {
+  const [x0, y0, x1, y1] = roi, w = x1 - x0, h = y1 - y0, N = w * h;
+  const cv = document.createElement('canvas'); cv.width = 480; cv.height = 270; const cx = cv.getContext('2d', { willReadFrequently: true });
+  cx.drawImage(g.bg, 0, 0, 480, 270); const px = cx.getImageData(x0, y0, w, h).data;
+  let m = new Uint8Array(N);
+  for (let i = 0; i < N; i++) { const r = px[i * 4], gr = px[i * 4 + 1], b = px[i * 4 + 2]; m[i] = b - r >= 8 && b >= gr - 6 && Math.max(r, gr, b) <= 175 ? 1 : 0; }
+  const morph = (src, grow) => {                        /* dilatation (grow) ou érosion 3×3, hors zone = sec */
+    const o = new Uint8Array(N);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      let any = 0, all = 1;
+      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { const X = x + dx, Y = y + dy, v = X >= 0 && Y >= 0 && X < w && Y < h ? src[Y * w + X] : 0; any |= v; all &= v; }
+      o[y * w + x] = grow ? any : all;
+    }
+    return o;
+  };
+  m = morph(morph(morph(morph(m, 1), 1), 0), 0);       /* fermeture : bouche l'écume et les reflets */
+  m = morph(morph(m, 0), 1);                            /* ouverture : enlève les miettes */
+  const lab = new Int32Array(N); let best = 0, bestN = 0, id = 0;   /* plus grande nappe (4-connexité) */
+  for (let i = 0; i < N; i++) {
+    if (!m[i] || lab[i]) continue; id++; let n = 0; const st = [i]; lab[i] = id;
+    while (st.length) { const q = st.pop(), x = q % w, y = (q / w) | 0; n++; for (const [X, Y] of [[x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]]) { if (X < 0 || Y < 0 || X >= w || Y >= h) continue; const j = Y * w + X; if (m[j] && !lab[j]) { lab[j] = id; st.push(j); } } }
+    if (n > bestN) { bestN = n; best = id; }
+  }
+  for (let i = 0; i < N; i++) m[i] = lab[i] === best && best ? 1 : 0;
+  const wet = (x, y) => { x -= x0; y -= y0; return x >= 0 && y >= 0 && x < w && y < h && m[y * w + x] === 1; };
+  const top = new Int16Array(N), bot = new Int16Array(N);
+  for (let x = 0; x < w; x++) for (let y = 0; y < h;) { if (!m[y * w + x]) { y++; continue; } let e = y; while (e < h && m[e * w + x]) e++; for (let q = y; q < e; q++) { top[q * w + x] = y; bot[q * w + x] = e - 1; } y = e; }
+  const land = new Uint8Array(N), starts = [], A = Array.from({ length: 16 }, (_, i) => [Math.cos(i * Math.PI / 8), Math.sin(i * Math.PI / 8)]);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const i = y * w + x; if (!m[i]) continue;
+    const gx = x + x0, gy = y + y0, s = k * g.persp(gy), run = bot[i] - top[i] + 1, rel = 1 - Math.abs((y - top[i]) - (bot[i] - y)) / run;
+    if (run < 11 * s || rel < 0.3) continue;
+    if (!A.every(([c, d]) => wet(Math.round(gx + c * 11 * s), Math.round(gy + d * 3.8 * s)))) continue;
+    land[i] = 1; if (run >= 16 * s && rel >= 0.5) starts.push([gx, gy]);
+  }
+  return { wet, land: (x, y) => { x -= x0; y -= y0; return x >= 0 && y >= 0 && x < w && y < h && land[y * w + x] === 1; }, starts };
+}
+
 const KINDS = {
   /* rivière : chaque ligne du décor glisse un peu de côté (ondulation) + éclats de lumière */
   water(o) {
@@ -141,21 +183,37 @@ const KINDS = {
   /* oiseaux en sprites : 3 poses d'ailes (bird.1 à bird.3), qui traversent le ciel */
   flock(o) {
     const n = o.n ?? 4, R = rnd(o.seed || 5), bs = Array.from({ length: n }, () => ({ y: (o.y0 ?? 18) + R() * ((o.y1 ?? 70) - (o.y0 ?? 18)), sp: (o.speed ?? 14) * (0.8 + R() * 0.5), off: R() * 600, ph: R() * 6, dir: R() > 0.5 ? 1 : -1, sc: 0.5 + R() * 0.4 }));
+    let t0 = null;
     return {
       draw(g, c, t) {
+        /* la nuit, ils filent se coucher hors de l'écran (3 fois plus vite) et ne reviennent qu'après le réveil, en entrant par le bord */
+        const dt = t0 === null ? 0 : Math.max(0, Math.min(0.2, t - t0)); t0 = t; const night = !!g.night && g.night.st !== 'wake';
         bs.forEach(b => {
-          const im = g.spr('bird.' + ([1, 2, 3, 2][Math.floor(t * 7 + b.ph) % 4])); if (!im) return;
-          const x = ((t * b.sp + b.off) % 560) - 40, X = b.dir > 0 ? x : 480 - x, Y = Math.round(b.y + Math.sin(t * 0.8 + b.ph) * 4), w = im.width * b.sc, h = im.height * b.sc;
+          b.p = (b.p ?? b.off) + dt * b.sp * (night ? 3 : 1);
+          const x = (b.p % 560) - 40, off = x < -24 || x > 504;
+          if (off) b.hide = night; if (b.hide) return;
+          const im = g.spr('bird.' + ([1, 2, 3, 2][Math.floor(t * (night ? 12 : 7) + b.ph) % 4])); if (!im) return;
+          const X = b.dir > 0 ? x : 480 - x, Y = Math.round(b.y + Math.sin(t * 0.8 + b.ph) * 4), w = im.width * b.sc, h = im.height * b.sc;
           c.save(); c.translate(Math.round(X), Y); if (b.dir < 0) c.scale(-1, 1); c.drawImage(im, Math.round(-w / 2), Math.round(-h / 2), Math.round(w), Math.round(h)); c.restore();
         });
       }
     };
   },
-  /* poissons qui sautent : de temps en temps, un saumon jaillit d'un des points d'eau `spots` ([x, y, échelle]), décrit un arc en suivant
-     sa trajectoire et replonge ; ce qui est sous la surface est caché, éclaboussures et ronds dans l'eau au départ et à l'arrivée */
+  /* poissons qui sautent : de temps en temps, un saumon jaillit en pleine rivière, décrit un arc en suivant sa trajectoire et replonge ;
+     ce qui est sous la surface est caché, éclaboussures et ronds dans l'eau au départ et à l'arrivée. Départ et retombée sont tirés dans
+     l'eau lue sur le décor (`water` : zone de recherche, `k` : échelle × perspective), au milieu du courant, jamais contre les rochers. */
   fish(o) {
-    const R = rnd(o.seed || 21), spots = o.spots, D = 0.95, jumps = [];
-    let next = 1.5 + R() * 3;
+    const R = rnd(o.seed || 21), D = 0.95, jumps = [];
+    let next = 1.5 + R() * 3, wm = null;
+    const pick = g => {
+      for (let n = 0; n < 40 && wm.starts.length; n++) {
+        const [x, y] = wm.starts[(R() * wm.starts.length) | 0], s = (o.k ?? 1) * g.persp(y), dir = R() > 0.5 ? 1 : -1, L = 14 + R() * 8, H = 11 + R() * 7;
+        if (!wm.land(Math.round(x + dir * L * s), y)) continue;
+        let ok = true; for (let f = 0; f <= 11; f++) if (!wm.wet(Math.round(x + dir * L * s * f / 11), y)) { ok = false; break; }
+        if (ok) return { x, y, s, dir, L, H };
+      }
+      return null;
+    };
     const splash = (c, x, y, s, k) => {
       /* rond dans l'eau qui s'élargit, puis gouttes qui retombent */
       const a = 1 - k; if (a <= 0) return;
@@ -166,7 +224,9 @@ const KINDS = {
     return {
       draw(g, c, t) {
         const im = g.spr('fish');
-        if (t > next) { const sp = spots[(R() * spots.length) | 0]; jumps.push({ t0: t, x: sp[0], y: sp[1], s: sp[2] ?? 1, dir: sp[3] ?? (R() > 0.5 ? 1 : -1), L: 14 + R() * 8, H: 11 + R() * 7 }); next = t + (o.every ?? 4) + R() * (o.spread ?? 5); }
+        if (g.night && g.night.st !== 'wake') next = Math.max(next, t + 2 + R() * 3);   /* la nuit, les poissons dorment : plus de sauts */
+        if (!wm && g.bg && g.bg.width) wm = waterMap(g, o.water, o.k ?? 1);
+        if (t > next && wm) { const j = pick(g); if (j) jumps.push({ t0: t, ...j }); next = t + (o.every ?? 4) + R() * (o.spread ?? 5); }
         for (let i = jumps.length - 1; i >= 0; i--) {
           const j = jumps[i], k = (t - j.t0) / D, s = j.s;
           if (k > 1.8) { jumps.splice(i, 1); continue; }
@@ -238,14 +298,32 @@ const KINDS = {
   }
 };
 
-/* dragon perché (falaise, toit, tour, pont…) : il ne vole pas ; il respire, bouge la tête, étire parfois ses ailes et, de temps en temps, crache du feu */
+/* dragon perché (falaise, toit, tour, pont…) : il ne vole pas ; il respire, bouge la tête, étire parfois ses ailes et, de temps en temps, crache du feu.
+   gone = drapeau de partie qui détruit son perchoir (tour abattue par le gourdin du géant) : quand il passe à vrai sous ses yeux, le dragon
+   s'envole vers le haut à gauche et quitte l'écran ; s'il est déjà vrai à l'arrivée dans le décor, le dragon n'est plus là */
 function perch(o) {
-  const id = o.id || 'dragon', ph = (o.x * 7 + o.y * 3) % 17, every = o.every ?? 26 + (ph % 9), dir = o.dir ?? -1; let pos = null;
+  const id = o.id || 'dragon', ph = (o.x * 7 + o.y * 3) % 17, every = o.every ?? 26 + (ph % 9), dir = o.dir ?? -1; let pos = null, gone0, fly0 = null;
   return {
     id,
     hit(x, y) { return !!pos && x >= pos[0] - pos[2] / 2 && x <= pos[0] + pos[2] / 2 && y >= pos[1] - pos[3] && y <= pos[1]; },
     draw(g, c, t) {
       const K = o.kind && g.spr(o.kind + '.up') ? o.kind + '.' : 'dragon.', P = n => g.spr(K + n); if (!P('up')) return;
+      if (o.gone) {
+        const f = !!(g.st && g.st.flags && g.st.flags[o.gone]); if (gone0 === undefined) gone0 = f;
+        if (gone0) { pos = null; return; }
+        if (f && fly0 === null) { fly0 = t; if (g.sfx) g.sfx('whoosh'); }
+        if (fly0 !== null) {
+          const p = (t - fly0) / 2.6; pos = null; if (p > 1) return;
+          const POSES = ['up', 'mid1', 'down', 'mid2'], ff = (t - fly0) * 7, fi = Math.floor(ff) % 4, fe = ff - Math.floor(ff), im = P(POSES[fi]), im2 = P(POSES[(fi + 1) % 4]); if (!im) return;
+          const sc = (o.scale ?? 0.7) * (1 - 0.35 * p), w = im.width * sc, h = im.height * sc, e = p * p * (3 - 2 * p) * 0.6 + p * 0.4;
+          const x = o.x - e * (o.x + w + 20), y = o.y - h * 0.6 - e * (o.y + h) - Math.sin(p * Math.PI) * 12;
+          c.save(); c.translate(Math.round(x), Math.round(y)); c.rotate(-0.12);
+          c.drawImage(im, Math.round(-w / 2), Math.round(-h / 2), Math.round(w), Math.round(h));
+          if (im2 && im2 !== im) { c.globalAlpha = fe * fe * (3 - 2 * fe); c.drawImage(im2, Math.round(-w / 2), Math.round(-h / 2), Math.round(w), Math.round(h)); }
+          c.restore(); return;
+        }
+      }
+      if (perchSleep(g, c, o, dir, ph)) { pos = null; return; }
       const sc = o.scale ?? 0.7, tt = t + ph, stretch = (tt % 15) / 1.7, fireT = (tt + 7) % every, fire = o.fire !== false && fireT < 2.6;
       let a = 'down', b = 'down', f = 0;
       if (stretch < 1) { const seq = ['down', 'mid2', 'up', 'mid2', 'down'], q = stretch * 4, i = Math.floor(q); a = seq[i]; b = seq[Math.min(4, i + 1)]; f = q - i; }
@@ -263,5 +341,30 @@ function perch(o) {
       if (o.occ && g.sky && g.sky.occ) occlude(c, g.sky, o.x - w / 2 - 10, o.y - h - 10, w + 20, h + 20);
     }
   };
+}
+/* la nuit, le dragon perché se couche sur son perchoir (planche assets/pointclick/sleep/dragon_<espèce>.png, tools/sleep_simple.py) :
+   coucher image par image, pose « dort » tenue avec ses z z z, réveil ; réveillé avant d'être couché, il se relève par le même chemin */
+const DZ = { ember: [-35, -48], frost: [-27, -34], moss: [-30, -36], gold: [-17, -22] };   /* z z z : au-dessus de la tête (à gauche), pixels de la planche */
+function perchSleep(g, c, o, dir, ph) {
+  const st = o._sl, n = g.night, k = 'dragon_' + (o.kind || ''), A = g.sleepIdx && g.sleepIdx[k], sh = A && g.sleepSheet(k);
+  if (A && !sh && !o._ld) { o._ld = 1; Promise.resolve(g.img(`assets/pointclick/sleep/${k}.png`)).catch(() => {}); }   /* planche chargée dès l'arrivée */
+  if (!n || !sh) { o._sl = null; return false; }
+  const now = g.now, fr = names => { const out = []; for (const m of names) { const s = A.seg[m], h = A.hold && A.hold[m]; if (s) for (let i = 0; i < s[1]; i++) for (let r = h ? h[i] || 1 : 1; r > 0; r--) out.push(s[0] + i); } return out; };
+  let S = st;
+  if (!S) S = o._sl = { ph: 'down', t0: n.t0 + 3.5 + (ph % 3) * 0.6, fr: fr(['down1']) };
+  if (n.st === 'wake' && S.ph !== 'up' && S.ph !== 'over') {
+    if (S.ph === 'loop') S.fr = fr(['up1']); else { const j = Math.max(0, Math.min(S.fr.length - 1, Math.floor((now - S.t0) * A.fps))); S.fr = now < S.t0 ? [] : S.fr.slice(0, j + 1).reverse(); }
+    S.ph = 'up'; S.t0 = now;
+  }
+  if (now < S.t0 || S.ph === 'over') return false;
+  let f;
+  if (S.ph === 'loop') f = A.seg.loop[0];
+  else { const j = Math.floor((now - S.t0) * A.fps); if (j >= S.fr.length) { if (S.ph === 'down') { S.ph = 'loop'; f = A.seg.loop[0]; } else { S.ph = 'over'; return false; } } else f = S.fr[j]; }
+  const sc = o.scale ?? 0.7, sx = (f % A.cols) * A.w, sy = Math.floor(f / A.cols) * A.h;
+  c.save(); c.translate(Math.round(o.x), Math.round(o.y + 2)); if (dir > 0) c.scale(-1, 1);
+  c.drawImage(sh, sx, sy, A.w, A.h, Math.round(-A.ax * sc), Math.round(-A.ay * sc), Math.round(A.w * sc), Math.round(A.h * sc)); c.restore();
+  const Z = DZ[o.kind]; if (S.ph === 'loop' && Z) (g.zExtra = g.zExtra || []).push([o.x + Z[0] * sc * (dir > 0 ? -1 : 1), o.y + Z[1] * sc]);   /* z z z : dessinés par night.js */
+  if (o.occ && g.sky && g.sky.occ) occlude(c, g.sky, o.x - A.w * sc / 2 - 10, o.y - A.h * sc - 10, A.w * sc + 20, A.h * sc + 20);
+  return true;
 }
 export function makeAmbient(list) { return (list || []).map(o => KINDS[o.type](o)).filter(Boolean); }

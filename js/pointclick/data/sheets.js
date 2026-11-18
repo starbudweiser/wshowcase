@@ -50,6 +50,10 @@ NEWB.forEach(k => {
 /* le héros : marche en 4 temps, debout de profil, face (repos / parole) */
 /* animations détaillées du héros (tools/gen_hero.sh) : marche de profil en 8 phases, de face, de dos, parole, gestes, portrait ; repli sur les anciennes images si une manque */
 ['w1', 'w2', 'w3', 'w4', 'w5', 'w6', 'w7', 'w8', 'sIdle', 'sTalk1', 'sTalk2', 'sReach', 'sPick', 'fWalkA', 'fWalkP', 'fWalkB', 'fBlink', 'fTalk2', 'fShrug', 'fSurprise', 'bStand', 'bWalkA', 'bWalkB', 'pNeutral', 'pTalk', 'pBlink', 'pSleepy', 'pKnock1', 'pKnock2', 'pPoint', 'pPointT', 'pShrug', 'pShrugT', 'pPlead', 'pPleadT', 'pThink', 'pThinkT', 'pWave', 'pWaveT', 'pLean', 'pLeanT'].forEach(k => (SPR['hero.' + k] = 'hero_' + k));
+/* nuit du héros, vue de face (tools/hero_nuit_sprites.py) : approche (en pied, genoux, taille), portrait, gestes avec image intermédiaire (…A),
+   frappe en 3 temps ; HERO_N = visage [centre x, centre y, largeur] en pixels du sprite, pour enchaîner l'approche à taille de visage égale */
+['Ap1', 'Ap2', 'Ap3', 'Neutral', 'Talk', 'Blink', 'PointA', 'Point', 'ShrugA', 'Shrug', 'PleadA', 'Plead', 'ThinkA', 'Think', 'WaveA', 'Wave', 'KnockA', 'KnockB', 'KnockC'].forEach(k => (SPR['hero.n' + k] = 'hero_n' + k));
+export const HERO_N = {'nAp1': [319.5, 119.5, 50], 'nAp2': [318.0, 161.5, 87], 'nAp3': [319.0, 215.0, 111], 'nNeutral': [149.5, 102.0, 54]};
 export const HERO = {
   walk: ['hero.w1', 'hero.w2', 'hero.w3', 'hero.w4', 'hero.w5', 'hero.w6', 'hero.w7', 'hero.w8'], walkOld: ['hero.walkA', 'hero.walkP', 'hero.walkB', 'hero.walkP'],
   walkF: ['hero.fWalkA', 'hero.fWalkP', 'hero.fWalkB', 'hero.fWalkP'], walkB: ['hero.bWalkA', 'hero.bStand', 'hero.bWalkB', 'hero.bStand'],
@@ -58,6 +62,37 @@ export const HERO = {
   portrait: { neutral: 'hero.pNeutral', talk: 'hero.pTalk', blink: 'hero.pBlink', sleepy: 'hero.pSleepy' }
 };
 export const ITEMS = { bucket: { spr: 'bucket' }, honey: { spr: 'honey' }, carrot: { spr: 'carrot' }, cheese: { spr: 'cheese' }, cabbage: { spr: 'cabbage' }, arrow: { spr: 'arrow' }, pumpkin: { spr: 'pumpkin' }, anvil: { spr: 'anvil' } };
+
+/* coucher de nuit (tools/sleep_frames.py) : planche assets/pointclick/sleep/<clé>.png de chaque sprite qui sait se coucher, dormir et se réveiller ;
+   z = place des « z z z » au-dessus de la tête endormie, en pixels du sprite depuis le point d'ancrage au sol ;
+   thr : le géant lance son gourdin avant de dormir (planche : il le lâche à l'image thr.at du passage thr.seg) ; hand = sa main à cet instant, en pixels
+   de la planche depuis le point d'ancrage ; back = passages joués si on le réveille après le lancer (il sort un gourdin de son dos) ; par décor, to = point d'impact et casse = décor qui se brise (CASSE), sinon il le lance hors écran */
+export const SLEEP = {
+  'giant': { k: 'giant', z: [-80, -45], thr: { seg: 'down1', at: 2, back: [], hand: [-86, -152], img: 'assets/pointclick/sleep/gourdin.png', targets: { meadow: { to: [70, 92], casse: 'meadow' } } } },
+  'nazim': { k: 'nazim', z: [-38, -20] },
+  /* secondaires, version simple (tools/sleep_simple.py) : le garde (rue, porte, fête), la fermière, le cheval du moulin, la poule, le cavalier du gué */
+  'guard': { k: 'guard', z: [44, -26] }, 'farmer': { k: 'farmer', z: [-42, -26] }, 'horse': { k: 'horse', z: [40, -30] },
+  'hen': { k: 'hen', z: [2, -24] }, 'horseman': { k: 'horseman', z: [10, -84] },
+  'horseman.pumpkin': { k: 'horseman_pumpkin', z: [14, -66] },   /* fête : il pose sa citrouille sur la crinière pour dormir */
+  /* lot 2 (16/11) : le marchand (rue, fête), la compagne d'armes de la grande salle (elle dort assise contre son sac) */
+  'merchant': { k: 'merchant', z: [-38, -26] }, 'follower': { k: 'follower', z: [-4, -48] },
+  // lot 3 : les 10 clins d'œil « Pourquoi il fait si sombre ? » (tête à gauche, objet gardé sur les yeux)
+  'blind.pot': { k: 'blind_pot', z: [-28, -28] },
+  'blind.sack': { k: 'blind_sack', z: [-28, -29] },
+  'blind.hat': { k: 'blind_hat', z: [-39, -28] },
+  'blind.cabbage': { k: 'blind_cabbage', z: [-40, -54] },
+  'blind.helmet': { k: 'blind_helmet', z: [-35, -29] },
+  'blind.basket': { k: 'blind_basket', z: [-30, -37] },
+  'blind.boot': { k: 'blind_boot', z: [-36, -31] },
+  'blind.mushroom': { k: 'blind_mushroom', z: [-31, -28] },
+  'blind.banner': { k: 'blind_banner', z: [-33, -28] },
+  'blind.partyhat': { k: 'blind_partyhat', z: [-34, -29] },
+  // papillon géant du bois : il se pose sur son champignon (scenes/wood.js) ; ses deux images de vol mènent à la même planche
+  'butterfly': { k: 'butterfly', z: [8, -26] }, 'butterfly.2': { k: 'butterfly', z: [8, -26] }
+};
+/* décor brisé par le gourdin du géant (tools/decor_casse.py) : la tour de guet de la prairie s'effondre ; reste détruite pour toute la partie
+   (drapeau sauvegardé) ; les nuits suivantes, le géant lance son gourdin hors écran */
+export const CASSE = { meadow: { flag: 'casseMeadow', img: 'assets/pointclick/sleep/casse_meadow.png', x: 10, y: 22, dust: [32, 30, 108, 168] } };
 /* intro « Quinze ans plus tard » (engine/intro.js, arrivée dans scenes/rue.js) : cheval et charrette en cycle de pas, passagers vus de profil */
 export const INTRO_CART_N = 12;
 for (let i = 0; i < INTRO_CART_N; i++) SPR['intro.cart.' + i] = '../intro/cart/' + String(i).padStart(2, '0');

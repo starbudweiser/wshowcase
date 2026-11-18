@@ -1,5 +1,5 @@
 import { store } from './util.js';
-export const S = { apps: [], spaces: [], owner: 'starbudweiser', cur: 'skyrim', scale: 1, active: null, rectOf: () => null, extras: new Map() };
+export const S = { apps: [], spaces: [], owner: 'starbudweiser', cur: 'skyrim', scale: 1, W: 1600, H: 900, active: null, rectOf: () => null, extras: new Map() };
 export const bus = new EventTarget();
 export const emit = (n, d) => bus.dispatchEvent(new CustomEvent(n, { detail: d }));
 export const on = (n, f) => bus.addEventListener(n, e => f(e.detail));
@@ -17,7 +17,14 @@ export const WALLS = [
   { id: 'tes_moons', cat: 'tes', n: { fr: 'Masser et Secunda', en: 'Masser and Secunda' } },
   { id: 'tes_oblivion', cat: 'tes', n: { fr: 'Porte d’Oblivion', en: 'Oblivion Gate' } },
   { id: 'tes_sovngarde', cat: 'tes', n: { fr: 'Sovngarde', en: 'Sovngarde' } },
+  { id: 'pro_horizon', cat: 'pro', n: { fr: 'Horizon', en: 'Horizon' } },
+  { id: 'pro_graphite', cat: 'pro', n: { fr: 'Graphite', en: 'Graphite' } },
+  { id: 'pro_minuit', cat: 'pro', n: { fr: 'Minuit', en: 'Midnight' } },
+  { id: 'pro_ardoise', cat: 'pro', n: { fr: 'Ardoise', en: 'Slate' } },
+  { id: 'pro_ciel', cat: 'pro', n: { fr: 'Ciel', en: 'Sky' } },
+  { id: 'pro_aube', cat: 'pro', n: { fr: 'Aube', en: 'Dawn' } },
   { id: 'aurore', cat: 'gen', n: { fr: 'Aurore', en: 'Aurora' } },
+  { id: 'aurore_sombre', cat: 'gen', n: { fr: 'Aurore sombre', en: 'Dark aurora' } },
   { id: 'dune', cat: 'gen', n: { fr: 'Dune', en: 'Dune' } },
   { id: 'brume', cat: 'gen', n: { fr: 'Brume', en: 'Mist' } },
   { id: 'ocean', cat: 'gen', n: { fr: 'Océan', en: 'Ocean' } },

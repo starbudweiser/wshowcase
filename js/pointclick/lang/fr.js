@@ -7,7 +7,9 @@ export default {
   'v.walk': 'Aller vers', 'v.take': 'Prendre', 'v.use': 'Utiliser', 'v.talk': 'Parler à', 'v.look': 'Regarder', 'ui.with': 'avec',
   'ui.title': 'Le Seau de Rivebois', 'ui.sub': 'Un jeu d’aventure parodique pour les 15 ans de Skyrim : un casque à cornes, un seau et beaucoup de mauvaise foi.',
   'ui.new': 'Nouvelle partie', 'ui.continue': 'Continuer', 'ui.resume': 'Reprendre', 'ui.musicOn': 'Musique : oui', 'ui.musicOff': 'Musique : non',
-  'ui.fine': 'Hommage de fan, sans aucun lien avec Bethesda. Sauvegarde automatique dans ce navigateur. Touches 1 à 5 : verbes. Espace : passer une réplique.',
+  'ui.fine': 'Hommage de fan, sans aucun lien avec Bethesda. Sauvegarde automatique dans ce navigateur. Clic : aller. Clic maintenu : pièce des verbes. Clic droit ou I : besace. Espace : passer une réplique.',
+  'ui.inv': 'Besace (clic droit, I)', 'ui.menu': 'Menu (Échap)', 'ui.coin.title': 'La pièce des verbes',
+  'ui.coin.tip': 'Maintiens le clic sur un objet ou un personnage : la pièce s’ouvre. Regarder, Prendre, Parler, Utiliser. Clic droit : la besace.',
   'end.title': 'À suivre…', 'end.sub': 'Chapitre 2 : le chemin du moulin, un cheval et une falaise à 90 degrés.', 'end.love': '15 ans de Skyrim · 11/11/2011 – 11/11/2026. Merci d’avoir joué.', 'end.again': 'Rejouer',
   /* noms */
   'n.hero': 'moi', 'n.merchant': 'marchand', 'n.honey': 'rouleau au miel', 'n.stall': 'étal', 'n.cart': 'charrette', 'n.door': 'porte', 'n.sign': 'enseigne', 'n.inn': 'auberge',
