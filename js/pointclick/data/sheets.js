@@ -58,3 +58,8 @@ export const HERO = {
   portrait: { neutral: 'hero.pNeutral', talk: 'hero.pTalk', blink: 'hero.pBlink', sleepy: 'hero.pSleepy' }
 };
 export const ITEMS = { bucket: { spr: 'bucket' }, honey: { spr: 'honey' }, carrot: { spr: 'carrot' }, cheese: { spr: 'cheese' }, cabbage: { spr: 'cabbage' }, arrow: { spr: 'arrow' }, pumpkin: { spr: 'pumpkin' }, anvil: { spr: 'anvil' } };
+/* intro « Quinze ans plus tard » (engine/intro.js, arrivée dans scenes/rue.js) : cheval et charrette en cycle de pas, passagers vus de profil */
+export const INTRO_CART_N = 12;
+for (let i = 0; i < INTRO_CART_N; i++) SPR['intro.cart.' + i] = '../intro/cart/' + String(i).padStart(2, '0');
+Object.assign(SPR, { 'intro.cart': '../intro/cart/00', 'intro.comp_s': '../intro/comp_s', 'intro.thief_s': '../intro/thief_s' });
+ANIM['intro.cart'] = { idle: ['intro.cart.0'], walk: Array.from({ length: INTRO_CART_N }, (_, i) => 'intro.cart.' + i), fps: { idle: 1, walk: 12 } };

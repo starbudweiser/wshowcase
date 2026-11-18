@@ -242,5 +242,17 @@ export default {
   'ui.chapters': 'Pick a scene',
   'ch.rue': '1. Riverwood main street',
   'ch.mill': '2. The mill road',
-  'ch.meadow': '3. The giants’ meadow'
+  'ch.meadow': '3. The giants’ meadow',
+  /* "Fifteen years later" intro (engine/intro.js, scenes/rue.js) and title screen */
+  'intro.skip': 'Click or Esc: skip the intro',
+  'intro.card': 'Skyrim. Fifteen years later.',
+  'intro.comp1': 'Oi, you. Yes, you, with the horns. Awake at last?',
+  'intro.comp2': 'Fifteen years you’ve been snoring. Meanwhile, they re-released the whole world four times.',
+  'intro.thief1': 'All I did was steal ONE bucket! And now everybody’s wearing one on their head!',
+  'intro.hero1': 'Fifteen years? What did I miss?',
+  'intro.comp3': 'Nothing. Same dragons. Same arrows in the same knees.',
+  'intro.comp4': 'Oh, wait: word is there’s one honey roll left on a stall in Riverwood.',
+  'intro.hero2': 'Honey? Driver! To Riverwood!',
+  'intro.driver1': 'Here we are, pal. Last stop!',
+  'ui.tagline': '1,000 quests. 0 inventory space.', 'ui.options': 'Options', 'ui.back': 'Back', 'ui.credits': 'Fan tribute, not affiliated with Bethesda'
 };

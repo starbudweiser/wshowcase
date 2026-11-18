@@ -25,6 +25,10 @@ V = {  # personnage : (voix prête, consigne de jeu)
   'wk_ho': ('aiden', 'deep slow comedic horse voice, proud'),
  'sleepy': ('aiden', 'groggy half-asleep confused man, yawning, mumbling'),
  'hen': ('vivian', 'comedic clucking chicken-like voice'),
+ # intro « Quinze ans plus tard »
+ 'comp': ('ryan', 'warm booming Nordic warrior in his forties, amused know-it-all, hearty and teasing'),
+ 'thief': ('ryan', 'scrawny nervous thief, high-pitched whining voice, panicked'),
+ 'driver': ('aiden', 'gruff old coachman, deadpan and unimpressed'),
 }
 V['pmerchant'] = V['merchant']; V['gguard'] = V['pguard'] = V['guard']; V['pgiant'] = V['giant']; V['phorseman'] = V['horseman']
 BD = {'rue': 'aiden', 'mill': 'ryan', 'meadow': 'aiden', 'market': 'serena', 'gate': 'ryan', 'house': 'aiden', 'ford': 'ryan', 'wood': 'aiden', 'hall': 'vivian', 'party': 'ryan'}

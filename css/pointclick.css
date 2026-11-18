@@ -58,3 +58,23 @@
 .pc-fs{right:calc(var(--u)*43px);width:calc(var(--u)*11px)}
 .pc:fullscreen{width:100vw;height:100vh}.pc::backdrop{background:#000}
 .pc-amb{right:calc(var(--u)*56px);width:calc(var(--u)*11px)}.pc-amb.off{opacity:.5;text-decoration:line-through}
+
+/* intro « Quinze ans plus tard » : carton gravé et rappel « passer » */
+.pc-cap{position:absolute;left:0;right:0;top:42%;transform:translateY(-50%);text-align:center;color:#f4ead6;font-size:calc(var(--u)*19px);line-height:1.05;letter-spacing:.04em;opacity:0;transition:opacity .7s;
+  text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000,0 calc(var(--u)*1.5px) 0 #000,calc(var(--u)*1.5px) 0 0 #000,calc(var(--u)*-1.5px) 0 0 #000,0 calc(var(--u)*-1.5px) 0 #000}
+.pc-cap.on{opacity:1}
+.pc-skip{position:absolute;right:calc(var(--u)*6px);bottom:calc(var(--u)*4px);color:#cdbfa8;font-size:calc(var(--u)*8px);opacity:.75;transition:opacity .7s;text-shadow:1px 1px 0 #000}
+.pc-skip.out{opacity:0}
+
+/* écran titre : menu en lettres dorées cernées de noir, en bas au centre du tableau animé (engine/title.js) */
+.pc-title.pc-tmenu{background:none;align-items:flex-end;justify-content:center;font-family:'PCPixel',ui-monospace,Menlo,monospace;pointer-events:none}
+.pc-tm{display:flex;flex-direction:column;align-items:center;gap:calc(var(--u)*0.5px);margin-bottom:calc(var(--u)*24px);padding:calc(var(--u)*3px) calc(var(--u)*14px);border-radius:calc(var(--u)*4px);
+  background:radial-gradient(ellipse at center,rgba(8,10,20,.62),rgba(8,10,20,.0) 72%);pointer-events:auto}
+.pc-ti{font:inherit;font-size:calc(var(--u)*12px);line-height:1;border:0;background:none;cursor:pointer;color:#e9c46a;padding:calc(var(--u)*1px) calc(var(--u)*10px);position:relative;white-space:nowrap;
+  text-shadow:-1px -1px 0 #2a1408,1px -1px 0 #2a1408,-1px 1px 0 #2a1408,1px 1px 0 #2a1408,0 calc(var(--u)*1px) 0 #000,calc(var(--u)*1px) 0 0 #000,calc(var(--u)*-1px) 0 0 #000}
+.pc-ti.on{color:#fff6cf}
+.pc-ti.on::before,.pc-ti.on::after{content:'◆';position:absolute;top:50%;transform:translateY(-50%);font-size:calc(var(--u)*6px);color:#ffcf5a}
+.pc-ti.on::before{left:0}.pc-ti.on::after{right:0}
+.pc-ti.back{color:#b9a98a;margin-top:calc(var(--u)*2px)}
+.pc-tfoot{position:absolute;left:0;right:0;bottom:calc(var(--u)*2px);display:flex;justify-content:space-between;padding:0 calc(var(--u)*5px);font-size:calc(var(--u)*7px);color:#b8c2d6;opacity:.8;text-shadow:1px 1px 0 #000;pointer-events:none}
+.pc-tach.done{color:#e8b84a}

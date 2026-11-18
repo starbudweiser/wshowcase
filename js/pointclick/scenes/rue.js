@@ -47,9 +47,35 @@ export default {
     const m = g.ent('merchant'); if (m && g.flag('blind')) m.bob = Math.abs(Math.sin(g.now * 1.3)) * 1.2;
   },
 
-  async intro(g) {
-    const hero = g.hero; await g.walkTo(196, 252); hero.front = true;
+  async intro(g, how) {
+    const hero = g.hero; if (how && how.intro === 'cart') await this.cartArrival(g);
+    await g.walkTo(196, 252); hero.front = true;
     await g.say('hero', 's.intro1'); await g.say('hero', 's.intro2'); await g.say('hero', 's.intro3'); await g.say('hero', 's.intro4'); hero.front = false;
+  },
+
+  /* fin de l'intro (intro.js) : la charrette des prisonniers entre de derrière l'étal, pile, éjecte le héros et repart par le pont */
+  async cartArrival(g) {
+    const hero = g.hero, Y = 257, K = 1, LAND = [166, 262];
+    const cart = { id: 'driver', spr: 'intro.cart', x: -80, y: Y, scale: K, visible: true, noHot: true, solid: false };
+    const riders = [['icomp', 'intro.comp_s', -80, 22, K, 1.3], ['ithief', 'intro.thief_s', -52, 22, K, 0.4], ['ihero', 'hero.pNeutral', -108, 58, K * 0.17, 2.1]]
+      .map(([id, spr, dx, dy, scale, ph]) => ({ id, spr, dx, dy, ph, x: cart.x + dx * K, y: Y - dy * K, scale, visible: true, noHot: true, solid: false }));
+    const puffs = [], gone = new Set();
+    const follow = () => { for (const r of riders) { r.x = cart.x + r.dx * K; r.y = cart.y - r.dy * K; r.bob = cart.goal ? Math.abs(Math.sin(g.now * 6.2 + r.ph)) * 1.2 : 0; } return false; };
+    const clean = () => { g.ents = g.ents.filter(e => e !== cart && !riders.includes(e) && !puffs.includes(e)); hero.visible = true; hero.pose = null; hero.x = LAND[0]; hero.y = LAND[1]; hero.front = true; };
+    g.cineEnd = clean; hero.visible = false; g.ents.push(...riders, cart);
+    try {
+      g.sfx('creak'); cart.goal = [262, Y, 62]; await g.until(() => { follow(); return !cart.goal; }); g.chk();
+      g.sfx('screech'); g.shake(260, 1.5);
+      await g.say('driver', 'intro.driver1');
+      const hr = riders[2]; g.ents = g.ents.filter(e => e !== hr); riders.pop();
+      g.sfx('whoosh'); await g.fly('hero.fSurprise', [cart.x - 108 * K, Y - 70 * K], LAND, 760, 58, -6.28, 0.95);
+      g.sfx('splat'); g.shake(320, 2.5);
+      for (let i = 0; i < 14; i++) { const a = (i / 14) * Math.PI * 2; puffs.push({ id: 'puff' + i, spr: 'puff', x: LAND[0] + Math.cos(a) * 12, y: LAND[1] + 3 + Math.sin(a) * 3, vx: Math.cos(a) * (30 + (i % 4) * 7), k0: 0.6 + (i % 3) * 0.2, scale: 0.6, alpha: 0.75, visible: true, noHot: true, solid: false, z: 2 }); }
+      g.ents.push(...puffs); hero.visible = true; hero.x = LAND[0]; hero.y = LAND[1]; hero.front = true; hero.pose = 'hero.fShrug';
+      (async () => { for (const p of [[330, 238], [392, 208], [530, 196]]) { cart.goal = [p[0], p[1], 58]; await g.until(() => { follow(); return !cart.goal || !g.ents.includes(cart); }); } g.ents = g.ents.filter(e => e !== cart && !riders.includes(e)); })();
+      const t0 = g.now; await g.until(() => { const t = g.now - t0; for (const p of puffs) { p.x += p.vx * 0.016 * (1 - Math.min(1, t)); p.scale = p.k0 + t * 1.2; p.alpha = Math.max(0, 0.75 - t * 0.6); } return t > 1.25; });
+      g.ents = g.ents.filter(e => !puffs.includes(e)); await g.wait(500); hero.pose = null;
+    } finally { if (g.cineEnd === clean) g.cineEnd = null; }
   },
 
   async on(g, verb, id, item) {

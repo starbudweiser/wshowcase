@@ -258,5 +258,17 @@ export default {
   'ui.chapters': 'Choisir une scène',
   'ch.rue': '1. La rue de Rivebois',
   'ch.mill': '2. Le chemin du moulin',
-  'ch.meadow': '3. La prairie des géants'
+  'ch.meadow': '3. La prairie des géants',
+  /* intro « Quinze ans plus tard » (engine/intro.js, scenes/rue.js) et écran titre */
+  'intro.skip': 'Clic ou Échap : passer l’intro',
+  'intro.card': 'Bordeciel. Quinze ans plus tard.',
+  'intro.comp1': 'Eh, toi. Oui, toi, avec les cornes. Enfin réveillé ?',
+  'intro.comp2': 'Quinze ans que tu ronfles. Pendant ce temps, ils ont réédité le monde quatre fois.',
+  'intro.thief1': 'Moi, j’ai juste volé UN seau ! Et maintenant tout le monde en porte un sur la tête !',
+  'intro.hero1': 'Quinze ans ? J’ai raté quoi ?',
+  'intro.comp3': 'Rien. Les mêmes dragons, les mêmes flèches dans les genoux.',
+  'intro.comp4': 'Ah si : il paraît qu’il reste un rouleau au miel sur l’étal de Rivebois.',
+  'intro.hero2': 'Du miel ? Cocher ! Direction Rivebois !',
+  'intro.driver1': 'On y est, l’ami. Terminus !',
+  'ui.tagline': '1 000 quêtes. 0 place dans l’inventaire.', 'ui.options': 'Options', 'ui.back': 'Retour', 'ui.credits': 'Hommage de fan, sans lien avec Bethesda'
 };

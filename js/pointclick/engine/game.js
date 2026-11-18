@@ -13,6 +13,8 @@ import { CHAPTERS } from '../scenes/index.js';
 import { loadLang, makeT } from './lang.js';
 import { hasSave, loadSave, writeSave, clearSave } from './save.js';
 import { makeAmbient } from './ambient.js';
+import { playIntro, preloadIntro } from './intro.js';
+import { TitleArt, buildMenu } from './title.js';
 import * as SH from '../data/sheets.js';
 const { SPR, ITEMS } = SH, ANIM = SH.ANIM || {}, HERO = SH.HERO || null;
 
@@ -46,7 +48,8 @@ export class Game {
   destroy() { document.removeEventListener('pointermove', this._mv); document.removeEventListener('pointerdown', this._pd); document.removeEventListener('keydown', this._pd); this.alive = false; cancelAnimationFrame(this.raf); this.ro && this.ro.disconnect(); snd.stop(); }
   async setLang(l, first) {
     this.dict = await loadLang(l); this.T = makeT(this.dict); this.lang = l;
-    if (!first) { this.renderPanel(); this.renderLine(); if (this.titleEl) this.showTitle(); }
+    if (this.titleArt) this.titleArt.setLang(l);
+    if (!first) { this.renderPanel(); this.renderLine(); if (this.titleEl) { const ig = this.titleIn; this.showTitle(ig, 'opt'); } }
   }
   img(src) { return this.imgs[src] || (this.imgs[src] = new Promise(res => { const i = new Image(); i.onload = () => { this.imgs[src] = i; res(i); }; i.onerror = () => res(null); i.src = src; }).then(i => (this.imgs[src] = i))); }
   /* image d'animation d'un personnage selon son état : repos, parole, déplacement */
@@ -134,22 +137,24 @@ export class Game {
   setHover(t) { const k = t ? t.id : null; if ((this.hover && this.hover.id) === k) return; this.hover = t; this.cv.classList.toggle('hot', !!t); this.renderLine(); }
 
   /* ───────── écran-titre et menu (composants Socle) ───────── */
-  showTitle(inGame) {
-    this.hideTitle(); const T = this.T, d = el('div', 'pc-title socle'), c = el('div', 'pc-card');
-    c.append(el('h1', '', T('ui.title')), el('p', '', T('ui.sub')));
-    const row = el('div', 'pc-btns'), btn = (t, fn, cls) => { const b = el('button', 'sbtn' + (cls ? ' ' + cls : ''), t); b.onclick = () => { snd.unlock(); fn(); }; row.append(b); return b; };
-    if (inGame) btn(T('ui.resume'), () => this.hideTitle(), 'acc');
-    btn(T('ui.fullscreen'), () => { this.hideTitle(); this.toggleFullscreen(); });
-    if (this.scaler) { const fb = btn(T('ui.filter') + ' : ' + T('ui.filter.' + this.filter), () => {}); fb.onclick = () => { snd.unlock(); const L = ['sharp', 'nearest', 'smooth', 'scale2x', 'scale4x']; this.setFilter(L[(L.indexOf(this.filter) + 1) % L.length], true); fb.textContent = this.T('ui.filter') + ' : ' + this.T('ui.filter.' + this.filter); }; }
-    if (!inGame && hasSave()) btn(T('ui.continue'), () => this.continueGame(), 'acc');
-    btn(T('ui.new'), () => this.newGame(), !inGame && !hasSave() ? 'acc' : '');
-    const opts = el('div', 'pc-opts');
-    const sb = el('button', 'sbtn', T(snd.musicOn === false ? 'ui.musicOff' : 'ui.musicOn')); sb.onclick = () => { this.setMusic(snd.musicOn === false); sb.textContent = T(snd.musicOn ? 'ui.musicOn' : 'ui.musicOff'); }; opts.append(sb);
-    const lb = el('button', 'sbtn', this.lang === 'fr' ? 'English' : 'Français'); lb.onclick = () => this.setLang(this.lang === 'fr' ? 'en' : 'fr'); opts.append(lb);
-    let chapEls = []; const rs = reached(), chs = CHAPTERS.filter(x => rs.includes(x.id));
-    if (chs.length > 1) { const cr = el('div', 'pc-chap'); chs.forEach(x => { const b = el('button', 'sbtn', T('ch.' + x.id)); b.onclick = () => { snd.unlock(); this.startAt(x); }; cr.append(b); }); chapEls = [el('p', 'pc-ach', T('ui.chapters')), cr]; }
-    const ac = getAch(), n = ac.lit.filter(x => BLINDS.includes(x)).length;
-    c.append(row, opts, ...chapEls, el('p', 'pc-ach' + (ac.done.includes('fiatlux') ? ' done' : ''), T('ach.menu', { n, t: BLINDS.length })), el('p', 'pc-fine', T('ui.fine'))); d.append(c); this.stage.append(d); this.titleEl = d;
+  showTitle(inGame, page) {
+    this.hideTitle(); const T = this.T;
+    if (!this.titleArt) { this.titleArt = new TitleArt(this); this.titleArt.load(this.lang); } else if (!inGame) this.titleArt.replayLogo();
+    this.titleOn = true; this.titleIn = !!inGame;
+    if (!inGame) { snd.music(snd.musicOn !== false, 'title'); if (!this.introPre) this.introPre = preloadIntro(this); }
+    const rs = reached(), ac = getAch(), n = ac.lit.filter(x => BLINDS.includes(x)).length, L = ['sharp', 'nearest', 'smooth', 'scale2x', 'scale4x'];
+    const d = buildMenu(this, {
+      inGame: !!inGame, hasSave: hasSave(), page,
+      resume: () => this.hideTitle(), cont: () => this.continueGame(), newGame: () => this.newGame(),
+      chapters: CHAPTERS.filter(x => rs.includes(x.id)).map(x => ({ id: x.id, label: T('ch.' + x.id), go: () => this.startAt(x) })),
+      fullscreen: () => this.toggleFullscreen(),
+      filter: this.scaler ? () => this.filter : null, nextFilter: () => this.setFilter(L[(L.indexOf(this.filter) + 1) % L.length], true),
+      music: () => snd.musicOn !== false, setMusic: v => { this.setMusic(v); if (v && !inGame) snd.music(true, 'title'); },
+      voice: () => this.voiceOn, setVoice: v => this.setVoice(v), amb: () => this.ambOn, setAmb: v => this.setAmbience(v),
+      toggleLang: () => this.setLang(this.lang === 'fr' ? 'en' : 'fr'),
+      ach: T('ach.menu', { n, t: BLINDS.length }), achDone: ac.done.includes('fiatlux')
+    });
+    this.stage.append(d); this.titleEl = d;
   }
   /* commutateur de musique (bouton ♪ du panneau et bouton du menu), préférence mémorisée */
   setMusic(on, quiet) {
@@ -176,7 +181,7 @@ export class Game {
     this.nq.push({ key, force: !!o.force, t: this.now + (o.delay || 0) });
   }
   pumpNarr() {
-    if (this.night || (this.gl && this.gl.run)) return;
+    if (this.night || (this.gl && this.gl.run) || this.cine) return;
     const n = this.narr;
     if (n && (this.bubbles.length || this.locked || this.hiBusy())) { this.hushNarr(); return; }
     if (n) { const playing = n.au && !n.au.ended && !n.au.error && !n.au.paused; if (this.now > n.end && !playing) { n.b.remove(); this.narr = null; this.lastNarr = this.now; } return; }
@@ -187,13 +192,22 @@ export class Game {
     this.narr = { b, au: this.voicePlay(q.key, idx), end: this.now + Math.max(3, text.length * 0.065) };
     if (this.narr.au) this.narr.au.addEventListener('loadedmetadata', () => { if (this.narr) this.narr.end = Math.max(this.narr.end, this.now + this.narr.au.duration + 0.3); });
   }
-  hideTitle() { if (this.titleEl) { this.titleEl.remove(); this.titleEl = null; } }
+  hideTitle() { if (this.titleEl) { this.titleEl.remove(); this.titleEl = null; } if (this.titleOn) { this.titleOn = false; if (this.titleIn && this.started && this.scene) snd.music(snd.musicOn !== false, this.scene.music || this.scene.id); } }
 
   /* ───────── parties ───────── */
   async newGame() {
     this.hideTitle(); clearSave(); this.cancelAll(); this.locked = false; this.sel = null; this.fx = {};
-    this.st = { scene: 'rue', flags: {}, inv: [], hero: null }; snd.music(snd.musicOn !== false); this.started = true;
-    await this.goScene('rue', { intro: true });
+    this.st = { scene: 'rue', flags: {}, inv: [], hero: null }; this.started = true;
+    /* intro « Quinze ans plus tard » (intro.js) : aucune scène chargée pendant qu'elle se joue */
+    this.scene = null; this.bg = null; this.ents = []; this.hero = null; this.hot = []; this.amb = null; this.night = null; this.ambId = null; snd.ambStop(); this.clearBarks(); this.hushNarr(); this.renderPanel(); this.renderLine();
+    const done = await playIntro(this);
+    if (!this.alive) return;
+    const go = this.goScene('rue', { intro: done ? 'cart' : true }); this.fade(0, 900); await go;
+  }
+  /* passe l'intro : plans dessinés (intro.js) ou arrivée de la charrette dans la rue (rue.js) */
+  cineSkip() {
+    if (this.cine) { this.cine.skipped = true; this.cancelAll(); return; }
+    if (this.cineEnd) { const f = this.cineEnd; this.cineEnd = null; this.cancelAll(); f(); }
   }
   /* sélecteur de scène : repart au début d'un chapitre déjà atteint, avec l'état attendu à son entrée */
   async startAt(ch) {
@@ -223,7 +237,7 @@ export class Game {
     if (sc.enter) await sc.enter(this, how);
     this.save();
     this.lastAct = this.now; if (how.restored) this.narrate('nar.back', { delay: 1.5, force: true });
-    if (how.intro && sc.intro) this.run(async () => { await this.cut(() => sc.intro(this)); this.narrate('nar.' + id + '.enter', { force: true, delay: 1.2 }); });
+    if (how.intro && sc.intro) this.run(async () => { await this.cut(() => sc.intro(this, how)); this.narrate('nar.' + id + '.enter', { force: true, delay: 1.2 }); });
   }
 
   /* ───────── API pour les scènes ───────── */
@@ -260,7 +274,7 @@ export class Game {
     if (this.voiceOn && this.hiBusy()) { const w0 = this.now; await this.until(() => !this.hiBusy() || this.now - w0 > 9); this.chk(); }
     const text = key.startsWith('=') ? key.slice(1) : this.T(key, vars), e = who === 'narr' ? null : this.ent(who);
     const b = el('div', 'pc-b', text); b.style.color = COLORS[who] || '#fff'; this.ov.append(b); this.bubbles.push(b);
-    const [ax, ay] = e ? this.headPos(e) : [W / 2, 40]; this.placeBubble(b, ax, ay);
+    const [ax, ay] = (this.cinePos && this.cinePos[who]) || (e ? this.headPos(e) : [W / 2, 40]); this.placeBubble(b, ax, ay);
     if (e) e.talk = who;
     const au = this.voicePlay(key, key[0] === '=' ? -1 : this.T.idx); this.sayAu = au;
     this.skip = false; const t0 = this.now, end = t0 + Math.max(1.7, text.length * 0.06); this.sayT0 = t0;
@@ -346,6 +360,7 @@ export class Game {
   }
   entRect(e) { const im = this.spr(e.spr); if (!im) return null; const s = e.scale ?? this.persp(e.y), w = im.width * s, h = im.height * s; return [e.x - w / 2, e.y - h, e.x + w / 2, e.y]; }
   onDown(e) {
+    if (this.cine || this.cineEnd) { if (e.button !== 2) this.cineSkip(); return; }
     /* pendant une réplique, un clic ne fait que la passer (et seulement après un court délai de lecture) : il ne lance pas une autre action */
     if (this.bubbles.length && !this.titleEl && e.button !== 2) { if (this.now - (this.sayT0 || 0) > 0.6) this.skip = true; return; }
     if (e.button === 2 || this.locked || this.titleEl) { if (this.locked) this.skip = true; return; }
@@ -389,7 +404,8 @@ export class Game {
     const key = k.find(x => T.has(x)); await this.say('hero', key); if (key.startsWith('def.') && Math.random() < 0.4 && this.now - this.lastNarr > 20) this.narrate('nar.fail');
   }
   key(e) {
-    if (this.titleEl) return;
+    if (this.titleEl) { if (this.titleEl.key) this.titleEl.key(e); return; }
+    if (this.cine || this.cineEnd) { if (e.key === 'Escape') this.cineSkip(); else if (e.key === ' ' || e.key === 'Enter') { this.skip = true; e.preventDefault(); } return; }
     if (e.key >= '1' && e.key <= '5') this.setVerb(VERBS[+e.key - 1]);
     else if (e.key === ' ' || e.key === 'Enter') { this.skip = true; e.preventDefault(); }
     else if (e.key === 'f' || e.key === 'F') this.toggleFullscreen();
@@ -418,15 +434,20 @@ export class Game {
       if (e.goal) { const [gx, gy, sp] = e.goal, dx = gx - e.x, dy = gy - e.y, d = Math.hypot(dx, dy), st = sp * dt; if (d <= st) { e.x = gx; e.y = gy; e.goal = null; } else { e.x += dx / d * st; e.y += dy / d * st; if (ANIM[e.spr] && ANIM[e.spr].walk && Math.abs(dx) > 0.3) e.flip = dx < 0; } }
     });
     for (let i = this.barks.length - 1; i >= 0; i--) { const k = this.barks[i], e = this.ent(k.who); if (!e || this.now > k.end) { k.b.remove(); this.barks.splice(i, 1); } else { const [ax, ay] = this.headPos(e); this.placeBubble(k.b, ax, ay); } }
+    if (this.cine) this.cine.update(dt);
+    if (this.titleOn && this.titleArt) this.titleArt.update(dt);
     if (this.scene && this.scene.tick) this.scene.tick(this, dt);
-    updateWinks(this, dt); updateGlass(this, dt); this.updateAmbience();
-    if (this.night) updateNight(this, dt); else if (this.started && !this.titleEl && this.alive) { if (this.locked || this.bubbles.length || this.barks.length || this.narr) this.lastMove = Math.max(this.lastMove, this.now - IDLE_NIGHT + 25); else if (this.now - this.lastMove > IDLE_NIGHT && !(this.gl && this.gl.run) && document.visibilityState === 'visible' && this.hero) startNight(this); }
+    if (!this.cine) { updateWinks(this, dt); updateGlass(this, dt); } this.updateAmbience();
+    if (this.night) updateNight(this, dt); else if (this.started && !this.titleEl && this.alive && !this.cine && !this.cineEnd) { if (this.locked || this.bubbles.length || this.barks.length || this.narr) this.lastMove = Math.max(this.lastMove, this.now - IDLE_NIGHT + 25); else if (this.now - this.lastMove > IDLE_NIGHT && !(this.gl && this.gl.run) && document.visibilityState === 'visible' && this.hero) startNight(this); }
     this.pumpNarr();
     for (let i = this.waiters.length - 1; i >= 0; i--) { const w = this.waiters[i]; if (w.cond()) { this.waiters.splice(i, 1); w.res(); } }
     const f = this.fx.fade; if (f) { const t = clamp((this.now - f.t0) / f.ms, 0, 1); f.a = f.from + (f.to - f.from) * t; if (t >= 1) { f.a = f.to; if (f.to === 0) delete this.fx.fade; } }
   }
   draw() {
-    const c = this.ctx; if (!c || !this.scene || !this.bg || !this.bg.width) { if (c) { c.fillStyle = '#000'; c.fillRect(0, 0, W, H); if (this.scaler) this.scaler.render(); } return; }
+    const c = this.ctx;
+    if (c && this.titleOn && this.titleArt && !this.cine) { this.titleArt.draw(c); if (this.actx && this.now - this.ambT > 0.12) { this.ambT = this.now; this.actx.drawImage(this.cv, 0, 0, 48, 27); } if (this.scaler) this.scaler.render(); return; }
+    if (c && this.cine) { this.cine.draw(c); if (this.fx.fade) { c.fillStyle = `rgba(0,0,0,${this.fx.fade.a})`; c.fillRect(0, 0, W, H); } if (this.actx && this.now - this.ambT > 0.12) { this.ambT = this.now; this.actx.drawImage(this.cv, 0, 0, 48, 27); } if (this.scaler) this.scaler.render(); return; }
+    if (!c || !this.scene || !this.bg || !this.bg.width) { if (c) { c.fillStyle = '#000'; c.fillRect(0, 0, W, H); if (this.scaler) this.scaler.render(); } return; }
     c.save(); const sh = this.fx.shake; if (sh && this.now < sh.end) c.translate(Math.round((Math.random() - .5) * sh.amp * 2), Math.round((Math.random() - .5) * sh.amp * 2));
     if (this.bg) c.drawImage(this.bg, 0, 0, W, H);
     if (this.sky) drawSky(c, this.sky, this.now);
