@@ -5,12 +5,12 @@ const PERCH = [160, 114];   /* chapeau du petit champignon où le papillon dort 
 
 export default {
   id: 'wood', bg: 'wood.png', persp: [200, 0.64, 268, 1.0],
-  walk: [[[130, 268], [150, 240], [230, 218], [300, 204], [360, 198], [440, 226], [470, 268]]],
+  walk: [[[192, 268], [186, 236], [214, 214], [300, 204], [360, 198], [440, 210], [458, 226], [458, 233], [372, 233], [334, 238], [326, 268]]],   /* décor refait le 19/11 : sol de feuilles entre les champignons et la mare (on ne traverse plus ni l'un ni l'autre) */
   fg: [],
-  start: { x: 190, y: 258, dir: 'r' },
+  start: { x: 206, y: 258, dir: 'r' },
   hot: [
     { id: 'wwall', rect: [268, 62, 446, 194], at: [318, 206] }, { id: 'wmush', rect: [0, 30, 190, 262], at: [196, 244], dir: 'l' },
-    { id: 'wpond', rect: [380, 206, 480, 262], at: [404, 240] }, { id: 'wlight', rect: [150, 0, 290, 112] }
+    { id: 'wpond', rect: [330, 234, 480, 268], at: [322, 236], dir: 'r' }, { id: 'wlight', rect: [150, 0, 290, 112] }
   ],
   ambient: [
     { type: 'flock', n: 3, y0: 10, y1: 50, speed: 7, seed: 41 },

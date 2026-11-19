@@ -64,7 +64,7 @@ export default {
       case 'horse':
         if (verb === 'use' && !item) {
           if (!F('friend')) { await g.say('hero', 'use.horse.nocarrot'); return true; }
-          if (F('cheese')) { await g.say('hero', 'talk.horse'); return true; }   /* le fromage est pris : plus de raison de remonter (sinon il restait coincé là-haut) */
+          if (F('cheese')) { await g.say('hero', 's2.horse.cheese'); return true; }   /* le fromage est pris : plus de raison de remonter (sinon il restait coincé là-haut) */
           await g.cut(() => this.rideUp(g)); return true;
         }
         if (verb === 'use' && item === 'carrot') { if (F('friend')) { await g.say('hero', 'use.horse.friend2'); return true; } await g.cut(() => this.feedHorse(g)); return true; }

@@ -16,7 +16,7 @@ export default {
     { id: 'cart', rect: [128, 182, 160, 228], at: [170, 228], dir: 'l' },
     { id: 'flowers', rect: [372, 222, 480, 268], at: [362, 244] },
     { id: 'bridge', rect: [352, 172, 480, 214], at: [332, 206] },
-    { id: 'honey', rect: [88, 190, 124, 208], at: [134, 236], dir: 'l' }
+    { id: 'honey', rect: [88, 190, 124, 208], at: [136, 238], dir: 'l' }
   ],
   /* décor vivant : dragon qui vole, oiseaux, rivière, roue du moulin, mammouth qui respire, fleurs et herbes dans le vent */
   ambient: [

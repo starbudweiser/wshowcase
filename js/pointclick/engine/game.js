@@ -11,7 +11,7 @@ import { lang } from '../../i18n.js';
 import { Walk, hitPoly } from './walk.js';
 import { snd } from './sound.js';
 import { store } from '../../util.js';
-import { light, getAch, BLINDS, reach, reached } from './ach.js';
+import { light, getAch, BLINDS, reach, reached, award } from './ach.js';
 import { CHAPTERS } from '../scenes/index.js';
 import { loadLang, makeT } from './lang.js';
 import { hasSave, loadSave, writeSave, clearSave } from './save.js';
@@ -351,6 +351,7 @@ export class Game {
     setTimeout(() => t.classList.add('out'), ms); setTimeout(() => t.remove(), ms + 600);
   }
   /* un aveugle a retrouvé la lumière : compte, toast, succès */
+  award(id) { if (award(id)) this.toast(this.T('ach.' + id + '.title'), this.T('ach.' + id + '.text')); }
   lightUp(sceneId) {
     const r = light(sceneId), T = this.T; this.narrate('nar.lit');
     this.toast(T('ach.lit.title'), T('ach.lit', { n: r.count, t: r.total }));

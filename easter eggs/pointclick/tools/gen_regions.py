@@ -54,7 +54,7 @@ CFG2 = {
     {'id': 'ford_water', 'poly': rect(172, 112, 292, 180), 'desc': WATER},
     {'id': 'ford_mist', 'poly': rect(60, 62, 200, 118), 'desc': MIST}]},
   'wood': {'src': 'wood.png', 'items': [
-    {'id': 'wood_pond', 'poly': rect(382, 208, 480, 264), 'desc': WATER},
+    {'id': 'wood_pond', 'poly': [[334, 240], [372, 234], [430, 234], [478, 238], [478, 268], [330, 268]], 'desc': WATER},   # décor refait le 19/11 : mare réduite au coin inférieur droit
     {'id': 'wood_rays', 'poly': rect(150, 0, 290, 112), 'desc': GLINT},
     {'id': 'wood_spark', 'poly': rect(300, 10, 440, 70), 'desc': GLINT}]},
   'hall': {'src': 'hall.png', 'items': [

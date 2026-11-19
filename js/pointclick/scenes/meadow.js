@@ -7,7 +7,7 @@ const ORBIT = { type: 'orbit', spr: 'nazim', id: 'nazim_orbit', scale: 0.2, y: 4
 
 export default {
   id: 'meadow', bg: 'meadow.png', persp: [185, 0.6, 268, 1.0],
-  walk: [[[66, 268], [70, 242], [130, 238], [222, 238], [300, 234], [372, 206], [392, 190], [404, 190], [470, 214], [470, 268]]],
+  walk: [[[66, 268], [70, 242], [130, 238], [222, 238], [300, 234], [372, 206], [392, 190], [404, 190], [458, 214], [458, 268]]],
   fg: [],
   start: { x: 80, y: 256, dir: 'r' },   /* à droite du tas d'os : on ne marche plus dessus */
   hot: [

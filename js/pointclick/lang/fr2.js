@@ -4,6 +4,10 @@ export default {
   'ui.fullscreen': 'Plein écran', 'ui.filter': 'Agrandissement', 'ui.filter.sharp': 'Pixels nets', 'ui.filter.nearest': 'Pixels bruts', 'ui.filter.smooth': 'Lissé', 'ui.filter.scale2x': 'Scale2x', 'ui.filter.scale4x': 'Scale4x',
   /* ───── noms et regards communs ───── */
   'n.cabbage': 'chou', 'n.arrow': 'flèche', 'n.pumpkin': 'citrouille', 'n.anvil': 'enclume',
+  'look.cabbage': 'Dix choux. Froids, durs, et ils me regardent. On a convenu de ne pas en parler.',
+  'look.arrow': 'La flèche du genou du garde. Encore tiède. Je préfère ne pas savoir pourquoi.',
+  'look.pumpkin': 'Une belle citrouille bien ronde. Deux trous, un sourire, et ça ferait une tête très présentable.',
+  'look.anvil': 'Une enclume. Elle tient dans ma besace. Il vaut mieux ne pas se demander comment.',
   'ch.market': '4. Le marché aux choux', 'ch.gate': '5. La porte de la ville', 'ch.house': '6. La maison de la veuve', 'ch.ford': '7. Le gué du cavalier',
   'ch.wood': '8. Le bois des papillons', 'ch.hall': '9. La longue salle', 'ch.party': '10. La fête des quinze ans',
   /* ───── aveugles : gestes et chansons ───── */
@@ -201,6 +205,9 @@ export default {
   's10.bday': 'Chantons tous ! Joyeux anniversaire…',
   's10.cake.nofire': 'Il manque de quoi allumer les bougies. Un briquet ? Un dragon, peut-être. Il en passe un de temps en temps.',
   's10.cake.arrow': 'J’essaie la flèche en guise de bougie. Elle ne s’allume pas. Les flèches, ça ne va que dans les genoux.',
+  's10.arrow.give': 'Tenez, je crois que c’est à vous. Enfin, à l’un de vous. Les gardes, vous vous ressemblez tous un peu.',
+  's10.arrow.g1': 'Une flèche ? Pour mon genou ? Oh, merci ! Sans elle, je n’avais plus rien à raconter.',
+  's10.arrow.g2': 'Autrefois, j’étais un aventurier comme vous. Puis j’ai pris une flèche dans le genou. Ah, ça fait du bien de pouvoir le redire !',
   's10.call1': 'Hé ! Le dragon ! Un petit souffle sur les bougies, s’il te plaît ?',
   's10.call2': 'C’est pour Skyrim. Quinze ans, ça se fête. Même chez les lézards volants.',
   's10.dragon.after': 'Il a fait son travail. Il a droit à une part de gâteau. Une petite. Il est très gourmand.',
@@ -263,6 +270,7 @@ export default {
   'nar.ford.horsemanHappy': 'Un homme à tête de citrouille galope vers l’horizon. Voilà ce que j’appelle une fin heureuse. Vous avez un talent étrange.',
   'nar.hall.followerGone': 'Elle est partie en craquant sous une enclume. Son dévouement est admirable. Votre méthode, moins.',
   'nar.party.lit': 'Quinze bougies. Un dragon. Un héros ému. Je n’ai jamais été aussi proche d’avoir une larme. Ne le répétez pas.',
+  'nar.party.arrowBack': 'Le héros vient de rendre une flèche à un garde. Quelque part, une vieille plaisanterie a retrouvé sa raison de vivre.',
 
   /* ───── la nuit tombe quand le joueur ne bouge plus ───── */
   'night.hero.knock': 'Toc, toc, toc ! Allô ? Y a quelqu’un derrière l’écran ?',

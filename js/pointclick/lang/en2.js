@@ -3,6 +3,10 @@ export default {
   'ui.ambOn': 'Ambience: on', 'ui.ambOff': 'Ambience: off',
   'ui.fullscreen': 'Full screen', 'ui.filter': 'Scaler', 'ui.filter.sharp': 'Sharp pixels', 'ui.filter.nearest': 'Raw pixels', 'ui.filter.smooth': 'Smooth', 'ui.filter.scale2x': 'Scale2x', 'ui.filter.scale4x': 'Scale4x',
   'n.cabbage': 'cabbage', 'n.arrow': 'arrow', 'n.pumpkin': 'pumpkin', 'n.anvil': 'anvil',
+  'look.cabbage': 'Ten cabbages. Cold, hard, and staring at me. We’ve agreed not to talk about it.',
+  'look.arrow': 'The arrow from the guard’s knee. Still warm. I’d rather not know why.',
+  'look.pumpkin': 'A fine round pumpkin. Two holes and a grin, and it’d make a very respectable head.',
+  'look.anvil': 'An anvil. It fits in my satchel. Best not to ask how.',
   'ch.market': '4. The cabbage market', 'ch.gate': '5. The city gate', 'ch.house': '6. The widow’s house', 'ch.ford': '7. The horseman’s ford',
   'ch.wood': '8. The butterfly wood', 'ch.hall': '9. The long hall', 'ch.party': '10. The fifteenth-birthday party',
   'blind.cabbage.1': 'I bite into the cabbage like a giant apple.',
@@ -199,6 +203,9 @@ export default {
   's10.bday': 'Everyone sing! Happy birthday…',
   's10.cake.nofire': 'I need something to light the candles. A lighter? A dragon, maybe. One passes by from time to time.',
   's10.cake.arrow': 'I try the arrow as a candle. It won’t light. Arrows only go in knees.',
+  's10.arrow.give': 'Here, I believe this is yours. Well, one of yours. You guards all look a bit alike.',
+  's10.arrow.g1': 'An arrow? For my knee? Oh, thank you! Without one, I had nothing left to talk about.',
+  's10.arrow.g2': 'I used to be an adventurer like you. Then I took an arrow in the knee. Ah, it feels good to say that again!',
   's10.call1': 'Hey! Dragon! A little breath on the candles, please?',
   's10.call2': 'It’s for Skyrim. Fifteen years deserve a party. Even for flying lizards.',
   's10.dragon.after': 'He did his job. He deserves a slice. A small one. He’s very greedy.',
@@ -261,6 +268,7 @@ export default {
   'nar.ford.horsemanHappy': 'A man with a pumpkin head gallops to the horizon. That’s what I call a happy ending. You have a strange talent.',
   'nar.hall.followerGone': 'She left creaking under an anvil. Her devotion is admirable. Your method, less so.',
   'nar.party.lit': 'Fifteen candles. A dragon. A moved hero. I have never been so close to shedding a tear. Don’t repeat that.',
+  'nar.party.arrowBack': 'Our hero has just returned an arrow to a guard. Somewhere, an old joke has found its reason to live again.',
 
   /* night falls when the player stops moving */
   'night.hero.knock': 'Knock, knock, knock! Hello? Anyone behind the screen?',
