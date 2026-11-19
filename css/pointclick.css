@@ -85,5 +85,9 @@
 .pc-ti.on::before,.pc-ti.on::after{content:'◆';position:absolute;top:50%;transform:translateY(-50%);font-size:calc(var(--u)*6px);color:#ffcf5a}
 .pc-ti.on::before{left:0}.pc-ti.on::after{right:0}
 .pc-ti.back{color:#b9a98a;margin-top:calc(var(--u)*2px)}
+/* choix de la scène : deux colonnes lues de haut en bas, « Retour » centré dessous */
+.pc-tm.grid{display:grid;grid-template-columns:auto auto;grid-template-rows:repeat(var(--rows),auto) auto;grid-auto-flow:column;column-gap:calc(var(--u)*4px);justify-items:start}
+.pc-tm.grid .pc-ti{font-size:calc(var(--u)*10px)}
+.pc-tm.grid .pc-ti.back{grid-column:1/-1;grid-row:-2/-1;justify-self:center}
 .pc-tfoot{position:absolute;left:0;right:0;bottom:calc(var(--u)*2px);display:flex;justify-content:space-between;padding:0 calc(var(--u)*5px);font-size:calc(var(--u)*7px);color:#b8c2d6;opacity:.8;text-shadow:1px 1px 0 #000;pointer-events:none}
 .pc-tach.done{color:#e8b84a}

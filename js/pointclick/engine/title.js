@@ -81,14 +81,14 @@ export class TitleArt {
   }
 }
 
-/* menu de l'écran titre : liste verticale ; o = { inGame, hasSave, chapters: [{id,label,go}], items callbacks } */
+/* menu de l'écran titre : liste verticale, scènes sur deux colonnes au-delà de 4 ; o = { inGame, hasSave, chapters: [{id,label,go}], items callbacks } */
 export function buildMenu(g, o) {
   const T = g.T, root = el('div', 'pc-title pc-tmenu');
   const box = el('div', 'pc-tm'), foot = el('div', 'pc-tfoot');
   root.append(box, foot);
-  let list = [], sel = 0, page = o.page || 'main';
+  let list = [], sel = 0, page = o.page || 'main', rows = 0;
   const render = () => {
-    box.innerHTML = ''; list = [];
+    box.innerHTML = ''; list = []; rows = 0; box.classList.remove('grid');
     const add = (label, fn, cls) => { const b = el('button', 'pc-ti' + (cls ? ' ' + cls : ''), label); b.onclick = () => { snd.unlock(); snd.click(); fn(b); }; b.onmouseenter = () => focus(list.indexOf(b)); box.append(b); list.push(b); return b; };
     if (page === 'main') {
       if (o.inGame) add(T('ui.resume'), o.resume);
@@ -104,6 +104,8 @@ export function buildMenu(g, o) {
       add(g.lang === 'fr' ? 'English' : 'Français', o.toggleLang);
       add(T('ui.back'), () => { page = 'main'; sel = 0; render(); }, 'back');
     } else if (page === 'chap') {
+      const n = o.chapters.length;
+      if (n > 4) { rows = Math.ceil(n / 2); box.classList.add('grid'); box.style.setProperty('--rows', rows); }   /* 1 à 5 à gauche, 6 à 10 à droite */
       o.chapters.forEach(c => add(c.label, c.go));
       add(T('ui.back'), () => { page = 'main'; sel = 0; render(); }, 'back');
     }
@@ -114,6 +116,10 @@ export function buildMenu(g, o) {
   root.key = e => {
     const k = e.key;
     if (k === 'ArrowDown' || k === 'ArrowUp') { e.preventDefault(); focus((sel + (k === 'ArrowDown' ? 1 : list.length - 1)) % list.length); snd.click(); }
+    else if (rows && (k === 'ArrowLeft' || k === 'ArrowRight') && sel < o.chapters.length) {
+      e.preventDefault(); const t = sel + (k === 'ArrowRight' ? rows : -rows);
+      if (t >= 0 && t < o.chapters.length) { focus(t); snd.click(); }
+    }
     else if (k === 'Enter' || k === ' ') { e.preventDefault(); if (list[sel]) list[sel].click(); }
     else if (k === 'Escape') { if (page !== 'main') { page = 'main'; sel = 0; render(); } else if (o.inGame) o.resume(); }
   };
