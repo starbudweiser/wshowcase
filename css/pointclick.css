@@ -19,15 +19,13 @@
 .pc-card h1{margin:0 0 8px;font-size:26px;letter-spacing:.02em;color:var(--s-ts)}
 .pc-card p{margin:0 0 18px;font-size:14px;line-height:1.5;color:var(--s-tm)}
 .pc-card .pc-fine{margin:16px 0 0;font-size:11.5px;color:var(--s-sub)}
-.pc-btns,.pc-opts{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}.pc-opts{margin-top:10px}
+.pc-btns{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
 .pc-card .sbtn{height:36px;font-size:12.5px}
 .pc-toast{position:absolute;left:50%;bottom:calc(var(--u)*14px);transform:translateX(-50%);z-index:6;display:flex;flex-direction:column;gap:2px;align-items:center;max-width:70%;padding:calc(var(--u)*5px) calc(var(--u)*12px);background:rgba(22,10,6,.94);border:1px solid #d49a45;border-radius:4px;color:#ffe9b8;text-align:center;font-size:calc(var(--u)*11px);line-height:1.1;box-shadow:0 8px 30px rgba(0,0,0,.5);animation:pctoast .35s ease-out;transition:opacity .5s}
 .pc-toast b{color:#ffd27a;font-weight:400;font-size:calc(var(--u)*12px);letter-spacing:.04em}.pc-toast.out{opacity:0}
 @keyframes pctoast{from{transform:translate(-50%,16px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
-.pc-card .pc-ach{margin:14px 0 0;font-size:12.5px;color:var(--s-tm)}.pc-card .pc-ach.done{color:#e8b84a}
 .pc-narr{font-style:italic;max-width:62%;background:rgba(10,8,14,.55);border-radius:calc(var(--u)*3px)}
-.pc-card .pc-btns .sbtn,.pc-card .pc-opts .sbtn{min-width:190px}
-.pc-chap{display:flex;flex-direction:column;gap:8px;width:min(340px,100%);margin:0 auto 6px}.pc-chap .sbtn{width:100%;min-width:0}
+.pc-card .pc-btns .sbtn{min-width:190px}
 /* agrandisseur d'image (WebGL) : le canvas du jeu reste en place (souris), invisible, au-dessus de la sortie */
 .pc-out{position:absolute;inset:0;width:100%;height:100%}
 .pc canvas.pc-src{position:absolute;inset:0;opacity:0}
@@ -66,10 +64,9 @@
 .pc-corner:hover{opacity:1}
 .pc.pc-noui .pc-bag,.pc.pc-noui .pc-corner{opacity:0;pointer-events:none}
 .pc.holding .pc-slot,.pc.holding .pc-bag,.pc.holding .pc-menu,.pc.holding .pc-corner{cursor:inherit}
-/* menu dans la hauteur du 16:9 : scènes sur deux colonnes, défilement de secours */
+/* menu dans la hauteur du 16:9 : défilement de secours */
 .pc-title{overflow:auto}
 .pc-card{max-height:calc(100% - 20px);overflow:auto;box-sizing:border-box}
-.pc-chap{display:grid;grid-template-columns:1fr 1fr;width:min(540px,100%)}
 
 /* intro « Quinze ans plus tard » : carton gravé et rappel « passer » */
 .pc-cap{position:absolute;left:0;right:0;top:42%;transform:translateY(-50%);text-align:center;color:#f4ead6;font-size:calc(var(--u)*19px);line-height:1.05;letter-spacing:.04em;opacity:0;transition:opacity .7s;

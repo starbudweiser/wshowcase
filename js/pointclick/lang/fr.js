@@ -5,12 +5,10 @@ export default {
   ...X,
   /* interface */
   'v.walk': 'Aller vers', 'v.take': 'Prendre', 'v.use': 'Utiliser', 'v.talk': 'Parler à', 'v.look': 'Regarder', 'ui.with': 'avec',
-  'ui.title': 'Le Seau de Rivebois', 'ui.sub': 'Un jeu d’aventure parodique pour les 15 ans de Skyrim : un casque à cornes, un seau et beaucoup de mauvaise foi.',
   'ui.new': 'Nouvelle partie', 'ui.continue': 'Continuer', 'ui.resume': 'Reprendre', 'ui.musicOn': 'Musique : oui', 'ui.musicOff': 'Musique : non',
-  'ui.fine': 'Hommage de fan, sans aucun lien avec Bethesda. Sauvegarde automatique dans ce navigateur. Clic : aller. Clic maintenu : pièce des verbes. Clic droit ou I : besace. Espace : passer une réplique.',
   'ui.inv': 'Besace (clic droit, I)', 'ui.menu': 'Menu (Échap)', 'ui.coin.title': 'La pièce des verbes',
   'ui.coin.tip': 'Maintiens le clic sur un objet ou un personnage : la pièce s’ouvre. Regarder, Prendre, Parler, Utiliser. Clic droit : la besace.',
-  'end.title': 'À suivre…', 'end.sub': 'Chapitre 2 : le chemin du moulin, un cheval et une falaise à 90 degrés.', 'end.love': '15 ans de Skyrim · 11/11/2011 – 11/11/2026. Merci d’avoir joué.', 'end.again': 'Rejouer',
+  'end.love': '15 ans de Skyrim · 11/11/2011 – 11/11/2026. Merci d’avoir joué.', 'end.again': 'Rejouer',
   /* noms */
   'n.hero': 'moi', 'n.merchant': 'marchand', 'n.honey': 'rouleau au miel', 'n.stall': 'étal', 'n.cart': 'charrette', 'n.door': 'porte', 'n.sign': 'enseigne', 'n.inn': 'auberge',
   'n.house': 'maison', 'n.dragon': 'dragon', 'n.mountain': 'montagne', 'n.mammoth': 'mammouth', 'n.mill': 'scierie', 'n.bridge': 'pont', 'n.flowers': 'fleurs bleues',
@@ -153,7 +151,6 @@ export default {
   's2.horse.cheese': 'On a le fromage, mon vieux. On ne remonte pas : j’ai le vertige à retardement.',
   'use.horse.friend2': 'On est déjà amis. Un légume de plus et il me demande en mariage.',
   's2.exit.no': 'Pas sans la meule dorée. Le scénario insiste, et moi aussi.', 's2.exit.yes': 'Direction la prairie, là où broutent les géants. Et les ennuis.',
-  'end2.title': 'À suivre…', 'end2.sub': 'Chapitre 3 : le programme spatial des géants. Prévoir un casque, une meule de fromage et de bonnes jambes.',
   'n.giant': 'géant',
   'n.nazim': 'Nazim',
   'n.palace': 'palais',
@@ -219,8 +216,6 @@ export default {
   's3.n7': 'Route libre. Et l’air est tout de suite plus respirable.',
   's3.road.no': 'Ce Nazim s’est planté pile sur la route. Comme un PNJ placé par un script paresseux. Il va falloir le déplacer. Idéalement très loin.',
   's3.exit.yes': 'Blancherive, me voilà. Je promets de ne voler aucun panier de légumes. Presque aucun.',
-  'end3.title': 'À suivre…',
-  'end3.sub': 'Chapitre 4 : cinquante choux dans une charrette. La physique a déposé un arrêt maladie.',
   'n.blind_pot': 'villageois',
   'n.blind_sack': 'meunier',
   'n.blind_hat': 'chasseur',
@@ -280,5 +275,5 @@ export default {
   'intro.comp4': 'Ah si : il paraît qu’il reste un rouleau au miel sur l’étal de Rivebois.',
   'intro.hero2': 'Du miel ? Cocher ! Direction Rivebois !',
   'intro.driver1': 'On y est, l’ami. Terminus !',
-  'ui.tagline': '1 000 quêtes. 0 place dans l’inventaire.', 'ui.options': 'Options', 'ui.back': 'Retour', 'ui.credits': 'Hommage de fan, sans lien avec Bethesda'
+  'ui.options': 'Options', 'ui.back': 'Retour', 'ui.credits': 'Hommage de fan, sans lien avec Bethesda'
 };

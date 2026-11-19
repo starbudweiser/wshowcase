@@ -201,5 +201,6 @@ export function drawGlass(g, c) {
   if (gl.fly) flyDraw(c, gl.fly, t);
   if (run && run.bird) { const b = run.bird, u = (t - b.t0) / 2.1; if (u < 1) { c.save(); c.fillStyle = '#16120e'; const x = -30 + (b.x + 30) * u, y = b.y0 + 10 * u * u - Math.sin(u * 8) * 3, f = Math.sin(t * 30) * 4 * (1 - u); c.translate(x, y); c.scale(1 + u * 1.8, 1 + u * 1.8); c.beginPath(); c.ellipse(0, 0, 5, 2.4, 0, 0, 7); c.fill(); c.beginPath(); c.moveTo(-1, 0); c.lineTo(-7, -6 - f); c.lineTo(2, 0); c.fill(); c.beginPath(); c.moveTo(-1, 0); c.lineTo(-7, 6 + f); c.lineTo(2, 0); c.fill(); c.restore(); } }
 }
+/* lance un nettoyage précis (essais) */
 export function playGlass(g, id, kind) { const gl = g.gl || (g.gl = { stains: [], drips: [], fly: null, run: null, bird: null, at: undefined }); loadClean(g); gl.run = null; gl.stains = []; gl.drips = []; gl.fly = null; start(g, gl, id); if (kind && gl.run) gl.run.kind = kind; }
 export const GLASS_IDS = IDS;

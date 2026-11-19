@@ -372,7 +372,7 @@ export class Game {
     await this.until(() => { const t = Math.min(1, (this.now - t0) / d); e.x = x0 + (x1 - x0) * t; e.y = y0 + (y1 - y0) * t - Math.sin(t * Math.PI) * arc; e.rot = spin * t; return t >= 1; });
     this.ents = this.ents.filter(x => x !== e); this.chk();
   }
-  async end(pre = 'end') { /* fin du chapitre */
+  async end(pre) { /* fin du jeu : textes `<pre>.title` et `<pre>.sub` */
     await this.fade(1, 1200); clearSave(); this.started = false; const d = el('div', 'pc-title socle'), c = el('div', 'pc-card'); const T = this.T;
     c.append(el('h1', '', T(pre + '.title')), el('p', '', T(pre + '.sub')), el('p', 'pc-fine', T('end.love')));
     const row = el('div', 'pc-btns'), a = el('button', 'sbtn acc', T('end.again')); a.onclick = () => { d.remove(); this.newGame(); }; row.append(a); c.append(row); d.append(c); this.stage.append(d); this.titleEl = d; snd.jingle();
@@ -517,7 +517,7 @@ export class Game {
     return best;
   }
   async act(verb, tg, item) {
-    if (!tg.at && !tg.isItem && !tg.isEnt && verb !== 'look' && verb !== 'walk') { const done = this.scene.on && await this.scene.on(this, verb, tg.id, item); if (!done) await this.fallbackFar(verb, tg); return; }
+    if (!tg.at && !tg.isItem && !tg.isEnt && verb !== 'look' && verb !== 'walk') { const done = this.scene.on && await this.scene.on(this, verb, tg.id, item); if (!done) await this.fallbackFar(verb, tg, item); return; }
     if (verb === 'walk') { if (!tg.at) { await this.say('hero', 'def.far'); return; } await this.walkTo(...(tg.isEnt ? this.approach(tg) : tg.at));   /* une sortie : on va jusqu'à la porte */ this.faceTg(tg); if (this.scene.on) await this.scene.on(this, 'walk', tg.id); return; }
     if (verb !== 'look' && !tg.isItem && tg.at) { await this.walkTo(...this.approach(tg)); this.faceTg(tg); if ((verb === 'take' || verb === 'use') && this.spr('hero.sReach') && !this.hero.back) { this.hero.pose = 'hero.sReach'; setTimeout(() => { if (this.hero) this.hero.pose = null; }, 1100); } } else if (verb === 'look' && !tg.isItem) this.faceTg(tg);
     const sc = this.scene; let done = false;
@@ -525,7 +525,11 @@ export class Game {
     if (!done) await this.fallback(verb, tg, item);
     this.save();
   }
-  async fallbackFar(verb, tg) { const T = this.T, k = verb === 'talk' ? 'talk.' + tg.id : verb === 'take' ? 'take.' + tg.id : 'use.' + tg.id; await this.say('hero', T.has(k) ? k : 'def.far'); }
+  /* cible hors d'atteinte : réplique propre à l'objet tenu (flèche brandie vers la tour), sinon à la cible, sinon « trop loin » */
+  async fallbackFar(verb, tg, item) {
+    const T = this.T, use = 'use.' + tg.id, k = verb === 'talk' ? ['talk.' + tg.id] : verb === 'take' ? ['take.' + tg.id] : item ? [`use.${item}.${tg.id}`, `use.${tg.id}.${item}`, use] : [use];
+    await this.say('hero', k.find(x => T.has(x)) || 'def.far');
+  }
   async fallback(verb, tg, item) {
     const T = this.T; let k;
     if (verb === 'look') k = ['look.' + tg.id, 'def.look'];

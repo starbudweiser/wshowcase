@@ -18,7 +18,7 @@ export default {
     { id: 'bridge', rect: [352, 172, 480, 214], at: [332, 206] },
     { id: 'honey', rect: [88, 190, 124, 208], at: [136, 238], dir: 'l' }
   ],
-  /* décor vivant : dragon qui vole, oiseaux, rivière, roue du moulin, mammouth qui respire, fleurs et herbes dans le vent */
+  /* décor vivant : oiseaux, rivière, saumons, roue du moulin, mammouth qui respire, fleurs et herbes dans le vent */
   ambient: [
     { type: 'flock', n: 5, y0: 16, y1: 80, speed: 12, seed: 4 },
     { type: 'frames', id: 'rue_river1', fps: 2.2 }, { type: 'frames', id: 'rue_river2', fps: 2, offset: 0.4 },
@@ -141,9 +141,6 @@ export default {
       case 'guard':
         if (verb === 'talk') { await g.cut(() => this.talkGuard(g)); return true; }
         if (verb === 'use' && item === 'honey') { await g.cut(() => this.giveHoney(g)); return true; }
-        break;
-      case 'dragon':
-        if (verb === 'talk' || verb === 'use') { await g.cut(async () => { g.sfx('shout'); g.shake(1100, 3); await g.say('hero', '=FUS... RO... DAH !'); await g.wait(500); await g.say('guard', 's.guard.wind'); }); return true; }
         break;
     }
     return false;

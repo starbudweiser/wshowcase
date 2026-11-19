@@ -18,7 +18,6 @@ CFG = {
   'rue': {'src': 'sky_22_nodragon.png', 'items': [
     {'id': 'rue_river1', 'poly': [[395, 198], [420, 190], [450, 192], [470, 198], [470, 218], [450, 226], [420, 228], [400, 218]], 'desc': WATER},
     {'id': 'rue_river2', 'poly': [[330, 158], [352, 156], [385, 158], [392, 166], [360, 168], [335, 166]], 'desc': WATER},
-    {'id': 'rue_wheel', 'poly': rect(452, 138, 480, 166), 'desc': WHEEL},
     {'id': 'rue_mammoth', 'poly': rect(386, 128, 421, 162), 'desc': ['the mammoth lowering its head and trunk to graze on the grass', 'the mammoth raising its head high with the trunk lifted', 'the mammoth turning its head slightly with the ears flapping']},
     {'id': 'rue_flowers', 'poly': rect(380, 226, 480, 268), 'desc': WIND},
     {'id': 'rue_grass', 'poly': rect(270, 238, 380, 268), 'desc': WIND}]},

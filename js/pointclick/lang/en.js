@@ -4,12 +4,10 @@ import { darkKeys } from './dark.js';
 export default {
   ...X,
   'v.walk': 'Walk to', 'v.take': 'Pick up', 'v.use': 'Use', 'v.talk': 'Talk to', 'v.look': 'Look at', 'ui.with': 'with',
-  'ui.title': 'The Bucket of Riverwood', 'ui.sub': 'A parody adventure for Skyrim’s 15th anniversary: one horned helmet, one bucket and plenty of bad faith.',
   'ui.new': 'New game', 'ui.continue': 'Continue', 'ui.resume': 'Resume', 'ui.musicOn': 'Music: on', 'ui.musicOff': 'Music: off',
-  'ui.fine': 'Fan tribute, not affiliated with Bethesda. Saved automatically in this browser. Click: walk. Click and hold: verb coin. Right-click or I: satchel. Space: skip a line.',
   'ui.inv': 'Satchel (right-click, I)', 'ui.menu': 'Menu (Esc)', 'ui.coin.title': 'The verb coin',
   'ui.coin.tip': 'Click and hold on anything or anyone: the coin opens. Look, Pick up, Talk, Use. Right-click: your satchel.',
-  'end.title': 'To be continued…', 'end.sub': 'Chapter 2: the mill road, one horse and a 90-degree cliff.', 'end.love': '15 years of Skyrim · 11/11/2011 – 11/11/2026. Thanks for playing.', 'end.again': 'Play again',
+  'end.love': '15 years of Skyrim · 11/11/2011 – 11/11/2026. Thanks for playing.', 'end.again': 'Play again',
   'n.hero': 'myself', 'n.merchant': 'merchant', 'n.honey': 'honey roll', 'n.stall': 'stall', 'n.cart': 'cart', 'n.door': 'door', 'n.sign': 'sign', 'n.inn': 'inn',
   'n.house': 'house', 'n.dragon': 'dragon', 'n.mountain': 'mountain', 'n.mammoth': 'mammoth', 'n.mill': 'sawmill', 'n.bridge': 'bridge', 'n.flowers': 'blue flowers',
   'n.bucket': 'bucket', 'n.guard': 'guard', 'n.hen': 'hen',
@@ -137,7 +135,6 @@ export default {
   's2.horse.cheese': 'We’ve got the cheese, old boy. We’re not going back up: I’ve got delayed-onset vertigo.',
   'use.horse.friend2': 'We’re already friends. One more vegetable and he’ll propose.',
   's2.exit.no': 'Not without the golden wheel. The script insists, and so do I.', 's2.exit.yes': 'To the meadow, where giants graze. And trouble.',
-  'end2.title': 'To be continued…', 'end2.sub': 'Chapter 3: the giants’ space program. Bring a helmet, a cheese wheel and good legs.',
   'n.giant': 'giant',
   'n.nazim': 'Nazim',
   'n.palace': 'palace',
@@ -203,8 +200,6 @@ export default {
   's3.n7': 'Road’s clear. And the air feels more breathable.',
   's3.road.no': 'This Nazim planted himself right on the road. Like an NPC placed by a lazy script. I’ll have to move him. Preferably very far.',
   's3.exit.yes': 'Whiterun, here I come. I promise not to steal a single vegetable basket. Almost none.',
-  'end3.title': 'To be continued…',
-  'end3.sub': 'Chapter 4: fifty cabbages in a cart. Physics has filed a sick note.',
   'n.blind_pot': 'villager',
   'n.blind_sack': 'miller',
   'n.blind_hat': 'hunter',
@@ -264,5 +259,5 @@ export default {
   'intro.comp4': 'Oh, wait: word is there’s one honey roll left on a stall in Riverwood.',
   'intro.hero2': 'Honey? Driver! To Riverwood!',
   'intro.driver1': 'Here we are, pal. Last stop!',
-  'ui.tagline': '1,000 quests. 0 inventory space.', 'ui.options': 'Options', 'ui.back': 'Back', 'ui.credits': 'Fan tribute, not affiliated with Bethesda'
+  'ui.options': 'Options', 'ui.back': 'Back', 'ui.credits': 'Fan tribute, not affiliated with Bethesda'
 };

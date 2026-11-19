@@ -9,6 +9,6 @@ export const CHAPTERS = [
   { id: 'house', flags: { guardGone: true }, inv: ['arrow'] },
   { id: 'ford', flags: { armorMoved: true }, inv: ['arrow'] },
   { id: 'wood', flags: { horsemanHappy: true }, inv: ['arrow'] },
-  { id: 'hall', flags: { butterflyDone: true }, inv: ['arrow'] },
+  { id: 'hall', flags: {}, inv: ['arrow'] },
   { id: 'party', flags: { followerGone: true }, inv: ['arrow'] }
 ];
