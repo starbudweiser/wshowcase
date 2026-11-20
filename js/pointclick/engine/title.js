@@ -81,7 +81,7 @@ export class TitleArt {
   }
 }
 
-/* menu de l'écran titre : liste verticale, scènes sur deux colonnes au-delà de 4 ; o = { inGame, hasSave, chapters: [{id,label,go}], items callbacks } */
+/* menu de l'écran titre : liste verticale, scènes sur deux colonnes au-delà de 4 ; o = { inGame, hasSave, chapters: [{id,label,go,locked}], items callbacks } */
 export function buildMenu(g, o) {
   const T = g.T, root = el('div', 'pc-title pc-tmenu');
   const box = el('div', 'pc-tm'), foot = el('div', 'pc-tfoot');
@@ -89,12 +89,12 @@ export function buildMenu(g, o) {
   let list = [], sel = 0, page = o.page || 'main', rows = 0;
   const render = () => {
     box.innerHTML = ''; list = []; rows = 0; box.classList.remove('grid');
-    const add = (label, fn, cls) => { const b = el('button', 'pc-ti' + (cls ? ' ' + cls : ''), label); b.onclick = () => { snd.unlock(); snd.click(); fn(b); }; b.onmouseenter = () => focus(list.indexOf(b)); box.append(b); list.push(b); return b; };
+    const add = (label, fn, cls) => { const b = el('button', 'pc-ti' + (cls ? ' ' + cls : ''), label); if (cls !== 'lock') { b.onclick = () => { snd.unlock(); snd.click(); fn(b); }; b.onmouseenter = () => focus(list.indexOf(b)); } box.append(b); list.push(b); return b; };
     if (page === 'main') {
       if (o.inGame) add(T('ui.resume'), o.resume);
       if (!o.inGame && o.hasSave) add(T('ui.continue'), o.cont);
       add(T('ui.new'), o.newGame);
-      if (o.chapters.length > 1) add(T('ui.chapters'), () => { page = 'chap'; sel = 0; render(); });
+      if (o.chapters.filter(c => !c.locked).length > 1) add(T('ui.chapters'), () => { page = 'chap'; sel = 0; render(); });
       add(T('ui.options'), () => { page = 'opt'; sel = 0; render(); });
     } else if (page === 'opt') {
       add(T('ui.fullscreen'), o.fullscreen);
@@ -106,19 +106,20 @@ export function buildMenu(g, o) {
     } else if (page === 'chap') {
       const n = o.chapters.length;
       if (n > 4) { rows = Math.ceil(n / 2); box.classList.add('grid'); box.style.setProperty('--rows', rows); }   /* 1 à 5 à gauche, 6 à 10 à droite */
-      o.chapters.forEach(c => add(c.label, c.go));
+      o.chapters.forEach(c => add(c.label, c.go, c.locked ? 'lock' : ''));
       add(T('ui.back'), () => { page = 'main'; sel = 0; render(); }, 'back');
     }
-    focus(Math.min(sel, list.length - 1));
+    focus(Math.min(sel, list.length - 1)); if (!ok(sel)) focus(list.findIndex((b, k) => ok(k)));
     foot.innerHTML = ''; foot.append(el('span', 'pc-tach' + (o.achDone ? ' done' : ''), o.ach), el('span', '', T('ui.credits')));
   };
+  const ok = i => list[i] && !list[i].classList.contains('lock');   /* scène verrouillée : jamais sélectionnée */
   const focus = i => { sel = Math.max(0, i); list.forEach((b, k) => b.classList.toggle('on', k === sel)); };
   root.key = e => {
     const k = e.key;
-    if (k === 'ArrowDown' || k === 'ArrowUp') { e.preventDefault(); focus((sel + (k === 'ArrowDown' ? 1 : list.length - 1)) % list.length); snd.click(); }
+    if (k === 'ArrowDown' || k === 'ArrowUp') { e.preventDefault(); let t = sel; do t = (t + (k === 'ArrowDown' ? 1 : list.length - 1)) % list.length; while (!ok(t)); focus(t); snd.click(); }
     else if (rows && (k === 'ArrowLeft' || k === 'ArrowRight') && sel < o.chapters.length) {
       e.preventDefault(); const t = sel + (k === 'ArrowRight' ? rows : -rows);
-      if (t >= 0 && t < o.chapters.length) { focus(t); snd.click(); }
+      if (ok(t) && t < o.chapters.length) { focus(t); snd.click(); }
     }
     else if (k === 'Enter' || k === ' ') { e.preventDefault(); if (list[sel]) list[sel].click(); }
     else if (k === 'Escape') { if (page !== 'main') { page = 'main'; sel = 0; render(); } else if (o.inGame) o.resume(); }

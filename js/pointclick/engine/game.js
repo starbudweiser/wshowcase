@@ -195,7 +195,7 @@ export class Game {
     const d = buildMenu(this, {
       inGame: !!inGame, hasSave: hasSave(), page,
       resume: () => this.hideTitle(), cont: () => this.continueGame(), newGame: () => this.newGame(),
-      chapters: CHAPTERS.filter(x => rs.includes(x.id)).map(x => ({ id: x.id, label: T('ch.' + x.id), go: () => this.startAt(x) })),
+      chapters: CHAPTERS.map((x, i) => rs.includes(x.id) ? { id: x.id, label: T('ch.' + x.id), go: () => this.startAt(x) } : { id: x.id, label: (i + 1) + '. ???', locked: true }),   /* scènes pas encore atteintes : grisées, titre caché */
       fullscreen: () => this.toggleFullscreen(),
       filter: this.scaler ? () => this.filter : null, nextFilter: () => this.setFilter(L[(L.indexOf(this.filter) + 1) % L.length], true),
       music: () => snd.musicOn !== false, setMusic: v => { this.setMusic(v); if (v && !inGame) snd.music(true, 'title'); },

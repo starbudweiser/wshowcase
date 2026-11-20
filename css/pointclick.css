@@ -88,6 +88,7 @@
 /* choix de la scène : deux colonnes lues de haut en bas, « Retour » centré dessous */
 .pc-tm.grid{display:grid;grid-template-columns:auto auto;grid-template-rows:repeat(var(--rows),auto) auto;grid-auto-flow:column;column-gap:calc(var(--u)*4px);justify-items:start}
 .pc-tm.grid .pc-ti{font-size:calc(var(--u)*10px)}
+.pc-ti.lock{color:#857a66;cursor:default}
 .pc-tm.grid .pc-ti.back{grid-column:1/-1;grid-row:-2/-1;justify-self:center}
 .pc-tfoot{position:absolute;left:0;right:0;bottom:calc(var(--u)*2px);display:flex;justify-content:space-between;padding:0 calc(var(--u)*5px);font-size:calc(var(--u)*7px);color:#b8c2d6;opacity:.8;text-shadow:1px 1px 0 #000;pointer-events:none}
 .pc-tach.done{color:#e8b84a}
