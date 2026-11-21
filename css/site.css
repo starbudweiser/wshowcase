@@ -495,3 +495,4 @@ button.xrow:hover{background:var(--ctl-h)}
 .feat b{display:block;margin:4px 0 4px}.feat ul{margin:0;padding-left:16px;display:flex;flex-direction:column;gap:5px}
 .featbadge{display:inline-block;font-size:11px;font-weight:700;color:#f59e0b;letter-spacing:.04em}
 .featl{text-align:left;max-width:560px;margin:10px auto;padding-left:20px;font-size:13px;line-height:1.45;display:flex;flex-direction:column;gap:6px}
+.deskrow{gap:8px;align-items:center}.deskrow img{border-radius:7px}.deskrow .btn{padding:4px 9px;min-width:30px}

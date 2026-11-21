@@ -79,7 +79,19 @@ const EXTRAS = [
   { id: 'Videos', space: 'skyrim', desk: true, mod: './player.js', src: 'assets/icons/videos.png', label: ['Vidéos', 'Videos'] },
   { id: 'Discord', space: 'skyrim', desk: true, mod: './discord.js', src: 'assets/icons/discord.png', at: [0, 0], label: ['Témoignage', 'Testimonial'] }
 ];
-const deskList = sp => [...S.apps.filter(a => a.space === sp && a.desk).sort((x, y) => (x.deskIdx ?? 99) - (y.deskIdx ?? 99)), ...EXTRAS.filter(x => x.space === sp), ...EGGS.filter(e => e.space === sp)];
+/* Contenu et ordre du bureau choisis par le visiteur (Réglages › Bureau, clic droit sur une icône) ; sans choix : réglage par défaut de apps.json */
+const deskApps = sp => {
+  const inSp = S.apps.filter(a => a.space === sp), sel = store.get('deskSel', {})[sp];
+  if (Array.isArray(sel)) return sel.map(id => inSp.find(a => a.id === id)).filter(Boolean);
+  return inSp.filter(a => a.desk).sort((x, y) => (x.deskIdx ?? 99) - (y.deskIdx ?? 99));
+};
+export const deskState = sp => { const on = deskApps(sp), ids = new Set(on.map(a => a.id)); return { on, off: S.apps.filter(a => a.space === sp && !ids.has(a.id)) }; };
+export function setDesk(sp, ids) {
+  const sel = store.get('deskSel', {}); if (ids) sel[sp] = ids; else delete sel[sp]; store.set('deskSel', sel);
+  const d = store.get('desk', {}); S.apps.filter(a => a.space === sp).forEach(a => delete d[a.id]); store.set('desk', d);
+  renderDesk();
+}
+const deskList = sp => [...deskApps(sp), ...EXTRAS.filter(x => x.space === sp), ...EGGS.filter(e => e.space === sp)];
 const run = a => { if (a.mod) import(a.mod).then(m => m.open()); else if (a.load) a.load(); else launch(a.id); };
 const lbl = a => typeof a.label === 'function' ? a.label() : T(...a.label);
 export function renderDesk(reset) {
@@ -100,6 +112,7 @@ export function renderDesk(reset) {
       d.addEventListener('dblclick', () => run(a, d));
       d.addEventListener('keydown', e => { if (e.key === 'Enter') run(a, d); });
       if (!coarse) d.addEventListener('pointerdown', e => dragIcon(e, d, a, el, pos));
+      d.addEventListener('contextmenu', e => { e.stopPropagation(); iconMenu(e, a, sp.id); });
       el.append(d);
     });
   });
@@ -143,6 +156,17 @@ function tidy(spaceEl) {
   els.forEach((d, i) => { const p = cell(COLS - 1, i % ROWS - 0), c = COLS - 1 - Math.floor(i / ROWS); const q = cell(c, i % ROWS); d.classList.add('snap'); d.style.left = q.left + 'px'; d.style.top = q.top + 'px'; savePos(d.getAttribute('aria-label'), [c, i % ROWS]); });
   sfx.swap(); setTimeout(() => renderDesk(), 360);
 }
+function menuAt(e, items) {
+  e.preventDefault();
+  const s = $('#stage').getBoundingClientRect(), x = (e.clientX - s.left) / S.scale, y = (e.clientY - s.top) / S.scale;
+  const anchor = h('i', { style: { position: 'absolute', left: x + 'px', top: y + 'px', width: '1px', height: '1px' } }); $('#layer').append(anchor);
+  import('./menubar.js').then(m => { m.showMenu(anchor, items); anchor.remove(); });
+}
+/* clic droit sur une icône : l'ouvrir ou la retirer du bureau (elle reste dans le Dock et le Finder) */
+function iconMenu(e, a, spaceId) {
+  const isApp = S.apps.includes(a);
+  menuAt(e, [{ l: t('m.open'), fn: () => run(a) }, ...(isApp ? [{ sep: 1 }, { l: t('m.removeFromDesk'), fn: () => { sfx.swap(); setDesk(spaceId, deskApps(spaceId).filter(x => x.id !== a.id).map(x => x.id)); } }] : [])]);
+}
 /* clic droit sur le bureau */
 export function deskMenu(e, spaceEl) {
   e.preventDefault();
@@ -151,6 +175,7 @@ export function deskMenu(e, spaceEl) {
   import('./menubar.js').then(m => { m.showMenu(anchor, [
     { l: t('m.cleanup'), fn: () => tidy(spaceEl) },
     { l: t('m.resetDesk'), fn: () => { renderDesk(true); sfx.swap(); } },
+    { l: t('m.organizeDesk'), fn: () => import('./system.js').then(sy => sy.openSettings('desk')) },
     { sep: 1 },
     { l: t('m.changeWall'), fn: () => import('./system.js').then(sy => sy.openSettings('wall')) },
     { sep: 1 },
