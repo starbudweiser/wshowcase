@@ -28,7 +28,7 @@ export function renderDock(enter = true) {
   ((sp && sp.folders) || []).forEach(f => {
     const list = f.apps.map(id => mine.find(a => a.id === id)).filter(Boolean); if (!list.length) return; list.forEach(a => seen.add(a.id));
     const label = f.name[lang()] || f.name.en;
-    const b = add('folder:' + f.id, label, h('div', { class: 'fi' }, list.slice(0, 4).map(a => h('img', { src: icon(a.id), alt: '', draggable: 'false' }))), () => {});
+    const b = add('folder:' + f.id, label, h('div', { class: 'fi n' + Math.min(list.length, 4) }, list.slice(0, 4).map(a => h('img', { src: icon(a.id), alt: '', draggable: 'false' }))), () => {});
     b.classList.add('fold'); b.dataset.apps = list.map(a => a.id).join('|'); b.setAttribute('aria-haspopup', 'dialog');
     b.onclick = e => { bounce(b); pop && pop.dataset.f === f.id ? closePop() : openPop(b, f, label, list, e.detail === 0); };
   });
