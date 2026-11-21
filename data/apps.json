@@ -998,8 +998,8 @@
    "desk": true,
    "demo": "engine",
    "shots": 0,
-   "download": false,
-   "version": "",
+   "download": true,
+   "version": "1.5.0",
    "tag": {
     "fr": "Casting de voix IA en local : bibliothèque, clonage, distribution par projet, serveur MCP.",
     "en": "Local AI voice casting: voice library, cloning, per-project casting, MCP server.",

@@ -11,7 +11,7 @@ let state = null;                                  // id → 'ok' | 'upd' | 'new
 export function open(app) {
   css(CSS);
   const c = { w: 1060, h: 650 };
-  const list = () => S.apps.filter(a => (a.space === 'util' || a.space === 'pro') && a.id !== 'mHUB' && (a.download || a.id === 'mCASTING'));
+  const list = () => S.apps.filter(a => (a.space === 'util' || a.space === 'pro') && a.id !== 'mHUB' && a.download);
   if (!state) { state = {}; list().forEach(a => { state[a.id] = !a.download ? 'dev' : UPD.has(a.id) ? 'upd' : 'ok'; }); }
   return winOf(app, c, w => {
     let cat = 'all', q = '', sel = list()[0], checked = T('il y a 20 min', '20 min ago');
