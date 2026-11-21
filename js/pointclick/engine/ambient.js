@@ -1,67 +1,52 @@
 import { occlude } from './night.js';
-/* Décor vivant : zones du décor animées (eau, roue, herbes), respiration des animaux, fumée, oiseaux, dragon qui vole, lueurs.
+/* Décor vivant : zones du décor animées par images (eau, roue, herbes, animaux), roue à aubes en 3D, oiseaux, poissons, fumée, dragons, objet en orbite.
    Chaque scène déclare `ambient: [...]`. Tout est dessiné par-dessus le décor, avant les personnages. */
-import { hitPoly } from './walk.js';
 
 const rnd = (seed) => { let s = seed * 9301 + 49297; return () => ((s = (s * 9301 + 49297) % 233280) / 233280); };
-const bbox = p => { const xs = p.map(q => q[0]), ys = p.map(q => q[1]); return [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)]; };
-const clipPoly = (c, p) => { c.beginPath(); p.forEach(([x, y], i) => (i ? c.lineTo(x, y) : c.moveTo(x, y))); c.closePath(); c.clip(); };
+
+/* Eau d'une rivière lue dans le décor (pour les sauts de poissons) : dans la zone de recherche `roi` [x0, y0, x1, y1], pixels bleutés
+   (ni verts, ni neige claire), fermeture puis ouverture morphologiques 3×3, plus grande nappe d'un seul tenant. Pour chaque point d'eau :
+   la colonne d'eau qui le contient (hauteur, position relative) et le test de l'éclaboussure (ellipse 11·s × 3,8·s entièrement dans l'eau).
+   Départs : colonne haute (≥ 16·s), près du milieu ; retombées : colonne ≥ 11·s, moins centrées. s = k × perspective de la scène. */
+function waterMap(g, roi, k) {
+  const [x0, y0, x1, y1] = roi, w = x1 - x0, h = y1 - y0, N = w * h;
+  const cv = document.createElement('canvas'); cv.width = 480; cv.height = 270; const cx = cv.getContext('2d', { willReadFrequently: true });
+  cx.drawImage(g.bg, 0, 0, 480, 270); const px = cx.getImageData(x0, y0, w, h).data;
+  let m = new Uint8Array(N);
+  for (let i = 0; i < N; i++) { const r = px[i * 4], gr = px[i * 4 + 1], b = px[i * 4 + 2]; m[i] = b - r >= 8 && b >= gr - 6 && Math.max(r, gr, b) <= 175 ? 1 : 0; }
+  const morph = (src, grow) => {                        /* dilatation (grow) ou érosion 3×3, hors zone = sec */
+    const o = new Uint8Array(N);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      let any = 0, all = 1;
+      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { const X = x + dx, Y = y + dy, v = X >= 0 && Y >= 0 && X < w && Y < h ? src[Y * w + X] : 0; any |= v; all &= v; }
+      o[y * w + x] = grow ? any : all;
+    }
+    return o;
+  };
+  m = morph(morph(morph(morph(m, 1), 1), 0), 0);       /* fermeture : bouche l'écume et les reflets */
+  m = morph(morph(m, 0), 1);                            /* ouverture : enlève les miettes */
+  const lab = new Int32Array(N); let best = 0, bestN = 0, id = 0;   /* plus grande nappe (4-connexité) */
+  for (let i = 0; i < N; i++) {
+    if (!m[i] || lab[i]) continue; id++; let n = 0; const st = [i]; lab[i] = id;
+    while (st.length) { const q = st.pop(), x = q % w, y = (q / w) | 0; n++; for (const [X, Y] of [[x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]]) { if (X < 0 || Y < 0 || X >= w || Y >= h) continue; const j = Y * w + X; if (m[j] && !lab[j]) { lab[j] = id; st.push(j); } } }
+    if (n > bestN) { bestN = n; best = id; }
+  }
+  for (let i = 0; i < N; i++) m[i] = lab[i] === best && best ? 1 : 0;
+  const wet = (x, y) => { x -= x0; y -= y0; return x >= 0 && y >= 0 && x < w && y < h && m[y * w + x] === 1; };
+  const top = new Int16Array(N), bot = new Int16Array(N);
+  for (let x = 0; x < w; x++) for (let y = 0; y < h;) { if (!m[y * w + x]) { y++; continue; } let e = y; while (e < h && m[e * w + x]) e++; for (let q = y; q < e; q++) { top[q * w + x] = y; bot[q * w + x] = e - 1; } y = e; }
+  const land = new Uint8Array(N), starts = [], A = Array.from({ length: 16 }, (_, i) => [Math.cos(i * Math.PI / 8), Math.sin(i * Math.PI / 8)]);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const i = y * w + x; if (!m[i]) continue;
+    const gx = x + x0, gy = y + y0, s = k * g.persp(gy), run = bot[i] - top[i] + 1, rel = 1 - Math.abs((y - top[i]) - (bot[i] - y)) / run;
+    if (run < 11 * s || rel < 0.3) continue;
+    if (!A.every(([c, d]) => wet(Math.round(gx + c * 11 * s), Math.round(gy + d * 3.8 * s)))) continue;
+    land[i] = 1; if (run >= 16 * s && rel >= 0.5) starts.push([gx, gy]);
+  }
+  return { wet, land: (x, y) => { x -= x0; y -= y0; return x >= 0 && y >= 0 && x < w && y < h && land[y * w + x] === 1; }, starts };
+}
 
 const KINDS = {
-  /* rivière : chaque ligne du décor glisse un peu de côté (ondulation) + éclats de lumière */
-  water(o) {
-    const poly = o.poly, [x0, y0, x1, y1] = bbox(poly), w = x1 - x0 + 4, amp = o.amp ?? 1.3, sp = o.speed ?? 2.2, R = rnd(o.seed || 3);
-    const glints = Array.from({ length: o.glints ?? 14 }, () => ({ x: x0 + R() * (x1 - x0), y: y0 + R() * (y1 - y0), p: R() * 6.28, s: 1.5 + R() * 2 })).filter(g => hitPoly(g.x, g.y, poly));
-    return {
-      draw(g, c, t) {
-        c.save(); clipPoly(c, poly);
-        for (let y = Math.floor(y0); y < y1; y++) {
-          const off = Math.round(Math.sin(t * sp + y * 0.62) * amp * (0.55 + 0.45 * Math.sin(y * 0.17 + t * 0.4)) + ((t * (o.flow ?? 0)) % 1));
-          if (off) c.drawImage(g.bg, x0, y, w, 1, x0 + off, y, w, 1);
-        }
-        c.restore();
-        glints.forEach(q => { const v = Math.sin(t * q.s + q.p); if (v > 0.86) { c.fillStyle = v > 0.95 ? 'rgba(255,248,214,.95)' : 'rgba(255,236,170,.7)'; c.fillRect(Math.round(q.x), Math.round(q.y), v > 0.95 ? 2 : 1, 1); } });
-      }
-    };
-  },
-  /* roue de moulin : un disque du décor qui tourne */
-  wheel(o) {
-    const { cx, cy, r } = o, sp = o.speed ?? 0.9;
-    return { draw(g, c, t) { c.save(); c.beginPath(); c.arc(cx, cy, r, 0, 6.2832); c.clip(); c.translate(cx, cy); c.rotate(t * sp); c.drawImage(g.bg, cx - r, cy - r, 2 * r, 2 * r, -r, -r, 2 * r, 2 * r); c.restore(); } };
-  },
-  /* herbes, fleurs, roseaux : le haut de la zone se balance plus que le bas */
-  sway(o) {
-    const [x0, y0, x1, y1] = o.rect, amp = o.amp ?? 1.6, sp = o.speed ?? 1.5;
-    return { draw(g, c, t) { for (let y = y0; y < y1; y++) { const k = (y1 - y) / (y1 - y0), off = Math.round(Math.sin(t * sp + y * 0.11 + (o.phase || 0)) * amp * k); if (off) c.drawImage(g.bg, x0, y, x1 - x0, 1, x0 + off, y, x1 - x0, 1); } } };
-  },
-  /* animal qui respire / broute : la zone s'étire un peu depuis ses pieds */
-  bob(o) {
-    const [x0, y0, x1, y1] = o.rect, amp = o.amp ?? 0.035, sp = o.speed ?? 1.4;
-    return { draw(g, c, t) { const k = 1 + amp * (0.5 + 0.5 * Math.sin(t * sp + (o.phase || 0))), h = (y1 - y0) * k; c.drawImage(g.bg, x0, y0, x1 - x0, y1 - y0, x0, Math.round(y1 - h), x1 - x0, Math.round(h)); } };
-  },
-  /* fumée de cheminée */
-  smoke(o) {
-    const n = o.n ?? 9;
-    return { draw(g, c, t) { for (let i = 0; i < n; i++) { const ph = (t * (o.speed ?? 0.3) + i / n) % 1, x = o.x + Math.sin(ph * 5 + i) * 2 + ph * (o.wind ?? 10), y = o.y - ph * (o.h ?? 28), r = 1.2 + ph * 3.2; c.fillStyle = `rgba(236,230,220,${(0.5 * (1 - ph)).toFixed(2)})`; c.fillRect(Math.round(x - r), Math.round(y - r), Math.round(r * 2), Math.round(r * 2)); } } };
-  },
-  /* lueur vacillante (fenêtre, lanterne, forge) */
-  glow(o) {
-    return { draw(g, c, t) { const f = 0.75 + 0.25 * Math.sin(t * 7 + (o.phase || 0)) * Math.sin(t * 3.3); c.save(); c.globalCompositeOperation = 'lighter'; for (let k = 3; k >= 1; k--) { c.fillStyle = `rgba(255,${150 + k * 20},70,${(0.05 * f * (4 - k)).toFixed(3)})`; c.beginPath(); c.arc(o.x, o.y, o.r * k / 3, 0, 6.2832); c.fill(); } c.restore(); } };
-  },
-  /* oiseaux : petits « v » qui battent des ailes et traversent le ciel */
-  birds(o) {
-    const n = o.n ?? 4, R = rnd(o.seed || 5), bs = Array.from({ length: n }, (_, i) => ({ y: (o.y0 ?? 18) + R() * ((o.y1 ?? 70) - (o.y0 ?? 18)), sp: (o.speed ?? 14) * (0.8 + R() * 0.5), off: R() * 600, ph: R() * 6, dir: o.dir ?? (R() > 0.5 ? 1 : -1) }));
-    return {
-      draw(g, c, t) {
-        bs.forEach(b => {
-          const span = 480 + 80, x = ((t * b.sp + b.off) % span) - 40, X = b.dir > 0 ? x : 480 - x, Y = Math.round(b.y + Math.sin(t * 0.8 + b.ph) * 4), up = Math.sin(t * 9 + b.ph) > 0;
-          c.fillStyle = '#2a1c1c'; const px = Math.round(X);
-          if (up) { c.fillRect(px - 3, Y - 2, 2, 1); c.fillRect(px - 1, Y - 1, 2, 1); c.fillRect(px + 1, Y - 1, 2, 1); c.fillRect(px + 3, Y - 2, 2, 1); }
-          else { c.fillRect(px - 3, Y, 2, 1); c.fillRect(px - 1, Y - 1, 2, 1); c.fillRect(px + 1, Y - 1, 2, 1); c.fillRect(px + 3, Y, 2, 1); }
-        });
-      }
-    };
-  },
   /* objet en orbite : un sprite minuscule qui tourne lentement dans le ciel ; cliquable */
   orbit(o) {
     const id = o.id || 'satellite'; let pos = null;
@@ -123,39 +108,40 @@ const KINDS = {
       }
     };
   },
-  /* roue qui tourne vraiment : la roue du décor, découpée en ellipse (vue de biais), est tournée dans son plan ; `skip` = zone à laisser fixe (barrière devant la roue) */
-  spin(o) {
-    const sx = o.rx / o.ry, bw = Math.ceil(o.rx * 2 + 4), bh = Math.ceil(o.ry * 2 + 4), tmp = document.createElement('canvas'); tmp.width = bw; tmp.height = bh;
-    const T = tmp.getContext('2d'), ox = Math.floor(o.cx - bw / 2), oy = Math.floor(o.cy - bh / 2);
-    return {
-      draw(g, c, t) {
-        if (!g.bg) return;
-        T.globalCompositeOperation = 'source-over'; T.clearRect(0, 0, bw, bh); T.save(); T.beginPath(); T.ellipse(o.cx - ox, o.cy - oy, o.rx, o.ry, 0, 0, Math.PI * 2); T.clip();
-        T.translate(o.cx - ox, o.cy - oy); T.scale(sx, 1); T.rotate(t * (o.speed ?? 0.3)); T.scale(1 / sx, 1); T.drawImage(g.bg, -o.cx, -o.cy, 480, 270); T.restore();
-        /* `fade` = [x0, yHaut, yBas] : à droite de x0, la rotation s'estompe de yHaut à yBas (la barrière reste celle du décor, sans coupure nette) */
-        if (o.fade) { const [x0, y0, y1] = o.fade, gr = T.createLinearGradient(0, y0 - oy, 0, y1 - oy); gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(1, 'rgba(0,0,0,1)'); T.globalCompositeOperation = 'destination-out'; T.fillStyle = gr; T.fillRect(x0 - ox, y0 - oy, bw, bh); T.fillStyle = 'rgba(0,0,0,1)'; T.fillRect(x0 - ox, y1 - oy, bw, bh); }
-        c.drawImage(tmp, ox, oy);
-      }
-    };
-  },
   /* oiseaux en sprites : 3 poses d'ailes (bird.1 à bird.3), qui traversent le ciel */
   flock(o) {
     const n = o.n ?? 4, R = rnd(o.seed || 5), bs = Array.from({ length: n }, () => ({ y: (o.y0 ?? 18) + R() * ((o.y1 ?? 70) - (o.y0 ?? 18)), sp: (o.speed ?? 14) * (0.8 + R() * 0.5), off: R() * 600, ph: R() * 6, dir: R() > 0.5 ? 1 : -1, sc: 0.5 + R() * 0.4 }));
+    let t0 = null;
     return {
       draw(g, c, t) {
+        /* la nuit, ils filent se coucher hors de l'écran (3 fois plus vite) et ne reviennent qu'après le réveil, en entrant par le bord */
+        const dt = t0 === null ? 0 : Math.max(0, Math.min(0.2, t - t0)); t0 = t; const night = !!g.night && g.night.st !== 'wake';
         bs.forEach(b => {
-          const im = g.spr('bird.' + ([1, 2, 3, 2][Math.floor(t * 7 + b.ph) % 4])); if (!im) return;
-          const x = ((t * b.sp + b.off) % 560) - 40, X = b.dir > 0 ? x : 480 - x, Y = Math.round(b.y + Math.sin(t * 0.8 + b.ph) * 4), w = im.width * b.sc, h = im.height * b.sc;
+          b.p = (b.p ?? b.off) + dt * b.sp * (night ? 3 : 1);
+          const x = (b.p % 560) - 40, off = x < -24 || x > 504;
+          if (off) b.hide = night; if (b.hide) return;
+          const im = g.spr('bird.' + ([1, 2, 3, 2][Math.floor(t * (night ? 12 : 7) + b.ph) % 4])); if (!im) return;
+          const X = b.dir > 0 ? x : 480 - x, Y = Math.round(b.y + Math.sin(t * 0.8 + b.ph) * 4), w = im.width * b.sc, h = im.height * b.sc;
           c.save(); c.translate(Math.round(X), Y); if (b.dir < 0) c.scale(-1, 1); c.drawImage(im, Math.round(-w / 2), Math.round(-h / 2), Math.round(w), Math.round(h)); c.restore();
         });
       }
     };
   },
-  /* poissons qui sautent : de temps en temps, un saumon jaillit d'un des points d'eau `spots` ([x, y, échelle]), décrit un arc en suivant
-     sa trajectoire et replonge ; ce qui est sous la surface est caché, éclaboussures et ronds dans l'eau au départ et à l'arrivée */
+  /* poissons qui sautent : de temps en temps, un saumon jaillit en pleine rivière, décrit un arc en suivant sa trajectoire et replonge ;
+     ce qui est sous la surface est caché, éclaboussures et ronds dans l'eau au départ et à l'arrivée. Départ et retombée sont tirés dans
+     l'eau lue sur le décor (`water` : zone de recherche, `k` : échelle × perspective), au milieu du courant, jamais contre les rochers. */
   fish(o) {
-    const R = rnd(o.seed || 21), spots = o.spots, D = 0.95, jumps = [];
-    let next = 1.5 + R() * 3;
+    const R = rnd(o.seed || 21), D = 0.95, jumps = [];
+    let next = 1.5 + R() * 3, wm = null;
+    const pick = g => {
+      for (let n = 0; n < 40 && wm.starts.length; n++) {
+        const [x, y] = wm.starts[(R() * wm.starts.length) | 0], s = (o.k ?? 1) * g.persp(y), dir = R() > 0.5 ? 1 : -1, L = 14 + R() * 8, H = 11 + R() * 7;
+        if (!wm.land(Math.round(x + dir * L * s), y)) continue;
+        let ok = true; for (let f = 0; f <= 11; f++) if (!wm.wet(Math.round(x + dir * L * s * f / 11), y)) { ok = false; break; }
+        if (ok) return { x, y, s, dir, L, H };
+      }
+      return null;
+    };
     const splash = (c, x, y, s, k) => {
       /* rond dans l'eau qui s'élargit, puis gouttes qui retombent */
       const a = 1 - k; if (a <= 0) return;
@@ -166,7 +152,9 @@ const KINDS = {
     return {
       draw(g, c, t) {
         const im = g.spr('fish');
-        if (t > next) { const sp = spots[(R() * spots.length) | 0]; jumps.push({ t0: t, x: sp[0], y: sp[1], s: sp[2] ?? 1, dir: sp[3] ?? (R() > 0.5 ? 1 : -1), L: 14 + R() * 8, H: 11 + R() * 7 }); next = t + (o.every ?? 4) + R() * (o.spread ?? 5); }
+        if (g.night && g.night.st !== 'wake') next = Math.max(next, t + 2 + R() * 3);   /* la nuit, les poissons dorment : plus de sauts */
+        if (!wm && g.bg && g.bg.width) wm = waterMap(g, o.water, o.k ?? 1);
+        if (t > next && wm) { const j = pick(g); if (j) jumps.push({ t0: t, ...j }); next = t + (o.every ?? 4) + R() * (o.spread ?? 5); }
         for (let i = jumps.length - 1; i >= 0; i--) {
           const j = jumps[i], k = (t - j.t0) / D, s = j.s;
           if (k > 1.8) { jumps.splice(i, 1); continue; }
@@ -263,6 +251,7 @@ function perch(o) {
           c.restore(); return;
         }
       }
+      if (perchSleep(g, c, o, dir, ph)) { pos = null; return; }
       const sc = o.scale ?? 0.7, tt = t + ph, stretch = (tt % 15) / 1.7, fireT = (tt + 7) % every, fire = o.fire !== false && fireT < 2.6;
       let a = 'down', b = 'down', f = 0;
       if (stretch < 1) { const seq = ['down', 'mid2', 'up', 'mid2', 'down'], q = stretch * 4, i = Math.floor(q); a = seq[i]; b = seq[Math.min(4, i + 1)]; f = q - i; }
@@ -280,5 +269,30 @@ function perch(o) {
       if (o.occ && g.sky && g.sky.occ) occlude(c, g.sky, o.x - w / 2 - 10, o.y - h - 10, w + 20, h + 20);
     }
   };
+}
+/* la nuit, le dragon perché se couche sur son perchoir (planche assets/pointclick/sleep/dragon_<espèce>.png, tools/sleep_simple.py) :
+   coucher image par image, pose « dort » tenue avec ses z z z, réveil ; réveillé avant d'être couché, il se relève par le même chemin */
+const DZ = { ember: [-35, -48], frost: [-27, -34], moss: [-30, -36], gold: [-17, -22] };   /* z z z : au-dessus de la tête (à gauche), pixels de la planche */
+function perchSleep(g, c, o, dir, ph) {
+  const st = o._sl, n = g.night, k = 'dragon_' + (o.kind || ''), A = g.sleepIdx && g.sleepIdx[k], sh = A && g.sleepSheet(k);
+  if (A && !sh && !o._ld) { o._ld = 1; Promise.resolve(g.img(`assets/pointclick/sleep/${k}.png`)).catch(() => {}); }   /* planche chargée dès l'arrivée */
+  if (!n || !sh) { o._sl = null; return false; }
+  const now = g.now, fr = names => { const out = []; for (const m of names) { const s = A.seg[m], h = A.hold && A.hold[m]; if (s) for (let i = 0; i < s[1]; i++) for (let r = h ? h[i] || 1 : 1; r > 0; r--) out.push(s[0] + i); } return out; };
+  let S = st;
+  if (!S) S = o._sl = { ph: 'down', t0: n.t0 + 3.5 + (ph % 3) * 0.6, fr: fr(['down1']) };
+  if (n.st === 'wake' && S.ph !== 'up' && S.ph !== 'over') {
+    if (S.ph === 'loop') S.fr = fr(['up1']); else { const j = Math.max(0, Math.min(S.fr.length - 1, Math.floor((now - S.t0) * A.fps))); S.fr = now < S.t0 ? [] : S.fr.slice(0, j + 1).reverse(); }
+    S.ph = 'up'; S.t0 = now;
+  }
+  if (now < S.t0 || S.ph === 'over') return false;
+  let f;
+  if (S.ph === 'loop') f = A.seg.loop[0];
+  else { const j = Math.floor((now - S.t0) * A.fps); if (j >= S.fr.length) { if (S.ph === 'down') { S.ph = 'loop'; f = A.seg.loop[0]; } else { S.ph = 'over'; return false; } } else f = S.fr[j]; }
+  const sc = o.scale ?? 0.7, sx = (f % A.cols) * A.w, sy = Math.floor(f / A.cols) * A.h;
+  c.save(); c.translate(Math.round(o.x), Math.round(o.y + 2)); if (dir > 0) c.scale(-1, 1);
+  c.drawImage(sh, sx, sy, A.w, A.h, Math.round(-A.ax * sc), Math.round(-A.ay * sc), Math.round(A.w * sc), Math.round(A.h * sc)); c.restore();
+  const Z = DZ[o.kind]; if (S.ph === 'loop' && Z) (g.zExtra = g.zExtra || []).push([o.x + Z[0] * sc * (dir > 0 ? -1 : 1), o.y + Z[1] * sc]);   /* z z z : dessinés par night.js */
+  if (o.occ && g.sky && g.sky.occ) occlude(c, g.sky, o.x - A.w * sc / 2 - 10, o.y - A.h * sc - 10, A.w * sc + 20, A.h * sc + 20);
+  return true;
 }
 export function makeAmbient(list) { return (list || []).map(o => KINDS[o.type](o)).filter(Boolean); }

@@ -7,12 +7,12 @@ const ORBIT = { type: 'orbit', spr: 'nazim', id: 'nazim_orbit', scale: 0.2, y: 4
 
 export default {
   id: 'meadow', bg: 'meadow.png', persp: [185, 0.6, 268, 1.0],
-  walk: [[[10, 268], [20, 242], [130, 238], [222, 238], [300, 234], [372, 206], [392, 190], [404, 190], [470, 214], [470, 268]]],
+  walk: [[[66, 268], [70, 242], [130, 238], [222, 238], [300, 234], [372, 206], [392, 190], [404, 190], [458, 214], [458, 268]]],
   fg: [],
-  start: { x: 30, y: 256, dir: 'r' },
+  start: { x: 80, y: 256, dir: 'r' },   /* à droite du tas d'os : on ne marche plus dessus */
   hot: [
     { id: 'palace', rect: [300, 11, 462, 98] }, { id: 'mountain', rect: [0, 38, 292, 98] },
-    { id: 'skull', rect: [10, 124, 114, 222], at: [120, 242], dir: 'l' }, { id: 'tripod', rect: [19, 38, 90, 165], at: [96, 242] },
+    { id: 'skull', rect: [10, 124, 114, 222], at: [90, 248], dir: 'l' }, { id: 'tripod', rect: [19, 38, 90, 165], at: [96, 242] },
     { id: 'ramp', rect: [188, 141, 293, 188], at: [236, 238] }, { id: 'circle', rect: [225, 182, 476, 226], at: [320, 236] },
     { id: 'fire', rect: [118, 198, 168, 232], at: [150, 244] }, { id: 'road', rect: [350, 100, 420, 190], at: [378, 206] }
   ],
@@ -31,7 +31,7 @@ export default {
 
   async enter(g) {
     blindEnter(g, BL);
-    if (g.flag('nazimGone')) { g.ents = g.ents.filter(e => e.id !== 'nazim'); g.amb.push(...makeAmbient([ORBIT])); }
+    if (g.flag('nazimGone')) { g.ents = g.ents.filter(e => e.id !== 'nazim'); g.amb.push(...makeAmbient([ORBIT])); const gi = g.ent('giant'); if (gi) { gi.x = GIANT[0] + 62; gi.y = GIANT[1] - 6; gi.at = [GIANT[0] + 10, GIANT[1] + 2]; } }
   },
   tick(g) {
     blindTick(g, BL);
@@ -103,7 +103,7 @@ export default {
     const gi = g.ent('giant'), nz = g.ent('nazim');
     await g.say('hero', 's3.n1'); await g.say('giant', 's3.n2');
     g.drop('cheese'); g.sfx('coin');
-    await g.walkEnt('giant', GIANT[0] + 62, GIANT[1] - 6, 46);
+    await g.walkEnt('giant', GIANT[0] + 62, GIANT[1] - 6, 46); gi.at = [GIANT[0] + 10, GIANT[1] + 2];   /* on lui parle là où il s'est mis */
     await g.say('nazim', 's3.n3');
     gi.spr = 'giant.swing'; g.sfx('shout'); await g.wait(450); g.sfx('whoosh'); g.shake(900, 3.5);
     g.ents = g.ents.filter(e => e !== nz);

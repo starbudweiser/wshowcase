@@ -5,7 +5,7 @@ const CART = [316, 198], LOAD = 10;
 
 export default {
   id: 'market', bg: 'market.png', persp: [170, 0.55, 268, 1.0],
-  walk: [[[175, 268], [175, 238], [200, 216], [250, 206], [320, 192], [350, 184], [392, 196], [470, 232], [470, 268]]],
+  walk: [[[175, 268], [175, 238], [200, 216], [250, 206], [320, 192], [350, 184], [392, 196], [458, 232], [458, 268]]],
   fg: [],
   start: { x: 192, y: 258, dir: 'r' },
   hot: [
@@ -51,6 +51,7 @@ export default {
         break;
       case 'crate':
         if (verb === 'take' || (verb === 'use' && !item)) {
+          if (g.flag('cartGone')) return false;   /* la charrette est partie : plus de chou à prendre (il restait à vie dans la besace) */
           if (g.has('cabbage')) { await g.say('hero', 's4.take.have'); return true; }
           await g.cut(async () => { await g.say('hero', 's4.take1'); g.sfx('pop'); g.give('cabbage'); }); return true;
         }

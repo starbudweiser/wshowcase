@@ -57,4 +57,5 @@ def main():
     json.dump(meta, open(os.path.join(OUT, 'hero_n.json'), 'w'))
 
 
-main()
+if __name__ == "__main__":
+    main()

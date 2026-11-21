@@ -4,7 +4,7 @@ const BL = BLINDS.ford;
 
 export default {
   id: 'ford', bg: 'ford.png', persp: [190, 0.62, 268, 1.0],
-  walk: [[[210, 268], [236, 248], [330, 224], [392, 198], [430, 204], [470, 226], [470, 268]]],
+  walk: [[[210, 268], [236, 248], [330, 224], [392, 198], [430, 204], [458, 226], [458, 268]]],
   fg: [],
   start: { x: 240, y: 258, dir: 'r' },
   hot: [
@@ -15,7 +15,7 @@ export default {
     { type: 'dragon', mode: 'perch', kind: 'ember', x: 255, y: 101, dir: -1, scale: 0.6 },
     { type: 'flock', n: 5, y0: 20, y1: 80, speed: 8, seed: 31 },
     { type: 'frames', id: 'ford_water', fps: 1.8 },
-    { type: 'fish', spots: [[190, 166, 0.65], [230, 173, 0.7], [262, 161, 0.6]], every: 5, seed: 33 },
+    { type: 'fish', water: [140, 148, 290, 205], k: 1.3, every: 5, seed: 33 },
     { type: 'frames', id: 'ford_mist', fps: 0.9 }
   ],
   ents: [

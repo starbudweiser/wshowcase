@@ -62,7 +62,7 @@ function lanePt(L, u) { const n = L.length - 1, f = Math.min(Math.max(u, 0), 1) 
 
 export function updateWinks(g, dt) {
   const w = g.wk || (g.wk = { run: null, recent: [] }); if (g.wkAt === undefined) g.wkAt = g.now + 110 + Math.random() * 80;
-  if (g.night || !g.started || g.titleEl) { if (w.run) endRun(g, w); return; }
+  if (g.night || !g.started || g.titleEl) { if (w.run) { if (g.night) pouf(g, w.run); endRun(g, w); } return; }
   if (w.run) return run(g, w, dt);
   if (g.now < g.wkAt || (g.gl && g.gl.run) || g.locked || g.bubbles.length || g.barks.length || g.narr || g.nq.length || g.hiBusy() || g.lowBusy()) return;
   const ok = IDS.filter(id => { const d = V[id]; return !w.recent.includes(id) && (!d.only || d.only.includes(g.st.scene)) && (!d.ext || g.sky); });
@@ -128,8 +128,35 @@ function wsfx(g, n) {
   else if (n === 'owl') snd.owl && snd.owl(); else if (n === 'click') g.sfx('step'); else if (n === 'boom') g.sfx('clang'); else g.sfx(n);
 }
 
+/* la nuit tombe pendant la scénette : tous ses acteurs visibles (créatures et personnages) disparaissent dans un « pouf » de fumée
+   au lieu de se coucher (choix de Stéphan, 17/11) */
+function pouf(g, r) {
+  let any = false;
+  for (const { e, c } of r.ents) {
+    if (!e.visible || e.x < -10 || e.x > 490 || (e.alpha ?? 1) < 0.2) continue;
+    const im = g.spr(e.spr), s = e.scale ?? g.persp(e.y), h = im ? im.height * s : 30, w = im ? im.width * s : 30;
+    (g.poufs = g.poufs || []).push({ t0: g.now, x: e.x, y: e.y - (e.bob || 0) - h / 2, r: Math.max(w, h) }); any = true;
+  }
+  if (any) g.sfx('pop');
+}
+function drawPoufs(g, c) {
+  const L = g.poufs; if (!L || !L.length) return; const pf = g.spr('puff'); g.poufs = L.filter(p => g.now - p.t0 < 0.9);
+  for (const p of g.poufs) {
+    const u = (g.now - p.t0) / 0.9;
+    for (let i = 0; i < 7; i++) {
+      const ang = i / 7 * Math.PI * 2 + 0.4, d = p.r * (0.12 + 0.38 * Math.sqrt(u)), k = (p.r / 40) * (0.7 + 0.9 * Math.sqrt(u)) * (i % 2 ? 0.8 : 1);
+      const x = p.x + Math.cos(ang) * d, y = p.y + Math.sin(ang) * d * 0.7 - u * 6; c.globalAlpha = Math.min(1, u * 10) * (1 - u) * 0.95;
+      if (pf) { const w = pf.width * k, h = pf.height * k; c.drawImage(pf, Math.round(x - w / 2), Math.round(y - h / 2), Math.round(w), Math.round(h)); }
+      else { c.fillStyle = '#e6e6e6'; c.beginPath(); c.arc(x, y, 6 * k, 0, 7); c.fill(); }
+    }
+    if (u < 0.25 && pf) { const k = (p.r / 40) * 1.4 * (1 - u * 2), w = pf.width * k, h = pf.height * k; c.globalAlpha = 1 - u * 4; c.drawImage(pf, Math.round(p.x - w / 2), Math.round(p.y - h / 2), Math.round(w), Math.round(h)); }
+  }
+  c.globalAlpha = 1;
+}
+
 /* fumée de la scénette de bricolage */
 export function drawWinks(g, c) {
+  drawPoufs(g, c);
   const r = g.wk && g.wk.run; if (!r || !r.puffs) return;
   c.save(); for (const p of r.puffs) { const a = g.now - p.t0; if (a > 3) continue; for (let i = 0; i < 9; i++) { const k = a / 3, ang = i * 0.7 + 1; c.globalAlpha = (1 - k) * 0.6; c.fillStyle = i % 2 ? '#d8d8d8' : '#8d8d8d'; c.beginPath(); c.arc(p.x + Math.cos(ang) * (6 + a * 18), p.y - a * 10 + Math.sin(ang) * (4 + a * 8), 4 + a * 5, 0, 7); c.fill(); } } c.restore();
 }

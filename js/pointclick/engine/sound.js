@@ -156,7 +156,7 @@ function stopTrack() {
   cur = null;
 }
 /* musiques enregistrées (Google Flow Music) : boucle sans couture assets/pointclick/music/<id>.mp3 ; sinon la piste synthétisée */
-const FILES = { rue: 0.55, wood: 0.55, mill: 0.55, meadow: 0.55, market: 0.55, gate: 0.55, house: 0.55, ford: 0.55, hall: 0.55, party: 0.55 }, fileCache = {};
+const FILES = { intro: 0.6, title: 0.55, rue: 0.55, wood: 0.55, mill: 0.55, meadow: 0.55, market: 0.55, gate: 0.55, house: 0.55, ford: 0.55, hall: 0.55, party: 0.55 }, fileCache = {};
 async function fileBuf(id) {
   if (fileCache[id]) return fileCache[id];
   const r = await fetch(`assets/pointclick/music/${id}.mp3`); if (!r.ok) throw new Error('music'); return (fileCache[id] = await ctx.decodeAudioData(await r.arrayBuffer()));
@@ -227,7 +227,6 @@ export const snd = {
   oneshot(kind) { if (!ambOn || !ONE[kind] || !ensure()) return; ONE[kind](); },
   oneshotFor(scene, night, interior) { const l = POOL[night ? (interior ? 'nightIn' : 'night') : scene]; return l && l[Math.random() * l.length | 0]; },
   unlock: ensure,
-  blip(who = 'hero') { const base = { hero: 330, merchant: 190, guard: 150, hen: 520, giant: 85, nazim: 300, narr: 260 }[who] || 260; tone({ f: base * (0.9 + Math.random() * 0.3), d: 0.045, g: 0.05, type: 'square' }); },
   step() { noise({ d: 0.06, f: 500 + Math.random() * 300, q: 0.8, g: 0.07, type: 'lowpass' }); },
   click() { tone({ f: 900, to: 600, d: 0.04, g: 0.05, type: 'triangle' }); },
   pop() { tone({ f: 420, to: 1100, d: 0.12, g: 0.1, type: 'triangle' }); tone({ f: 1320, d: 0.16, t: 0.1, g: 0.06, type: 'sine' }); },

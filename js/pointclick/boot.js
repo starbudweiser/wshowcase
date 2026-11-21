@@ -13,7 +13,7 @@ export async function open() {
   const { Game } = await import('./engine/game.js');
   let root;
   wm.open({
-    id: 'pointclick', appId: 'pointclick', title: T('Le Seau de Rivebois', 'The Bucket of Riverwood'), w: 980, h: 700, minw: 560, minh: 420, cls: 'pcwin', space: 'skyrim',
+    id: 'pointclick', appId: 'pointclick', title: T('Le Seau de Rivebois', 'The Bucket of Riverwood'), w: 1120, h: 676, minw: 560, minh: 361, cls: 'pcwin', space: 'skyrim',
     build: () => { root = h('div'); game = new Game(root); game.init(); window.pcGame = game; return root; },
     onclose: () => { if (game) { game.destroy(); game = null; window.pcGame = null; } }
   });

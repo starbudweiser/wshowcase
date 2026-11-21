@@ -1,9 +1,13 @@
 /* « La vitre de l'écran » : rarement et au hasard, quelque chose salit l'écran du joueur (mouche posée ou écrasée, éternuement du héros ou d'un personnage,
-   fiente d'oiseau) puis le héros vient le nettoyer avec sa main gantée (sprites FLUX, tools/gen_hands.sh), de façon différente à chaque fois :
-   paume en cercles, chiffon en zigzag, feuille de chou en éponge, plumeau par petits coups, manche en longs passages, ongle qui gratte,
-   buée soufflée puis frottée. L'avant-bras monte du bas de l'écran et pivote autour du coude, hors champ. */
+   fiente d'oiseau) puis le héros vient le nettoyer, de façon différente à chaque fois : paume en cercles, chiffon en zigzag, feuille de chou en éponge,
+   plumeau par petits coups, avant-bras en longs passages, bout du doigt qui frotte, buée soufflée puis frottée.
+   Le héros est ENTIER, de face, derrière la vitre (18/11/2026, plus de bras coupé) : poses FLUX où la main ou l'ustensile est plaqué contre le verre
+   (tools/gen_hero_clean.sh, détourées par tools/hero_clean_sprites.py). Il glisse tout entier sous les taches ; à chaque instant la pose retenue est celle
+   qui amène le point de contact sur la tache en gardant le héros le plus près du centre de l'écran. Il parle avec les portraits de nuit, alignés sur son visage. */
 import { snd } from './sound.js';
 import { pickPose } from './night.js';
+import { HERO_N } from '../data/sheets.js';
+import { CLEAN } from '../data/clean.js';
 const W = 480, H = 270, R = (a, b) => a + Math.random() * (b - a), pick = a => a[(Math.random() * a.length) | 0];
 const ease = k => k * k * (3 - 2 * k);
 
@@ -35,23 +39,48 @@ function flyDraw(c, f, t) {
   c.restore();
 }
 
-/* ───── le héros derrière la vitre, et ce qui sert à nettoyer ───── */
-const ELBOW = [W * 0.44, H + 96];                                   /* le coude du héros, sous le bord de l'écran */
-const KINDS = {   /* sprite de la main, geste, rayon nettoyé, vitesse, point de contact dans le sprite (fraction de sa hauteur) */
-  palm: { spr: 'hand.palm', move: 'circles', r: 30, v: 170, tip: 0.18 }, rag: { spr: 'hand.rag', move: 'zigzag', r: 30, v: 200, tip: 0.15 },
-  leaf: { spr: 'hand.leaf', move: 'zigzag', r: 32, v: 150, tip: 0.15 }, duster: { spr: 'hand.duster', move: 'flicks', r: 26, v: 330, tip: 0.12 },
-  sleeve: { spr: 'hand.sleeve', move: 'strokes', r: 36, v: 230, tip: 0.42 }, finger: { spr: 'hand.finger', move: 'scrape', r: 13, v: 120, tip: 0.04 },
-  breath: { spr: 'hand.breath', move: 'circles', r: 34, v: 150, tip: 0.18 }
+/* ───── le héros derrière la vitre ───── */
+const FW = 61;                                    /* largeur du visage à l'écran : celle du portrait de nuit, et celle de toutes les poses de nettoyage */
+const HOME = [W / 2, 112];                        /* où se tient son visage quand il parle */
+const PN = HERO_N.nNeutral, PSC = FW / PN[2];     /* portraits de nuit (même cadrage pour tous) : visage et échelle */
+const FIST = [95 - PN[0], 161 - PN[1]];           /* poing contre la vitre (hero_nKnockC), par rapport au visage, en pixels du portrait */
+const KINDS = {   /* façon de frotter, rayon nettoyé, vitesse du point de contact */
+  palm: { move: 'circles', r: 30, v: 150 }, rag: { move: 'zigzag', r: 30, v: 180 }, leaf: { move: 'zigzag', r: 32, v: 140 }, duster: { move: 'flicks', r: 26, v: 260 },
+  sleeve: { move: 'strokes', r: 36, v: 200 }, finger: { move: 'scrape', r: 13, v: 110 }, breath: { move: 'circles', r: 34, v: 140 }
 };
-function handDraw(g, c, r, t) {
-  const K = KINDS[r.kind], im = g.spr(K.spr); if (!im) return;
-  const s = (r.s || 1) * 0.82, w = im.width * s, h = im.height * s, ex = r.mirror ? W - ELBOW[0] : ELBOW[0];   /* héros tourné de l'autre côté : l'autre bras */
-  const dx = ex - r.x, dy = ELBOW[1] - r.y, d = Math.hypot(dx, dy), th = Math.atan2(-dx / d, dy / d) + (r.wob || 0);
-  c.save(); c.imageSmoothingEnabled = false; c.translate(Math.round(r.x), Math.round(r.y)); c.rotate(th); if (r.mirror) c.scale(-1, 1);
-  const press = 1 - 0.03 * Math.abs(Math.sin(t * 9));                   /* la main appuie sur la vitre */
-  c.drawImage(im, Math.round(-w / 2), Math.round(-h * K.tip), Math.round(w), Math.round(h * press)); c.restore();
+const TOOL = k => (k === 'breath' ? 'palm' : k);  /* après la buée, il frotte à la paume */
+const POSES = {}; for (const n of Object.keys(CLEAN)) { const t = n.split('_')[0]; (POSES[t] = POSES[t] || []).push(n); }
+const cpath = n => `assets/pointclick/spr/hc_${n}.png`;
+function cimg(g, n) { const i = g.imgs[cpath(n)]; return i && i.width ? i : null; }
+function loadClean(g) { if (g.hcLoad) return; g.hcLoad = 1; for (const n of Object.keys(CLEAN)) g.img(cpath(n)); }   /* chargées en tâche de fond, pas au démarrage */
+function ready(g, k) { const L = POSES[TOOL(k)] || []; return L.length > 0 && L.every(n => cimg(g, n)) && (k !== 'breath' || ['breath_a', 'breath_b'].every(n => CLEAN[n] && cimg(g, n))); }
+function off(run, n) { const m = CLEAN[n], mx = run.mirror ? -1 : 1; return [mx * (m[2] - m[0]), m[3] - m[1]]; }   /* contact par rapport au visage, à l'écran */
+/* plus haut que ça, le bas du buste (coupé à la taille dans l'image) apparaîtrait au-dessus du bord de l'écran : jamais de héros tronqué */
+function minFY(g, n) { const im = cimg(g, n); return im ? H + 2 - (im.height - CLEAN[n][1]) : -1e9; }
+function glide(run, tx, ty, dt, k) { const a = 1 - Math.exp(-dt * (k || 14)); run.F[0] += (tx - run.F[0]) * a; run.F[1] += (ty - run.F[1]) * a; }
+
+function heroDraw(g, c, run, k, t) {
+  const mx = run.mirror ? -1 : 1, lift = (1 - k) * 180;
+  let im = null, fx, fy, sc;
+  if (run.cl && cimg(g, run.cl)) { im = cimg(g, run.cl); [fx, fy] = CLEAN[run.cl]; sc = 1; }
+  else {
+    const talking = run.say && run.say.au && !run.say.au.paused && !run.say.au.ended, fl = talking && Math.floor(t * 7) % 2;
+    let key;
+    if (run.pose === 'knock') { const tk = t - (run.kt || t); key = tk < 0.25 ? 'KnockA' : tk < 0.33 ? 'KnockB' : 'KnockC'; }   /* élan, coup, poing contre la vitre */
+    else if (run.pose === 'sleepy') key = 'Blink';
+    else {
+      const base = run.p && (run.pose === 'neutral' || run.pose === 'talk') ? run.p : null;
+      if (base !== run.pb) { run.pb = base; run.pbT = t; }
+      key = base && g.spr('hero.n' + base) ? (t - run.pbT < 0.14 && g.spr('hero.n' + base + 'A') ? base + 'A' : base) : fl ? 'Talk' : t % 3.7 < 0.14 ? 'Blink' : 'Neutral';
+    }
+    im = g.spr('hero.n' + key) || g.spr('hero.nNeutral'); fx = PN[0]; fy = PN[1]; sc = PSC;
+  }
+  if (!im) return;
+  c.save(); c.imageSmoothingEnabled = false; c.globalAlpha = Math.min(1, k * 1.4);
+  c.translate(Math.round(run.F[0]), Math.round(run.F[1] + lift)); c.scale(mx * sc, sc); c.drawImage(im, -fx, -fy); c.restore();
 }
-/* trajet de la main sur les salissures, selon la façon de nettoyer */
+
+/* trajet du point de contact sur les salissures, selon la façon de frotter */
 function handPath(kind, S, fog) {
   const pts = S.map(s => [s.x, s.y]).concat(fog ? [[fog.x, fog.y]] : []), xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
   const x0 = Math.max(40, Math.min(...xs) - 30), x1 = Math.min(440, Math.max(...xs) + 30), y0 = Math.max(30, Math.min(...ys) - 24), y1 = Math.min(240, Math.max(...ys) + 40), p = [];
@@ -62,15 +91,7 @@ function handPath(kind, S, fog) {
   else if (M === 'circles') { for (let y = y0; y <= y1 + 1; y += 40) for (let x = x0; x <= x1 + 1; x += 44) for (let k = 0; k <= 8; k++) { const a = k / 8 * Math.PI * 2; p.push([x + Math.cos(a) * 18, y + Math.sin(a) * 14]); } }
   else if (M === 'flicks') { for (const q of (big.length ? big : pts)) for (let k = 0; k < 4; k++) p.push([q[0] - 16, q[1] + (k % 2 ? 8 : -8)], [q[0] + 16, q[1] + (k % 2 ? -8 : 8)]); }
   else if (M === 'scrape') { for (const q of (big.length ? big : pts).slice(0, 5)) for (let k = 0; k < 3; k++) p.push([q[0] - 10, q[1] - 6 + k * 6], [q[0] + 10, q[1] - 6 + k * 6]); for (let y = y0; y <= y1 + 1; y += 34) p.push([x0, y], [x1, y]); }
-  p.push([ELBOW[0], H + 140]);                                               /* la main repart vers le bas */
   return p;
-}
-
-function heroFace(g, c, run, k, t) {
-  const pose = run.pose, key = { talk: 'hero.pTalk', sleepy: 'hero.pSleepy', knock: 'hero.pKnock1', blink: 'hero.pBlink' }[pose] || 'hero.pNeutral', talking = run.say && run.say.au && !run.say.au.paused && !run.say.au.ended;
-  const base = run.p && (pose === 'neutral' || pose === 'talk') ? 'hero.p' + run.p : null, fl = talking && Math.floor(t * 7) % 2;
-  const im = (base && g.spr(base) ? g.spr(fl && g.spr(base + 'T') ? base + 'T' : base) : g.spr(fl && pose !== 'sleepy' ? 'hero.pTalk' : key)) || g.spr('hero.pNeutral'); if (!im) return;
-  const am = talking ? 1.7 : 1, sc = 0.82 * (1 + 0.012 * Math.sin(t * 1.7)), y = H * 0.74 + (1 - k) * 180 + Math.sin(t * 2.1) * 2 * am; c.save(); c.imageSmoothingEnabled = false; c.globalAlpha = Math.min(1, k * 1.4); c.translate(W / 2 + Math.sin(t * 1.3) * 3 * am, y); c.rotate(Math.sin(t * 0.9) * 0.025 * am); if (run.mirror) c.scale(-1, 1); c.drawImage(im, -im.width * sc / 2, -im.height * sc / 2, im.width * sc, im.height * sc); c.restore();
 }
 
 function say(g, run, key) {
@@ -80,9 +101,11 @@ function say(g, run, key) {
 }
 
 /* ───── les scénettes : suites d'étapes {w: attente} {say} {fn} {hero:'in'|'out'} {rag: true} ───── */
+const pMinY = g => { const im = g.spr('hero.nNeutral'); return im ? H + 2 - (im.height - PN[1]) * PSC : HOME[1]; };   /* portrait : plus haut, le bas du buste apparaîtrait */
+const knock = (g, r) => { r.pose = 'knock'; r.kt = g.now; const f = g.gl.fly; if (f) { const mx = f.x > W / 2 ? -1 : 1; r.mirror = mx < 0; r.FT = [f.x - mx * FIST[0] * PSC, Math.max(f.y - FIST[1] * PSC, pMinY(g))]; } };   /* il amène son poing sur la mouche */
 const SC = {
-  flySwat: () => [{ fn: (g, r) => spawnFly(g, 'wander') }, { w: 6.5 }, { fn: g => landFly(g) }, { w: 1.8 }, { hero: 'in' }, { say: 'clean.fly.1', pose: 'talk' }, { fn: (g, r) => { r.pose = 'knock'; } }, { w: 0.35 },
-    { fn: (g, r) => { const f = g.gl.fly; if (f) { splat(g.gl, 'fly', f.x, f.y); g.gl.fly = null; } g.shake(220, 2.4); } }, { w: 0.5 }, { fn: (g, r) => { r.pose = 'sleepy'; } }, { say: 'clean.fly.2' }, { rag: true }, { say: 'clean.done', pose: 'neutral' }, { hero: 'out' }],
+  flySwat: () => [{ fn: (g, r) => spawnFly(g, 'wander') }, { w: 6.5 }, { fn: g => landFly(g) }, { w: 1.8 }, { hero: 'in' }, { say: 'clean.fly.1', pose: 'talk' }, { fn: knock }, { w: 0.33 },
+    { fn: (g, r) => { const f = g.gl.fly; if (f) { splat(g.gl, 'fly', f.x, f.y); g.gl.fly = null; } g.shake(220, 2.4); } }, { w: 0.5 }, { fn: (g, r) => { r.pose = 'sleepy'; r.FT = null; } }, { say: 'clean.fly.2' }, { rag: true }, { say: 'clean.done', pose: 'neutral' }, { hero: 'out' }],
   flyCrash: () => [{ fn: (g, r) => spawnFly(g, 'crash') }, { w: 3.4 }, { hero: 'in' }, { say: 'clean.fly.crash', pose: 'talk' }, { rag: true }, { say: 'clean.done', pose: 'neutral' }, { hero: 'out' }],
   flyAway: () => [{ fn: (g, r) => spawnFly(g, 'wander') }, { w: 6 }, { fn: g => landFly(g) }, { w: 2 }, { hero: 'in' }, { say: 'clean.fly.1', pose: 'talk' }, { fn: g => { g.sfx('whoosh'); } }, { w: 0.6 }, { fn: g => { const f = g.gl.fly; if (f) { f.mode = 'off'; f.vx = R(-160, 160); f.vy = R(-200, -80); } } }, { w: 1.2 }, { say: 'clean.fly.4', pose: 'neutral' }, { hero: 'out' }],
   sneezeHero: () => [{ hero: 'in' }, { say: 'clean.sneeze.a', pose: 'sleepy' }, { fn: (g, r) => { r.pose = 'talk'; splat(g.gl, 'snot', R(150, 330), R(50, 120)); g.shake(300, 3.5); } }, { say: 'clean.sneeze.b' }, { w: 0.5 }, { fn: (g, r) => { r.pose = 'neutral'; } }, { say: 'clean.sneeze.2' }, { rag: true }, { say: 'clean.done' }, { hero: 'out' }],
@@ -92,10 +115,11 @@ const SC = {
 const IDS = Object.keys(SC);
 
 function spawnFly(g, mode) { g.gl.fly = { x: mode === 'crash' ? R(120, 360) : R(-10, 490), y: mode === 'crash' ? R(50, 130) : R(20, 250), vx: R(-90, 90), vy: R(-70, 70), s: mode === 'crash' ? 0.6 : 1.4, mode, t: 0, buzz: 0, tx: R(80, 400), ty: R(60, 200) }; }
-function landFly(g) { const f = g.gl.fly; if (f) { f.mode = 'land'; f.vx = f.vy = 0; f.s = 2.6; f.x = R(120, 360); f.y = R(40, 130); } }
+function landFly(g) { const f = g.gl.fly; if (f) { f.mode = 'land'; f.vx = f.vy = 0; f.s = 2.6; f.x = R(110, 370); f.y = R(188, 226); } }   /* dans la moitié basse : à portée du poing sans que le héros monte (buste entier) */
 
 export function updateGlass(g, dt) {
   const gl = g.gl || (g.gl = { stains: [], drips: [], fly: null, run: null, bird: null, at: undefined });
+  if (g.started) loadClean(g);
   if (gl.at === undefined) gl.at = g.now + 220 + R(0, 140);
   for (const d of gl.drips) { if (d.len < d.max) d.len += d.spd * dt; }
   const f = gl.fly;
@@ -106,7 +130,6 @@ export function updateGlass(g, dt) {
     else if (f.mode === 'off') { f.x += f.vx * dt; f.y += f.vy * dt; f.vy -= 40 * dt; f.s *= 1 - dt * 0.8; if (f.y < -20 || f.s < 0.2) gl.fly = null; }
     else if (f.mode === 'land' && Math.random() < dt * 0.7) { f.x += R(-6, 6); f.y += R(-4, 4); }
   }
-  /* rag : zigzag sur les salissures, qui s'effacent au passage */
   const run = gl.run;
   if (run) runGlass(g, gl, run, dt);
   else if (gl.stains.length && !gl.run) { /* salissures orphelines : on les nettoie dès que possible */ if (idle(g)) start(g, gl, 'sneezeHero', true); }
@@ -114,13 +137,18 @@ export function updateGlass(g, dt) {
 }
 function idle(g) { return g.started && !g.titleEl && !g.night && !g.locked && !g.bubbles.length && !g.barks.length && !g.narr && !g.nq.length && !g.hiBusy() && !g.lowBusy(); }
 function start(g, gl, id, orphan) {
-  const run = { id, q: SC[id]().slice(), cur: null, t0: g.now, hk: 0, hdir: 0, pose: 'neutral', say: null, rag: null, mirror: Math.random() < 0.5,   /* il ne se tourne pas toujours du même côté */ kind: id === 'bird' ? pick(['finger', 'duster', 'rag']) : pick(['palm', 'rag', 'leaf', 'duster', 'sleeve', 'finger', 'breath']), wait: 0 };
+  const ok = Object.keys(KINDS).filter(k => ready(g, k)), kinds = id === 'bird' ? ['finger', 'duster', 'rag'].filter(k => ok.includes(k)) : ok;
+  if (!kinds.length) { gl.at = g.now + 20; return; }                     /* poses pas encore chargées : on réessaie plus tard */
+  const run = { id, q: SC[id]().slice(), cur: null, t0: g.now, hk: 0, hdir: 0, pose: 'neutral', say: null, rag: null, blow: null, cl: null, F: HOME.slice(), FT: null,
+    mirror: Math.random() < 0.5, kind: pick(kinds), wait: 0 };
   if (orphan) { run.q = [{ hero: 'in' }, { say: 'clean.sneeze.2', pose: 'talk' }, { rag: true }, { say: 'clean.done', pose: 'neutral' }, { hero: 'out' }]; }
   gl.run = run;
 }
 function runGlass(g, gl, run, dt) {
   const now = g.now;
   if (run.hdir) { run.hk = Math.max(0, Math.min(1, run.hk + run.hdir * dt / 0.8)); if (run.hk === 0 || run.hk === 1) run.hdir = 0; }
+  if (!run.rag && !run.blow) { const T = run.FT || HOME; glide(run, T[0], Math.max(T[1], pMinY(g)), dt, run.FT ? 22 : 6); }   /* au repos, il revient au centre ; pour frapper, il amène son poing */
+  if (run.blow) return blowStep(g, gl, run, dt);
   if (run.say) { const s = run.say, playing = s.au && !s.au.paused && !s.au.ended && !s.au.error; if (now > s.end && !playing) { s.b.remove(); run.say = null; } else return; }
   if (run.rag) return ragStep(g, gl, run, dt);
   if (run.wait > 0) { run.wait -= dt; return; }
@@ -133,34 +161,46 @@ function runGlass(g, gl, run, dt) {
   else if (it.rag) { run.kind = typeof it.rag === 'string' ? it.rag : run.kind; run.q.unshift({ rag2: 1 }); say(g, run, 'clean.with.' + run.kind); }
   else if (it.rag2) {
     if (!gl.stains.length) { run.rag = null; return; }
-    if (run.kind === 'breath' && !gl.fog) { const S = gl.stains, cx = S.reduce((a, q) => a + q.x, 0) / S.length, cy = S.reduce((a, q) => a + q.y, 0) / S.length; gl.fog = { x: cx, y: cy, r: 70, a: 0, grow: 1 }; run.q.unshift({ w: 1.1 }, { rag2: 1 }); snd.whoosh && snd.whoosh(); return; }   /* il souffle d'abord de la buée */
-    const ex = run.mirror ? W - ELBOW[0] : ELBOW[0], path = handPath(run.kind, gl.stains, gl.fog); path[path.length - 1] = [ex, H + 140];
-    run.rag = { x: ex, y: H + 140, kind: run.kind, path, i: 0, mirror: run.mirror };
+    const S = gl.stains, cx = S.reduce((a, q) => a + q.x, 0) / S.length, cy = S.reduce((a, q) => a + q.y, 0) / S.length;
+    run.mirror = cx > W / 2;                                                  /* il frotte avec la main du côté des taches */
+    if (run.kind === 'breath' && !gl.fog) { run.blow = { t0: now, x: cx, y: cy }; return; }   /* il souffle d'abord de la buée */
+    const path = handPath(run.kind, S, gl.fog);
+    run.rag = { x: path[0][0], y: path[0][1], kind: run.kind, path, i: 0 };
   }
   if (run.skip) { run.q.length = 0; }
 }
+function blowStep(g, gl, run, dt) {   /* joues gonflées, puis il souffle sur les taches : la buée naît devant sa bouche */
+  const b = run.blow, u = g.now - b.t0;
+  run.cl = u < 0.55 ? 'breath_a' : 'breath_b'; const o = off(run, run.cl); glide(run, b.x - o[0], Math.max(b.y - o[1], minFY(g, run.cl)), dt);
+  if (u >= 0.55 && !gl.fog) { gl.fog = { x: b.x, y: b.y, r: 70, a: 0, grow: 1 }; snd.whoosh && snd.whoosh(); }
+  if (u >= 1.7) { run.blow = null; run.cl = null; run.q.unshift({ rag2: 1 }); }
+}
 function ragStep(g, gl, run, dt) {
-  const r = run.rag, K = KINDS[r.kind], p = r.path[r.i]; if (!p) { run.rag = null; gl.fog = null; return; }
+  const r = run.rag, K = KINDS[r.kind], p = r.path[r.i];
+  if (!p) { run.rag = null; run.cl = null; gl.fog = null; gl.stains = []; gl.drips = []; return; }
   const dx = p[0] - r.x, dy = p[1] - r.y, d = Math.hypot(dx, dy), st = K.v * dt;
   if (d <= st) { r.x = p[0]; r.y = p[1]; r.i++; if (r.i % 2) snd.squeak && snd.squeak(); } else { r.x += dx / d * st; r.y += dy / d * st; }
-  r.wob = Math.sin(g.now * (K.move === 'flicks' ? 22 : 8)) * (K.move === 'flicks' ? 0.22 : 0.06);
-  for (const s of gl.stains) if (Math.hypot(s.x - r.x, s.y - r.y) < K.r) s.a = Math.max(0, s.a - dt * 7);
-  for (const q of gl.drips) if (Math.hypot(q.x - r.x, q.y + q.len / 2 - r.y) < K.r + 4) q.a = Math.max(0, q.a - dt * 7);
-  if (gl.fog && Math.hypot(gl.fog.x - r.x, gl.fog.y - r.y) < gl.fog.r) gl.fog.a = Math.max(0, gl.fog.a - dt * 0.9);
+  /* pose : celle qui pose le contact sur (r.x, r.y) avec le visage le plus près du centre ; on n'en change que si c'est nettement mieux */
+  const cost = n => { const o = off(run, n), ty = r.y - o[1], lo = minFY(g, n); return Math.hypot(r.x - o[0] - HOME[0], (Math.max(ty, lo) - HOME[1]) * 1.3) + Math.max(0, lo - ty) * 8; };   /* contact hors d'atteinte sans tronquer le héros : très pénalisé */
+  if (!run.cl || g.now - (run.clT || 0) > 0.16) { let best = run.cl, bc = run.cl && CLEAN[run.cl] && run.cl.startsWith(TOOL(r.kind)) ? cost(run.cl) - 14 : 1e9; for (const n of POSES[TOOL(r.kind)]) { const c = cost(n); if (c < bc) { bc = c; best = n; } } if (best !== run.cl) { run.cl = best; run.clT = g.now; } }
+  const o = off(run, run.cl); glide(run, r.x - o[0], Math.max(r.y - o[1], minFY(g, run.cl)), dt, 16);
+  const hx = run.F[0] + o[0], hy = run.F[1] + o[1];                           /* là où la main est vraiment plaquée */
+  for (const s of gl.stains) if (Math.hypot(s.x - hx, s.y - hy) < K.r) s.a = Math.max(0, s.a - dt * 7);
+  for (const q of gl.drips) if (Math.hypot(q.x - hx, q.y + q.len / 2 - hy) < K.r + 4) q.a = Math.max(0, q.a - dt * 7);
+  if (gl.fog && Math.hypot(gl.fog.x - hx, gl.fog.y - hy) < gl.fog.r) gl.fog.a = Math.max(0, gl.fog.a - dt * 0.9);
   gl.stains = gl.stains.filter(s => s.a > 0.02); gl.drips = gl.drips.filter(s => s.a > 0.02);
 }
 function finish(g, gl, run) { gl.run = null; gl.stains = []; gl.drips = []; gl.fly = null; gl.fog = null; gl.at = g.now + 360 + R(0, 300); if (run.say) run.say.b.remove(); }
 
 export function drawGlass(g, c) {
-  const gl = g.gl; if (!gl) return; const t = g.now;
+  const gl = g.gl; if (!gl) return; const t = g.now, run = gl.run;
+  if (run && run.hk > 0) heroDraw(g, c, run, ease(run.hk), t);               /* derrière la vitre : les salissures, la buée et la mouche passent devant lui */
   for (const d of gl.drips) { if (d.len < 1) continue; c.save(); c.globalAlpha = 0.6 * d.a; c.strokeStyle = d.col; c.lineWidth = 2.2; c.lineCap = 'round'; c.beginPath(); c.moveTo(d.x, d.y); c.lineTo(d.x, d.y + d.len); c.stroke(); c.fillStyle = d.col; c.beginPath(); c.arc(d.x, d.y + d.len, 2.4, 0, 7); c.fill(); c.restore(); }
   for (const s of gl.stains) { c.save(); c.globalAlpha = 0.95 * s.a; c.fillStyle = s.col; c.beginPath(); c.arc(s.x, s.y, s.r, 0, 7); c.fill(); c.globalAlpha = 0.55 * s.a; c.fillStyle = '#fff'; c.beginPath(); c.arc(s.x - s.r * 0.35, s.y - s.r * 0.4, Math.max(0.5, s.r * 0.28), 0, 7); c.fill(); c.restore(); }
   if (gl.fog) { const f = gl.fog; if (f.grow) { f.a = Math.min(0.7, f.a + 0.03); if (f.a >= 0.7) f.grow = 0; } c.save(); const rg = c.createRadialGradient(f.x, f.y, 4, f.x, f.y, f.r); rg.addColorStop(0, `rgba(235,240,245,${f.a})`); rg.addColorStop(1, 'rgba(235,240,245,0)'); c.fillStyle = rg; c.beginPath(); c.ellipse(f.x, f.y, f.r * 1.3, f.r, 0, 0, 7); c.fill(); c.restore(); }   /* buée */
-  const run = gl.run;
-  if (run && run.hk > 0) heroFace(g, c, run, ease(run.hk), t);
   if (gl.fly) flyDraw(c, gl.fly, t);
   if (run && run.bird) { const b = run.bird, u = (t - b.t0) / 2.1; if (u < 1) { c.save(); c.fillStyle = '#16120e'; const x = -30 + (b.x + 30) * u, y = b.y0 + 10 * u * u - Math.sin(u * 8) * 3, f = Math.sin(t * 30) * 4 * (1 - u); c.translate(x, y); c.scale(1 + u * 1.8, 1 + u * 1.8); c.beginPath(); c.ellipse(0, 0, 5, 2.4, 0, 0, 7); c.fill(); c.beginPath(); c.moveTo(-1, 0); c.lineTo(-7, -6 - f); c.lineTo(2, 0); c.fill(); c.beginPath(); c.moveTo(-1, 0); c.lineTo(-7, 6 + f); c.lineTo(2, 0); c.fill(); c.restore(); } }
-  if (run && run.rag) handDraw(g, c, run.rag, t);
 }
-export function playGlass(g, id) { const gl = g.gl || (g.gl = { stains: [], drips: [], fly: null, run: null, bird: null, at: undefined }); gl.run = null; gl.stains = []; gl.drips = []; gl.fly = null; start(g, gl, id); }
+/* lance un nettoyage précis (essais) */
+export function playGlass(g, id, kind) { const gl = g.gl || (g.gl = { stains: [], drips: [], fly: null, run: null, bird: null, at: undefined }); loadClean(g); gl.run = null; gl.stains = []; gl.drips = []; gl.fly = null; start(g, gl, id); if (kind && gl.run) gl.run.kind = kind; }
 export const GLASS_IDS = IDS;

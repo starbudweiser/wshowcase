@@ -48,6 +48,37 @@ if os.path.exists(GC):
     CONF['giant'] = ('giant', 'giant', [('guide.png', 3), (c['elan'], 8), (c['jet'], 10), (c['yawn'], 12), (c['sit'], 9), (c['settle'], 9), (c['sleep'], 6)],
                      [(c['sleep'], 4), (c['wake'], 12), (c['rise'], 9), ('guide.png', 6)])
 
+# lot 2 (16/11) : le marchand (rue, fête) et la compagne d'armes (grande salle), poses de tools/sleep_keys.py choisies sur planche
+for key in ('merchant', 'follower'):
+    f = os.path.join(W, key, 'choix.json')
+    if not os.path.exists(f): continue
+    c = json.load(open(f))
+    dn = [('guide.png', 3), (c['yawn'], 12), (c['sit'], 9)] + ([(c['settle'], 9)] if 'settle' in c else []) + [(c['sleep'], 6)]
+    CONF[key] = (key, key, dn, [(c['sleep'], 4), (c['sit'], 12), (c['rise'], 9), ('guide.png', 6)])
+
+# lot 3 (16/11) : les 10 clins d'œil « Pourquoi il fait si sombre ? », objet gardé sur les yeux ; pas de pose « settle »
+for n in ('pot', 'sack', 'hat', 'cabbage', 'helmet', 'basket', 'boot', 'mushroom', 'banner', 'partyhat'):
+    key = 'blind_' + n; f = os.path.join(W, key, 'choix.json')
+    if not os.path.exists(f): continue
+    c = json.load(open(f))
+    CONF[key] = (key, key, [('guide.png', 3), (c['yawn'], 12), (c['sit'], 9), (c['sleep'], 6)],
+                 [(c['sleep'], 4), (c['sit'], 12), (c['rise'], 9), ('guide.png', 6)])
+
+# papillon géant (bois, 16/11) : il se pose (le moteur l'amène sur son champignon, scenes/wood.js PERCH), baisse les ailes, dort emmitouflé
+BC = os.path.join(W, 'butterfly', 'choix.json')
+if os.path.exists(BC):
+    c = json.load(open(BC))
+    CONF['butterfly'] = ('butterfly', 'butterfly', [('guide.png', 3), (c['land'], 9), (c['fold'], 12), (c['sleep'], 6)],
+                         [(c['sleep'], 4), (c['stretch'], 12), ('guide.png', 6)])
+
+# dragons perchés (17/11) : joués par ambient.js perchSleep (pas des entités) ; réveil = bâillement puis pose de vol « ailes basses »
+for k in ('ember', 'frost', 'moss', 'gold'):
+    f = os.path.join(W, 'dragon_' + k, 'choix.json')
+    if not os.path.exists(f): continue
+    c = json.load(open(f))
+    CONF['dragon_' + k] = (f'dragon_{k}_down', 'dragon_' + k, [('guide.png', 3), (c['yawn'], 12), (c['curl'], 9), (c['sleep'], 6)],
+                           [(c['sleep'], 4), (c['yawn'], 10), ('guide.png', 6)])
+
 NOHOLES = {'giant'}
 
 

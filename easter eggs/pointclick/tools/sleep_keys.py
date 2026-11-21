@@ -83,6 +83,71 @@ CHARS = {
 SEEDS = (1, 2, 3)
 
 
+# lot 2 (16/11/2026), version simple : le marchand (rue, fête) et la compagne d'armes de la grande salle ; tête de même taille que debout
+HS = " His head is exactly the same size as in the reference picture: he is not closer to the camera."
+HSF = " Her head is exactly the same size as in the reference picture: she is not closer to the camera."
+FOL_BOX = {'yawn': (.40, .40, 1.18), 'sit': (.46, .46, .60), 'sleep': (.46, .46, .56), 'rise': (.40, .40, .80)}
+MER_BOX = dict(HUM_BOX, sit=(.46, .46, .70), rise=(.40, .40, .90), sleep=(.60, .60, .30))   # assis et à genoux sortaient trop petits (tête 0,8 fois celle de debout)
+CHARS['merchant'] = dict(src='ch2_merchant.png', kind='hum', body=.95, boxes=MER_BOX, poses={
+    'yawn': "The stout bald merchant stands and stretches, both arms raised high above his head, his mouth wide open in a huge yawn under his big moustache, eyes squeezed shut, his round belly pushed forward." + HS,
+    'sit': "The stout bald merchant sits down on the ground, legs stretched forward, his fur-trimmed coat and leather apron spread around him, both hands patting his round belly, drowsy half-closed eyes." + HS,
+    'settle': "The stout bald merchant lies down on his back on the ground, his body horizontal across the picture with his head on the left and his boots on the right, propped up on one elbow, heavy drooping eyelids." + HS,
+    'sleep': "The stout bald merchant lies asleep on his back on the ground, his body horizontal across the picture with his head on the left and his boots on the right, both hands folded on his round belly, his big moustache fluttering, eyes closed, mouth open snoring." + HS,
+    'rise': "The stout bald merchant gets up from the ground: he kneels on one knee, one hand on his raised knee, the other rubbing the small of his back, grumpy face." + HS})
+CHARS['follower'] = dict(src='ch_follower.png', kind='hum', body=.80, boxes=FOL_BOX, poses={
+    'yawn': "The armored woman stands and stretches, both arms raised high above her head, her mouth wide open in a big yawn, eyes squeezed shut, her huge overloaded backpack still on her back with all its swords, the cheese wheel and the hen." + HSF,
+    'sit': "The armored woman sits down on the ground, legs stretched forward, leaning back against her huge overloaded backpack which stands upright on the ground behind her, with all its swords, the cheese wheel and the hen, arms crossed, drowsy half-closed eyes." + HSF,
+    'sleep': "The armored woman sleeps sitting on the ground, legs stretched forward, slumped back against her huge overloaded backpack which stands upright on the ground behind her, with all its swords, the cheese wheel and the hen asleep on top, her chin dropped on her chest, arms crossed, eyes closed, mouth open snoring." + HSF,
+    'rise': "The armored woman gets up from the ground: she kneels on one knee, one hand pushing on her raised knee, her huge overloaded backpack on her back with all its swords, the cheese wheel and the hen, groggy face." + HSF})
+
+
+# lot 3 (16/11/2026) : les 10 clins d'œil « Pourquoi il fait si sombre ? » (scenes/blind.js) ; ils gardent leur objet sur les yeux pour dormir
+BL_BOX = dict(HUM_BOX, sit=(.44, .44, .64), rise=(.40, .40, .86), sleep=(.58, .58, .30))
+BLIND = {  # clé : (qui, il/elle, objet gardé)
+  'pot': ("The stocky villager in brown clothes", 'm', "the big dented iron cooking pot still pulled down over his whole face"),
+  'sack': ("The peasant woman in a grey dress and apron", 'f', "the burlap sack still pulled down over her head and eyes"),
+  'hat': ("The bearded hunter in furs", 'm', "his huge shaggy fur hat still pulled down over his eyes, his spear laid on the ground beside him (exactly one spear)"),
+  'cabbage': ("The villager in brown clothes", 'm', "his whole head still hidden inside the giant cabbage"),
+  'helmet': ("The man in a brown leather coat", 'm', "the iron helmet still pulled down over his whole face"),
+  'basket': ("The stout man in a white shirt", 'm', "the wicker basket still upside down over his head and eyes"),
+  'boot': ("The ragged jester bard in colorful patched clothes", 'm', "the old leather boot still stuck over his head, his lute still on his back"),
+  'mushroom': ("The old bearded man in a green robe", 'm', "the giant red spotted mushroom cap still pulled down over his eyes"),
+  'banner': ("The woman in a long white dress", 'f', "the long red embroidered banner still draped over her head"),
+  'partyhat': ("The laughing man in a blue jacket", 'm', "the striped party hat still pulled down over his eyes, his drum still strapped at his side"),
+}
+for n, (who, sx, obj) in BLIND.items():
+    his, he = ('her', 'she') if sx == 'f' else ('his', 'he')
+    hs = f" {his.capitalize()} head is exactly the same size as in the reference picture: {he} is not closer to the camera. Keep {obj}."
+    CHARS['blind_' + n] = dict(src=f'blind_{n}.png', kind='hum', body=.95, boxes=BL_BOX, poses={
+      'yawn': f"{who} stands and stretches, both arms raised high above {his} head, mouth wide open in a big yawn." + hs,
+      'sit': f"{who} sits down on the ground, legs stretched forward, both hands resting on {his} knees, nodding off." + hs,
+      'sleep': f"{who} lies asleep on {his} back on the ground, {his} body horizontal across the picture with {his} head on the left and {his} feet on the right, hands folded on {his} belly, snoring." + hs,
+      'rise': f"{who} gets up from the ground: {he} kneels on one knee, one hand on {his} raised knee, groggy." + hs})
+# le chou : FLUX le grossit assis et à genoux (1er passage) -> boîtes réduites de 40 %
+CHARS['blind_cabbage']['boxes'] = dict(BL_BOX, sit=(.27, .27, .40), rise=(.24, .24, .52))
+
+
+# papillon géant (bois, 16/11) : il se pose sur un chapeau de champignon, s'enveloppe dans ses ailes et dort ; vue de face comme son sprite
+BF_BOX = {'land': (.42, .42, .90), 'fold': (.40, .40, .80), 'sleep': (.34, .34, .70), 'stretch': (.55, .55, 1.0)}
+BF = " Same front view, same size as in the reference picture: its body is exactly as big as in the reference."
+CHARS['butterfly'] = dict(src='ch_butterfly.png', kind='ani', boxes=BF_BOX, poses={
+  'land': "The giant butterfly lands, seen from the front: its wings half raised and drawn up above its body, its thin legs stretched down to touch the ground, big cute eyes half closed, sleepy." + BF,
+  'fold': "The giant butterfly sits on the ground seen from the front, its wings lowered and drooping down on both sides of its body like a cloak, yawning with its mouth wide open, eyes half closed, antennae bent." + BF,
+  'sleep': "The giant butterfly sleeps sitting on the ground seen from the front, its wings wrapped around its body like a blanket, eyes closed, antennae drooping, peaceful smile." + BF,
+  'stretch': "The giant butterfly stretches, seen from the front: its wings spread wide open and raised high, yawning, blinking its big cute eyes." + BF})
+
+# dragons perchés (17/11) : ils replient leurs ailes, se couchent sur leur perchoir et dorment enroulés ; profil gauche comme leurs sprites
+DR_BOX = {'yawn': (.40, .40, 1.0), 'curl': (.46, .46, .62), 'sleep': (.42, .42, .52)}
+DRS = " Same side profile facing left, same size as in the reference picture: its head is exactly as big as in the reference."
+for k in ('ember', 'frost', 'moss', 'gold'):
+    CHARS['dragon_' + k] = dict(src=f'dr_{k}_down.png', kind='ani', boxes=DR_BOX, poses={
+      'yawn': "The dragon is perched standing on its four legs, its wings folded against its sides, head raised, yawning with its jaws wide open, sleepy." + DRS,
+      'curl': "The dragon lies down on its belly, legs tucked under its body, wings folded flat along its back, head lowered towards its front paws, eyes half closed." + DRS,
+      'sleep': "The dragon sleeps lying on its belly, curled up, wings folded flat along its back, its tail curled around its body, its chin resting on its front paws, eyes closed." + DRS})
+# braise : au 1er passage, ailes restées déployées couché -> consigne plus stricte (ailes fermées)
+WF = " Its tattered wings are completely closed and folded tight against its body, wing tips pointing back, not spread, not raised."
+CHARS['dragon_ember']['poses'] = dict(CHARS['dragon_ember']['poses'], curl=CHARS['dragon_ember']['poses']['curl'] + WF, sleep=CHARS['dragon_ember']['poses']['sleep'] + WF)
+
 def main():
     a = sys.argv[1:]; only = None; out = 'jobs.tsv'
     if '--poses' in a: i = a.index('--poses'); only = a[i + 1].split(','); del a[i:i + 2]

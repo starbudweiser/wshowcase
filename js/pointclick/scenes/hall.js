@@ -4,13 +4,13 @@ const BL = BLINDS.hall, DOOR = [362, 172], AWAY = [150, 236];
 
 export default {
   id: 'hall', interior: true, bg: 'hall.png', persp: [172, 0.75, 268, 1.45],
-  walk: [[[40, 268], [130, 232], [260, 196], [330, 174], [396, 170], [432, 192], [470, 232], [470, 268]]],
+  walk: [[[88, 268], [130, 232], [260, 196], [330, 174], [396, 170], [412, 184], [404, 244], [452, 262], [452, 268]]],   /* ni dans la caisse (gauche) ni dans le banc et le tonneau (droite) ; héros entier à l'écran */
   fg: [],
   start: { x: 250, y: 232, dir: 'r' },
   hot: [
     { id: 'hdoorway', rect: [328, 68, 398, 158], at: [362, 176] }, { id: 'hthrone', rect: [92, 84, 182, 212], at: [204, 228], dir: 'l' },
-    { id: 'hbanner', rect: [100, 20, 262, 132] }, { id: 'htorch', rect: [28, 68, 64, 162], at: [78, 232], dir: 'l' },
-    { id: 'hrug', rect: [200, 190, 410, 268], at: [300, 250] }, { id: 'hchest', rect: [22, 206, 88, 262], at: [104, 248], dir: 'l' }
+    { id: 'hbanner', rect: [100, 20, 262, 132] }, { id: 'htorch', rect: [28, 68, 64, 162], at: [106, 260], dir: 'l' },
+    { id: 'hrug', rect: [200, 190, 410, 268], at: [300, 250] }, { id: 'hchest', rect: [22, 206, 88, 262], at: [116, 250], dir: 'l' }
   ],
   ambient: [
     { type: 'frames', id: 'hall_torch_l', fps: 7, seq: [0, 1, 2, 1] },

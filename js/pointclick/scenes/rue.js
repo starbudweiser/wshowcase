@@ -11,18 +11,18 @@ export default {
   hot: [
     { id: 'mountain', rect: [322, 8, 450, 110] }, { id: 'mammoth', rect: [388, 130, 418, 160] }, { id: 'mill', rect: [425, 130, 475, 168] },
     { id: 'house', rect: [0, 20, 100, 135] }, { id: 'inn', rect: [100, 60, 215, 150] }, { id: 'sign', rect: [135, 86, 178, 112] },
-    { id: 'door', rect: [158, 150, 182, 195], at: [176, 210] },
+    { id: 'door', rect: [158, 150, 182, 195], at: [176, 222] },
     { id: 'stall', rect: [4, 138, 128, 262], at: [136, 240], dir: 'l' },
     { id: 'cart', rect: [128, 182, 160, 228], at: [170, 228], dir: 'l' },
     { id: 'flowers', rect: [372, 222, 480, 268], at: [362, 244] },
     { id: 'bridge', rect: [352, 172, 480, 214], at: [332, 206] },
-    { id: 'honey', rect: [88, 190, 124, 208], at: [134, 236], dir: 'l' }
+    { id: 'honey', rect: [88, 190, 124, 208], at: [136, 238], dir: 'l' }
   ],
-  /* décor vivant : dragon qui vole, oiseaux, rivière, roue du moulin, mammouth qui respire, fleurs et herbes dans le vent */
+  /* décor vivant : oiseaux, rivière, saumons, roue du moulin, mammouth qui respire, fleurs et herbes dans le vent */
   ambient: [
     { type: 'flock', n: 5, y0: 16, y1: 80, speed: 12, seed: 4 },
     { type: 'frames', id: 'rue_river1', fps: 2.2 }, { type: 'frames', id: 'rue_river2', fps: 2, offset: 0.4 },
-    { type: 'fish', spots: [[392, 206, 0.55, 1], [424, 208, 0.55, -1]], every: 6, seed: 9 },
+    { type: 'fish', water: [386, 192, 476, 224], k: 1, every: 6, seed: 9 },
     { type: 'wheel3d', cx: 468, cy: 152, rx: 10, ry: 14, speed: 0.6, spokes: 8, paddles: 12 },
     { type: 'frames', id: 'rue_mammoth', fade: false, fps: 0.7, seq: [-1, 0, 0, -1, 1, 1, 2, -1] },
     { type: 'frames', id: 'rue_flowers', fps: 1.3, seq: [-1, 0, 2, 0] }, { type: 'frames', id: 'rue_grass', fps: 1.1, offset: 0.7 }
@@ -47,9 +47,68 @@ export default {
     const m = g.ent('merchant'); if (m && g.flag('blind')) m.bob = Math.abs(Math.sin(g.now * 1.3)) * 1.2;
   },
 
-  async intro(g) {
-    const hero = g.hero; await g.walkTo(196, 252); hero.front = true;
+  async intro(g, how) {
+    const hero = g.hero; if (how && how.intro === 'cart') await this.cartArrival(g);
+    await g.walkTo(196, 252); hero.front = true;
     await g.say('hero', 's.intro1'); await g.say('hero', 's.intro2'); await g.say('hero', 's.intro3'); await g.say('hero', 's.intro4'); hero.front = false;
+  },
+
+  /* fin de l'intro (intro.js) : la charrette des prisonniers sort de derrière l'étal, pile, éjecte le héros, puis s'éloigne en perspective
+     par la route du pont (le garde s'écarte), roule sur le tablier derrière le parapet et sort à droite */
+  async cartArrival(g) {
+    const hero = g.hero, Y = 257, LAND = [166, 262], k = () => g.persp(cart.y);
+    const cart = { id: 'driver', spr: 'intro.cart', x: -80, y: Y, visible: true, noHot: true, solid: false };
+    const riders = [['icomp', 'intro.comp_s', -80, 22, 1, 1.3], ['ithief', 'intro.thief_s', -52, 22, 1, 0.4], ['ihero', 'hero.pNeutral', -108, 58, 0.17, 2.1]]
+      .map(([id, spr, dx, dy, k0, ph]) => ({ id, spr, dx, dy, k0, ph, x: cart.x, y: Y, scale: k0, visible: true, noHot: true, solid: false }));
+    const fence = this.fenceEnt(g), puffs = [];
+    const follow = () => { const s = k(); for (const r of riders) { r.scale = r.k0 * s; r.x = cart.x + r.dx * s; r.y = cart.y - r.dy * s; r.bob = cart.goal ? Math.abs(Math.sin(g.now * 6.2 + r.ph)) * 1.2 * s : 0; } return false; };
+    const guard = g.ent('guard'), hen = g.ent('hen');
+    const drop = () => { g.ents = g.ents.filter(e => e !== cart && e !== fence && !riders.includes(e)); };
+    const clean = () => { drop(); g.ents = g.ents.filter(e => !puffs.includes(e)); hero.visible = true; hero.pose = null; hero.x = LAND[0]; hero.y = LAND[1]; hero.front = true;
+      if (guard) { guard.goal = null; guard.x = GUARD_SPOT[0]; guard.y = GUARD_SPOT[1]; guard.flip = false; } if (hen) hen.goal = null; };
+    g.cineEnd = clean; hero.visible = false; follow(); g.ents.push(...riders, cart); if (fence) g.ents.push(fence);
+    try {
+      g.sfx('creak'); cart.goal = [262, Y, 58]; await g.until(() => { follow(); return !cart.goal; }); g.chk();
+      g.sfx('screech'); g.shake(260, 1.5);
+      await g.say('driver', 'intro.driver1');
+      const hr = riders.pop(), s = k(); g.ents = g.ents.filter(e => e !== hr);
+      g.sfx('whoosh'); await g.fly('hero.fSurprise', [cart.x - 108 * s, Y - 70 * s], LAND, 760, 58, -6.28, 0.95);
+      g.sfx('splat'); g.shake(320, 2.5);
+      for (let i = 0; i < 14; i++) { const a = (i / 14) * Math.PI * 2; puffs.push({ id: 'puff' + i, spr: 'puff', x: LAND[0] + Math.cos(a) * 12, y: LAND[1] + 3 + Math.sin(a) * 3, vx: Math.cos(a) * (30 + (i % 4) * 7), k0: 0.6 + (i % 3) * 0.2, scale: 0.6, alpha: 0.75, visible: true, noHot: true, solid: false, z: 2 }); }
+      g.ents.push(...puffs); hero.visible = true; hero.x = LAND[0]; hero.y = LAND[1]; hero.front = true; hero.pose = 'hero.fShrug';
+      this.cartLeave(g, cart, follow, drop, guard, hen);
+      const t0 = g.now; await g.until(() => { const t = g.now - t0; for (const p of puffs) { p.x += p.vx * 0.016 * (1 - Math.min(1, t)); p.scale = p.k0 + t * 1.2; p.alpha = Math.max(0, 0.75 - t * 0.6); } return t > 1.25; });
+      g.ents = g.ents.filter(e => !puffs.includes(e)); await g.wait(500); hero.pose = null;
+    } finally { if (g.cineEnd === clean) g.cineEnd = null; }
+  },
+  /* le départ continue pendant que le héros parle : route du pont (la poule s'enfuit, le garde s'écarte), tablier, sortie à droite */
+  async cartLeave(g, cart, follow, drop, guard, hen) {
+    const on = () => g.ents.includes(cart), go = async (x, y, sp) => { cart.goal = [x, y, sp]; await g.until(() => { follow(); return !cart.goal || !on(); }); };
+    if (hen) { g.sfx('cluck'); hen.goal = [326, 260, 70]; }
+    await go(290, 222, 52); if (!on()) return;
+    if (guard) guard.goal = [378, 213, 32];
+    await go(330, 196, 40); if (!on()) return;
+    await go(352, 188, 30); if (!on()) return;
+    await go(420, 184, 26); if (!on()) return;
+    if (guard) guard.goal = [GUARD_SPOT[0], GUARD_SPOT[1], 32];
+    if (hen) hen.goal = [288, 242, 30];
+    await go(545, 177, 26);
+    drop();
+  },
+  /* parapet du pont : calque tiré du décor lui-même (poteaux et lisses sombres, les jours entre eux restent transparents) ;
+     il se dessine devant la charrette quand elle roule sur le tablier */
+  fenceEnt(g) {
+    const bg = g.bg; if (!bg || !bg.width) return null;
+    const P = [[344, 172], [480, 163], [480, 194], [344, 199]], X0 = 344, Y0 = 163, X1 = 480, Y1 = 199;
+    const c = document.createElement('canvas'); c.width = X1 - X0; c.height = Y1 - Y0; const x = c.getContext('2d');
+    x.drawImage(bg, 0, 0, bg.width, bg.height, -X0, -Y0, 480, 270);
+    const d = x.getImageData(0, 0, c.width, c.height), inP = (px, py) => { let o = false; for (let i = 0, j = P.length - 1; i < P.length; j = i++) { const [xi, yi] = P[i], [xj, yj] = P[j]; if ((yi > py) !== (yj > py) && px < (xj - xi) * (py - yi) / (yj - yi) + xi) o = !o; } return o; };
+    for (let py = 0; py < c.height; py++) for (let px = 0; px < c.width; px++) {
+      const i = (py * c.width + px) * 4, r = d.data[i], gg = d.data[i + 1], b = d.data[i + 2];
+      if (!inP(px + X0, py + Y0) || Math.max(r, gg, b) >= 125 || b >= r + 25) d.data[i + 3] = 0;
+    }
+    x.putImageData(d, 0, 0); g.imgs['assets/pointclick/spr/__rue_fence.png'] = c;
+    return { id: 'ifence', spr: '__rue_fence', x: (X0 + X1) / 2, y: Y1, scale: 1, visible: true, noHot: true, solid: false };
   },
 
   async on(g, verb, id, item) {
@@ -82,9 +141,6 @@ export default {
       case 'guard':
         if (verb === 'talk') { await g.cut(() => this.talkGuard(g)); return true; }
         if (verb === 'use' && item === 'honey') { await g.cut(() => this.giveHoney(g)); return true; }
-        break;
-      case 'dragon':
-        if (verb === 'talk' || verb === 'use') { await g.cut(async () => { g.sfx('shout'); g.shake(1100, 3); await g.say('hero', '=FUS... RO... DAH !'); await g.wait(500); await g.say('guard', 's.guard.wind'); }); return true; }
         break;
     }
     return false;

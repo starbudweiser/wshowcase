@@ -4,7 +4,7 @@ const BL = BLINDS.party, CAKE = [242, 214];
 
 export default {
   id: 'party', bg: 'party.png', persp: [180, 0.62, 268, 1.0],
-  walk: [[[10, 268], [14, 246], [150, 246], [160, 254], [322, 254], [332, 246], [466, 240], [470, 268]]],
+  walk: [[[24, 268], [26, 246], [150, 246], [160, 254], [322, 254], [332, 246], [456, 240], [458, 268]]],   /* héros entier à l'écran */
   fg: [],
   start: { x: 60, y: 258, dir: 'r' },
   hot: [
@@ -27,10 +27,13 @@ export default {
     blindEnt(BL)
   ],
 
-  async enter(g) { blindEnter(g, BL); },
+  async enter(g) { blindEnter(g, BL); if (g.flag('arrowBack')) g.ents.push(this.kneeArrow(g)); },
+  /* la flèche rendue, plantée dans le genou du garde (elle suit son balancement) */
+  kneeArrow(g) { const e = g.ent('pguard'), s = g.persp(e.y); return { id: 'parrow', spr: 'arrow', x: e.x + 4 * s, y: e.y - 22 * s, scale: 0.55 * s, z: 30, noHot: true, solid: false, visible: true }; },
   tick(g) {
     blindTick(g, BL);
     for (const id of ['pmerchant', 'pguard', 'phorseman']) { const e = g.ent(id); if (e) e.bob = Math.abs(Math.sin(g.now * 3 + e.x)) * 1.3; }
+    const pa = g.ent('parrow'), pg = g.ent('pguard'); if (pa && pg) pa.bob = pg.bob;
     const gi = g.ent('pgiant'); if (gi) gi.bob = Math.abs(Math.sin(g.now * 2.2)) * 1.6;
   },
 
@@ -41,6 +44,7 @@ export default {
 
   async on(g, verb, id, item) {
     if (await blindOn(g, BL, verb, id, item)) return true;
+    if (id === 'pguard' && verb === 'use' && item === 'arrow') { await g.cut(() => this.arrowBack(g)); return true; }
     switch (id) {
       case 'pmerchant': case 'pguard': case 'phorseman': case 'pgiant':
         if (verb === 'talk') { await g.say(id, 's10.' + id); return true; }
@@ -57,6 +61,14 @@ export default {
     return false;
   },
 
+  /* « Retour à l'envoyeur » (facultatif) : on rend la flèche du genou du garde de la porte à un garde, n'importe lequel ; il la remet en place, ravi */
+  async arrowBack(g) {
+    const e = g.ent('pguard'), h = g.hero; g.face(e.x);
+    await g.say('hero', 's10.arrow.give'); g.drop('arrow');
+    g.sfx('whoosh'); await g.fly('arrow', [h.x, h.y - 34], [e.x + 4, e.y - 15], 420, 16, 0.6, 0.9); g.sfx('clang'); g.shake(200, 1.5); g.ents.push(this.kneeArrow(g));
+    await g.say('pguard', 's10.arrow.g1'); await g.say('pguard', 's10.arrow.g2');
+    g.set('arrowBack'); g.award('arrow');
+  },
   /* le dragon allume les bougies, puis la déclaration d'amour, puis la fin */
   async finale(g) {
     await g.say('hero', 's10.call1'); await g.say('hero', 's10.call2');
