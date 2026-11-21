@@ -1,0 +1,24 @@
+/* mHUB : bibliothèque du Desktop Mac Toolkit (Socle sombre). */
+.mhub{display:flex;flex-direction:column;height:100%}
+.mhub .mh-sub{font:600 11px/1 -apple-system,system-ui,sans-serif;letter-spacing:.08em;color:var(--s-tm);margin-left:10px}
+.mh-body{flex:1;display:grid;grid-template-columns:200px 1fr 250px;min-height:0}
+.mh-side{padding:14px 10px;display:flex;flex-direction:column;gap:2px;overflow:auto;border-right:1px solid var(--s-bd)}
+.mh-h{font:700 10px/1 -apple-system,system-ui,sans-serif;letter-spacing:.08em;color:var(--s-tm);margin:14px 8px 6px}
+.mh-nav{display:flex;justify-content:space-between;align-items:center;border:0;background:none;color:var(--s-t);padding:7px 10px;border-radius:9px;font-size:13px;text-align:left}
+.mh-nav:hover{background:var(--s-hover)}.mh-nav.on{background:#0a84ff;color:#fff}.mh-nav em{font-style:normal;opacity:.7;font-size:12px}
+.mh-foot{margin-top:auto;padding-top:12px}.mh-foot .sbtn{width:100%}
+.mh-main{padding:14px;overflow:auto;min-width:0}
+.mh-top{display:flex;gap:10px;align-items:center;margin-bottom:12px}.mh-top .sfind{flex:1}.mh-chk{font-size:12px;white-space:nowrap}
+.mh-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.mh-card{background:var(--s-surf);border:1px solid var(--s-bd);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px;cursor:default}
+.mh-card.on{border-color:#0a84ff;box-shadow:0 0 0 1px #0a84ff}
+.mh-card p{margin:0;font-size:12px;line-height:1.35;flex:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.mh-ch{display:flex;gap:10px;align-items:center}.mh-ch img,.mh-dh img{width:40px;height:40px;border-radius:9px}.mh-ch b,.mh-dh b{font-size:14px;display:block}
+.mh-chip{display:inline-block;font-size:10.5px;padding:2px 8px;border-radius:99px;background:var(--s-ctl);color:var(--s-tm);margin-top:3px}
+.mh-chip.ok{background:rgba(52,199,89,.16);color:var(--s-ok)}.mh-chip.upd{background:rgba(255,159,10,.18);color:var(--s-wn)}.mh-chip.dev{background:rgba(10,132,255,.16);color:#64b5ff}
+.mh-act{display:flex;gap:6px}.mh-act .sbtn{flex:1}
+.mh-bar{height:6px;border-radius:3px;background:var(--s-ctl);overflow:hidden;margin:9px 0}.mh-bar i{display:block;height:100%;width:0;background:#0a84ff;transition:width .09s linear}
+.mh-det{padding:16px;border-left:1px solid var(--s-bd);display:flex;flex-direction:column;gap:10px;overflow:auto}
+.mh-dh{display:flex;gap:12px;align-items:center}.mh-dh img{width:52px;height:52px}
+.mh-kv{display:flex;justify-content:space-between;font-size:12.5px;border-top:1px solid var(--s-bd);padding-top:8px}
+@media (max-width:900px){.mh-body{grid-template-columns:160px 1fr}.mh-det{display:none}}
