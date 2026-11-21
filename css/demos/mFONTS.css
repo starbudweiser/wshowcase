@@ -1,0 +1,18 @@
+.mf-tools{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--bd)}.mf-tools .tk-in{width:230px}
+.mf-filters{display:flex;align-items:center;gap:8px;padding:8px 14px}.mf-filters .cnt{margin-left:auto;color:var(--tm);font-size:12px}
+.mf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;padding:4px 14px 14px;align-content:start}
+.mf-grid.list{grid-template-columns:1fr}
+.mf-c{background:var(--pn);border:1px solid var(--bd);border-radius:11px;padding:10px 12px 12px;cursor:default;min-width:0;overflow:hidden}
+.mf-c:hover{border-color:#55555a}.mf-c.on{border-color:var(--ac);box-shadow:0 0 0 1px var(--ac)}
+.mf-h{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--tm);margin-bottom:6px}.mf-h b{font-weight:500;color:var(--t);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mf-dot{width:11px;height:11px;border-radius:50%;border:1.5px solid #66666b;flex:none;background:none;padding:0}.mf-dot.on{background:var(--ok);border-color:var(--ok)}
+.mf-star{margin-left:auto;border:0;background:none;color:#66666b;font-size:14px;padding:0}.mf-star.on{color:#ffd60a}
+.mf-s{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff;line-height:1.25}
+.mf-grid.list .mf-c{display:grid;grid-template-columns:220px 1fr;align-items:center;gap:12px;padding:8px 12px}.mf-grid.list .mf-h{margin:0}
+.mf-insp{width:250px;flex:none;border-left:1px solid var(--bd);padding:14px;display:flex;flex-direction:column;gap:10px;overflow:auto}
+.mf-insp h4{margin:0;font-size:15px;color:#fff}.mf-gl{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;font-size:18px;text-align:center;color:#fff}
+.mf-st{display:flex;justify-content:space-between;font-size:12.5px;padding:5px 0;border-top:1px solid var(--bd)}
+.mf-col{display:flex;align-items:center;gap:8px;font-size:12.5px}.mf-col input{accent-color:var(--ac)}
+.mf-rng{width:90px;accent-color:var(--ac)}
+.mf-drop{border:1.5px dashed #55555a;border-radius:12px;padding:26px;text-align:center;color:var(--tm)}
+@media (max-width:900px){.mf-insp{display:none}}

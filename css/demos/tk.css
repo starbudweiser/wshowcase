@@ -1,0 +1,34 @@
+/* Base commune des démos « Desktop Mac Toolkit » récentes : fenêtre sombre façon macOS (comme les vraies applis), aplats, coins arrondis. */
+.win.tkwin{background:#1b1b1d;border:1px solid #3a3a3c;color:#e8e8ea;border-radius:14px;backdrop-filter:none;-webkit-backdrop-filter:none}
+.tk{position:relative;--bg:#1b1b1d;--pn:#242426;--pn2:#2c2c2e;--pn3:#363639;--bd:#3a3a3c;--t:#e8e8ea;--tm:#9a9aa0;--ac:#0a84ff;--ok:#30d158;--wn:#ff9f0a;--dg:#ff453a;display:flex;flex-direction:column;height:100%;min-height:0;background:var(--bg);color:var(--t);font:13px/1.35 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif}
+.tk *{box-sizing:border-box}
+.tk-bar{height:46px;flex:none;display:flex;align-items:center;gap:12px;padding:0 14px;border-bottom:1px solid var(--bd);background:var(--bg)}
+.tk-bar>b{font-size:15px;letter-spacing:.02em;color:#fff}.tk-sp{flex:1}
+.tk-body{flex:1;display:flex;min-height:0}
+.tk-side{width:210px;flex:none;padding:12px 10px;display:flex;flex-direction:column;gap:2px;overflow:auto;border-right:1px solid var(--bd);background:var(--bg)}
+.tk-main{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column}
+.tk-scroll{overflow:auto;min-height:0}
+.tk-h{font:700 10.5px/1 inherit;letter-spacing:.08em;color:var(--tm);margin:14px 8px 6px;text-transform:uppercase}
+.tk-nav{display:flex;align-items:center;gap:9px;width:100%;border:0;background:none;color:var(--t);padding:7px 10px;border-radius:9px;font:inherit;text-align:left;cursor:default}
+.tk-nav:hover{background:var(--pn2)}.tk-nav.on{background:var(--ac);color:#fff}
+.tk-nav em{margin-left:auto;font-style:normal;font-size:12px;opacity:.65}.tk-nav .g{width:18px;text-align:center;opacity:.8}
+.tk-btn{height:30px;padding:0 14px;border:0;border-radius:8px;background:var(--pn3);color:var(--t);font:600 12.5px/1 inherit;cursor:default;white-space:nowrap}
+.tk-btn:hover:not(:disabled){filter:brightness(1.18)}.tk-btn:disabled{opacity:.45}
+.tk-btn.pri{background:var(--ac);color:#fff}.tk-btn.ok{background:var(--ok);color:#0b2a12}.tk-btn.dg{background:#8e2a24;color:#fff}.tk-btn.sm{height:26px;padding:0 10px;font-size:12px}
+.tk-ico{width:30px;height:30px;border:0;border-radius:8px;background:none;color:var(--tm);font-size:15px;cursor:default}.tk-ico:hover{background:var(--pn2);color:#fff}.tk-ico.on{background:#12385f;color:#64b5ff}
+.tk-in{height:30px;border:0;border-radius:8px;background:var(--pn2);color:var(--t);padding:0 11px;font:inherit;outline:0;min-width:0}.tk-in:focus{box-shadow:0 0 0 2px var(--ac)}
+.tk-sel{height:30px;border:0;border-radius:8px;background:var(--pn2);color:var(--t);padding:0 8px;font:inherit;outline:0}
+.tk-card{background:var(--pn);border:1px solid var(--bd);border-radius:12px}
+.tk-chip{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 9px;border-radius:99px;background:var(--pn3);color:var(--tm);font-size:11.5px;white-space:nowrap}
+.tk-chip.ok{background:rgba(48,209,88,.16);color:var(--ok)}.tk-chip.wn{background:rgba(255,159,10,.16);color:var(--wn)}.tk-chip.ac{background:rgba(10,132,255,.2);color:#64b5ff}.tk-chip.dg{background:rgba(255,69,58,.16);color:var(--dg)}
+.tk-pill{height:30px;padding:0 15px;border:0;border-radius:99px;background:var(--pn2);color:var(--t);font:inherit;cursor:default}.tk-pill:hover{background:var(--pn3)}.tk-pill.on{background:var(--ac);color:#fff}
+.tk-sw{width:44px;height:26px;border-radius:13px;border:0;background:var(--pn3);position:relative;flex:none;padding:0;cursor:default;transition:background .18s}
+.tk-sw i{position:absolute;left:2px;top:2px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .18s}.tk-sw.on{background:var(--ok)}.tk-sw.on i{transform:translateX(18px)}
+.tk-bar2{height:6px;border-radius:3px;background:var(--pn3);overflow:hidden}.tk-bar2 i{display:block;height:100%;width:0;background:var(--ac);transition:width .12s linear}
+.tk-wave{display:flex;align-items:center;gap:2px;height:30px;flex:1}.tk-wave i{width:3px;border-radius:2px;background:#5c5c62;transition:background .1s}.tk-wave i.on{background:var(--ac)}
+.tk-foot{flex:none;height:30px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-top:1px solid var(--bd);color:var(--tm);font-size:12px}
+.tk-dim{color:var(--tm)}.tk-mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.tk-modal{position:absolute;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:5}
+.tk-dlg{background:var(--pn);border:1px solid var(--bd);border-radius:14px;padding:20px;width:min(440px,90%);display:flex;flex-direction:column;gap:12px}
+.tk-dlg h4{margin:0;font-size:15px;color:#fff}.tk-dlg p{margin:0;color:var(--tm)}.tk-dlg .row{display:flex;gap:8px;justify-content:flex-end}
+@media (max-width:780px){.tk-side{width:150px}}
