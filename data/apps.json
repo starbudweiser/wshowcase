@@ -126,7 +126,8 @@
       "mSIZER",
       "mSTAGRAM",
       "mFONTS",
-      "mFRAMES"
+      "mFRAMES",
+      "mTAPES"
      ]
     },
     {
@@ -156,6 +157,18 @@
      "apps": [
       "mCASTING",
       "mUGGINFACE"
+     ]
+    },
+    {
+     "id": "virt",
+     "name": {
+      "fr": "Virtualisation",
+      "en": "Virtualization",
+      "es": "Virtualización",
+      "it": "Virtualizzazione"
+     },
+     "apps": [
+      "TESSERaCT"
      ]
     }
    ]
@@ -1064,6 +1077,78 @@
     "en": "⌘V pastes as plain text everywhere and strips tracking parameters from links.",
     "es": "⌘V pega como texto sin formato en todas partes y quita los parámetros de seguimiento.",
     "it": "⌘V incolla come testo semplice ovunque e rimuove i parametri di tracciamento."
+   }
+  },
+  {
+   "id": "mTAPES",
+   "space": "util",
+   "repo": "mTAPES",
+   "accent": "#ef4444",
+   "kind": "menubar",
+   "desk": false,
+   "demo": "engine",
+   "shots": 1,
+   "download": true,
+   "version": "1.0.1",
+   "tag": {
+    "fr": "Enregistreur d’écran natif qui monte vos démos tout seul, pilotable par IA via MCP.",
+    "en": "A native screen recorder that edits your demos for you, drivable by AI through MCP.",
+    "es": "Grabador de pantalla nativo que edita tus demos por ti, controlable por IA mediante MCP.",
+    "it": "Registratore di schermo nativo che monta le tue demo da solo, pilotabile da IA tramite MCP."
+   },
+   "features": {
+    "fr": [
+     "Enregistre un écran, une fenêtre (même recouverte), une appli ou une zone ; raccourci ⌥⌘R.",
+     "Son du Mac et micro sur des pistes séparées, vitesse normale, gain par piste.",
+     "Finition automatique : zooms sur les actions, temps morts accélérés, curseur lissé, sous-titres, cadre et fond.",
+     "Exports GIF (README), MP4 1080p et MP4 vertical (short) ; la vidéo brute n’est jamais modifiée.",
+     "Serveur MCP (10 outils) : une IA filme, annonce ses actions et monte la prise elle-même.",
+     "sRGB ou Display P3 de bout en bout ; mise à jour automatique ; 4 langues."
+    ],
+    "en": [
+     "Records a screen, a window (even covered), an app or a zone; shortcut ⌥⌘R.",
+     "Mac sound and microphone on separate tracks, normal speed, gain per track.",
+     "Automatic finishing: zooms on actions, dead time sped up, smoothed cursor, captions, frame and background.",
+     "Exports GIF (README), 1080p MP4 and vertical MP4 (short); the raw video is never modified.",
+     "MCP server (10 tools): an AI records, announces its actions and edits the take itself.",
+     "sRGB or Display P3 end to end; automatic updates; 4 languages."
+    ]
+   }
+  },
+  {
+   "id": "TESSERaCT",
+   "space": "util",
+   "repo": "TESSERaCT",
+   "accent": "#8b5cf6",
+   "kind": "app",
+   "desk": true,
+   "demo": "engine",
+   "shots": 1,
+   "download": true,
+   "version": "1.0.1",
+   "tag": {
+    "fr": "Créez et lancez des machines virtuelles sur Mac Apple Silicon : macOS, Linux, Windows 11, BSD, pilotable par IA.",
+    "en": "Create and run virtual machines on Apple Silicon Macs: macOS, Linux, Windows 11, BSD, drivable by AI.",
+    "es": "Crea y ejecuta máquinas virtuales en Macs Apple Silicon: macOS, Linux, Windows 11, BSD, controlable por IA.",
+    "it": "Crea ed esegui macchine virtuali su Mac Apple Silicon: macOS, Linux, Windows 11, BSD, pilotabile da IA."
+   },
+   "features": {
+    "fr": [
+     "Invités macOS, Linux et Windows 11 pour Arm qui s’installent et se configurent tout seuls.",
+     "Bureaux Linux prêts à l’emploi : GNOME, KDE Plasma, Xfce, Cinnamon.",
+     "Catalogue de systèmes ARM64 (Debian, NixOS, FreeBSD, OpenBSD, Alpine…) mis à jour chaque jour.",
+     "Instantanés et duplicatas qui partagent les blocs de disque sur APFS ; modèles de machines.",
+     "Dossiers et presse-papiers partagés, redirection de ports, USB, suspension et reprise.",
+     "Commande tctl et serveur MCP : une IA voit et pilote le bureau de la machine invitée."
+    ],
+    "en": [
+     "macOS, Linux and Windows 11 for Arm guests that install and set themselves up.",
+     "Ready-made Linux desktops: GNOME, KDE Plasma, Xfce, Cinnamon.",
+     "A daily-updated catalogue of ARM64 systems (Debian, NixOS, FreeBSD, OpenBSD, Alpine…).",
+     "Snapshots and duplicates that share disk blocks on APFS; machine templates.",
+     "Shared folders and clipboard, port forwarding, USB, suspend and resume.",
+     "tctl command and MCP server: an AI sees and drives the guest's desktop."
+    ]
    }
   }
  ]

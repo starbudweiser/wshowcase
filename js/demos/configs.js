@@ -14,6 +14,22 @@ const STA = () => ({ new: [T('Nouveau', 'New'), ''], open: [T('Ouvert', 'Open'),
 
 export const CONFIG = {
   /* ---------------- Desktop Mac Toolkit : ajouts récents ---------------- */
+  mTAPES: () => ({ type: 'menu', sub: T('Enregistreur d’écran, monté par IA', 'Screen recorder, edited by AI'), view: (body, ctx) => {
+    let rec = 0, iv = 0, finished = false; const clock = h('b', { class: 'num' }, '00:00'), st = h('small', { class: 'mut' }), box = h('div', { class: 'xlist' });
+    const fmtT = s => String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+    const steps = [[T('Zooms sur les actions', 'Zooms on actions'), 1], [T('Temps morts accélérés', 'Dead time sped up'), 1], [T('Sous-titres des étiquettes', 'Captions from labels'), 1], [T('Curseur lissé', 'Smoothed cursor'), 0]];
+    const draw = () => { clock.textContent = fmtT(rec); st.textContent = iv ? T('Enregistrement… la prise brute reste intacte.', 'Recording… the raw take stays untouched.') : finished ? T('Prise finie. Exportez-la.', 'Take finished. Export it.') : T('Prêt (⌥⌘R)', 'Ready (⌥⌘R)'); box.innerHTML = ''; if (finished) steps.forEach(([n, on]) => box.append(h('div', { class: 'xrow' }, h('b', {}, n), h('small', { class: on ? 'ok' : 'mut' }, on ? '✓' : '—')))); };
+    const toggle = () => { if (iv) { clearInterval(iv); iv = 0; finished = true; sfx.done(); ctx.toast(T('Prise enregistrée, finition automatique appliquée.', 'Take saved, automatic finishing applied.')); } else { rec = 0; finished = false; sfx.click(); iv = setInterval(() => { rec++; if (clock.isConnected) draw(); else { clearInterval(iv); iv = 0; } }, 1000); } draw(); };
+    const btn = h('button', { class: 'btn pri full', onclick: () => { toggle(); btn.textContent = iv ? T('Arrêter', 'Stop') : T('Enregistrer', 'Record'); } }, T('Enregistrer', 'Record'));
+    body.append(h('div', { class: 'xtot' }, h('span', { class: 'mut' }, '●'), clock), st, btn, box, h('div', { class: 'xtot', style: { gap: '6px', flexWrap: 'wrap' } }, ['GIF', 'MP4 1080p', 'Short 9:16'].map(f => h('button', { class: 'btn', onclick: () => { sfx.pop(); ctx.toast(T('Export ' + f + ' prêt.', f + ' export ready.')); } }, f)))); draw(); } }),
+  TESSERaCT: () => ({ type: 'browse', w: 1000, h: 620, states: { free: [T('À télécharger', 'To download'), ''], ready: [T('Machine créée', 'Machine created'), 'ok'], run: [T('En marche', 'Running'), 'ok'] }, state0: 'free',
+    items: [
+      { n: 'Debian 13.7', sub: 'Linux · 735 MB', fields: [[T('Architecture', 'Architecture'), 'ARM64'], [T('Bureau', 'Desktop'), 'GNOME'], [T('Taille', 'Size'), '735 MB']] },
+      { n: 'NixOS 26.05', sub: 'Linux · 1.8 GB', fields: [[T('Architecture', 'Architecture'), 'ARM64'], [T('Configuration', 'Configuration'), T('Déclarative', 'Declarative')], [T('Taille', 'Size'), '1.8 GB']] },
+      { n: 'FreeBSD 15.1', sub: 'BSD · 1.2 GB', fields: [[T('Architecture', 'Architecture'), 'ARM64'], ['ZFS', T('Oui', 'Yes')], [T('Taille', 'Size'), '1.2 GB']] },
+      { n: 'Windows 11 (Arm)', sub: T('Téléchargé chez Microsoft', 'Downloaded from Microsoft'), fields: [[T('Architecture', 'Architecture'), 'ARM64'], [T('Pilotes', 'Drivers'), T('Installés', 'Installed')], [T('Session', 'Session'), T('Ouverte', 'Logged in')]] },
+      { n: 'macOS', sub: T('Dernière version', 'Latest macOS'), fields: [[T('Architecture', 'Architecture'), 'Apple Silicon'], [T('Installation', 'Setup'), T('Automatique', 'Automatic')], [T('Instantanés', 'Snapshots'), 'APFS']] }],
+    actions: [{ label: T('Télécharger et créer la machine', 'Download and create machine'), pri: 1, set: 'ready', toast: s => s.n + T(' : machine créée.', ': machine created.') }, { label: T('Démarrer', 'Start'), set: 'run', toast: s => s.n + T(' démarre.', ' is starting.') }] }),
   mFONTS: () => ({ type: 'browse', w: 960, h: 600, states: { on: [T('Activée', 'Active'), 'ok'], off: [T('Désactivée', 'Inactive'), ''] }, state0: 'off',
     items: [
       { n: 'Avenir Next', sub: T('Collection Interface', 'Interface collection'), state: 'on', fields: [[T('Styles', 'Styles'), '12'], ['Format', 'OpenType'], [T('Bibliothèque', 'Library'), T('Système', 'System')], [T('Activation', 'Activation'), T('Permanente', 'Permanent')]] },
