@@ -465,7 +465,7 @@
    "repo": "mCLEAN",
    "accent": "#30d158",
    "kind": "menubar",
-   "desk": true,
+   "desk": false,
    "demo": "mCLEAN",
    "shots": 0,
    "download": true,
@@ -627,7 +627,7 @@
    "repo": "wCLAUDE",
    "accent": "#ff9f0a",
    "kind": "app",
-   "desk": true,
+   "desk": false,
    "demo": "wCLAUDE",
    "shots": 0,
    "download": false,
@@ -829,7 +829,7 @@
    "repo": "mPDF",
    "accent": "#f9514c",
    "kind": "app",
-   "desk": true,
+   "desk": false,
    "demo": "mPDF",
    "shots": 3,
    "download": true,
@@ -927,7 +927,8 @@
      "Library by category: status of each app (up to date, update, not installed), search, sort.",
      "Open an app or its settings in one click, and see at a glance what is waiting for an update."
     ]
-   }
+   },
+   "deskIdx": 0
   },
   {
    "id": "mFONTS",
@@ -945,7 +946,8 @@
     "en": "Font manager: libraries, collections, on-demand activation, live preview.",
     "es": "Gestor de fuentes: bibliotecas, colecciones, activación bajo demanda, vista previa en directo.",
     "it": "Gestore di font: librerie, raccolte, attivazione su richiesta, anteprima dal vivo."
-   }
+   },
+   "deskIdx": 1
   },
   {
    "id": "mFRAMES",
@@ -984,7 +986,8 @@
      "Your network, your rules: local, direct address (UPnP, STUN), self-hosted relay, HTTP / SOCKS5 proxy.",
      "DaVinci Resolve, After Effects, Premiere Pro: feedback becomes markers; EDL, FCPXML, CSV exports."
     ]
-   }
+   },
+   "deskIdx": 5
   },
   {
    "id": "mCASTING",
@@ -1023,7 +1026,8 @@
      "Import an existing project with one sentence to your agent, without ever erasing a casting already done.",
      "100% local on Apple Silicon: isolated Python engine (mlx-audio), one heavy generation at a time."
     ]
-   }
+   },
+   "deskIdx": 6
   },
   {
    "id": "mUGGINFACE",
@@ -1041,7 +1045,8 @@
     "en": "The best Hugging Face AI models, matched to your Mac, with constant monitoring of new releases.",
     "es": "Los mejores modelos de IA de Hugging Face, adaptados a tu Mac, con vigilancia de novedades.",
     "it": "I migliori modelli IA di Hugging Face, adatti al tuo Mac, con monitoraggio delle novità."
-   }
+   },
+   "deskIdx": 3
   },
   {
    "id": "mPARLE",
@@ -1085,7 +1090,7 @@
    "repo": "mTAPES",
    "accent": "#ef4444",
    "kind": "menubar",
-   "desk": false,
+   "desk": true,
    "demo": "engine",
    "shots": 1,
    "download": true,
@@ -1113,7 +1118,8 @@
      "MCP server (10 tools): an AI records, announces its actions and edits the take itself.",
      "sRGB or Display P3 end to end; automatic updates; 4 languages."
     ]
-   }
+   },
+   "deskIdx": 4
   },
   {
    "id": "TESSERaCT",
@@ -1149,7 +1155,8 @@
      "Shared folders and clipboard, port forwarding, USB, suspend and resume.",
      "tctl command and MCP server: an AI sees and drives the guest's desktop."
     ]
-   }
+   },
+   "deskIdx": 2
   }
  ]
 }

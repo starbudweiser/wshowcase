@@ -79,7 +79,7 @@ const EXTRAS = [
   { id: 'Videos', space: 'skyrim', desk: true, mod: './player.js', src: 'assets/icons/videos.png', label: ['Vidéos', 'Videos'] },
   { id: 'Discord', space: 'skyrim', desk: true, mod: './discord.js', src: 'assets/icons/discord.png', at: [0, 0], label: ['Témoignage', 'Testimonial'] }
 ];
-const deskList = sp => [...S.apps.filter(a => a.space === sp && a.desk), ...EXTRAS.filter(x => x.space === sp), ...EGGS.filter(e => e.space === sp)];
+const deskList = sp => [...S.apps.filter(a => a.space === sp && a.desk).sort((x, y) => (x.deskIdx ?? 99) - (y.deskIdx ?? 99)), ...EXTRAS.filter(x => x.space === sp), ...EGGS.filter(e => e.space === sp)];
 const run = a => { if (a.mod) import(a.mod).then(m => m.open()); else if (a.load) a.load(); else launch(a.id); };
 const lbl = a => typeof a.label === 'function' ? a.label() : T(...a.label);
 export function renderDesk(reset) {
