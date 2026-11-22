@@ -1,5 +1,5 @@
 /* Fonds d'écran, Réglages système, À propos, notifications. */
-import { S, WALLS, applyTheme, themeMode, on, spaceById } from './core.js';
+import { S, WALLS, applyTheme, themeMode, on, spaceById, icon } from './core.js';
 import { h, $, store, brand } from './util.js';
 import { t, lang, setLang, LANGS, sname } from './i18n.js';
 import { sfx } from './audio.js';
@@ -86,7 +86,7 @@ export function openAbout() {
 
 /* ---- Réglages système ---- */
 export function openSettings(tab = 'wall') {
-  const tabs = [['wall', t('s.wall')], ['look', t('s.look')], ['sound', t('s.sound')], ['lang', t('s.lang')]];
+  const tabs = [['wall', t('s.wall')], ['look', t('s.look')], ['desk', t('s.desk')], ['sound', t('s.sound')], ['lang', t('s.lang')]];
   const w = wm.open({ id: 'settings', appId: 'settings', title: t('s.title'), w: 900, h: 590, minw: 640, minh: 440, cls: 'settings', bare: true,
     build: w => {
       const main = h('div', { class: 'sm' }), side = h('div', { class: 'ss' });
@@ -99,6 +99,17 @@ export function openSettings(tab = 'wall') {
         } else if (id === 'look') {
           main.append(h('h3', {}, t('s.look')), h('div', { class: 'lg' }, [['light', t('cc.light')], ['dark', t('cc.dark')], ['auto', t('cc.auto')]].map(([v, l]) =>
             h('button', { class: 'lk lk-' + v + (themeMode() === v ? ' on' : ''), onclick: () => { applyTheme(v); sfx.click(); draw('look'); } }, h('i'), h('span', {}, l)))));
+        } else if (id === 'desk') {
+          import('./spaces.js').then(({ deskState, setDesk }) => {
+            const spc = S.cur, st = deskState(spc), ids = () => deskState(spc).on.map(x => x.id);
+            const row = (app, on, i, n) => h('div', { class: 'row deskrow' }, h('img', { src: icon(app.id), alt: '', width: 28, height: 28 }), h('span', { style: { flex: 1 }, html: brand(app.id, app.accent) }),
+              on ? h('button', { class: 'btn', disabled: i === 0, 'aria-label': t('s.up'), onclick: () => { const l = ids(); [l[i - 1], l[i]] = [l[i], l[i - 1]]; setDesk(spc, l); sfx.tick(); draw('desk'); } }, '↑') : null,
+              on ? h('button', { class: 'btn', disabled: i === n - 1, 'aria-label': t('s.down'), onclick: () => { const l = ids(); [l[i + 1], l[i]] = [l[i], l[i + 1]]; setDesk(spc, l); sfx.tick(); draw('desk'); } }, '↓') : null,
+              h('button', { class: 'sw' + (on ? ' on' : ''), role: 'switch', 'aria-checked': on, 'aria-label': app.id, onclick: () => { setDesk(spc, on ? ids().filter(x => x !== app.id) : [...ids(), app.id]); sfx.click(); draw('desk'); } }, h('i')));
+            main.innerHTML = '';
+            main.append(h('h3', {}, t('s.desk')), h('p', { class: 'hint' }, t('s.deskHint', { s: sname(spaceById(spc)) })), h('h4', {}, t('s.deskOn')), ...st.on.map((a, i) => row(a, true, i, st.on.length)),
+              h('h4', {}, t('s.deskOff')), ...st.off.map(a => row(a, false)), h('div', { class: 'row' }, h('button', { class: 'btn', onclick: () => { setDesk(spc, null); sfx.swap(); draw('desk'); } }, t('s.deskDef'))));
+          });
         } else if (id === 'sound') {
           main.append(h('h3', {}, t('s.sound')),
             h('label', { class: 'row' }, h('span', {}, t('s.soundOn')), h('button', { class: 'sw' + (sfx.on ? ' on' : ''), role: 'switch', 'aria-checked': sfx.on, onclick: () => { sfx.set(!sfx.on); draw('sound'); } }, h('i'))),

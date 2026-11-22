@@ -1,7 +1,7 @@
 /* Parcours guidé : les vraies captures de l'appli, étape par étape, avec lecture automatique. */
 import { icon } from './core.js';
 import { h, brand, reduced } from './util.js';
-import { t, lang, tag } from './i18n.js';
+import { t, lang, tag, feats } from './i18n.js';
 import { sfx } from './audio.js';
 import * as wm from './wm.js';
 import { download, repoUrl } from './apps.js';
@@ -16,7 +16,7 @@ export function open(app) {
       const set = lang() === 'fr' ? 'fr' : 'en', n = app.shots || 0;
       const imgs = [];
       for (let i = 1; i <= n; i++) { const im = h('img', { src: `assets/shots/${set}/${app.id}_${i}.webp`, alt: `${app.id} ${i}`, draggable: 'false' }); imgs.push(im); stage.append(im); }
-      if (!n) stage.append(h('div', { class: 'art', style: { '--c': app.accent } }, h('img', { src: icon(app.id), alt: '' }), h('div', { class: 'at', html: brand(app.id, app.accent) }), h('p', {}, tag(app)), h('small', {}, t('t.noshots'))));
+      if (!n) stage.append(h('div', { class: 'art', style: { '--c': app.accent } }, h('img', { src: icon(app.id), alt: '' }), h('div', { class: 'at', html: brand(app.id, app.accent) }), h('p', {}, tag(app)), ...(feats(app).length ? [h('ul', { class: 'featl' }, feats(app).map(x => h('li', {}, x)))] : []), h('small', {}, t('t.noshots'))));
       const dots = h('div', { class: 'tdots' });
       const prev = h('button', { class: 'btn', 'aria-label': t('t.prev'), onclick: () => go(k - 1, true) }, '‹'), next = h('button', { class: 'btn', 'aria-label': t('t.next'), onclick: () => go(k + 1, true) }, '›');
       const play = h('button', { class: 'btn', onclick: () => { playing = !playing; play.textContent = playing ? t('t.pause') : t('t.play'); if (playing) loop(); else clearInterval(w.timer); } }, playing ? t('t.pause') : t('t.play'));

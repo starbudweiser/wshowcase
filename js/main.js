@@ -11,6 +11,8 @@ import { initWall, toast, logoSvg } from './system.js';
 import { openFinder, launch } from './apps.js';
 import './spotlight.js';
 import './cc.js';
+/* Le Mac simulé n'ouvre jamais le menu du navigateur (Imprimer, Caster, Inspecter…) : les menus propres au site s'ouvrent seuls, les champs de saisie gardent le menu natif (copier / coller). */
+addEventListener('contextmenu', e => { const t0 = e.target; if (t0 && t0.closest && t0.closest('#stage') && !t0.closest('input, textarea, [contenteditable=""], [contenteditable="true"]')) e.preventDefault(); }, true);
 
 let macReady = false, powered = false;
 

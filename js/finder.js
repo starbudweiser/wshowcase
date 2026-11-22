@@ -1,7 +1,7 @@
 /* Finder : vue Galerie (aperçu, bande d'icônes, inspecteur), vue Icônes, vue Liste. */
 import { S, appById, icon, spaceById } from './core.js';
 import { h, store, brand, reduced } from './util.js';
-import { t, lang, tag, sname } from './i18n.js';
+import { t, lang, tag, sname, feats } from './i18n.js';
 import { sfx } from './audio.js';
 import * as wm from './wm.js';
 import { launch, download, repoUrl } from './apps.js';
@@ -147,7 +147,9 @@ function renderInsp(app, launchSel) {
   el.append(h('img', { class: 'bigic', src: icon(app.id), alt: '', draggable: 'false' }),
     h('div', {}, h('h3', { html: brand(app.id, app.accent) }), h('div', { class: 'k' }, `${app.kind === 'menubar' ? t('f.kindMenu') : t('f.kindApp')} · ${sname(sp)}`)),
     h('p', {}, tag(app)),
+    ...(feats(app).length ? [h('div', { class: 'feat' }, ...(app.featured ? [h('span', { class: 'featbadge' }, '★ ' + t('f.featured'))] : []), h('b', {}, t('f.features')), h('ul', {}, feats(app).map(x => h('li', {}, x))))] : []),
     h('dl', {}, h('dt', {}, t('f.version')), verEl, h('dt', {}, t('f.demo')), h('dd', {}, app.demo ? t('f.demoLive') : t('f.demoTour')),
+      app.hub ? h('dt', {}, t('f.hubLbl')) : null, app.hub ? h('dd', { class: 'hubrole' }, '★ ' + t('f.hubRole')) : null,
       app.tier === 'demo' ? h('dt', {}, t('f.edition')) : null, app.tier === 'demo' ? h('dd', {}, t('f.tierDemo')) : null,
       app.src === false ? null : h('dt', {}, t('f.source')), app.src === false ? null : h('dd', {}, h('a', { href: repoUrl(app), target: '_blank', rel: 'noopener' }, 'GitHub ›'))),
     h('div', { class: 'acts' },

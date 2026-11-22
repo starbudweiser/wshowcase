@@ -124,7 +124,10 @@
       "MiCONE",
       "iCONIQ",
       "mSIZER",
-      "mSTAGRAM"
+      "mSTAGRAM",
+      "mFONTS",
+      "mFRAMES",
+      "mTAPES"
      ]
     },
     {
@@ -138,7 +141,34 @@
      "apps": [
       "wCLAUDE",
       "qNOTES",
-      "mSTICK"
+      "mSTICK",
+      "mPASTE",
+      "mPARLE"
+     ]
+    },
+    {
+     "id": "ai",
+     "name": {
+      "fr": "IA en local",
+      "en": "Local AI",
+      "es": "IA en local",
+      "it": "IA in locale"
+     },
+     "apps": [
+      "mCASTING",
+      "mUGGINFACE"
+     ]
+    },
+    {
+     "id": "virt",
+     "name": {
+      "fr": "Virtualisation",
+      "en": "Virtualization",
+      "es": "Virtualización",
+      "it": "Virtualizzazione"
+     },
+     "apps": [
+      "TESSERaCT"
      ]
     }
    ]
@@ -435,7 +465,7 @@
    "repo": "mCLEAN",
    "accent": "#30d158",
    "kind": "menubar",
-   "desk": true,
+   "desk": false,
    "demo": "mCLEAN",
    "shots": 0,
    "download": true,
@@ -597,7 +627,7 @@
    "repo": "wCLAUDE",
    "accent": "#ff9f0a",
    "kind": "app",
-   "desk": true,
+   "desk": false,
    "demo": "wCLAUDE",
    "shots": 0,
    "download": false,
@@ -799,7 +829,7 @@
    "repo": "mPDF",
    "accent": "#f9514c",
    "kind": "app",
-   "desk": true,
+   "desk": false,
    "demo": "mPDF",
    "shots": 3,
    "download": true,
@@ -864,6 +894,269 @@
     "es": "Explorador multimedia y transcodificador rápido, con exportación a DaVinci Resolve.",
     "it": "Browser multimediale e transcoder veloce, con export verso DaVinci Resolve."
    }
+  },
+  {
+   "id": "mHUB",
+   "space": "util",
+   "repo": "mHUB",
+   "accent": "#f59e0b",
+   "kind": "menubar",
+   "desk": true,
+   "demo": "mHUB",
+   "shots": 1,
+   "download": true,
+   "version": "1.1.2",
+   "hub": true,
+   "tag": {
+    "fr": "Le hub du Desktop Mac Toolkit : installe, met à jour et lance toutes les applis depuis une seule icône.",
+    "en": "The Desktop Mac Toolkit hub: installs, updates and launches every app from one menu bar icon.",
+    "es": "El hub del Desktop Mac Toolkit: instala, actualiza y abre todas las apps desde un solo icono.",
+    "it": "L'hub del Desktop Mac Toolkit: installa, aggiorna e apre tutte le app da una sola icona."
+   },
+   "featured": true,
+   "features": {
+    "fr": [
+     "Une seule icône dans la barre des menus pour installer, mettre à jour et lancer toutes les applis du Desktop Mac Toolkit.",
+     "Téléchargement depuis les releases GitHub publiques, signature Developer ID vérifiée, jamais pendant qu’une appli est ouverte.",
+     "Bibliothèque par catégories : état de chaque appli (à jour, mise à jour, non installée), recherche, tri.",
+     "Ouvrir une appli ou ses réglages d’un clic, et voir d’un coup d’œil ce qui attend une mise à jour."
+    ],
+    "en": [
+     "One menu bar icon to install, update and launch every Desktop Mac Toolkit app.",
+     "Downloads from public GitHub releases, Developer ID signature verified, never while an app is open.",
+     "Library by category: status of each app (up to date, update, not installed), search, sort.",
+     "Open an app or its settings in one click, and see at a glance what is waiting for an update."
+    ]
+   },
+   "deskIdx": 0
+  },
+  {
+   "id": "mFONTS",
+   "space": "util",
+   "repo": "mFONTS",
+   "accent": "#0a84ff",
+   "kind": "app",
+   "desk": true,
+   "demo": "mFONTS",
+   "shots": 1,
+   "download": true,
+   "version": "1.9.0",
+   "tag": {
+    "fr": "Gestionnaire de polices : bibliothèques, collections, activation à la demande, aperçu en direct.",
+    "en": "Font manager: libraries, collections, on-demand activation, live preview.",
+    "es": "Gestor de fuentes: bibliotecas, colecciones, activación bajo demanda, vista previa en directo.",
+    "it": "Gestore di font: librerie, raccolte, attivazione su richiesta, anteprima dal vivo."
+   },
+   "deskIdx": 1
+  },
+  {
+   "id": "mFRAMES",
+   "space": "util",
+   "repo": "mFRAMES",
+   "accent": "#2dd4bf",
+   "kind": "app",
+   "desk": true,
+   "demo": "mFRAMES",
+   "shots": 2,
+   "download": true,
+   "version": "1.4.2",
+   "tag": {
+    "fr": "Review et annotation en direct avec un client : vidéo, images, PDF, chiffré de bout en bout.",
+    "en": "Live review and annotation with a client: video, images, PDF, end-to-end encrypted.",
+    "es": "Revisión y anotación en directo con un cliente: vídeo, imágenes, PDF, cifrado de extremo a extremo.",
+    "it": "Revisione e annotazione in diretta con un cliente: video, immagini, PDF, cifratura end-to-end."
+   },
+   "featured": true,
+   "features": {
+    "fr": [
+     "Review en direct : le prestataire invite son client par code, QR code ou lien ; annotations, réponses et « Suivez-moi » circulent en pair-à-pair, chiffrés de bout en bout.",
+     "Client sans installation : un simple lien ouvre la review dans n’importe quel navigateur ; le secret ne quitte jamais le lien.",
+     "Vidéo, images, PDF, PSD et AI : proxys légers, originaux jamais envoyés, reprise des transferts et vérification d’empreinte.",
+     "Épingles et zones sur l’image, sur une image de la vidéo ou une page de PDF ; réponses en bulles, statut ouvert / résolu.",
+     "Copie locale du client : il continue hors ligne, tout se resynchronise au retour, sans perte ni doublon.",
+     "Réseau à votre main : local, adresse directe (UPnP, STUN), relais auto-hébergé, proxy HTTP / SOCKS5.",
+     "DaVinci Resolve, After Effects, Premiere Pro : les retours deviennent des marqueurs ; exports EDL, FCPXML, CSV."
+    ],
+    "en": [
+     "Live review: the provider invites the client by code, QR code or link; annotations, replies and “Follow me” travel peer to peer, end-to-end encrypted.",
+     "No install for the client: a plain link opens the review in any browser; the secret never leaves the link.",
+     "Video, images, PDF, PSD and AI: light proxies, originals never sent, resumable transfers with hash checks.",
+     "Pins and zones on the image, on a video frame or a PDF page; threaded replies, open / resolved status.",
+     "Client-side local copy: keep reviewing offline, everything resyncs on return with no loss or duplicates.",
+     "Your network, your rules: local, direct address (UPnP, STUN), self-hosted relay, HTTP / SOCKS5 proxy.",
+     "DaVinci Resolve, After Effects, Premiere Pro: feedback becomes markers; EDL, FCPXML, CSV exports."
+    ]
+   },
+   "deskIdx": 5
+  },
+  {
+   "id": "mCASTING",
+   "space": "util",
+   "repo": "mCASTING",
+   "accent": "#f472b6",
+   "kind": "app",
+   "desk": true,
+   "demo": "mCASTING",
+   "shots": 0,
+   "download": true,
+   "version": "1.6.1",
+   "tag": {
+    "fr": "Casting de voix IA en local : bibliothèque, clonage, distribution par projet, serveur MCP.",
+    "en": "Local AI voice casting: voice library, cloning, per-project casting, MCP server.",
+    "es": "Casting de voces IA en local: biblioteca, clonación, reparto por proyecto, servidor MCP.",
+    "it": "Casting di voci IA in locale: libreria, clonazione, cast per progetto, server MCP."
+   },
+   "featured": true,
+   "features": {
+    "fr": [
+     "Casting par projet : jeu, vidéo, voix off… une liste de personnages avec rôle, répliques d’essai et langue (français ou anglais).",
+     "Bibliothèque d’environ 600 voix (hommes, femmes, enfants, animaux, créatures) créées en local, avec un échantillon français et un anglais chacune.",
+     "Filtres par genre, âge, ton et langue ; comparaison A/B ; émotion réglée réplique par réplique.",
+     "Clonage de voix : importez un fichier audio ou un lien web, choisissez 5 à 15 s, transcrivez, la voix rejoint la bibliothèque (droits à vérifier).",
+     "Prêt pour les agents (MCP) : créer un projet, ajouter des personnages, chercher et écouter des voix, écrire le casting.json final.",
+     "Import d’un projet existant en une phrase à votre agent, sans jamais effacer un casting déjà fait.",
+     "100 % local sur Apple Silicon : moteur Python isolé (mlx-audio), une génération lourde à la fois."
+    ],
+    "en": [
+     "Per-project casting: a game, a video, a voice-over… a list of characters with role, sample lines and language (French or English).",
+     "A library of about 600 voices (men, women, children, animals, creatures) generated locally, each with a French and an English sample.",
+     "Filter by gender, age, tone and language; A/B comparison; emotion set line by line.",
+     "Voice cloning: import an audio file or a web link, pick 5–15 s, transcribe, and the voice joins the library (you must hold the rights).",
+     "Agent-ready (MCP): create a project, add characters, search and preview voices, write the final casting.json.",
+     "Import an existing project with one sentence to your agent, without ever erasing a casting already done.",
+     "100% local on Apple Silicon: isolated Python engine (mlx-audio), one heavy generation at a time."
+    ]
+   },
+   "deskIdx": 6
+  },
+  {
+   "id": "mUGGINFACE",
+   "space": "util",
+   "repo": "mUGGINFACE",
+   "accent": "#fbbf24",
+   "kind": "app",
+   "desk": true,
+   "demo": "mUGGINFACE",
+   "shots": 1,
+   "download": true,
+   "version": "1.0.13",
+   "tag": {
+    "fr": "Les meilleurs modèles d'IA de Hugging Face, adaptés à votre Mac, avec veille des nouveautés.",
+    "en": "The best Hugging Face AI models, matched to your Mac, with constant monitoring of new releases.",
+    "es": "Los mejores modelos de IA de Hugging Face, adaptados a tu Mac, con vigilancia de novedades.",
+    "it": "I migliori modelli IA di Hugging Face, adatti al tuo Mac, con monitoraggio delle novità."
+   },
+   "deskIdx": 3
+  },
+  {
+   "id": "mPARLE",
+   "space": "util",
+   "repo": "mPARLE",
+   "accent": "#38bdf8",
+   "kind": "menubar",
+   "desk": false,
+   "demo": "mPARLE",
+   "shots": 2,
+   "download": true,
+   "version": "1.0.2",
+   "tag": {
+    "fr": "Traduction rapide de tout texte sélectionné : Apple Translation hors ligne, DeepL, Google ou IA locale.",
+    "en": "Fast translation of any selected text: offline Apple Translation, DeepL, Google or local AI.",
+    "es": "Traducción rápida de cualquier texto seleccionado: Apple Translation sin conexión, DeepL, Google o IA local.",
+    "it": "Traduzione rapida di qualsiasi testo selezionato: Apple Translation offline, DeepL, Google o IA locale."
+   }
+  },
+  {
+   "id": "mPASTE",
+   "space": "util",
+   "repo": "mPASTE",
+   "accent": "#a78bfa",
+   "kind": "menubar",
+   "desk": false,
+   "demo": "mPASTE",
+   "shots": 1,
+   "download": true,
+   "version": "1.0.3",
+   "tag": {
+    "fr": "⌘V colle en texte brut partout et retire les paramètres de suivi des liens.",
+    "en": "⌘V pastes as plain text everywhere and strips tracking parameters from links.",
+    "es": "⌘V pega como texto sin formato en todas partes y quita los parámetros de seguimiento.",
+    "it": "⌘V incolla come testo semplice ovunque e rimuove i parametri di tracciamento."
+   }
+  },
+  {
+   "id": "mTAPES",
+   "space": "util",
+   "repo": "mTAPES",
+   "accent": "#ef4444",
+   "kind": "menubar",
+   "desk": true,
+   "demo": "mTAPES",
+   "shots": 1,
+   "download": true,
+   "version": "1.0.1",
+   "tag": {
+    "fr": "Enregistreur d’écran natif qui monte vos démos tout seul, pilotable par IA via MCP.",
+    "en": "A native screen recorder that edits your demos for you, drivable by AI through MCP.",
+    "es": "Grabador de pantalla nativo que edita tus demos por ti, controlable por IA mediante MCP.",
+    "it": "Registratore di schermo nativo che monta le tue demo da solo, pilotabile da IA tramite MCP."
+   },
+   "features": {
+    "fr": [
+     "Enregistre un écran, une fenêtre (même recouverte), une appli ou une zone ; raccourci ⌥⌘R.",
+     "Son du Mac et micro sur des pistes séparées, vitesse normale, gain par piste.",
+     "Finition automatique : zooms sur les actions, temps morts accélérés, curseur lissé, sous-titres, cadre et fond.",
+     "Exports GIF (README), MP4 1080p et MP4 vertical (short) ; la vidéo brute n’est jamais modifiée.",
+     "Serveur MCP (10 outils) : une IA filme, annonce ses actions et monte la prise elle-même.",
+     "sRGB ou Display P3 de bout en bout ; mise à jour automatique ; 4 langues."
+    ],
+    "en": [
+     "Records a screen, a window (even covered), an app or a zone; shortcut ⌥⌘R.",
+     "Mac sound and microphone on separate tracks, normal speed, gain per track.",
+     "Automatic finishing: zooms on actions, dead time sped up, smoothed cursor, captions, frame and background.",
+     "Exports GIF (README), 1080p MP4 and vertical MP4 (short); the raw video is never modified.",
+     "MCP server (10 tools): an AI records, announces its actions and edits the take itself.",
+     "sRGB or Display P3 end to end; automatic updates; 4 languages."
+    ]
+   },
+   "deskIdx": 4
+  },
+  {
+   "id": "TESSERaCT",
+   "space": "util",
+   "repo": "TESSERaCT",
+   "accent": "#8b5cf6",
+   "kind": "app",
+   "desk": true,
+   "demo": "TESSERaCT",
+   "shots": 1,
+   "download": true,
+   "version": "1.0.1",
+   "tag": {
+    "fr": "Créez et lancez des machines virtuelles sur Mac Apple Silicon : macOS, Linux, Windows 11, BSD, pilotable par IA.",
+    "en": "Create and run virtual machines on Apple Silicon Macs: macOS, Linux, Windows 11, BSD, drivable by AI.",
+    "es": "Crea y ejecuta máquinas virtuales en Macs Apple Silicon: macOS, Linux, Windows 11, BSD, controlable por IA.",
+    "it": "Crea ed esegui macchine virtuali su Mac Apple Silicon: macOS, Linux, Windows 11, BSD, pilotabile da IA."
+   },
+   "features": {
+    "fr": [
+     "Invités macOS, Linux et Windows 11 pour Arm qui s’installent et se configurent tout seuls.",
+     "Bureaux Linux prêts à l’emploi : GNOME, KDE Plasma, Xfce, Cinnamon.",
+     "Catalogue de systèmes ARM64 (Debian, NixOS, FreeBSD, OpenBSD, Alpine…) mis à jour chaque jour.",
+     "Instantanés et duplicatas qui partagent les blocs de disque sur APFS ; modèles de machines.",
+     "Dossiers et presse-papiers partagés, redirection de ports, USB, suspension et reprise.",
+     "Commande tctl et serveur MCP : une IA voit et pilote le bureau de la machine invitée."
+    ],
+    "en": [
+     "macOS, Linux and Windows 11 for Arm guests that install and set themselves up.",
+     "Ready-made Linux desktops: GNOME, KDE Plasma, Xfce, Cinnamon.",
+     "A daily-updated catalogue of ARM64 systems (Debian, NixOS, FreeBSD, OpenBSD, Alpine…).",
+     "Snapshots and duplicates that share disk blocks on APFS; machine templates.",
+     "Shared folders and clipboard, port forwarding, USB, suspend and resume.",
+     "tctl command and MCP server: an AI sees and drives the guest's desktop."
+    ]
+   },
+   "deskIdx": 2
   }
  ]
 }

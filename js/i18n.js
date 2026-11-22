@@ -13,11 +13,11 @@ const D = {
     'm.aboutApp': 'À propos de wSHOWCASE', 'm.about': 'À propos de {app}', 'm.aboutFinder': 'À propos de wSHOWCASE', 'm.settings': 'Réglages système…', 'm.wallpaper': 'Fond d’écran…',
     'm.restart': 'Redémarrer…', 'm.shutdown': 'Éteindre…', 'm.download': 'Télécharger {app}…', 'm.quit': 'Quitter {app}', 'm.file': 'Fichier', 'm.newFinder': 'Nouvelle fenêtre du Finder',
     'm.close': 'Fermer la fenêtre', 'm.view': 'Présentation', 'm.go': 'Aller', 'm.search': 'Rechercher…', 'm.window': 'Fenêtre', 'm.minimize': 'Réduire', 'm.zoom': 'Zoom', 'm.help': 'Aide',
-    'm.helpSite': 'Site skyrimtools.com', 'm.helpGh': 'Profil GitHub', 'm.changeWall': 'Changer le fond d’écran…', 'm.cleanup': 'Ranger les icônes', 'm.resetDesk': 'Remettre les icônes à leur place',
+    'm.helpSite': 'Site skyrimtools.com', 'm.helpGh': 'Profil GitHub', 'm.changeWall': 'Changer le fond d’écran…', 'm.open': 'Ouvrir', 'm.removeFromDesk': 'Retirer du bureau', 'm.organizeDesk': 'Organiser le bureau…', 's.desk': 'Bureau', 's.deskOn': 'Sur le bureau', 's.deskOff': 'Disponibles', 's.deskDef': 'Par défaut', 's.up': 'Monter', 's.down': 'Descendre', 's.deskHint': 'Choisissez les applis affichées sur le bureau {s} et leur ordre. Elles restent dans le Dock et le Finder.', 'm.cleanup': 'Ranger les icônes', 'm.resetDesk': 'Remettre les icônes à leur place',
     'f.icons': 'Icônes', 'f.list': 'Liste', 'f.gallery': 'Galerie', 'f.search': 'Rechercher', 'f.spaces': 'Bureaux', 'f.tags': 'Étiquettes', 'f.tag.menubar': 'Barre des menus',
     'f.tag.demo': 'Démo interactive', 'f.tag.dl': 'Téléchargeables', 'f.empty': 'Aucune application ne correspond.', 'f.name': 'Nom', 'f.kind': 'Type', 'f.demo': 'Démo', 'f.version': 'Version',
     'f.kindApp': 'Application', 'f.kindMenu': 'Barre des menus', 'f.demoLive': 'Démo interactive', 'f.demoTour': 'Parcours guidé', 'f.source': 'Code source', 'f.try': 'Ouvrir la démo',
-    'f.download': 'Télécharger', 'f.shots': 'Voir les captures', 'f.soon': 'Bientôt disponible', 'f.edition': 'Édition', 'f.tierDemo': 'Démo limitée · activation complète payante',
+    'f.download': 'Télécharger', 'f.shots': 'Voir les captures', 'f.soon': 'Bientôt disponible', 'f.hubRole': 'Gère toutes les applis du kit', 'f.hubLbl': 'Hub', 'f.featured': 'À l’honneur', 'f.features': 'Fonctionnalités', 'f.edition': 'Édition', 'f.tierDemo': 'Démo limitée · activation complète payante',
     'cc.title': 'Centre de contrôle', 'cc.appearance': 'Apparence', 'cc.light': 'Clair', 'cc.dark': 'Sombre', 'cc.auto': 'Auto', 'cc.sound': 'Son', 'cc.lang': 'Langue', 'cc.wallpaper': 'Fond d’écran',
     's.title': 'Réglages système', 's.wall': 'Fond d’écran', 's.look': 'Apparence', 's.sound': 'Son', 's.lang': 'Langue', 's.wallFor': 'Pour le bureau {s}', 's.wallTes': 'The Elder Scrolls', 's.wallGen': 'Général', 's.soundOn': 'Sons d’interface', 's.volume': 'Volume', 's.chime': 'Son de démarrage', 's.play': 'Écouter',
     'sp.ph': 'Rechercher une appli ou une commande', 'sp.app': 'Application', 'sp.cmd': 'Commande', 'sp.none': 'Aucun résultat.', 'sp.dark': 'Passer en mode sombre', 'sp.light': 'Passer en mode clair',
@@ -50,11 +50,11 @@ const D = {
     'm.aboutApp': 'About wSHOWCASE', 'm.about': 'About {app}', 'm.aboutFinder': 'About wSHOWCASE', 'm.settings': 'System Settings…', 'm.wallpaper': 'Wallpaper…',
     'm.restart': 'Restart…', 'm.shutdown': 'Shut Down…', 'm.download': 'Download {app}…', 'm.quit': 'Quit {app}', 'm.file': 'File', 'm.newFinder': 'New Finder Window',
     'm.close': 'Close Window', 'm.view': 'View', 'm.go': 'Go', 'm.search': 'Search…', 'm.window': 'Window', 'm.minimize': 'Minimize', 'm.zoom': 'Zoom', 'm.help': 'Help',
-    'm.helpSite': 'skyrimtools.com website', 'm.helpGh': 'GitHub profile', 'm.changeWall': 'Change Wallpaper…', 'm.cleanup': 'Clean Up', 'm.resetDesk': 'Reset Icon Positions',
+    'm.helpSite': 'skyrimtools.com website', 'm.helpGh': 'GitHub profile', 'm.changeWall': 'Change Wallpaper…', 'm.open': 'Open', 'm.removeFromDesk': 'Remove from Desktop', 'm.organizeDesk': 'Organize Desktop…', 's.desk': 'Desktop', 's.deskOn': 'On the desktop', 's.deskOff': 'Available', 's.deskDef': 'Default', 's.up': 'Move up', 's.down': 'Move down', 's.deskHint': 'Choose which apps appear on the {s} desktop and in what order. They stay in the Dock and the Finder.', 'm.cleanup': 'Clean Up', 'm.resetDesk': 'Reset Icon Positions',
     'f.icons': 'Icons', 'f.list': 'List', 'f.gallery': 'Gallery', 'f.search': 'Search', 'f.spaces': 'Desktops', 'f.tags': 'Tags', 'f.tag.menubar': 'Menu bar',
     'f.tag.demo': 'Interactive demo', 'f.tag.dl': 'Downloadable', 'f.empty': 'No app matches.', 'f.name': 'Name', 'f.kind': 'Kind', 'f.demo': 'Demo', 'f.version': 'Version',
     'f.kindApp': 'Application', 'f.kindMenu': 'Menu bar', 'f.demoLive': 'Interactive demo', 'f.demoTour': 'Guided tour', 'f.source': 'Source code', 'f.try': 'Open the demo',
-    'f.download': 'Download', 'f.shots': 'See screenshots', 'f.soon': 'Coming soon', 'f.edition': 'Edition', 'f.tierDemo': 'Limited demo · full activation is paid',
+    'f.download': 'Download', 'f.shots': 'See screenshots', 'f.soon': 'Coming soon', 'f.hubRole': 'Manages every app of the kit', 'f.hubLbl': 'Hub', 'f.featured': 'Featured', 'f.features': 'Features', 'f.edition': 'Edition', 'f.tierDemo': 'Limited demo · full activation is paid',
     'cc.title': 'Control Center', 'cc.appearance': 'Appearance', 'cc.light': 'Light', 'cc.dark': 'Dark', 'cc.auto': 'Auto', 'cc.sound': 'Sound', 'cc.lang': 'Language', 'cc.wallpaper': 'Wallpaper',
     's.title': 'System Settings', 's.wall': 'Wallpaper', 's.look': 'Appearance', 's.sound': 'Sound', 's.lang': 'Language', 's.wallFor': 'For the {s} desktop', 's.wallTes': 'The Elder Scrolls', 's.wallGen': 'General', 's.soundOn': 'Interface sounds', 's.volume': 'Volume', 's.chime': 'Startup sound', 's.play': 'Play',
     'sp.ph': 'Search an app or a command', 'sp.app': 'Application', 'sp.cmd': 'Command', 'sp.none': 'No results.', 'sp.dark': 'Switch to dark mode', 'sp.light': 'Switch to light mode',
@@ -85,6 +85,7 @@ export function t(k, v) {
   if (v) for (const [a, b] of Object.entries(v)) s = s.replaceAll(`{${a}}`, b);
   return s;
 }
+export const feats = a => (a.features && (a.features[L] || a.features.en)) || [];
 export const tag = a => a.tag[L] || a.tag.en || a.tag.fr;
 export const sname = s => s.name[L] || s.name.en || s.name.fr;
 export function initLang() {

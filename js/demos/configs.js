@@ -13,6 +13,62 @@ const STA = () => ({ new: [T('Nouveau', 'New'), ''], open: [T('Ouvert', 'Open'),
   draft: [T('Brouillon', 'Draft'), ''], copied: [T('Copié', 'Copied'), 'ok'], applied: [T('Appliqué', 'Applied'), 'ok'], avail: [T('Disponible', 'Available'), ''], modified: [T('Modifié', 'Modified'), 'wn'], saved: [T('Enregistré', 'Saved'), 'ok'], tagged: [T('Étiqueté', 'Tagged'), 'ok'] });
 
 export const CONFIG = {
+  /* ---------------- Desktop Mac Toolkit : ajouts récents ---------------- */
+  mTAPES: () => ({ type: 'menu', sub: T('Enregistreur d’écran, monté par IA', 'Screen recorder, edited by AI'), view: (body, ctx) => {
+    let rec = 0, iv = 0, finished = false; const clock = h('b', { class: 'num' }, '00:00'), st = h('small', { class: 'mut' }), box = h('div', { class: 'xlist' });
+    const fmtT = s => String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+    const steps = [[T('Zooms sur les actions', 'Zooms on actions'), 1], [T('Temps morts accélérés', 'Dead time sped up'), 1], [T('Sous-titres des étiquettes', 'Captions from labels'), 1], [T('Curseur lissé', 'Smoothed cursor'), 0]];
+    const draw = () => { clock.textContent = fmtT(rec); st.textContent = iv ? T('Enregistrement… la prise brute reste intacte.', 'Recording… the raw take stays untouched.') : finished ? T('Prise finie. Exportez-la.', 'Take finished. Export it.') : T('Prêt (⌥⌘R)', 'Ready (⌥⌘R)'); box.innerHTML = ''; if (finished) steps.forEach(([n, on]) => box.append(h('div', { class: 'xrow' }, h('b', {}, n), h('small', { class: on ? 'ok' : 'mut' }, on ? '✓' : '—')))); };
+    const toggle = () => { if (iv) { clearInterval(iv); iv = 0; finished = true; sfx.done(); ctx.toast(T('Prise enregistrée, finition automatique appliquée.', 'Take saved, automatic finishing applied.')); } else { rec = 0; finished = false; sfx.click(); iv = setInterval(() => { rec++; if (clock.isConnected) draw(); else { clearInterval(iv); iv = 0; } }, 1000); } draw(); };
+    const btn = h('button', { class: 'btn pri full', onclick: () => { toggle(); btn.textContent = iv ? T('Arrêter', 'Stop') : T('Enregistrer', 'Record'); } }, T('Enregistrer', 'Record'));
+    body.append(h('div', { class: 'xtot' }, h('span', { class: 'mut' }, '●'), clock), st, btn, box, h('div', { class: 'xtot', style: { gap: '6px', flexWrap: 'wrap' } }, ['GIF', 'MP4 1080p', 'Short 9:16'].map(f => h('button', { class: 'btn', onclick: () => { sfx.pop(); ctx.toast(T('Export ' + f + ' prêt.', f + ' export ready.')); } }, f)))); draw(); } }),
+  TESSERaCT: () => ({ type: 'browse', w: 1000, h: 620, states: { free: [T('À télécharger', 'To download'), ''], ready: [T('Machine créée', 'Machine created'), 'ok'], run: [T('En marche', 'Running'), 'ok'] }, state0: 'free',
+    items: [
+      { n: 'Debian 13.7', sub: 'Linux · 735 MB', fields: [[T('Architecture', 'Architecture'), 'ARM64'], [T('Bureau', 'Desktop'), 'GNOME'], [T('Taille', 'Size'), '735 MB']] },
+      { n: 'NixOS 26.05', sub: 'Linux · 1.8 GB', fields: [[T('Architecture', 'Architecture'), 'ARM64'], [T('Configuration', 'Configuration'), T('Déclarative', 'Declarative')], [T('Taille', 'Size'), '1.8 GB']] },
+      { n: 'FreeBSD 15.1', sub: 'BSD · 1.2 GB', fields: [[T('Architecture', 'Architecture'), 'ARM64'], ['ZFS', T('Oui', 'Yes')], [T('Taille', 'Size'), '1.2 GB']] },
+      { n: 'Windows 11 (Arm)', sub: T('Téléchargé chez Microsoft', 'Downloaded from Microsoft'), fields: [[T('Architecture', 'Architecture'), 'ARM64'], [T('Pilotes', 'Drivers'), T('Installés', 'Installed')], [T('Session', 'Session'), T('Ouverte', 'Logged in')]] },
+      { n: 'macOS', sub: T('Dernière version', 'Latest macOS'), fields: [[T('Architecture', 'Architecture'), 'Apple Silicon'], [T('Installation', 'Setup'), T('Automatique', 'Automatic')], [T('Instantanés', 'Snapshots'), 'APFS']] }],
+    actions: [{ label: T('Télécharger et créer la machine', 'Download and create machine'), pri: 1, set: 'ready', toast: s => s.n + T(' : machine créée.', ': machine created.') }, { label: T('Démarrer', 'Start'), set: 'run', toast: s => s.n + T(' démarre.', ' is starting.') }] }),
+  mFONTS: () => ({ type: 'browse', w: 960, h: 600, states: { on: [T('Activée', 'Active'), 'ok'], off: [T('Désactivée', 'Inactive'), ''] }, state0: 'off',
+    items: [
+      { n: 'Avenir Next', sub: T('Collection Interface', 'Interface collection'), state: 'on', fields: [[T('Styles', 'Styles'), '12'], ['Format', 'OpenType'], [T('Bibliothèque', 'Library'), T('Système', 'System')], [T('Activation', 'Activation'), T('Permanente', 'Permanent')]] },
+      { n: 'Playfair Display', sub: T('Collection Éditorial', 'Editorial collection'), fields: [[T('Styles', 'Styles'), '18'], ['Format', 'TrueType'], [T('Bibliothèque', 'Library'), 'Google Fonts'], [T('Activation', 'Activation'), T('À la demande', 'On demand')]] },
+      { n: 'JetBrains Mono', sub: T('Collection Code', 'Code collection'), state: 'on', fields: [[T('Styles', 'Styles'), '8'], ['Format', 'OpenType'], [T('Bibliothèque', 'Library'), T('Projets', 'Projects')], [T('Activation', 'Activation'), T('À la demande', 'On demand')]] },
+      { n: 'Bebas Neue', sub: T('Collection Affiches', 'Posters collection'), fields: [[T('Styles', 'Styles'), '1'], ['Format', 'OpenType'], [T('Bibliothèque', 'Library'), 'Google Fonts'], [T('Activation', 'Activation'), T('À la demande', 'On demand')]] },
+      { n: 'Caslon Antique', sub: T('Collection Éditorial', 'Editorial collection'), fields: [[T('Styles', 'Styles'), '4'], ['Format', 'TrueType'], [T('Bibliothèque', 'Library'), T('Projets', 'Projects')], [T('Activation', 'Activation'), T('À la demande', 'On demand')]] }],
+    actions: [{ label: T('Activer', 'Activate'), pri: 1, set: 'on', toast: s => s.n + T(' est activée.', ' is active.') }, { label: T('Désactiver', 'Deactivate'), set: 'off', toast: s => s.n + T(' est désactivée.', ' is inactive.') }] }),
+  mFRAMES: () => ({ type: 'browse', w: 980, h: 600, states: { open: [T('À traiter', 'Open'), 'wn'], fixed: [T('Résolu', 'Resolved'), 'ok'] }, state0: 'open', grid: false,
+    items: [
+      { n: T('Plan 04 · 00:12', 'Shot 04 · 00:12'), sub: T('Léa (cliente)', 'Lea (client)'), fields: [[T('Média', 'Media'), 'spot_v3.mov'], [T('Annotation', 'Annotation'), T('Cercle sur le logo', 'Circle on the logo')], [T('Chiffrement', 'Encryption'), T('De bout en bout', 'End to end')]], body: T('Le logo arrive trop tôt : le décaler de 10 images.', 'The logo comes in too early: shift it by 10 frames.') },
+      { n: T('Plan 07 · 00:31', 'Shot 07 · 00:31'), sub: T('Léa (cliente)', 'Lea (client)'), state: 'fixed', fields: [[T('Média', 'Media'), 'spot_v3.mov'], [T('Annotation', 'Annotation'), T('Flèche sur la voiture', 'Arrow on the car')], [T('Chiffrement', 'Encryption'), T('De bout en bout', 'End to end')]], body: T('Étalonner un peu plus chaud.', 'Grade a little warmer.') },
+      { n: T('Page 2 · brochure.pdf', 'Page 2 · brochure.pdf'), sub: 'Marc', fields: [[T('Média', 'Media'), 'brochure.pdf'], [T('Annotation', 'Annotation'), T('Surlignage du titre', 'Title highlight')], [T('Chiffrement', 'Encryption'), T('De bout en bout', 'End to end')]], body: T('Titre à raccourcir.', 'Shorten the title.') }],
+    bodyLabel: T('Commentaire', 'Comment'), actions: [{ label: T('Marquer résolu', 'Mark resolved'), pri: 1, set: 'fixed', toast: T('Retour envoyé au client, chiffré.', 'Reply sent to the client, encrypted.') }, { label: T('Rouvrir', 'Reopen'), set: 'open' }] }),
+  mCASTING: () => ({ type: 'browse', w: 960, h: 600, states: { free: [T('Disponible', 'Available'), ''], cast: [T('Distribuée', 'Cast'), 'ok'] }, state0: 'free',
+    items: [
+      { n: 'Brunhild', sub: T('Voix grave, ferme', 'Deep, firm voice'), fields: [[T('Langue', 'Language'), T('Français', 'French')], [T('Origine', 'Source'), T('Clonée (10 s)', 'Cloned (10 s)')], [T('Projet', 'Project'), T('Trailer long', 'Long trailer')]] },
+      { n: 'Le Roi', sub: T('Ironique, chaleureuse', 'Wry, warm'), state: 'cast', fields: [[T('Langue', 'Language'), 'English'], [T('Origine', 'Source'), T('Conçue', 'Designed')], [T('Projet', 'Project'), T('Clip marketing', 'Marketing clip')]] },
+      { n: 'Narrateur', sub: T('Posé, cinéma', 'Calm, cinematic'), fields: [[T('Langue', 'Language'), T('Français', 'French')], [T('Origine', 'Source'), T('Bibliothèque', 'Library')], [T('Projet', 'Project'), '—']] }],
+    actions: [{ label: T('Distribuer au projet', 'Cast in the project'), pri: 1, set: 'cast', toast: s => s.n + T(' est distribuée.', ' is cast.') }, { label: T('Retirer', 'Release'), set: 'free' }] }),
+  mUGGINFACE: () => ({ type: 'browse', w: 980, h: 600, states: { ok: [T('Compatible', 'Fits your Mac'), 'ok'], in: [T('Installé', 'Installed'), 'ok'], big: [T('Trop lourd', 'Too heavy'), 'wn'] }, state0: 'ok',
+    items: [
+      { n: 'Qwen3 8B · 4 bits', sub: T('Texte · 4,6 Go', 'Text · 4.6 GB'), fields: [[T('Mémoire requise', 'Memory needed'), '6 GB'], [T('Votre Mac', 'Your Mac'), 'M5 Max · 64 GB'], [T('Veille', 'Watch'), T('Nouvelle version', 'New version')]] },
+      { n: 'FLUX Klein · 8 bits', sub: T('Image · 9,6 Go', 'Image · 9.6 GB'), state: 'in', fields: [[T('Mémoire requise', 'Memory needed'), '14 GB'], [T('Votre Mac', 'Your Mac'), 'M5 Max · 64 GB'], [T('Veille', 'Watch'), T('À jour', 'Up to date')]] },
+      { n: 'Whisper large v3', sub: T('Voix · 3 Go', 'Speech · 3 GB'), fields: [[T('Mémoire requise', 'Memory needed'), '4 GB'], [T('Votre Mac', 'Your Mac'), 'M5 Max · 64 GB'], [T('Veille', 'Watch'), T('À jour', 'Up to date')]] },
+      { n: 'Llama 405B', sub: T('Texte · 230 Go', 'Text · 230 GB'), state: 'big', fields: [[T('Mémoire requise', 'Memory needed'), '240 GB'], [T('Votre Mac', 'Your Mac'), 'M5 Max · 64 GB'], [T('Veille', 'Watch'), T('Hors de portée', 'Out of reach')]] }],
+    actions: [{ label: T('Télécharger', 'Download'), pri: 1, fn: (s, items, draw) => { if (s.state === 'big') return; s.state = 'in'; }, toast: s => (s.state === 'big' ? T('Trop lourd pour ce Mac.', 'Too heavy for this Mac.') : s.n + T(' est installé.', ' is installed.')) }] }),
+  mPARLE: () => ({ type: 'menu', sub: T('Traduction du texte sélectionné', 'Translate the selected text'), view: (body, ctx) => {
+    const DICT = { 'bonjour le monde': 'hello world', 'merci beaucoup': 'thank you very much', 'où est la gare ?': 'where is the station?', 'hello world': 'bonjour le monde' };
+    const ENG = ['Apple Translation', 'DeepL', 'Google', T('IA locale', 'Local AI')]; let eng = 0;
+    const src = h('textarea', { class: 'sfind', rows: 3, 'aria-label': 'source' }, T('Bonjour le monde', 'Hello world')), out = h('p', { class: 'sraw' }), chips = h('div', { class: 'xtot', style: { flexWrap: 'wrap', gap: '6px' } });
+    const draw = () => { chips.innerHTML = ''; ENG.forEach((e, i) => chips.append(h('button', { class: 'btn' + (i === eng ? ' pri' : ''), onclick: () => { eng = i; sfx.tick(); draw(); } }, e))); out.textContent = DICT[src.value.trim().toLowerCase()] || '…'; };
+    src.oninput = draw; body.append(src, chips, out, h('small', { class: 'mut' }, T('Apple Translation : local, hors ligne, par défaut.', 'Apple Translation: local, offline, default.'))); draw(); } }),
+  mPASTE: () => ({ type: 'menu', sub: T('⌘V colle en texte brut', '⌘V pastes as plain text'), view: (body, ctx) => {
+    const RAW = 'https://exemple.fr/article?id=42&utm_source=news&utm_medium=email&fbclid=IwAR0xyz  « Titre   copié »';
+    const clean = s => s.replace(/[?&](utm_[a-z]+|fbclid|gclid)=[^&\s]*/gi, '').replace(/\?&/, '?').replace(/ {2,}/g, ' ').replace(/[«»]/g, '"');
+    const before = h('p', { class: 'sraw' }, RAW), after = h('p', { class: 'sraw ok' }, T('Appuyez sur ⌘V…', 'Press ⌘V…'));
+    body.append(h('small', { class: 'mut' }, T('Copié depuis une page web', 'Copied from a web page')), before,
+      h('button', { class: 'btn pri full', onclick: () => { after.textContent = clean(RAW); sfx.done(); ctx.toast(T('Collé en texte brut, liens nettoyés.', 'Pasted as plain text, links cleaned.')); } }, '⌘V'), after); } }),
   /* ---------------- Skyrim Mac Toolkit ---------------- */
   eSLIFY: () => ({ type: 'scan', mode: 'flag', head: 'Plugins', scanLabel: T('ANALYSER', 'ANALYZE'), actLabel: T('MARQUER ESL', 'FLAG ESL'), safe: T('Une copie .bak a été créée avant la modification.', 'A .bak copy was made before the change.'),
     intro: T('Ajoutez des plugins : eSLIFY vérifie les FormIDs avant de les marquer ESL.', 'Add plugins: eSLIFY checks the FormIDs before flagging them ESL.'), scanning: T('Vérification des FormIDs…', 'Checking FormIDs…'),
