@@ -18,9 +18,15 @@ Prototypes de rendu : https://claude.ai/artifact/Hbie6aV5LJGNajt7JZMpVR (`tools/
 - Scripts courts des 15 chapitres + rechange, avec les clins d'œil « Wabbajack sur… ».
 - Visuels d'ambiance de tous les chapitres, contrôlés, exportés en 960 × 540 (`img/`). Sources FLUX dans
   `work/crossover/` (ignoré par git), scripts `tools/gen_crossover*.sh`.
+- Planches de personnages (39, Sheogorath et Wabbajack compris) : une image FLUX par personnage, fond magenta,
+  contrôlée de près ; costumes vérifiés sur des sources en ligne (Dexter d'après la référence de Stéphan : polo corail,
+  lunettes au col ; jamais le visage des acteurs). Sources `work/crossover/persos/`, sélection `tools/persos_export.py`
+  → `crossover/persos/`, scripts `tools/gen_persos_s2*.sh`, `gen_dexter.sh`.
+- Bible de développement en PDF, français et anglais : `docs/saison2_bible_fr.pdf`, `docs/saison2_bible_en.pdf`
+  (contenu `tools/s2_content.py`, génération `tools/saison2_pdf.py` ; à relancer après chaque changement).
 
 ## À faire
-1. Planches de personnages des 15 chapitres (à valider avant toute pose).
+1. Validation des planches de personnages par Stéphan, puis poses clés (planche avant toute animation).
 2. Moteur : canevas 960 × 540, saison 1 affichée ×2 sans changement ; interface et police mises à l'échelle.
 3. Wabbajack : réserve d'effets génériques (une douzaine d'images faites une fois), réactions par point chaud,
    carnet des métamorphoses.

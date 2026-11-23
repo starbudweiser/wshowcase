@@ -114,6 +114,10 @@ ul.wl li::before{content:"";position:absolute;left:3px;top:.62em;width:6px;heigh
 .chap.stack{grid-template-columns:1fr}.chap.stack .img{min-height:0;aspect-ratio:16/9;height:auto}
 .wabimg{width:100%;max-width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:var(--r);border:1px solid var(--border);margin-bottom:14px;display:block;cursor:zoom-in}
 #zoom img{image-rendering:pixelated}
+.pgrp{margin-bottom:16px}.pgrp h3{font-size:14px;margin:0 0 8px;color:var(--text-strong)}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.pc{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--text);min-width:0}
+.pc img{width:100%;aspect-ratio:4/5;object-fit:contain;background:#c93a86;border-radius:6px;cursor:zoom-in}
 </style>
 </head>
 <body>
@@ -128,8 +132,9 @@ ul.wl li::before{content:"";position:absolute;left:3px;top:.62em;width:6px;heigh
   <a href="#wabbajack">2 · Le Wabbajack</a>
   <a href="#chapitres">3 · Les 15 chapitres</a>
   <a href="#rechange">4 · Épisodes de rechange</a>
-  <a href="#banque">5 · Banque notée</a>
-  <a href="#notes">6 · Suite</a>
+  <a href="#personnages">5 · Personnages</a>
+  <a href="#banque">6 · Banque notée</a>
+  <a href="#notes">7 · Suite</a>
 </div></nav>
 
 <main class="wrap">
@@ -359,6 +364,28 @@ ul.wl li::before{content:"";position:absolute;left:3px;top:.62em;width:6px;heigh
     </div>
   </div>
   <div class="note"><b>Les autres références ont été vérifiées pour l’anglais</b> : toutes sont connues des deux côtés. Seuls quelques jeux de mots se réécrivent librement en anglais, comme pour les dix premiers chapitres (« Choixseau » devient un jeu de mots sur <i>hat</i> et <i>bucket</i>).</div>
+</section>
+
+<!-- ═════════════ PERSONNAGES ═════════════ -->
+<section id="personnages">
+  <h2>Planches de personnages</h2>
+  <p class="sub">Une image de travail par personnage, sur fond magenta pour le détourage, à valider avant toute pose ou animation. Les sprites finaux seront au rendu 960 × 540.</p>
+  <div class="pgrp"><h3>Fil rouge</h3><div class="pgrid"><div class="pc"><img class="img" src="persos/c_sheo.jpg" alt="Sheogorath, Prince de la Folie"><span>Sheogorath, Prince de la Folie</span></div><div class="pc"><img class="img" src="persos/c_wabbajack.jpg" alt="Le Wabbajack"><span>Le Wabbajack</span></div></div></div>
+  <div class="pgrp"><h3>11 · Monkey Island</h3><div class="pgrid"><div class="pc"><img class="img" src="persos/c_pirate.jpg" alt="Le pirate au long nez"><span>Le pirate au long nez</span></div><div class="pc"><img class="img" src="persos/c_parrot.jpg" alt="Le perroquet de la taverne"><span>Le perroquet de la taverne</span></div></div></div>
+  <div class="pgrp"><h3>12 · Sam &amp; Max</h3><div class="pgrid"><div class="pc"><img class="img" src="persos/c_dog.jpg" alt="Le chien détective"><span>Le chien détective</span></div><div class="pc"><img class="img" src="persos/c_rabbit.jpg" alt="Le lapin surexcité"><span>Le lapin surexcité</span></div></div></div>
+  <div class="pgrp"><h3>13 · Minecraft</h3><div class="pgrid"><div class="pc"><img class="img" src="persos/c_villager.jpg" alt="Le villageois carré"><span>Le villageois carré</span></div><div class="pc"><img class="img" src="persos/c_creeper.jpg" alt="La créature verte"><span>La créature verte</span></div></div></div>
+  <div class="pgrp"><h3>14 · Indiana Jones · 15 · Retour vers le futur</h3><div class="pgrid"><div class="pc"><img class="img" src="persos/c_archeo.jpg" alt="L’archéologue"><span>L’archéologue</span></div><div class="pc"><img class="img" src="persos/c_doc.jpg" alt="Le savant"><span>Le savant</span></div></div></div>
+  <div class="pgrp"><h3>16 · Harry Potter</h3><div class="pgrid"><div class="pc"><img class="img" src="persos/c_potions.jpg" alt="Le professeur de potions"><span>Le professeur de potions</span></div><div class="pc"><img class="img" src="persos/c_hat.jpg" alt="Le chapeau parlant"><span>Le chapeau parlant</span></div></div></div>
+  <div class="pgrp"><h3>17 · Kaamelott (FR)</h3><div class="pgrid"><div class="pc"><img class="img" src="persos/c_king.jpg" alt="Le roi"><span>Le roi</span></div><div class="pc"><img class="img" src="persos/c_knight_dim.jpg" alt="Le chevalier lent"><span>Le chevalier lent</span></div><div class="pc"><img class="img" src="persos/c_knight_fat.jpg" alt="Le chevalier gourmand"><span>Le chevalier gourmand</span></div></div></div>
+  <div class="pgrp"><h3>17 · Sacré Graal (EN)</h3><div class="pgrid"><div class="pc"><img class="img" src="persos/c_ni.jpg" alt="Le chevalier qui dit « Ni ! »"><span>Le chevalier qui dit « Ni ! »</span></div><div class="pc"><img class="img" src="persos/c_coconut.jpg" alt="Le chevalier aux noix de coco"><span>Le chevalier aux noix de coco</span></div><div class="pc"><img class="img" src="persos/c_blackknight.jpg" alt="Le chevalier noir"><span>Le chevalier noir</span></div><div class="pc"><img class="img" src="persos/c_killerrabbit.jpg" alt="Le lapin tueur"><span>Le lapin tueur</span></div></div></div>
+  <div class="pgrp"><h3>18 · Conan &amp; L’Histoire sans fin</h3><div class="pgrid"><div class="pc"><img class="img" src="persos/c_barbarian.jpg" alt="Le barbare"><span>Le barbare</span></div><div class="pc"><img class="img" src="persos/c_luckdragon.jpg" alt="Le dragon porte-bonheur"><span>Le dragon porte-bonheur</span></div></div></div>
+  <div class="pgrp"><h3>19 · Jurassic Park</h3><div class="pgrid"><div class="pc"><img class="img" src="persos/c_paleo.jpg" alt="Le paléontologue"><span>Le paléontologue</span></div><div class="pc"><img class="img" src="persos/c_trex.jpg" alt="Le monstre"><span>Le monstre</span></div></div></div>
+  <div class="pgrp"><h3>20 · Stranger Things</h3><div class="pgrid"><div class="pc"><img class="img" src="persos/c_girl.jpg" alt="La fille aux pouvoirs"><span>La fille aux pouvoirs</span></div><div class="pc"><img class="img" src="persos/c_flower.jpg" alt="La créature à tête de fleur"><span>La créature à tête de fleur</span></div><div class="pc"><img class="img" src="persos/c_kid.jpg" alt="Le garçon au talkie-walkie"><span>Le garçon au talkie-walkie</span></div></div></div>
+  <div class="pgrp"><h3>21 · Twin Peaks</h3><div class="pgrid"><div class="pc"><img class="img" src="persos/c_redman.jpg" alt="Le petit homme en rouge"><span>Le petit homme en rouge</span></div><div class="pc"><img class="img" src="persos/c_loglady.jpg" alt="La dame à la bûche"><span>La dame à la bûche</span></div><div class="pc"><img class="img" src="persos/c_agent.jpg" alt="L’agent du FBI"><span>L’agent du FBI</span></div></div></div>
+  <div class="pgrp"><h3>22 · Dexter</h3><div class="pgrid"><div class="pc"><img class="img" src="persos/c_analyst.jpg" alt="L’expert scientifique"><span>L’expert scientifique</span></div><div class="pc"><img class="img" src="persos/c_sister.jpg" alt="La sœur policière"><span>La sœur policière</span></div></div></div>
+  <div class="pgrp"><h3>23 · Matrix</h3><div class="pgrid"><div class="pc"><img class="img" src="persos/c_morph.jpg" alt="L’homme au manteau de cuir"><span>L’homme au manteau de cuir</span></div><div class="pc"><img class="img" src="persos/c_agentm.jpg" alt="L’agent"><span>L’agent</span></div><div class="pc"><img class="img" src="persos/c_spoonkid.jpg" alt="L’enfant à la cuillère"><span>L’enfant à la cuillère</span></div></div></div>
+  <div class="pgrp"><h3>24 · Le Seigneur des Anneaux</h3><div class="pgrid"><div class="pc"><img class="img" src="persos/c_wizard.jpg" alt="Le magicien gris"><span>Le magicien gris</span></div><div class="pc"><img class="img" src="persos/c_demon.jpg" alt="Le démon de feu"><span>Le démon de feu</span></div><div class="pc"><img class="img" src="persos/c_halfling.jpg" alt="Le petit être aux pieds poilus"><span>Le petit être aux pieds poilus</span></div></div></div>
+  <div class="pgrp"><h3>25 · Portal</h3><div class="pgrid"><div class="pc"><img class="img" src="persos/c_ai.jpg" alt="L’IA"><span>L’IA</span></div><div class="pc"><img class="img" src="persos/c_turret.jpg" alt="La tourelle"><span>La tourelle</span></div></div></div>
 </section>
 
 <!-- ═════════════ BANQUE ═════════════ -->
