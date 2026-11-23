@@ -1,8 +1,10 @@
 /* Textes du jeu : français (rédigé en premier). Une valeur en tableau = réplique tirée au hasard. */
 import X from './fr2.js';
+import G from './genie_fr.js';   /* génie des indices */
 import { darkKeys } from './dark.js';
 export default {
   ...X,
+  ...G,
   /* interface */
   'v.walk': 'Aller vers', 'v.take': 'Prendre', 'v.use': 'Utiliser', 'v.talk': 'Parler à', 'v.look': 'Regarder', 'ui.with': 'avec',
   'ui.new': 'Nouvelle partie', 'ui.continue': 'Continuer', 'ui.resume': 'Reprendre', 'ui.musicOn': 'Musique : oui', 'ui.musicOff': 'Musique : non',

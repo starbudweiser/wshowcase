@@ -17,6 +17,7 @@ export const SPR = {
 };
 f('hero', ['walkA', 'walkP', 'walkB', 'stand', 'talk', 'idle2']); f('merchant', ['idle2', 'talk1', 'talk2']); f('guard', ['idle2', 'talk', 'walkA', 'walkB']);
 f('hen', ['peck', 'walk']); f('horse', ['idle2', 'walkA', 'walkB']); f('giant', ['idle2', 'talk', 'walkA', 'walkB']); f('nazim', ['idle2', 'talk']);
+f('genie', ['idle2', 'talk', 'tada', 'flat', 'scorch', 'mound', 'portal']); Object.assign(SPR, { genie: 'genie', lamp: 'lamp' });   /* génie des indices (engine/genie.js) */
 f('blind', ['pot2', 'sack2', 'hat2']); f('lit', ['pot2', 'sack2', 'hat2']);
 
 ['frost', 'ember', 'moss', 'gold'].forEach(k => ['up', 'mid1', 'down', 'mid2'].forEach(q => (SPR[k + '.' + q] = 'dragon_' + k + '_' + q)));   /* dragons d'autres espèces (tools/gen_dragons.sh) */
@@ -34,6 +35,7 @@ export const ANIM = {
   'horse': { idle: ['horse', 'horse.idle2'], walk: ['horse.walkA', 'horse', 'horse.walkB', 'horse'], fps: { idle: 0.5, walk: 5 } },
   'giant': { idle: ['giant', 'giant.idle2'], talk: ['giant.talk', 'giant'], walk: ['giant.walkA', 'giant', 'giant.walkB', 'giant'], fps: { idle: 0.45, talk: 6, walk: 3 } },
   'nazim': { idle: ['nazim', 'nazim.idle2'], talk: ['nazim.talk', 'nazim'], fps: { idle: 0.5, talk: 6 } },
+  'genie': { idle: ['genie', 'genie', 'genie.idle2'], talk: ['genie.talk', 'genie'], fps: { idle: 0.4, talk: 6 } },
   'blind.pot': { idle: ['blind.pot', 'blind.pot2'], fps: { idle: 1.6 } }, 'blind.sack': { idle: ['blind.sack', 'blind.sack2'], fps: { idle: 1.6 } }, 'blind.hat': { idle: ['blind.hat', 'blind.hat2'], fps: { idle: 1.6 } },
   'lit.pot': { idle: ['lit.pot', 'lit.pot2'], walk: ['lit.pot', 'lit.pot2'], fps: { idle: 5, walk: 6 } },
   'lit.sack': { idle: ['lit.sack', 'lit.sack2'], walk: ['lit.sack', 'lit.sack2'], fps: { idle: 5, walk: 6 } },
@@ -61,7 +63,7 @@ export const HERO = {
   idleFront: ['hero.front', 'hero.idle2'], talk: ['hero.front', 'hero.talk', 'hero.fTalk2', 'hero.talk'], blink: 'hero.fBlink',
   portrait: { neutral: 'hero.pNeutral', talk: 'hero.pTalk', blink: 'hero.pBlink', sleepy: 'hero.pSleepy' }
 };
-export const ITEMS = { bucket: { spr: 'bucket' }, honey: { spr: 'honey' }, carrot: { spr: 'carrot' }, cheese: { spr: 'cheese' }, cabbage: { spr: 'cabbage' }, arrow: { spr: 'arrow' }, pumpkin: { spr: 'pumpkin' }, anvil: { spr: 'anvil' } };
+export const ITEMS = { bucket: { spr: 'bucket' }, honey: { spr: 'honey' }, carrot: { spr: 'carrot' }, cheese: { spr: 'cheese' }, cabbage: { spr: 'cabbage' }, arrow: { spr: 'arrow' }, pumpkin: { spr: 'pumpkin' }, anvil: { spr: 'anvil' }, lamp: { spr: 'lamp' } };
 
 /* coucher de nuit (tools/sleep_frames.py) : planche assets/pointclick/sleep/<clé>.png de chaque sprite qui sait se coucher, dormir et se réveiller ;
    z = place des « z z z » au-dessus de la tête endormie, en pixels du sprite depuis le point d'ancrage au sol ;

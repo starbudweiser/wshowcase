@@ -1,8 +1,10 @@
 /* Game text: English (adapted from the French, not translated word for word). An array value = a random line. */
 import X from './en2.js';
+import G from './genie_en.js';   /* génie des indices */
 import { darkKeys } from './dark.js';
 export default {
   ...X,
+  ...G,
   'v.walk': 'Walk to', 'v.take': 'Pick up', 'v.use': 'Use', 'v.talk': 'Talk to', 'v.look': 'Look at', 'ui.with': 'with',
   'ui.new': 'New game', 'ui.continue': 'Continue', 'ui.resume': 'Resume', 'ui.musicOn': 'Music: on', 'ui.musicOff': 'Music: off',
   'ui.inv': 'Satchel (right-click, I)', 'ui.menu': 'Menu (Esc)', 'ui.coin.title': 'The verb coin',

@@ -86,3 +86,10 @@ for k in Point Shrug Plead Think Wave Lean; do l=${(L)k}; Q hero_p$k hp_$l.png 0
 
 # mains du héros qui nettoient la vitre de l'écran (relancer après tools/gen_hands.sh)
 Q hand_palm hand_palm.png 330 64 --fill; for k in rag leaf duster sleeve finger breath; do Q hand_$k hand_$k.png 0 --like hand_palm --fill; done
+# génie des indices (tools/gen_genie.sh, gen_genie_poses.sh ; choix de Stéphan du 23/11/2026) et accessoires de ses apparitions
+G="$W/genie"
+P genie "$G/genie_2.png" 112
+for f in idle2:3 talk:2 tada:1 flat:1 scorch:2; do P genie_${f%%:*} "$G/pose_${f%%:*}_${f##*:}.png" 0 --like genie; done
+P lamp "$G/lamp_2.png" 20 40
+P genie_mound "$G/mound_2.png" 16 40
+P genie_portal "$G/portal_3.png" 100

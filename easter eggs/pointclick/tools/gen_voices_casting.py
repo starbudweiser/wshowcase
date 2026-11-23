@@ -16,7 +16,7 @@ MC = os.path.expanduser('~/Library/Application Support/mCASTING')
 CASTING = os.environ.get('CASTING', '/Volumes/OWC 6To/TAF/DEV/wSHOWCASE (WEBSITE)/easter eggs/pointclick/casting.json')
 langs = [sys.argv[1]] if len(sys.argv) > 1 and sys.argv[1] in ('fr', 'en') else ['fr', 'en']
 limit = int(sys.argv[2]) if len(sys.argv) > 2 else 10**9
-only = sys.argv[3] if len(sys.argv) > 3 else None
+only = set(sys.argv[3].split(',')) if len(sys.argv) > 3 else None   # un ou plusieurs personnages : genie,comp
 TAKES, GOOD = 3, float(os.environ.get('GOOD', 0.86))   # prises au plus ; score Whisper jugé bon (GOOD=1 : toujours 3 prises)
 
 # --- casting : nom du personnage -> clé du jeu (projects.json de mCASTING garde la clé d'origine)
@@ -39,7 +39,7 @@ def ref_text(vid, lang):       # texte de l'échantillon, même règle que Catal
     return SAMPLE[lang][i].format(v['name'].split(' ')[0]) if i == 0 else SAMPLE[lang][1]
 C = {name2key[c['name']]: c for c in cast['characters'].values()}
 
-items = [o for o in json.load(open(os.path.join(W, 'voices.json'))) if o['lang'] in langs and o['who'] in C and (not only or o['who'] == only)]
+items = [o for o in json.load(open(os.path.join(W, 'voices.json'))) if o['lang'] in langs and o['who'] in C and (not only or o['who'] in only)]
 out = os.path.join(W, 'voice_new'); refs = os.path.join(out, '_refs')
 for l in langs: os.makedirs(os.path.join(out, l), exist_ok=True)
 os.makedirs(refs, exist_ok=True)
@@ -65,8 +65,10 @@ STT = load_stt('mlx-community/whisper-large-v3-turbo-asr-fp16')
 rep = open(os.path.join(out, 'report.jsonl'), 'a')
 for n, o in enumerate(todo, 1):
     c = C[o['who']]; lang = o['lang']; name = o['key'] + ('' if o['idx'] < 0 else f".v{o['idx']}") + '.mp3'
-    sample = c['samples'].get(lang) or c['timbre_ref_audio']; slang = lang if c['samples'].get(lang) else 'fr'
-    wav, rt = ref_wav(c['voice_id'], sample, slang), ref_text(c['voice_id'], slang)
+    if c.get('ref_audio'): wav, rt = ref_wav(c['voice_id'], c['ref_audio'], 'clone'), c['ref_text']   # voix clonée dans mCASTING : son extrait et sa transcription
+    else:
+        sample = c['samples'].get(lang) or c['timbre_ref_audio']; slang = lang if c['samples'].get(lang) else 'fr'
+        wav, rt = ref_wav(c['voice_id'], sample, slang), ref_text(c['voice_id'], slang)
     said = re.sub(r'\s+', ' ', o['text'].replace('*', '')).strip()      # « *croc croc* » : bruitage dit, sans les astérisques
     mood = (c.get('style') or '').split(',')[0].strip(); text = (f'[{mood}] ' if mood else '') + said
     takes = 1 if len(norm(said)) <= 4 else TAKES                        # cris et onomatopées : Whisper ne sait pas les juger

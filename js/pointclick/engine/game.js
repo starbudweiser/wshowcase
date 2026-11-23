@@ -18,12 +18,13 @@ import { hasSave, loadSave, writeSave, clearSave } from './save.js';
 import { makeAmbient } from './ambient.js';
 import { playIntro, preloadIntro } from './intro.js';
 import { TitleArt, buildMenu } from './title.js';
+import { rubLamp } from './genie.js';
 import * as SH from '../data/sheets.js';
 const { SPR, ITEMS } = SH, ANIM = SH.ANIM || {}, HERO = SH.HERO || null, SLEEP = SH.SLEEP || {};
 
 export const W = 480, H = 270;
 const HOLD_S = 0.32, CHARGE_S = 0.09, DRAWER_H = 46;   // appui long avant la pièce, délai avant l'anneau de chargement, hauteur du tiroir
-const COLORS = { hero: '#ffe08a', rider: '#ffe08a', merchant: '#ffa45c', guard: '#9ad0ff', horse: '#f0c890', hen: '#ffffff', blind_pot: '#e6e0a0', blind_sack: '#e6e0a0', blind_hat: '#e6e0a0', giant: '#ffb070', nazim: '#c9a8ff', farmer: '#9fe08a', pmerchant: '#ffa45c', pguard: '#9ad0ff', pgiant: '#ffb070', phorseman: '#ff9a5c', gguard: '#9ad0ff', horseman: '#ff9a5c', follower: '#ffb0c8', butterfly: '#9ad8ff', blind_cabbage: '#e6e0a0', blind_helmet: '#e6e0a0', blind_basket: '#e6e0a0', blind_boot: '#e6e0a0', blind_mushroom: '#e6e0a0', blind_banner: '#e6e0a0', blind_partyhat: '#e6e0a0', narr: '#cfe0ff' };
+const COLORS = { hero: '#ffe08a', rider: '#ffe08a', merchant: '#ffa45c', guard: '#9ad0ff', horse: '#f0c890', hen: '#ffffff', blind_pot: '#e6e0a0', blind_sack: '#e6e0a0', blind_hat: '#e6e0a0', giant: '#ffb070', nazim: '#c9a8ff', farmer: '#9fe08a', pmerchant: '#ffa45c', pguard: '#9ad0ff', pgiant: '#ffb070', phorseman: '#ff9a5c', gguard: '#9ad0ff', horseman: '#ff9a5c', follower: '#ffb0c8', butterfly: '#9ad8ff', blind_cabbage: '#e6e0a0', blind_helmet: '#e6e0a0', blind_basket: '#e6e0a0', blind_boot: '#e6e0a0', blind_mushroom: '#e6e0a0', blind_banner: '#e6e0a0', blind_partyhat: '#e6e0a0', narr: '#cfe0ff', genie: '#8fd3ff' };
 class Cancel {}
 const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
@@ -246,7 +247,7 @@ export class Game {
   /* ───────── parties ───────── */
   async newGame() {
     this.hideTitle(); clearSave(); this.cancelAll(); this.cutN = 0; this.saveLater = false; this.locked = false; this.sel = null; this.fx = {};
-    this.st = { scene: 'rue', flags: {}, inv: [], hero: null }; this.started = true;
+    this.st = { scene: 'rue', flags: {}, inv: ['lamp'], hero: null }; this.started = true;
     /* intro « Quinze ans plus tard » (intro.js) : aucune scène chargée pendant qu'elle se joue */
     this.scene = null; this.bg = null; this.ents = []; this.hero = null; this.hot = []; this.amb = null; this.night = null; this.ambId = null; snd.ambStop(); this.clearBarks(); this.hushNarr(); this.renderPanel(); this.renderLine();
     const done = await playIntro(this);
@@ -261,12 +262,12 @@ export class Game {
   /* sélecteur de scène : repart au début d'un chapitre déjà atteint, avec l'état attendu à son entrée */
   async startAt(ch) {
     this.hideTitle(); clearSave(); this.cancelAll(); this.cutN = 0; this.saveLater = false; this.locked = false; this.sel = null; this.fx = {};
-    this.st = { scene: ch.id, flags: { ...ch.flags }, inv: [...ch.inv], hero: null }; snd.music(snd.musicOn !== false, ch.id); this.started = true;
+    this.st = { scene: ch.id, flags: { ...ch.flags }, inv: ['lamp', ...ch.inv.filter(x => x !== 'lamp')], hero: null }; snd.music(snd.musicOn !== false, ch.id); this.started = true;
     await this.goScene(ch.id, { intro: true });
   }
   async continueGame() {
     const s = loadSave(); if (!s) return this.newGame();
-    this.hideTitle(); this.cancelAll(); this.cutN = 0; this.saveLater = false; this.locked = false; this.sel = null; this.fx = {}; this.st = { scene: s.scene, flags: s.flags || {}, inv: s.inv || [], hero: s.hero || null };
+    this.hideTitle(); this.cancelAll(); this.cutN = 0; this.saveLater = false; this.locked = false; this.sel = null; this.fx = {}; this.st = { scene: s.scene, flags: s.flags || {}, inv: s.inv || [], hero: s.hero || null }; if (!this.st.inv.includes('lamp')) this.st.inv.unshift('lamp');   /* sauvegardes d'avant le génie */
     snd.music(snd.musicOn !== false); this.started = true; await this.goScene(s.scene, { restored: true });
   }
   /* jamais de sauvegarde au milieu d'une cinématique (objet retiré, drapeau pas encore posé : partie bloquée après rechargement) : elle attend la fin */
@@ -333,7 +334,7 @@ export class Game {
     await this.until(() => (this.now >= end && !talking()) || (this.skip && this.now - t0 > 0.6)); this.skip = false; if (au) au.pause(); this.sayAu = null;
     b.remove(); this.bubbles = this.bubbles.filter(x => x !== b); if (e) e.talk = false; this.chk();
   }
-  headPos(e) { const im = this.spr(e.spr), s = e.scale ?? this.persp(e.y); return [e.x, e.y - (im ? im.height * s : 40) - 3]; }
+  headPos(e) { const im = this.spr(e.spr), s = e.scale ?? this.persp(e.y); return [e.x, e.y - (e.float || 0) - (im ? im.height * s : 40) - 3]; }
   placeBubble(b, x, y) {
     const sw = this.stage.clientWidth, k = sw / W; b.style.left = x * k + 'px'; b.style.top = y * k + 'px';
     const w = b.offsetWidth, l = clamp(x * k, w / 2 + 6, sw - w / 2 - 6); b.style.left = l + 'px'; if (y * k - b.offsetHeight < 4) b.style.top = (b.offsetHeight + 6) + 'px';
@@ -468,7 +469,7 @@ export class Game {
   }
   coinPick(v) {
     const c = this.coin; if (!c) return; this.closeCoin();
-    if (c.item) { if (v === 'use') { this.setSel(c.item); return; } return this.input(() => this.act(v, { id: c.item, name: 'n.' + c.item, isItem: true })); }
+    if (c.item) { if (v === 'use') { if (c.item === 'lamp') return this.input(() => rubLamp(this)); this.setSel(c.item); return; } return this.input(() => this.act(v, { id: c.item, name: 'n.' + c.item, isItem: true })); }
     const tg = c.tg; this.input(() => this.act(tg.id === 'hero' && v === 'use' ? 'look' : v, tg));
   }
   closeCoin() { if (this.coinOpen()) { this.coin.closeT = this.now; this.coin.hi = null; } this.renderLine(); }
@@ -482,6 +483,7 @@ export class Game {
   onItem(id) {
     snd.click();
     if (this.locked) return;
+    if (!this.sel && id === 'lamp') { this.toggleInv(false); return this.input(() => rubLamp(this)); }   // la lampe se frotte d'un clic : le génie des indices
     if (!this.sel) return this.setSel(id);                    // le tiroir reste ouvert : il se referme quand le curseur remonte dans la scène
     if (this.sel === id) return this.setSel(null);
     const it = this.sel; this.setSel(null); this.input(() => this.act('use', { id, name: 'n.' + id, isItem: true }, it));
@@ -612,6 +614,7 @@ export class Game {
     c.restore();
     drawWinks(this, c);
     drawNight(this, c); drawGlass(this, c);
+    if (this.overFx) this.overFx(c);   /* plein écran par-dessus la scène (faux écran de chargement du génie) */
     if (this.fx.fade) { c.fillStyle = `rgba(0,0,0,${this.fx.fade.a})`; c.fillRect(0, 0, W, H); }
     if (this.actx && this.now - this.ambT > 0.12) { this.ambT = this.now; this.actx.drawImage(this.cv, 0, 0, 48, 27); }
     if (this.scaler) this.scaler.render();
@@ -619,7 +622,8 @@ export class Game {
   drawEnt(e) {
     if (e.sleepF != null) { const k = this.sleepKey(e), sh = k && this.sleepSheet(k); if (sh) return this.drawSleep(e, this.sleepIdx[k], sh); }
     const im = this.spr(this.frame(e)) || this.spr(e.spr); if (!im) return; const c = this.ctx, s = e.scale ?? this.persp(e.y), w = im.width * s, h = im.height * s;
-    c.save(); if (e.alpha !== undefined) c.globalAlpha = e.alpha; c.translate(Math.round(e.x), Math.round(e.y - (e.bob || 0)));
+    c.save(); if (e.alpha !== undefined) c.globalAlpha = e.alpha; if (e.clipY != null) { c.beginPath(); c.rect(0, 0, W, Math.round(e.clipY)); c.clip(); }   /* clipY : caché sous cette ligne (le génie qui sort de terre) */
+    c.translate(Math.round(e.x), Math.round(e.y - (e.bob || 0) - (e.float ? e.float + Math.sin(this.now * 2.4) * 2 : 0)));   /* float : flotte au-dessus du sol */
     if (e.nrot) c.translate(0, Math.min(1, Math.abs(e.nrot) / 1.5708) * Math.max(0, h - w) / 2);
     if (e.rot || e.nrot) { c.translate(0, -h / 2); c.rotate((e.rot || 0) + (e.nrot || 0)); c.translate(0, h / 2); }
     if (e.flip) c.scale(-1, 1);
