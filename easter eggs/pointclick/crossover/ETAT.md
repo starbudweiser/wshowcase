@@ -7,9 +7,11 @@ Prototypes de rendu : https://claude.ai/artifact/Hbie6aV5LJGNajt7JZMpVR (`tools/
 - Pirouette : Sheogorath s'invite à la fête (seau-portail, une meule de fromage par monde, fondue finale) ;
   chaque chapitre s'ouvre sur « Hé, toi. T'es enfin réveillé. »
 - Le Wabbajack est l'outil central des énigmes ; le héros le garde à la fin (bonus dans les chapitres 1 à 10).
-- 15 chapitres (11 à 25) : Monkey Island, Sam & Max, Minecraft, Indiana Jones, Retour vers le futur, Harry Potter,
-  Table ronde, Conan + L'Histoire sans fin, Jurassic Park, Stranger Things, Twin Peaks, Dexter, Matrix,
-  Seigneur des Anneaux, Portal (finale).
+- 16 chapitres (11 à 26) : Monkey Island, Sam & Max, Minecraft, Indiana Jones, Retour vers le futur, Harry Potter,
+  Table ronde, Conan + L'Histoire sans fin, intermède du docteur House (19), Jurassic Park, Stranger Things,
+  Twin Peaks, Dexter, Matrix, Seigneur des Anneaux, Portal (finale, où House revient diagnostiquer Sheogorath).
+  House ne dit que ses répliques cultes, courtes et détournées (« Tout le monde ment », « C'est jamais le lupus »,
+  « Les gens ne changent pas »).
 - Épisodes de rechange par langue : chapitre 17 = Kaamelott (FR) / Sacré Graal (EN).
 - Rendu : 960 × 540, 16 millions de couleurs (double exact du canevas 480 × 270 de la saison 1). Le style peint
   FLUX ne change pas ; seules la définition et la palette changent.
@@ -42,6 +44,6 @@ Prototypes de rendu : https://claude.ai/artifact/Hbie6aV5LJGNajt7JZMpVR (`tools/
      réduction de couleurs. Si une pose devait changer : la recalculer entière avec genie_2 comme référence, puis
      planche à valider (jamais de retouche) ;
    - adapter les effets de `genie.js` écrits pour 480 × 270 (positions, tailles, faux écran de chargement) ;
-   - ajouter dans `hints.js` les étapes des chapitres 11 à 25 (et de Sacré Graal), 3 indices gradués par étape
+   - ajouter dans `hints.js` les étapes des chapitres 11 à 26 (et de Sacré Graal), 3 indices gradués par étape
      en FR/EN, voix du génie générée depuis le casting mCASTING (clé `genie`).
 6. Textes FR/EN, voix (casting mCASTING d'abord), sons, intégration et essais.
