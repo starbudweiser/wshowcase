@@ -9,7 +9,7 @@ import s2_content as C
 P = os.path.abspath(os.path.join(D, '..')); SRC = os.path.join(P, 'work', 'crossover', 'persos'); DST = os.path.join(P, 'crossover', 'persos')
 os.makedirs(DST, exist_ok=True)
 CHOIX = {  # personnage -> image retenue après contrôle (sinon <id>.png)
-    'c_doc': 'c_doc2', 'c_potions': 'c_potions2', 'c_redman': 'c_redman2', 'c_sister': 'c_sister3',
+    'c_doc': 'c_doc2', 'c_potions': 'c_potions2', 'c_redman': 'c_redman2', 'c_sister': 'c_sister4_2',
     'c_spoonkid': 'c_spoonkid2', 'c_analyst': 'c_analyst3_1', 'c_dog': 'c_dog2', 'c_knight_fat': 'c_knight_fat2',
     'c_paleo': 'c_paleo3', 'c_kid': 'c_kid2', 'c_loglady': 'c_loglady3', 'c_ai': 'c_ai2',
     'c_morph': 'c_morph2_2', 'c_wizard': 'c_wizard2_2',  # 23/11 : Morpheus est noir, Gandalf très grand (remarques de Stéphan)
