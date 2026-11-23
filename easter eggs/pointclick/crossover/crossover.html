@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seau crossover</title>
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#131316;--bg-sunken:#0c0c0e;--surface:#1c1c1f;--surface-raised:#232327;--surface-hover:#2c2c31;
+  --border:#303035;--border-strong:#404046;--border-subtle:#26262a;
+  --text-strong:#fff;--text:#f5f5f7;--text-muted:#98989f;--text-subtle:#8a8a92;
+  --accent-text:#409cff;--action:#fbbf24;--on-action:#1a1a1a;
+  --success:#30d158;--success-bg:#14391f;--warning:#ff9f0a;--warning-bg:#3f2a0c;--danger:#ff453a;
+  --bronze:#c9874a;--rouge:#8e2f2a;
+  --r:8px;--r-sm:5px;
+}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){
+  color-scheme:light;--bg:#f2f2f2;--bg-sunken:#ebebeb;--surface:#fff;--surface-raised:#fafafa;--surface-hover:#f0f0f0;
+  --border:#d4d4d4;--border-strong:#bdbdbd;--border-subtle:#e5e5e5;
+  --text-strong:#111;--text:#222;--text-muted:#555;--text-subtle:#666;--accent-text:#0369a1;--action:#d97706;--on-action:#fff;
+  --success:#15803d;--success-bg:#dcfce7;--warning:#b45309;--warning-bg:#fef3c7;--danger:#b91c1c;--bronze:#9a5a22;--rouge:#8e2f2a;}}
+:root[data-theme="light"]{
+  color-scheme:light;--bg:#f2f2f2;--bg-sunken:#ebebeb;--surface:#fff;--surface-raised:#fafafa;--surface-hover:#f0f0f0;
+  --border:#d4d4d4;--border-strong:#bdbdbd;--border-subtle:#e5e5e5;
+  --text-strong:#111;--text:#222;--text-muted:#555;--text-subtle:#666;--accent-text:#0369a1;--action:#d97706;--on-action:#fff;
+  --success:#15803d;--success-bg:#dcfce7;--warning:#b45309;--warning-bg:#fef3c7;--danger:#b91c1c;--bronze:#9a5a22;--rouge:#8e2f2a;}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:56px}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+header.top{padding:28px 0 18px;border-bottom:1px solid var(--border)}
+.kicker{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--bronze);font-weight:700}
+h1{font-size:26px;line-height:1.2;margin:4px 0 6px;color:var(--text-strong);letter-spacing:-.01em}
+.lead{color:var(--text-muted);max-width:820px;margin:0}
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--border)}
+nav.tabs .wrap{display:flex;gap:4px;overflow-x:auto}
+nav.tabs a{padding:12px 12px;color:var(--text-muted);text-decoration:none;font-weight:600;font-size:13px;white-space:nowrap;border-bottom:2px solid transparent}
+nav.tabs a:hover{color:var(--text)}
+nav.tabs a.on{color:var(--text-strong);border-bottom-color:var(--action)}
+section{padding:26px 0 8px}
+h2{font-size:18px;margin:0 0 4px;color:var(--text-strong)}
+.sub{color:var(--text-muted);margin:0 0 16px;max-width:860px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.card .img{aspect-ratio:16/9;background:var(--bg-sunken);display:block;width:100%;object-fit:cover;cursor:zoom-in}
+.card .body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:8px}
+.card h3{margin:0;font-size:15px;color:var(--text-strong);display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.tag{font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 6px;border-radius:4px;background:var(--surface-hover);color:var(--text-muted);white-space:nowrap}
+.tag.reco{background:var(--action);color:var(--on-action)}
+.tag.jeu{color:#a78bfa}.tag.film{color:#60a5fa}.tag.serie{color:#34d399}
+dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 10px}
+dt{color:var(--text-subtle);font-size:12px;font-weight:600;white-space:nowrap;padding-top:1px}
+dd{margin:0}
+.pm{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px}
+.pm div{padding:8px 10px;border-radius:var(--r-sm)}
+.pm .plus{background:var(--success-bg)}.pm .moins{background:var(--warning-bg)}
+.pm b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
+.pm .plus b{color:var(--success)}.pm .moins b{color:var(--warning)}
+.reco-box{margin-top:16px;padding:12px 14px;border-left:3px solid var(--action);background:var(--surface);border-radius:0 var(--r) var(--r) 0}
+.reco-box b{color:var(--text-strong)}
+/* banque */
+.tblwrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--r);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:980px;font-size:13px}
+th,td{padding:8px 10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--border-subtle)}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-subtle);background:var(--surface-raised);position:sticky;top:0;white-space:nowrap;cursor:pointer;user-select:none}
+th:hover{color:var(--text)}
+tr:last-child td{border-bottom:none}
+tr.sel td:first-child{box-shadow:inset 3px 0 0 var(--action)}
+td.ref{font-weight:700;color:var(--text-strong);white-space:nowrap}
+td.n{text-align:center;font-variant-numeric:tabular-nums;white-space:nowrap}
+.score{display:inline-block;min-width:26px;padding:1px 6px;border-radius:4px;font-weight:700;background:var(--surface-hover)}
+.s-hi{color:var(--success)}.s-mid{color:var(--action)}.s-lo{color:var(--text-muted)}
+td.tot .score{background:var(--action);color:var(--on-action)}
+.star{color:var(--action);font-weight:700;white-space:nowrap}
+.legend{display:flex;gap:16px;flex-wrap:wrap;color:var(--text-muted);font-size:12px;margin:10px 0 0}
+/* chapitres */
+.chap{display:grid;grid-template-columns:minmax(0,46%) minmax(0,1fr);background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:14px}
+.chap .img{width:100%;height:100%;min-height:220px;object-fit:cover;background:var(--bg-sunken);cursor:zoom-in;display:block}
+.chap .body{padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.chap h3{margin:0;font-size:16px;color:var(--text-strong);display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.num{font-variant-numeric:tabular-nums;color:var(--bronze);font-weight:800}
+.chap ol{margin:0;padding-left:20px}
+.chap ol li{margin:2px 0}
+.obj{font-weight:600;color:var(--text-strong)}
+.quote{font-style:italic;color:var(--text);border-left:2px solid var(--bronze);padding-left:10px;margin:2px 0}
+.small{font-size:12.5px;color:var(--text-muted)}
+.note{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;color:var(--text-muted);font-size:13px}
+.note b{color:var(--text)}
+footer{padding:28px 0 40px;color:var(--text-subtle);font-size:12px}
+/* zoom */
+#zoom{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:20;cursor:zoom-out;padding:16px}
+#zoom img{max-width:100%;max-height:100%;border-radius:6px}
+#zoom.on{display:flex}
+@media (max-width:900px){.grid3{grid-template-columns:1fr}.chap{grid-template-columns:1fr}.chap .img{min-height:0;aspect-ratio:16/9;height:auto}}
+@media (max-width:520px){.pm{grid-template-columns:1fr}h1{font-size:22px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <div class="kicker">Le Seau de Rivebois · proposition · chapitres 11 à 20</div>
+  <h1>Saison 2 : le Seau traverse les mondes</h1>
+  <p class="lead">Dix chapitres de plus, toujours dans l’univers de Skyrim, où le héros débarque dans dix scènes cultes (jeux, films, séries). Trois pirouettes pour relier la fête des quinze ans à ces mondes, une banque de 17 références notées, puis le script court des 10 chapitres proposés, avec une image d’ambiance chacun. Rien n’est codé dans le jeu.</p>
+</div></header>
+
+<nav class="tabs"><div class="wrap">
+  <a href="#pirouettes" class="on">1 · Pirouettes</a>
+  <a href="#banque">2 · Banque notée</a>
+  <a href="#chapitres">3 · Les 10 chapitres</a>
+  <a href="#notes">4 · Règles et suite</a>
+</div></nav>
+
+<main class="wrap">
+
+<!-- ═════════════ PIROUETTES ═════════════ -->
+<section id="pirouettes">
+  <h2>Trois pirouettes au départ de la fête</h2>
+  <p class="sub">Toutes partent de la scène finale (<i>party</i>) : le dragon vient d’allumer les quinze bougies, le géant applaudit, le garde a retrouvé sa flèche. Chacune donne un but au héros, un geste de passage d’un monde à l’autre et une fin qui ramène à Rivebois.</p>
+  <div class="grid3">
+
+    <article class="card">
+      <img class="img" src="img/p_orbite.jpg" alt="Le héros envoyé en orbite par les applaudissements du géant">
+      <div class="body">
+        <h3>A · « En orbite ! »</h3>
+        <dl>
+          <dt>Déclic</dt><dd>« MOI APPLAUDIR ! » Le héros se trouve entre les mains du géant. Clap. Comme dans le plus célèbre bug de Skyrim, il part en orbite, crève la voûte du ciel et retombe dans un autre monde.</dd>
+          <dt>Fil rouge</dt><dd>Rentrer avant que le dragon ait fini le gâteau. Entre deux chapitres, un plan de la fête : le dragon prend une part de plus. Dix parts, dix chapitres.</dd>
+          <dt>Passage</dt><dd>Chaque chapitre finit par un « lancement » local (tuyau, rocher, catapulte, coup de Cri) qui le renvoie en l’air.</dd>
+          <dt>Fin</dt><dd>Il retombe à plat ventre dans la dernière part. Le dragon, beau joueur, lui laisse la bougie.</dd>
+        </dl>
+        <div class="pm"><div class="plus"><b>Pour</b>Le mème le plus connu de Skyrim, déjà cité dans le jeu (« même quand tu me lances en orbite »). Compte à rebours très lisible.</div><div class="moins"><b>Contre</b>Le héros subit au lieu d’agir. Les dix chutes risquent de se ressembler.</div></div>
+      </div>
+    </article>
+
+    <article class="card">
+      <img class="img" src="img/p_sheo.jpg" alt="Le Prince de la Folie tend un seau qui ouvre un portail">
+      <div class="body">
+        <h3>B · « Sheogorath s’invite » <span class="tag reco">Recommandée</span></h3>
+        <dl>
+          <dt>Déclic</dt><dd>Un invité que personne n’a convié débarque : le Prince de la Folie, vexé. « Une fête sans moi ? C’est de la folie. Et la folie, c’est MOI. » Pour cadeau, il échange le seau du héros contre le sien. Le héros le met sur sa tête, par réflexe… et disparaît.</dd>
+          <dt>Fil rouge</dt><dd>Un pari : « Dix mondes. Rapporte-moi une meule de fromage de chacun, et je te rends ton seau. Sinon, tu deviens mon bouffon. » Dix fromages, une fondue finale.</dd>
+          <dt>Passage</dt><dd>Remettre le seau sur sa tête, le geste-signature du jeu. Bonus : Sheogorath caché, déguisé, dans chaque scène (« Où est Sheogorath ? »).</dd>
+          <dt>Fin</dt><dd>Fondue géante à la fête. Sheogorath, ému aux larmes, rend le seau… et garde le casque à cornes.</dd>
+        </dl>
+        <div class="pm"><div class="plus"><b>Pour</b>Le seau reste au centre. Un vrai but, un objet à collectionner, un antagoniste drôle qui parle. Le Daedra farceur justifie n’importe quel monde.</div><div class="moins"><b>Contre</b>Un personnage de plus : voix (casting mCASTING), poses, portrait.</div></div>
+      </div>
+    </article>
+
+    <article class="card">
+      <img class="img" src="img/p_charrette.jpg" alt="Le héros endormi dans la charrette qui traverse un tourbillon de mondes">
+      <div class="body">
+        <h3>C · « T’es enfin réveillé »</h3>
+        <dl>
+          <dt>Déclic</dt><dd>Repu de gâteau, le héros s’endort dans la charrette du retour, celle de l’intro. Le cocher prend « un raccourci ». La charrette traverse les mondes.</dd>
+          <dt>Fil rouge</dt><dd>Chaque chapitre s’ouvre sur le même réveil : un habitant du monde visité lui lance, à sa façon, « Hé, toi. T’es enfin réveillé. » Chaque arrivée casse une roue.</dd>
+          <dt>Passage</dt><dd>Trouver une « roue » locale (un anneau, une meule, un bouclier rond…), la monter, repartir jusqu’au crash suivant.</dd>
+          <dt>Fin</dt><dd>Retour à Rivebois sur dix roues dépareillées. Le cocher : « On aurait dû prendre la route. »</dd>
+        </dl>
+        <div class="pm"><div class="plus"><b>Pour</b>Le mème d’ouverture de Skyrim, et l’intro du jeu (charrette déjà dessinée). Gag récurrent très fort.</div><div class="moins"><b>Contre</b>La « roue » contraint toutes les énigmes et peut lasser.</div></div>
+      </div>
+    </article>
+  </div>
+  <div class="reco-box"><b>Ma recommandation : B, avec l’ouverture de C.</b> Le seau de Sheogorath sert de passage, les fromages donnent le but. Chaque chapitre s’ouvre sur un habitant qui lance son « T’es enfin réveillé » au héros, qui reprend ses esprits le seau sur la tête. Les scripts ci-dessous suivent ce mélange, mais ils marchent aussi avec A ou C (seule la sortie change).</div>
+</section>
+
+<!-- ═════════════ BANQUE ═════════════ -->
+<section id="banque">
+  <h2>Banque de 17 références notées</h2>
+  <p class="sub">Notes sur 10 : <b>humour</b> (le gag tient-il debout ?), <b>notoriété</b> (reconnu en France et ailleurs, le site est bilingue) et <b>faisabilité</b> en point &amp; click (une scène fixe, une énigme objet + cible, peu de personnages animés). ★ = dans la sélection proposée. Cliquer sur un titre de colonne pour trier.</p>
+  <div class="tblwrap"><table id="bank">
+    <thead><tr>
+      <th data-k="0">Référence</th><th data-k="1">Type</th><th data-k="2" class="n">Hum.</th><th data-k="3" class="n">Not.</th><th data-k="4" class="n">Faisa.</th><th data-k="5" class="n">Total</th>
+      <th>Scène parodiée</th><th>Énigme principale</th><th>Gag qui marque</th><th>Pont avec Skyrim</th>
+    </tr></thead>
+    <tbody>
+      <tr class="sel"><td class="ref">Le Seigneur des Anneaux <span class="star">★</span></td><td><span class="tag film">Film</span></td><td class="n">10</td><td class="n">10</td><td class="n">9</td><td class="n tot">29</td>
+        <td>Le pont étroit au-dessus de l’abîme de feu.</td><td>Le héros vole la grande réplique du magicien par un Cri ; il doit se faire pardonner.</td><td>En pleine bataille, il ouvre son inventaire et mange 39 meules de fromage.</td><td>FUS RO DAH, les 40 meules du menu pause, le voyage rapide contre « pourquoi pas les aigles ? »</td></tr>
+      <tr class="sel"><td class="ref">Portal <span class="star">★</span></td><td><span class="tag jeu">Jeu</span></td><td class="n">10</td><td class="n">8</td><td class="n">9</td><td class="n tot">27</td>
+        <td>La salle de test blanche, l’IA sarcastique, le gâteau promis.</td><td>Pas de cube pour le gros bouton : une meule de fromage. Le seau ouvre les portails.</td><td>« Le gâteau est un mensonge. » « Le mien était vrai, et un dragon a allumé les bougies. »</td><td>Le gâteau de la fête ; le cube de compagnie qui parle comme Lydia.</td></tr>
+      <tr class="sel"><td class="ref">Monkey Island <span class="star">★</span></td><td><span class="tag jeu">Jeu</span></td><td class="n">10</td><td class="n">7</td><td class="n">10</td><td class="n tot">27</td>
+        <td>Le quai des pirates, le combat d’insultes.</td><td>Récolter les réparties auprès d’un perroquet affamé (biscuit + perroquet), puis gagner le duel.</td><td>« Derrière toi, un mammouth à trois têtes ! »</td><td>Les répliques des gardes de Skyrim deviennent des insultes ; grog contre hydromel.</td></tr>
+      <tr class="sel"><td class="ref">Zelda <span class="star">★</span></td><td><span class="tag jeu">Jeu</span></td><td class="n">9</td><td class="n">9</td><td class="n">9</td><td class="n tot">27</td>
+        <td>La grotte du vieil homme : « Il est dangereux d’y aller seul ! »</td><td>Une piste de graines (herbe coupée + sac troué) pour détourner les poules rancunières.</td><td>Le vieil homme offre… un seau. « J’en ai déjà un. » « Alors prends-en deux. »</td><td>La poule : en toucher une, et tout le village vous tombe dessus, dans les deux jeux.</td></tr>
+      <tr class="sel"><td class="ref">Harry Potter <span class="star">★</span></td><td><span class="tag film">Film</span></td><td class="n">9</td><td class="n">10</td><td class="n">8</td><td class="n tot">27</td>
+        <td>La Répartition dans la grande salle aux bougies flottantes.</td><td>Le chapeau parlant refuse le casque à cornes : le seau le remplace et répartit à « Rivebois ». Puis réussir une potion avec des ingrédients de Skyrim.</td><td>« Dix points pour Rivebois ! » « Il n’y a pas de maison Rivebois. » « Maintenant, si. Et elle a un seau. »</td><td>Le seau sur la tête, gag central du jeu ; l’alchimie (on goûte tout).</td></tr>
+      <tr class="sel"><td class="ref">Star Wars <span class="star">★</span></td><td><span class="tag film">Film</span></td><td class="n">9</td><td class="n">10</td><td class="n">8</td><td class="n tot">27</td>
+        <td>La cantina du désert aux deux soleils.</td><td>Apprendre « Ragnar le Rouge » à l’orchestre (luth + orchestre), puis soigner le souffle du seigneur noir (potion + seigneur).</td><td>« Je suis ton père. » « Mon père était forgeron, et il respirait mieux que vous. »</td><td>La chanson du barde de Blancherive, la Persuasion (« Ce n’est pas le Nordique que vous cherchez »).</td></tr>
+      <tr><td class="ref">Indiana Jones</td><td><span class="tag film">Film</span></td><td class="n">9</td><td class="n">9</td><td class="n">9</td><td class="n tot">27</td>
+        <td>Le temple et l’idole d’or sur son socle.</td><td>Remplacer l’idole par une meule de fromage du même poids.</td><td>Le rocher qui le poursuit est une meule de fromage géante.</td><td>Les meules qu’on fait dévaler les escaliers de Skyrim ; les pièges à plaque.</td></tr>
+      <tr><td class="ref">Sacré Graal (Monty Python)</td><td><span class="tag film">Film</span></td><td class="n">10</td><td class="n">7</td><td class="n">10</td><td class="n tot">27</td>
+        <td>Les chevaliers qui disent « Ni ! » et réclament un buisson.</td><td>Quête du buisson : cueillir une plante d’alchimie de Skyrim et la planter devant eux.</td><td>Le chevalier noir : « Ce n’est qu’une flèche dans le genou. »</td><td>Les quêtes de livraison ; les chevaux qui grimpent aux falaises (ici, des noix de coco).</td></tr>
+      <tr class="sel"><td class="ref">Matrix <span class="star">★</span></td><td><span class="tag film">Film</span></td><td class="n">9</td><td class="n">9</td><td class="n">8</td><td class="n tot">26</td>
+        <td>Le choix de la pilule, les agents identiques.</td><td>Prendre les deux fioles (rouge et bleue), esquiver au ralenti, prendre le fromage « qui n’existe pas ».</td><td>Un agent : « J’étais un élu comme toi, puis j’ai pris une balle dans le genou. »</td><td>Potions rouges (santé) et bleues (magie), gardes tous pareils, Cri « Ralentir le temps ».</td></tr>
+      <tr class="sel"><td class="ref">Jurassic Park <span class="star">★</span></td><td><span class="tag film">Film</span></td><td class="n">9</td><td class="n">9</td><td class="n">8</td><td class="n tot">26</td>
+        <td>La nuit sous la pluie devant la clôture cassée, l’eau qui tremble.</td><td>S’accroupir (mode furtif), attirer le monstre au ravin avec une torche, récupérer le fromage de la cuisine.</td><td>L’eau tremble… dans le seau. « Un dragon ? » « Un lézard de luxe, sans ailes ni vocabulaire. »</td><td>Le seau ; l’indicateur [Caché] ; les dragons.</td></tr>
+      <tr class="sel"><td class="ref">Minecraft <span class="star">★</span></td><td><span class="tag jeu">Jeu</span></td><td class="n">8</td><td class="n">10</td><td class="n">8</td><td class="n tot">26</td>
+        <td>Le monde en cubes et sa créature verte qui siffle.</td><td>Attirer la créature contre le mur qui cache le fromage ; redescendre de la tour avec le seau d’eau.</td><td>« Chez moi, le seau va sur la tête des marchands. Ici, on le vide sous ses pieds en tombant. »</td><td>Le seau, objet sacré des deux jeux ; frapper un arbre à mains nues.</td></tr>
+      <tr><td class="ref">Super Mario</td><td><span class="tag jeu">Jeu</span></td><td class="n">8</td><td class="n">10</td><td class="n">8</td><td class="n tot">26</td>
+        <td>Tuyaux verts et blocs « ? » flottants.</td><td>Cogner un bloc pour faire sortir un champignon, ingrédient d’alchimie.</td><td>Il cogne le bloc avec son casque : les cornes restent plantées dedans.</td><td>« Votre princesse est dans une autre forteresse » ; l’alchimie des champignons.</td></tr>
+      <tr class="sel"><td class="ref">Game of Thrones <span class="star">★</span></td><td><span class="tag serie">Série</span></td><td class="n">9</td><td class="n">9</td><td class="n">7</td><td class="n tot">25</td>
+        <td>Le château du Nord, le trône, le mur de glace.</td><td>Coussin de fourrure sur le trône de dagues, puis Cri de soumission pour monter sur un dragon.</td><td>« L’hiver vient. » « Chez nous, il est venu, il a posé ses valises et il a pris une flèche dans le genou. »</td><td>Le trône fait des dagues de fer qu’on forge par milliers pour monter en compétence.</td></tr>
+      <tr><td class="ref">Pokémon</td><td><span class="tag jeu">Jeu</span></td><td class="n">8</td><td class="n">10</td><td class="n">7</td><td class="n tot">25</td>
+        <td>Les hautes herbes, la petite créature électrique.</td><td>Lancer une pierre d’âme au lieu d’une balle.</td><td>« Attrapez-les tous ! » « J’ai 312 pierres d’âme, je vais les attraper tous. »</td><td>Les pierres d’âme qu’on remplit.</td></tr>
+      <tr><td class="ref">Retour vers le futur</td><td><span class="tag film">Film</span></td><td class="n">8</td><td class="n">9</td><td class="n">7</td><td class="n tot">24</td>
+        <td>La place de l’horloge et l’orage.</td><td>La charrette doit atteindre 88 lieues à l’heure ; la foudre vient d’un Cri de tempête.</td><td>« Il nous faut 1,21 gigowatt ! » « J’ai un Cri pour ça. »</td><td>La charrette de l’intro (idéal avec la pirouette C).</td></tr>
+      <tr><td class="ref">Kaamelott</td><td><span class="tag serie">Série</span></td><td class="n">9</td><td class="n">6</td><td class="n">9</td><td class="n tot">24</td>
+        <td>La table ronde et ses chevaliers lents.</td><td>Expliquer ce qu’est un « Cri » à un chevalier qui ne comprend rien.</td><td>« C’est pas faux. »</td><td>Les dialogues des PNJ de Skyrim. Très drôle en français, intraduisible en anglais.</td></tr>
+      <tr><td class="ref">Stranger Things</td><td><span class="tag serie">Série</span></td><td class="n">8</td><td class="n">8</td><td class="n">7</td><td class="n tot">23</td>
+        <td>Le salon des années 80 et son mur de guirlandes-alphabet.</td><td>Lire les lettres qui s’allument comme un mur de mots de Skyrim pour apprendre un Cri.</td><td>Des enfants jouent à un jeu de rôle, et il est leur figurine.</td><td>Les murs de mots ; les créatures du dessous (draugr).</td></tr>
+    </tbody>
+  </table></div>
+  <div class="legend"><span><b class="s-hi">●</b> 9-10</span><span><b class="s-mid">●</b> 7-8</span><span><b class="s-lo">●</b> 6 ou moins</span><span>Sélection : 4 jeux, 5 films, 1 série, sans deux gags identiques (Indiana Jones et Sacré Graal reprennent la meule et la flèche déjà utilisées).</span></div>
+</section>
+
+<!-- ═════════════ CHAPITRES ═════════════ -->
+<section id="chapitres">
+  <h2>Les 10 chapitres proposés</h2>
+  <p class="sub">Script court de chaque chapitre, dans l’ordre proposé (des jeux vers les films, finale sur le gâteau de Portal qui ramène à la fête). Chaque chapitre : une arrivée, deux ou trois étapes objet + cible, un gag, une meule de fromage pour Sheogorath. Les personnages et lieux ne sont jamais nommés : seulement reconnaissables.</p>
+
+  <article class="chap"><img class="img" src="img/r_zelda.jpg" alt="Grotte du vieil homme qui tend un seau">
+    <div class="body"><h3><span class="num">11</span> Il est dangereux d’y aller seul <span class="tag jeu">Zelda</span></h3>
+      <p class="quote">« Hé, toi. T’es enfin réveillé. Il est dangereux d’y aller seul ! Prends ceci. » Le vieil homme lui tend un seau. « J’en ai déjà un. » « Alors prends-en deux. »</p>
+      <ol><li>Couper les hautes herbes à l’épée : il en tombe des pierres précieuses et un <span class="obj">sac de graines</span> troué.</li>
+        <li><span class="obj">Sac de graines + poule chef</span> : la piste de graines mène tout le poulailler dans l’enclos. Surtout, ne frapper aucune poule.</li>
+        <li>Le chemin est libre : le vieil homme cède sa meule, « dangereuse à manger seul ».</li></ol>
+      <p class="small"><b>Gag :</b> s’il frappe une poule, le ciel se couvre de poules vengeresses. Le narrateur : « Vous n’avez rien appris à Rivebois. » <b>Pont :</b> la poule sacrée de Rivebois (chapitre 1).</p></div></article>
+
+  <article class="chap"><img class="img" src="img/r_minecraft.jpg" alt="Le héros dans un monde en cubes, une créature verte derrière lui">
+    <div class="body"><h3><span class="num">12</span> Le monde en cubes <span class="tag jeu">Minecraft</span></h3>
+      <p class="quote">Tout est carré : les arbres, le soleil, les nuages. Sauf lui. « Je me sens rond. »</p>
+      <ol><li>La meule (cubique) est murée en haut d’une tour de blocs. Pas d’outil : il frappe un arbre à mains nues, longtemps. Il obtient un bloc de bois et un mal de poing.</li>
+        <li>Une créature verte s’approche sans bruit et siffle. <span class="obj">Bloc de bois + créature</span> : il la guide en escalier jusqu’au mur, qui saute avec elle.</li>
+        <li>Pour redescendre : <span class="obj">seau d’eau + sol</span>, versé pendant la chute.</li></ol>
+      <p class="small"><b>Gag :</b> « Chez moi, le seau va sur la tête des marchands. Ici, on le vide sous ses pieds en tombant. Chacun sa culture. » <b>Pont :</b> le seau, objet sacré des deux jeux.</p></div></article>
+
+  <article class="chap"><img class="img" src="img/r_monkey.jpg" alt="Duel d'insultes sur un quai de pirates">
+    <div class="body"><h3><span class="num">13</span> Combat d’insultes <span class="tag jeu">Monkey Island</span></h3>
+      <p class="quote">Un quai au clair de lune. Un pirate au long nez barre la passerelle : « On ne passe qu’en me battant… à l’insulte. »</p>
+      <ol><li>Le héros ne connaît que les répliques des gardes de Skyrim. <span class="obj">Biscuit + perroquet</span> de la taverne : le perroquet récite les réparties qu’il a entendues.</li>
+        <li>Duel en dialogue à choix : bonne repartie, un pas en avant.</li>
+        <li>Vaincu, le pirate lui donne une carte au trésor : le X cache un fromage de Hollande.</li></ol>
+      <p class="small"><b>Gag :</b> « Tu te bats comme un garde qui a pris une flèche dans le genou ! » « Au moins, lui, peut encore s’agenouiller pour s’excuser. » Et : « Derrière toi, un mammouth à trois têtes ! » <b>Pont :</b> le jeu d’aventure qui a inspiré le nôtre.</p></div></article>
+
+  <article class="chap"><img class="img" src="img/r_potter.jpg" alt="Le héros sur le tabouret de la répartition, un seau sur la tête">
+    <div class="body"><h3><span class="num">14</span> Le Choixseau <span class="tag film">Harry Potter</span></h3>
+      <p class="quote">La grande salle d’une école de sorcellerie, des centaines de bougies flottantes. Il atterrit sur le tabouret de la Répartition.</p>
+      <ol><li>Le vieux chapeau parlant refuse de se poser : « Trop de cornes. » <span class="obj">Seau + sa propre tête</span> : le seau (voix de Sheogorath) répartit : « Courageux, pas très malin, aime le fromage… RIVEBOIS ! »</li>
+        <li>Personne n’en veut. Pour gagner sa place, il passe le cours de potions : <span class="obj">fleur de montagne bleue + chaudron</span>, une potion de soin de Skyrim.</li>
+        <li>Quinze points pour Rivebois, et la meule du banquet.</li></ol>
+      <p class="small"><b>Gag :</b> « Il n’y a pas de maison Rivebois. » « Maintenant, si. Et elle a un seau. » <b>Pont :</b> le seau sur la tête et l’alchimie (il goûte chaque ingrédient avant de le jeter dedans).</p></div></article>
+
+  <article class="chap"><img class="img" src="img/r_jurassic.jpg" alt="L'eau du seau tremble, un dinosaure dans la jungle">
+    <div class="body"><h3><span class="num">15</span> Le seau qui tremble <span class="tag film">Jurassic Park</span></h3>
+      <p class="quote">Nuit, pluie, clôture électrique cassée. Boum. Boum. L’eau du seau tremble en cercles parfaits.</p>
+      <ol><li>Le monstre ne voit que ce qui bouge : verbe <span class="obj">S’accroupir</span>, l’indicateur [Caché] s’affiche au-dessus du héros.</li>
+        <li><span class="obj">Torche + ravin</span> : il la lance, le monstre la suit et dégringole.</li>
+        <li>La meule est dans la cuisine du bâtiment des visiteurs, gardée par deux petits monstres qui ouvrent les portes. Il les enferme dans le garde-manger.</li></ol>
+      <p class="small"><b>Gag :</b> « C’est un dragon ? » « Non, un lézard de luxe : ni ailes, ni vocabulaire. » <b>Pont :</b> le mode furtif et les dragons de Skyrim.</p></div></article>
+
+  <article class="chap"><img class="img" src="img/r_starwars.jpg" alt="Le héros chante sur une table dans une cantina d'extraterrestres">
+    <div class="body"><h3><span class="num">16</span> La cantina <span class="tag film">Star Wars</span></h3>
+      <p class="quote">Désert à deux soleils, cantina enfumée. Le barman : « On ne sert pas les Nordiques ici ! »</p>
+      <ol><li>L’orchestre ne connaît qu’un air. <span class="obj">Luth du barde + orchestre</span> : il leur apprend « Ragnar le Rouge ». Bagarre générale, comme à Blancherive.</li>
+        <li>Un seigneur en armure noire au souffle bruyant barre la sortie : « Je suis ton père. » <span class="obj">Potion d’endurance + seigneur</span> : il respire enfin normalement, ému.</li>
+        <li>Il lui offre un fromage bleu au lait bleu.</li></ol>
+      <p class="small"><b>Gag :</b> la Persuasion façon chevalier mystique : un geste de la main, « Ce n’est pas le Nordique que vous cherchez. » <b>Pont :</b> le barde de Blancherive et sa chanson.</p></div></article>
+
+  <article class="chap"><img class="img" src="img/r_thrones.jpg" alt="Le héros assis sur un trône de dagues dans un château enneigé">
+    <div class="body"><h3><span class="num">17</span> L’hiver est déjà là <span class="tag serie">Game of Thrones</span></h3>
+      <p class="quote">Un château du Nord. Un seigneur sombre : « L’hiver vient. » Le héros : « Chez nous, il est venu, il a posé ses valises et il a pris une flèche dans le genou. »</p>
+      <ol><li>Le trône est fait de centaines de dagues de fer : l’œuvre d’un joueur de Skyrim qui monte sa forge. S’y asseoir fait mal. <span class="obj">Coussin de fourrure + trône</span> : il est proclamé roi du Nord.</li>
+        <li>La meule est tout en haut du mur de glace. Un dragon passe : Cri de soumission, le dragon se pose, il monte dessus.</li></ol>
+      <p class="small"><b>Gag :</b> « Vous ne savez rien. » « Je sais forger quatre cents dagues en une nuit. » <b>Pont :</b> la forge, les dragons qu’on chevauche (extension Dragonborn).</p></div></article>
+
+  <article class="chap"><img class="img" src="img/r_matrix.jpg" alt="Un homme en manteau noir tend une fiole rouge et une fiole bleue">
+    <div class="body"><h3><span class="num">18</span> Potion rouge ou potion bleue <span class="tag film">Matrix</span></h3>
+      <p class="quote">Un homme en manteau de cuir et lunettes rondes tend deux fioles. « Choisis. » Le héros, joueur de Skyrim : il prend les deux, et les boit.</p>
+      <ol><li>Des agents en costume arrivent, tous avec le même visage, comme les gardes. Un agent : « J’étais un élu comme toi, puis j’ai pris une balle dans le genou. »</li>
+        <li>Ils tirent : <span class="obj">Cri « Ralentir le temps »</span>, il esquive en arrière au ralenti… et tombe sur le dos. Les balles passent quand même.</li>
+        <li>Un enfant chauve tord une cuillère : « Le fromage n’existe pas. » Il le prend quand même.</li></ol>
+      <p class="small"><b>Gag :</b> « Personne ne prend les deux. » « Vous n’avez jamais vu mon inventaire. » <b>Pont :</b> les couleurs des potions de Skyrim, les gardes clonés.</p></div></article>
+
+  <article class="chap"><img class="img" src="img/r_anneaux.jpg" alt="Le héros pousse un Cri sur le pont, à côté d'un vieux magicien gris">
+    <div class="body"><h3><span class="num">19</span> Vous ne passerez pas ! <span class="tag film">Le Seigneur des Anneaux</span></h3>
+      <p class="quote">Un pont étroit au-dessus d’un abîme de feu. Un vieux magicien gris lève son bâton, inspire… et le héros crie avant lui : FUS RO DAH. Le démon tombe.</p>
+      <ol><li>Le magicien boude : « C’était MA réplique. » Il faut le consoler : <span class="obj">pipe trouvée sur le pont + magicien</span>.</li>
+        <li>Un petit être aux pieds poilus réclame son second petit-déjeuner. Le héros ouvre son inventaire et mange 39 meules de fromage d’affilée. Il garde la quarantième pour Sheogorath.</li></ol>
+      <p class="small"><b>Gag :</b> « Pourquoi on n’a pas pris les aigles ? » « Pourquoi vous n’utilisez pas le voyage rapide ? » <b>Pont :</b> le Cri, les meules mangées en plein combat, le voyage rapide.</p></div></article>
+
+  <article class="chap"><img class="img" src="img/r_portal.jpg" alt="Salle de test blanche, portails bleu et orange, le héros pousse une meule sur un bouton">
+    <div class="body"><h3><span class="num">20</span> Le gâteau est un mensonge <span class="tag jeu">Portal</span></h3>
+      <p class="quote">Une salle de test blanche. Un œil rouge au plafond, une voix sucrée : « Il y aura du gâteau à la fin du test. »</p>
+      <ol><li>Pas de cube pour le gros bouton : <span class="obj">meule de fromage + bouton</span>. La porte s’ouvre (au grand dam de Sheogorath, qui la comptait).</li>
+        <li>Le seau ouvre un portail bleu, l’autre mur un portail orange : il passe d’un côté à l’autre pour atteindre le gâteau.</li>
+        <li>Le gâteau est en carton. Par le portail orange, on aperçoit la fête de Rivebois : il saute, retour à la maison et fondue finale.</li></ol>
+      <p class="small"><b>Gag :</b> l’IA et le narrateur se disputent le droit d’être sarcastiques. « Deux voix méprisantes pour un seul héros, c’est trop. » « Pour lui ? C’est à peine assez. » <b>Pont :</b> le gâteau des quinze ans, le cube qui parle comme Lydia (« Je suis là pour porter vos fardeaux »).</p></div></article>
+</section>
+
+<!-- ═════════════ NOTES ═════════════ -->
+<section id="notes">
+  <h2>Règles retenues et suite</h2>
+  <div class="note">
+    <p><b>Parodie, pas copie.</b> Aucun nom de personnage, de lieu ni de marque dans le jeu, aucun logo ni dessin officiel : un magicien gris, une école de sorcellerie, une créature verte en cubes. Les répliques cultes sont détournées, jamais recopiées telles quelles.</p>
+    <p><b>Images.</b> Ambiances FLUX 3 Klein locales, héros calculé à partir de sa référence (<code>work/ch2_hero.png</code>). Ce sont des planches d’intention : les décors du jeu seront recalculés au format du jeu (480×270), sans personnage, comme pour les dix premiers chapitres.</p>
+    <p><b>Coût.</b> Par chapitre : un décor, deux ou trois personnages secondaires (au plus simple), un ou deux objets, des répliques FR/EN, des voix mCASTING. Le génie des indices devra aussi recevoir les étapes des nouveaux chapitres.</p>
+    <p><b>À décider par Stéphan :</b> la pirouette, les références gardées (et les siennes), l’ordre, puis si on passe aux planches de personnages.</p>
+  </div>
+</section>
+</main>
+<footer><div class="wrap">Le Seau de Rivebois · proposition crossover · novembre 2026 · aucun code du jeu modifié</div></footer>
+
+<div id="zoom"><img alt=""></div>
+<script>
+(()=>{
+  const z=document.getElementById('zoom'), zi=z.querySelector('img');
+  document.querySelectorAll('img.img').forEach(i=>i.addEventListener('click',()=>{zi.src=i.src;zi.alt=i.alt;z.classList.add('on')}));
+  z.addEventListener('click',()=>z.classList.remove('on'));
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')z.classList.remove('on')});
+  // notes colorées
+  document.querySelectorAll('#bank td.n:not(.tot)').forEach(td=>{const v=+td.textContent;td.innerHTML=`<span class="score ${v>=9?'s-hi':v>=7?'s-mid':'s-lo'}">${v}</span>`});
+  document.querySelectorAll('#bank td.tot').forEach(td=>{td.innerHTML=`<span class="score">${td.textContent}</span>`});
+  // tri
+  const tb=document.querySelector('#bank tbody');
+  document.querySelectorAll('#bank th[data-k]').forEach(th=>{let asc=false;th.addEventListener('click',()=>{
+    const k=+th.dataset.k; asc=!asc;
+    const rows=[...tb.rows].sort((a,b)=>{const x=a.cells[k].innerText.trim(),y=b.cells[k].innerText.trim();
+      const nx=parseFloat(x),ny=parseFloat(y);
+      const c=(!isNaN(nx)&&!isNaN(ny))?nx-ny:x.localeCompare(y,'fr');return asc?c:-c});
+    rows.forEach(r=>tb.appendChild(r));})});
+  // onglet actif
+  const links=[...document.querySelectorAll('nav.tabs a')], secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.toggle('on',l.getAttribute('href')==='#'+e.target.id))}})},{rootMargin:'-40% 0px -55% 0px'});
+  secs.forEach(s=>io.observe(s));
+})();
+</script>
+</body>
+</html>
