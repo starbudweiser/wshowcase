@@ -26,7 +26,7 @@ Prototypes de rendu : https://claude.ai/artifact/Hbie6aV5LJGNajt7JZMpVR (`tools/
   (contenu `tools/s2_content.py`, génération `tools/saison2_pdf.py` ; à relancer après chaque changement).
 
 ## À faire
-1. Validation des planches de personnages par Stéphan, puis poses clés (planche avant toute animation).
+1. Planches de personnages validées par Stéphan le 23/11 (Morpheus refait en homme noir, Gandalf très grand). Suite : poses clés (planche avant toute animation).
 2. Moteur : canevas 960 × 540, saison 1 affichée ×2 sans changement ; interface et police mises à l'échelle.
 3. Wabbajack : réserve d'effets génériques (une douzaine d'images faites une fois), réactions par point chaud,
    carnet des métamorphoses.
