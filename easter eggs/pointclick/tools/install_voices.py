@@ -15,6 +15,10 @@ def one(f):
     return g
 files = sorted(glob.glob(os.path.join(SRC, 'fr', '*.mp3')) + glob.glob(os.path.join(SRC, 'en', '*.mp3')))
 import sys
-if len(sys.argv) > 1: files = [f for f in files if os.path.basename(f).startswith(tuple(sys.argv[1].split(',')))]   # seulement ces clés : hint.,genie.
+if len(sys.argv) > 1 and sys.argv[1].startswith('who='):   # seulement ces personnages : who=hero,narr (d'après work/voices.json)
+    import json; who = set(sys.argv[1][4:].split(','))
+    keep = {f"{o['lang']}/{o['key']}{'' if o['idx'] < 0 else '.v' + str(o['idx'])}.mp3" for o in json.load(open(os.path.join(SRC, '..', 'voices.json'))) if o['who'] in who}
+    files = [f for f in files if os.path.relpath(f, SRC) in keep]
+elif len(sys.argv) > 1: files = [f for f in files if os.path.basename(f).startswith(tuple(sys.argv[1].split(',')))]   # seulement ces clés : hint.,genie.
 with cf.ThreadPoolExecutor(10) as ex: gains = list(ex.map(one, files))
 print(len(files), 'voix posées ; gain de', round(min(gains), 1), 'à', round(max(gains), 1), 'dB')
