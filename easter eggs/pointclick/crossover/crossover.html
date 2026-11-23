@@ -111,6 +111,9 @@ ul.wl li::before{content:"";position:absolute;left:3px;top:.62em;width:6px;heigh
 .tag.choix{background:var(--success-bg);color:var(--success)}
 .old{opacity:.75}
 @media (max-width:900px){.grid2{grid-template-columns:1fr}}
+.chap.stack{grid-template-columns:1fr}.chap.stack .img{min-height:0;aspect-ratio:16/9;height:auto}
+.wabimg{width:100%;max-width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:var(--r);border:1px solid var(--border);margin-bottom:14px;display:block;cursor:zoom-in}
+#zoom img{image-rendering:pixelated}
 </style>
 </head>
 <body>
@@ -165,6 +168,7 @@ ul.wl li::before{content:"";position:absolute;left:3px;top:.62em;width:6px;heigh
 <section id="wabbajack">
   <h2>Le Wabbajack, l’outil à tout faire (et à tout défaire)</h2>
   <p class="sub">Le bâton de Sheogorath, déjà célèbre dans Skyrim pour changer ses cibles en poules, en lapins ou en brioches. Ici, il résout les énigmes et il est le jouet le plus drôle du jeu : on peut l’utiliser sur n’importe qui et n’importe quoi, et chaque monde répond avec ses propres clins d’œil.</p>
+  <img class="img wabimg" src="img/r_wabbajack.jpg" alt="Le héros brandit le Wabbajack, entouré d’une poule, d’une meule, d’un lapin et d’une brioche en pleine métamorphose">
   <div class="grid2">
     <div class="note">
       <p><b>Le cadeau.</b> « Et prends ça. Mon Wabbajack. Il change n’importe quoi en n’importe quoi d’autre. Surtout en n’importe quoi. »</p>
@@ -185,7 +189,7 @@ ul.wl li::before{content:"";position:absolute;left:3px;top:.62em;width:6px;heigh
 <!-- ═════════════ CHAPITRES ═════════════ -->
 <section id="chapitres">
   <h2>Les 15 chapitres, dans l’ordre (finale Portal)</h2>
-  <p class="sub">Tes 10 références, tes 4 idées et Minecraft. Chaque chapitre : un réveil, deux ou trois étapes (en gras, l’objet et sa cible), une liste « Wabbajack sur… », un gag et le pont avec Skyrim. Les personnages et les lieux ne sont jamais nommés dans le jeu, seulement reconnaissables. Les chapitres sans image attendent leur visuel.</p>
+  <p class="sub">Tes 10 références, tes 4 idées et Minecraft. Chaque chapitre : un réveil, deux ou trois étapes (en gras, l’objet et sa cible), une liste « Wabbajack sur… », un gag et le pont avec Skyrim. Les personnages et les lieux ne sont jamais nommés dans le jeu, seulement reconnaissables. Toutes les images sont au rendu de la saison 2 (960 × 540, 16 millions de couleurs) : clique dessus pour les voir en grand, pixel pour pixel.</p>
 
   <article class="chap"><img class="img" src="img/r_monkey.jpg" alt="Duel d'insultes sur un quai de pirates">
     <div class="body"><h3><span class="num">11</span> Combat d’insultes <span class="tag jeu">Monkey Island</span></h3>
@@ -197,8 +201,8 @@ ul.wl li::before{content:"";position:absolute;left:3px;top:.62em;width:6px;heigh
       <ul class="wl"><li>la chope de grog : elle fond, comme les chopes du jeu d’origine ;</li><li>le poulet en caoutchouc à poulie : il devient une vraie poule, qui file le long du câble ;</li><li>le perroquet : il ne dit plus que « FUS RO DAH » ;</li><li>la statue du singe : un mammouth à trois têtes.</li></ul>
       <p class="small"><b>Gag :</b> « Derrière toi, un mammouth à trois têtes ! » <b>Pont :</b> le jeu d’aventure qui a inspiré le nôtre.</p></div></article>
 
-  <article class="chap noimg">
-    <div class="body"><h3><span class="num">12</span> La plus grosse meule du monde <span class="tag jeu">Sam &amp; Max</span> <span class="todo">Visuel à faire</span></h3>
+  <article class="chap"><img class="img" src="img/r_sammax.jpg" alt="Le héros, un chien détective en costume et un lapin surexcité devant une meule géante au bord de la route">
+    <div class="body"><h3><span class="num">12</span> La plus grosse meule du monde <span class="tag jeu">Sam &amp; Max</span></h3>
       <p class="quote">Un lapin blanc surexcité lui saute sur le ventre : « Hé, toi ! T’es enfin réveillé ! On peut le garder, Sam ? » Un chien détective en costume soupire.</p>
       <ol><li>Le duo enquête sur le vol de « la plus grosse meule de fromage du monde », attraction au bord de la route. Il faut les suivre en voiture ; le héros n’en a jamais vu.</li>
         <li><span class="obj">Wabbajack + voiture</span> : elle devient une charrette. Elle roule moins vite, mais le héros sait la conduire.</li>
@@ -217,8 +221,8 @@ ul.wl li::before{content:"";position:absolute;left:3px;top:.62em;width:6px;heigh
       <ul class="wl"><li>la créature verte : elle explose en confettis ;</li><li>le villageois : « FUS RO HMM » ;</li><li>le soleil carré : il devient rond, et tout le monde est choqué ;</li><li>un mouton : il change de couleur à chaque coup ;</li><li>un bloc de terre : tout le paysage devient fromage pendant trois secondes.</li></ul>
       <p class="small"><b>Gag :</b> « Chez moi, le seau va sur la tête des marchands. Ici, on le vide sous ses pieds en tombant. Chacun sa culture. » <b>Pont :</b> le seau, objet sacré des deux jeux ; frapper un arbre à mains nues.</p></div></article>
 
-  <article class="chap noimg">
-    <div class="body"><h3><span class="num">14</span> L’idole et la meule <span class="tag film">Indiana Jones</span> <span class="todo">Visuel à faire</span></h3>
+  <article class="chap"><img class="img" src="img/r_indiana.jpg" alt="Le héros tient une meule près de l’idole d’or, un archéologue l’avertit">
+    <div class="body"><h3><span class="num">14</span> L’idole et la meule <span class="tag film">Indiana Jones</span></h3>
       <p class="quote">Un archéologue au chapeau et au fouet : « Hé, toi. T’es enfin réveillé ? Ne bouge plus. Tu es sur une dalle piégée. »</p>
       <ol><li>La fosse aux serpents. « Pourquoi des serpents ? » <span class="obj">Wabbajack + serpents</span> : des saucisses. Il traverse en mangeant.</li>
         <li>L’idole d’or sur son socle : <span class="obj">meule de fromage + socle</span>, au même poids. Un rocher se met à dévaler.</li>
@@ -227,8 +231,8 @@ ul.wl li::before{content:"";position:absolute;left:3px;top:.62em;width:6px;heigh
       <ul class="wl"><li>le fouet : une anguille ;</li><li>le chapeau : un casque à cornes, que l’archéologue refuse de rendre ;</li><li>l’idole : une poule dorée, qui s’envole ;</li><li>l’archéologue : un garde de Skyrim. « J’étais archéologue, comme vous… »</li></ul>
       <p class="small"><b>Gag :</b> « Ça appartient à un musée ! » « Chez nous, ça appartient à celui qui l’a dans son inventaire. » <b>Pont :</b> les meules qui dévalent les escaliers, les pièges à plaque, les joueurs qui ramassent tout.</p></div></article>
 
-  <article class="chap noimg">
-    <div class="body"><h3><span class="num">15</span> Quatre-vingt-huit lieues à l’heure <span class="tag film">Retour vers le futur</span> <span class="todo">Visuel à faire</span></h3>
+  <article class="chap"><img class="img" src="img/r_retour.jpg" alt="La charrette couverte d’inox devant la tour à horloge, un savant agite les bras">
+    <div class="body"><h3><span class="num">15</span> Quatre-vingt-huit lieues à l’heure <span class="tag film">Retour vers le futur</span></h3>
       <p class="quote">Place d’une petite ville, tour à horloge. Un savant aux cheveux en pétard : « Hé, toi ! T’es enfin réveillé ! On est en quelle année ? » Derrière lui, la charrette de l’intro, garée devant la mairie.</p>
       <ol><li><span class="obj">Wabbajack + charrette</span> : elle se couvre d’inox, avec des portes qui s’ouvrent vers le haut et un compteur.</li>
         <li>Elle doit atteindre 88 lieues à l’heure ; le cheval plafonne à 12. <span class="obj">Wabbajack + cheval</span> : un cheval de Skyrim, qui grimpe le clocher à la verticale et tire la charrette avec lui.</li>
@@ -246,8 +250,8 @@ ul.wl li::before{content:"";position:absolute;left:3px;top:.62em;width:6px;heigh
       <ul class="wl"><li>les bougies flottantes : des fromages flottants ;</li><li>le professeur aux cheveux gras : une chauve-souris, sans changer d’expression ;</li><li>la baguette d’un élève : une carotte ;</li><li>la chouette postale : une poule postale ;</li><li>le plafond étoilé : il neige, comme à Skyrim.</li></ul>
       <p class="small"><b>Gag :</b> « C’est quoi, ta baguette ? » « Un bâton qui change les gens en poules. » « Moins dix points pour… tout. » <b>Pont :</b> le seau sur la tête et l’alchimie de Skyrim.</p></div></article>
 
-  <article class="chap noimg">
-    <div class="body"><h3><span class="num">17</span> La Table ronde <span class="tag serie">Kaamelott</span> <span class="tag fr">Version française</span> <span class="todo">Visuel à faire</span></h3>
+  <article class="chap"><img class="img" src="img/r_kaamelott.jpg" alt="Le roi accoudé à la table ronde, un chevalier mange une cuisse de poulet">
+    <div class="body"><h3><span class="num">17</span> La Table ronde <span class="tag serie">Kaamelott</span> <span class="tag fr">Version française</span></h3>
       <p class="quote">Un chevalier pas très vif le regarde se réveiller : « Hé, toi. T’es enfin réveillé. » Silence. « … C’est pas faux. »</p>
       <ol><li>Le roi cherche le Graal avec ses deux chevaliers les plus lents, qui ne comprennent rien au mot « Cri ». Ils ne retiennent qu’un mot : « fromage ».</li>
         <li>Ils refusent de partir le ventre vide : <span class="obj">Wabbajack + table</span>, un banquet apparaît. « Le gras, c’est la vie. »</li>
@@ -256,8 +260,8 @@ ul.wl li::before{content:"";position:absolute;left:3px;top:.62em;width:6px;heigh
       <ul class="wl"><li>le chevalier lent : il devient brillant trois secondes, explique l’astronomie, puis « C’est pas faux » ;</li><li>le chevalier gourmand : une tranche de jambon, qui se regarde avec appétit ;</li><li>l’épée dans le rocher : une cuillère dans une meule ;</li><li>les dés de leur jeu de taverne : deux meules qu’on lance.</li></ul>
       <p class="small"><b>Gag :</b> « Le Graal, c’est un seau ? » « Chez moi, c’est un objet sacré aussi. » <b>Pont :</b> les PNJ de Skyrim qui répètent la même phrase ; le seau. <b>Version anglaise :</b> remplacée par Sacré Graal (voir les épisodes de rechange).</p></div></article>
 
-  <article class="chap noimg">
-    <div class="body"><h3><span class="num">18</span> La roue de la douleur <span class="tag film">Conan le barbare</span> <span class="tag film">L’Histoire sans fin</span> <span class="todo">Visuel à faire</span></h3>
+  <article class="chap"><img class="img" src="img/r_conan.jpg" alt="Le héros et un barbare poussent un cabestan dans la neige, un dragon blanc à poils vole au-dessus">
+    <div class="body"><h3><span class="num">18</span> La roue de la douleur <span class="tag film">Conan le barbare</span> <span class="tag film">L’Histoire sans fin</span></h3>
       <p class="quote">Un grenier. Un enfant lit un gros livre, et le héros est dedans. Un barbare très musclé : « Hé, toi. T’es enfin réveillé. Pousse. »</p>
       <ol><li>La roue de la douleur, comme la meule du moulin au chapitre 2. <span class="obj">Wabbajack + roue</span> : une meule de fromage géante, qui tourne toute seule. Le barbare est libre.</li>
         <li>Le Néant dévore le pays. Un dragon porte-bonheur, blanc et tout en poils, refuse de voler tant que personne ne crie un nom. Le héros crie… « SHEOGORATH ! » Ça marche.</li>
@@ -276,8 +280,8 @@ ul.wl li::before{content:"";position:absolute;left:3px;top:.62em;width:6px;heigh
       <ul class="wl"><li>la chèvre attachée : elle disparaît. Elle n’est jamais loin ;</li><li>la clôture électrique : des guirlandes ;</li><li>le moustique dans l’ambre : un papillon de Skyrim ;</li><li>le paléontologue : un mammouth, qui garde son chapeau.</li></ul>
       <p class="small"><b>Gag :</b> « Un dragon ? » « Un lézard de luxe : ni ailes, ni vocabulaire. » <b>Pont :</b> le mode furtif, les dragons, la poule de Rivebois.</p></div></article>
 
-  <article class="chap noimg">
-    <div class="body"><h3><span class="num">20</span> Le mur des mots <span class="tag serie">Stranger Things</span> <span class="todo">Visuel à faire</span></h3>
+  <article class="chap"><img class="img" src="img/r_stranger.jpg" alt="Un salon des années 80 avec l’alphabet sur le mur et une créature à tête de fleur">
+    <div class="body"><h3><span class="num">20</span> Le mur des mots <span class="tag serie">Stranger Things</span></h3>
       <p class="quote">Un salon des années 80, un alphabet peint sur le mur sous des guirlandes. Des enfants à vélo : « Hé, toi. T’es enfin réveillé ? Tu viens du monde à l’envers ? »</p>
       <ol><li>Les ampoules s’allument lettre par lettre ; le héros les lit comme un mur de mots de Skyrim et apprend un Cri.</li>
         <li>Une créature à tête de fleur sort du mur. <span class="obj">Wabbajack + créature</span> : une jonquille géante. Les enfants : « Elle était déjà un peu comme ça. »</li>
@@ -286,8 +290,8 @@ ul.wl li::before{content:"";position:absolute;left:3px;top:.62em;width:6px;heigh
       <ul class="wl"><li>les gaufres : des brioches ;</li><li>le talkie-walkie : il capte la radio de Skyrim et ses trois chansons ;</li><li>la partie de jeu de rôle au sous-sol : le héros devient une figurine ;</li><li>la guirlande : elle écrit « SHEOGORATH ÉTAIT LÀ ».</li></ul>
       <p class="small"><b>Gag :</b> au sous-sol, le maître du jeu annonce : « Un Nordique au casque à cornes entre dans la pièce. » Et il entre. <b>Pont :</b> les murs de mots qui enseignent les Cris.</p></div></article>
 
-  <article class="chap noimg">
-    <div class="body"><h3><span class="num">21</span> La chambre rouge <span class="tag serie">Twin Peaks</span> <span class="todo">Visuel à faire</span></h3>
+  <article class="chap"><img class="img" src="img/r_twinpeaks.jpg" alt="Une salle aux rideaux rouges et au sol en zigzag, Sheogorath prend un café">
+    <div class="body"><h3><span class="num">21</span> La chambre rouge <span class="tag serie">Twin Peaks</span></h3>
       <p class="quote">Rideaux rouges, sol en zigzag. Un petit homme en costume rouge danse et parle à l’envers : « Éillevér nifne se’t. Iot, éh. »</p>
       <ol><li>Personne ne parle à l’endroit. <span class="obj">Wabbajack + petit homme</span> : il parle enfin à l’endroit… et c’est le héros qui parle à l’envers.</li>
         <li>Sheogorath est là, chez lui : « Ma résidence secondaire. Les rideaux, c’est moi. » Il réclame un bon café et une part de tarte aux cerises.</li>
@@ -296,8 +300,8 @@ ul.wl li::before{content:"";position:absolute;left:3px;top:.62em;width:6px;heigh
       <ul class="wl"><li>la dame à la bûche : sa bûche devient une meule, et elle continue de lui parler ;</li><li>les hiboux, « qui ne sont pas ce qu’ils semblent » : ce sont des poules ;</li><li>le magnétophone de l’agent : il dicte son rapport à Sheogorath ;</li><li>la tarte : elle parle à l’envers.</li></ul>
       <p class="small"><b>Gag :</b> Sheogorath et le petit homme dansent ensemble, chacun dans un sens. <b>Pont :</b> les royaumes daedriques, et les Îles Frissonnantes de Sheogorath. Tonalité : aucun crime évoqué, on reste dans l’étrange.</p></div></article>
 
-  <article class="chap noimg">
-    <div class="body"><h3><span class="num">22</span> Projections <span class="tag serie">Dexter</span> <span class="todo">Visuel à faire</span></h3>
+  <article class="chap"><img class="img" src="img/r_dexter.jpg" alt="Un expert scientifique examine la confiture sur l’armure du héros, une boîte de beignets à la main">
+    <div class="body"><h3><span class="num">22</span> Projections <span class="tag serie">Dexter</span></h3>
       <p class="quote">Miami, plein soleil. Un expert de la police scientifique, très poli : « Hé, toi. T’es enfin réveillé. Tu as de la confiture partout. »</p>
       <ol><li>Il analyse les projections sur l’armure du héros : de la confiture du gâteau d’anniversaire. Il en déduit tout, Rivebois, le dragon, les quinze bougies.</li>
         <li>Sa pièce secrète est tapissée de plastique : <span class="obj">Wabbajack + pièce</span>, une aire de pique-nique.</li>
@@ -342,9 +346,9 @@ ul.wl li::before{content:"";position:absolute;left:3px;top:.62em;width:6px;heigh
   <div class="slot">
     <div class="slothead"><span class="num">17</span><b>La Table ronde</b><span class="small">même décor de château, même chute : le Graal est un seau</span></div>
     <div class="grid2">
-      <article class="chap noimg"><div class="body"><h3>Kaamelott <span class="tag fr">Français</span></h3>
+      <article class="chap stack"><img class="img" src="img/r_kaamelott.jpg" alt="La table ronde de la version française"><div class="body"><h3>Kaamelott <span class="tag fr">Français</span></h3>
         <p class="small">Script complet plus haut. Le roi, ses deux chevaliers les plus lents, « C’est pas faux », le banquet au Wabbajack.</p></div></article>
-      <article class="chap noimg"><div class="body"><h3>Sacré Graal <span class="tag en">Anglais</span> <span class="todo">Visuel à faire</span></h3>
+      <article class="chap stack"><img class="img" src="img/r_graal.jpg" alt="Les chevaliers aux bois de cerf, le chevalier aux noix de coco et le lapin tueur"><div class="body"><h3>Sacré Graal <span class="tag en">Anglais</span></h3>
         <p class="quote">Un chevalier qui avance en tapant deux noix de coco : « Hé, toi. T’es enfin réveillé. Tu n’aurais pas vu un Graal ? »</p>
         <ol><li>Les chevaliers qui disent « Ni ! » exigent un buisson : <span class="obj">plante d’alchimie de Skyrim + chevaliers</span>. Ils en veulent un plus joli : <span class="obj">Wabbajack + buisson</span>, taillé en mammouth.</li>
           <li>Le chevalier noir garde le pont : « Ce n’est qu’une flèche dans le genou. » <span class="obj">Wabbajack + chevalier</span> : un garde de Skyrim, qui s’assoit pour raconter sa vie. Le pont est libre.</li>
