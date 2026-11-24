@@ -1,0 +1,560 @@
+[
+ {
+  "id": "hero",
+  "name": "Héros",
+  "voix": "clone-69b43c3c",
+  "rechange": null,
+  "noms": [
+   "Marty MacFly"
+  ],
+  "recettes": [
+   "Cloned voice from a reference sample."
+  ]
+ },
+ {
+  "id": "narr",
+  "name": "Narrateur",
+  "voix": "clone-ca7cfe8c",
+  "rechange": null,
+  "noms": [
+   "Gregory House"
+  ],
+  "recettes": [
+   "Cloned voice from a reference sample."
+  ]
+ },
+ {
+  "id": "sheo",
+  "name": "Sheogorath",
+  "voix": "man-senior-low-9",
+  "rechange": "clone-7896f5d8",
+  "noms": [
+   "Theo 100",
+   "Jim Carrey"
+  ],
+  "recettes": [
+   "A French-speaking person, over 65 years old, deep, low-pitched male voice, pompous and theatrical delivery, natural conversational pace, clear diction.",
+   "Cloned voice from a reference sample."
+  ]
+ },
+ {
+  "id": "guybrush",
+  "name": "Apprenti pirate",
+  "voix": "man-young-high-3",
+  "rechange": "man-x20",
+  "noms": [
+   "Silas 24",
+   "Lucien 141"
+  ],
+  "recettes": [
+   "A French-speaking person, in their early twenties, light, higher-pitched male voice, cheerful and bright delivery, natural conversational pace, clear diction.",
+   "A person, in their early twenties, light, higher-pitched male voice, dry and deadpan delivery, slow, deliberate pace with long pauses, expressive."
+  ]
+ },
+ {
+  "id": "lechuck",
+  "name": "Capitaine fantôme",
+  "voix": "creature-ghost-5",
+  "rechange": "creature-ghost-1",
+  "noms": [
+   "Ghost 6",
+   "Ghost 2"
+  ],
+  "recettes": [
+   "The voice of a ghost: booming and proud, otherworldly character voice with distinctive texture, clear speech.",
+   "The voice of a ghost: grumpy and sarcastic, otherworldly character voice with distinctive texture, clear speech."
+  ]
+ },
+ {
+  "id": "swordmaster",
+  "name": "Maître d’armes",
+  "voix": "man-adult-low-9",
+  "rechange": "man-adult-low-6",
+  "noms": [
+   "Theo 40",
+   "Dorian 37"
+  ],
+  "recettes": [
+   "A French-speaking person, around 35 years old, deep, low-pitched male voice, pompous and theatrical delivery, natural conversational pace, clear diction.",
+   "A French-speaking person, around 35 years old, deep, low-pitched male voice, mischievous delivery, natural conversational pace, clear diction."
+  ]
+ },
+ {
+  "id": "parrot",
+  "name": "Perroquet",
+  "voix": "animal-parrot-1",
+  "rechange": "animal-parrot-3",
+  "noms": [
+   "Parrot 2",
+   "Parrot 4"
+  ],
+  "recettes": [
+   "A talking parrot character voice, grumpy and sarcastic, cartoon-like but believable, expressive, clear speech.",
+   "A talking parrot character voice, shrill and excitable, cartoon-like but believable, expressive, clear speech."
+  ]
+ },
+ {
+  "id": "sam",
+  "name": "Chien détective",
+  "voix": "animal-dog-2",
+  "rechange": "man-adult-medium-0",
+  "noms": [
+   "Dog 3",
+   "Lucien 41"
+  ],
+  "recettes": [
+   "A talking dog character voice, wise and slow, cartoon-like but believable, expressive, clear speech.",
+   "A French-speaking person, around 35 years old, medium-pitched male voice, dry and deadpan delivery, natural conversational pace, clear diction."
+  ]
+ },
+ {
+  "id": "max",
+  "name": "Lapin surexcité",
+  "voix": "animal-rabbit-3",
+  "rechange": "animal-rabbit-1",
+  "noms": [
+   "Rabbit 4",
+   "Rabbit 2"
+  ],
+  "recettes": [
+   "A talking rabbit character voice, shrill and excitable, cartoon-like but believable, expressive, clear speech.",
+   "A talking rabbit character voice, grumpy and sarcastic, cartoon-like but believable, expressive, clear speech."
+  ]
+ },
+ {
+  "id": "villager",
+  "name": "Villageois carré",
+  "voix": "man-senior-low-0",
+  "rechange": "man-mature-low-2",
+  "noms": [
+   "Felix 91",
+   "Marcus 63"
+  ],
+  "recettes": [
+   "A French-speaking person, over 65 years old, deep, low-pitched male voice, dry and deadpan delivery, natural conversational pace, clear diction.",
+   "A French-speaking person, around 50 years old, deep, low-pitched male voice, gruff and tired delivery, natural conversational pace, clear diction."
+  ]
+ },
+ {
+  "id": "creeper",
+  "name": "Créature verte",
+  "voix": "creature-golem-4",
+  "rechange": null,
+  "noms": [
+   "Golem 5"
+  ],
+  "recettes": [
+   "The voice of a golem: sly and whispering, otherworldly character voice with distinctive texture, clear speech."
+  ]
+ },
+ {
+  "id": "indy",
+  "name": "Archéologue",
+  "voix": "clone-f626a1b0",
+  "rechange": null,
+  "noms": [
+   "Indiana Jones"
+  ],
+  "recettes": [
+   "Cloned voice from a reference sample."
+  ]
+ },
+ {
+  "id": "doc",
+  "name": "Savant",
+  "voix": "clone-be1ce514",
+  "rechange": null,
+  "noms": [
+   "Doc Brown"
+  ],
+  "recettes": [
+   "Cloned voice from a reference sample."
+  ]
+ },
+ {
+  "id": "potions",
+  "name": "Professeur de potions",
+  "voix": "man-mature-low-0",
+  "rechange": "man-mature-low-5",
+  "noms": [
+   "Lucien 61",
+   "Hugo 66"
+  ],
+  "recettes": [
+   "A French-speaking person, around 50 years old, deep, low-pitched male voice, dry and deadpan delivery, natural conversational pace, clear diction.",
+   "A French-speaking person, around 50 years old, deep, low-pitched male voice, authoritative delivery, natural conversational pace, clear diction."
+  ]
+ },
+ {
+  "id": "hat",
+  "name": "Chapeau parlant",
+  "voix": "man-senior-low-3",
+  "rechange": "man-senior-low-4",
+  "noms": [
+   "Axel 94",
+   "Bastien 95"
+  ],
+  "recettes": [
+   "A French-speaking person, over 65 years old, deep, low-pitched male voice, cheerful and bright delivery, natural conversational pace, clear diction.",
+   "A French-speaking person, over 65 years old, deep, low-pitched male voice, calm and soothing delivery, natural conversational pace, clear diction."
+  ]
+ },
+ {
+  "id": "arthur",
+  "name": "Le roi (Kaamelott)",
+  "voix": "man-mature-medium-3",
+  "rechange": null,
+  "noms": [
+   "Axel 74"
+  ],
+  "recettes": [
+   "A French-speaking person, around 50 years old, medium-pitched male voice, cheerful and bright delivery, natural conversational pace, clear diction."
+  ]
+ },
+ {
+  "id": "perceval",
+  "name": "Le chevalier lent",
+  "voix": "man-young-low-7",
+  "rechange": null,
+  "noms": [
+   "Victor 8"
+  ],
+  "recettes": [
+   "A French-speaking person, in their early twenties, deep, low-pitched male voice, melancholic delivery, natural conversational pace, clear diction."
+  ]
+ },
+ {
+  "id": "karadoc",
+  "name": "Le chevalier gourmand",
+  "voix": "man-x10",
+  "rechange": null,
+  "noms": [
+   "Felix 131"
+  ],
+  "recettes": [
+   "A person, around 50 years old, light, higher-pitched male voice, dry and deadpan delivery, slow, deliberate pace with long pauses, expressive."
+  ]
+ },
+ {
+  "id": "ni",
+  "name": "Chevalier qui dit « Ni ! »",
+  "voix": "man-adult-low-5",
+  "rechange": "man-mature-low-9",
+  "noms": [
+   "Cyril 36",
+   "Roman 70"
+  ],
+  "recettes": [
+   "A French-speaking person, around 35 years old, deep, low-pitched male voice, authoritative delivery, natural conversational pace, clear diction.",
+   "A French-speaking person, around 50 years old, deep, low-pitched male voice, pompous and theatrical delivery, natural conversational pace, clear diction."
+  ]
+ },
+ {
+  "id": "coconut",
+  "name": "Chevalier aux noix de coco",
+  "voix": "man-mature-medium-5",
+  "rechange": "man-mature-high-9",
+  "noms": [
+   "Cyril 76",
+   "Roman 90"
+  ],
+  "recettes": [
+   "A French-speaking person, around 50 years old, medium-pitched male voice, authoritative delivery, natural conversational pace, clear diction.",
+   "A French-speaking person, around 50 years old, light, higher-pitched male voice, pompous and theatrical delivery, natural conversational pace, clear diction."
+  ]
+ },
+ {
+  "id": "blackknight",
+  "name": "Chevalier noir",
+  "voix": "man-x29",
+  "rechange": "man-adult-medium-2",
+  "noms": [
+   "Roman 150",
+   "Marcus 43"
+  ],
+  "recettes": [
+   "A person, around 35 years old, medium-pitched male voice, pompous and theatrical delivery, quick, energetic pace, expressive.",
+   "A French-speaking person, around 35 years old, medium-pitched male voice, gruff and tired delivery, natural conversational pace, clear diction."
+  ]
+ },
+ {
+  "id": "barbarian",
+  "name": "Barbare",
+  "voix": "clone-1c82458d",
+  "rechange": null,
+  "noms": [
+   "Arnold Schwarzennegger"
+  ],
+  "recettes": [
+   "Cloned voice from a reference sample."
+  ]
+ },
+ {
+  "id": "luckdragon",
+  "name": "Dragon porte-bonheur",
+  "voix": "creature-dragon-0",
+  "rechange": "creature-dragon-2",
+  "noms": [
+   "Dragon 1",
+   "Dragon 3"
+  ],
+  "recettes": [
+   "The voice of a dragon: gentle and curious, otherworldly character voice with distinctive texture, clear speech.",
+   "The voice of a dragon: wise and slow, otherworldly character voice with distinctive texture, clear speech."
+  ]
+ },
+ {
+  "id": "house",
+  "name": "Docteur House",
+  "voix": "clone-ca7cfe8c",
+  "rechange": null,
+  "noms": [
+   "Gregory House"
+  ],
+  "recettes": [
+   "Cloned voice from a reference sample."
+  ]
+ },
+ {
+  "id": "paleo",
+  "name": "Paléontologue",
+  "voix": "clone-65b1b55e",
+  "rechange": null,
+  "noms": [
+   "Sam Neill (Herve Bellon)"
+  ],
+  "recettes": [
+   "Cloned voice from a reference sample."
+  ]
+ },
+ {
+  "id": "trex",
+  "name": "Le monstre",
+  "voix": "creature-giant-5",
+  "rechange": null,
+  "noms": [
+   "Giant 6"
+  ],
+  "recettes": [
+   "The voice of a giant: booming and proud, otherworldly character voice with distinctive texture, clear speech."
+  ]
+ },
+ {
+  "id": "girl",
+  "name": "Fille aux pouvoirs",
+  "voix": "child-7",
+  "rechange": "child-5",
+  "noms": [
+   "Eva 8",
+   "Nina 6"
+  ],
+  "recettes": [
+   "A girl aged 12, melancholic delivery, playful, natural child voice.",
+   "A girl aged 10, authoritative delivery, playful, natural child voice."
+  ]
+ },
+ {
+  "id": "kid",
+  "name": "Garçon au talkie-walkie",
+  "voix": "child-38",
+  "rechange": "child-6",
+  "noms": [
+   "Leo 39",
+   "Leo 7"
+  ],
+  "recettes": [
+   "A boy aged 11, nervous and fast-talking delivery, playful, natural child voice.",
+   "A boy aged 11, mischievous delivery, playful, natural child voice."
+  ]
+ },
+ {
+  "id": "flower",
+  "name": "Créature à tête de fleur",
+  "voix": "creature-demon-3",
+  "rechange": null,
+  "noms": [
+   "Demon 4"
+  ],
+  "recettes": [
+   "The voice of a demon: shrill and excitable, otherworldly character voice with distinctive texture, clear speech."
+  ]
+ },
+ {
+  "id": "redman",
+  "name": "Petit homme en rouge",
+  "voix": "man-adult-high-6",
+  "rechange": "man-young-high-9",
+  "noms": [
+   "Dorian 57",
+   "Roman 30"
+  ],
+  "recettes": [
+   "A French-speaking person, around 35 years old, light, higher-pitched male voice, mischievous delivery, natural conversational pace, clear diction.",
+   "A French-speaking person, in their early twenties, light, higher-pitched male voice, pompous and theatrical delivery, natural conversational pace, clear diction."
+  ]
+ },
+ {
+  "id": "loglady",
+  "name": "Dame à la bûche",
+  "voix": "woman-senior-low-4",
+  "rechange": "woman-senior-low-7",
+  "noms": [
+   "Salome 245",
+   "Lea 248"
+  ],
+  "recettes": [
+   "A French-speaking person, over 65 years old, low, husky female voice, calm and soothing delivery, natural conversational pace, clear diction.",
+   "A French-speaking person, over 65 years old, low, husky female voice, melancholic delivery, natural conversational pace, clear diction."
+  ]
+ },
+ {
+  "id": "agent",
+  "name": "Agent du FBI",
+  "voix": "man-adult-low-3",
+  "rechange": "woman-x9",
+  "noms": [
+   "Axel 34",
+   "Margaux 280"
+  ],
+  "recettes": [
+   "A French-speaking person, around 35 years old, deep, low-pitched male voice, cheerful and bright delivery, natural conversational pace, clear diction.",
+   "A person, around 35 years old, bright, high-pitched female voice, pompous and theatrical delivery, quick, energetic pace, expressive."
+  ]
+ },
+ {
+  "id": "dexter",
+  "name": "Expert scientifique",
+  "voix": "man-adult-low-4",
+  "rechange": "man-adult-high-0",
+  "noms": [
+   "Bastien 35",
+   "Felix 51"
+  ],
+  "recettes": [
+   "A French-speaking person, around 35 years old, deep, low-pitched male voice, calm and soothing delivery, natural conversational pace, clear diction.",
+   "A French-speaking person, around 35 years old, light, higher-pitched male voice, dry and deadpan delivery, natural conversational pace, clear diction."
+  ]
+ },
+ {
+  "id": "sister",
+  "name": "Sœur policière",
+  "voix": "woman-adult-low-8",
+  "rechange": "woman-adult-low-2",
+  "noms": [
+   "Ines 189",
+   "Nora 183"
+  ],
+  "recettes": [
+   "A French-speaking person, around 35 years old, low, husky female voice, nervous and fast-talking delivery, natural conversational pace, clear diction.",
+   "A French-speaking person, around 35 years old, low, husky female voice, gruff and tired delivery, natural conversational pace, clear diction."
+  ]
+ },
+ {
+  "id": "morpheus",
+  "name": "Homme au manteau de cuir",
+  "voix": "man-mature-low-4",
+  "rechange": "man-senior-medium-5",
+  "noms": [
+   "Adrien 65",
+   "Hugo 106"
+  ],
+  "recettes": [
+   "A French-speaking person, around 50 years old, deep, low-pitched male voice, calm and soothing delivery, natural conversational pace, clear diction.",
+   "A French-speaking person, over 65 years old, medium-pitched male voice, authoritative delivery, natural conversational pace, clear diction."
+  ]
+ },
+ {
+  "id": "agentm",
+  "name": "L’agent",
+  "voix": "man-mature-medium-0",
+  "rechange": "man-adult-medium-5",
+  "noms": [
+   "Felix 71",
+   "Hugo 46"
+  ],
+  "recettes": [
+   "A French-speaking person, around 50 years old, medium-pitched male voice, dry and deadpan delivery, natural conversational pace, clear diction.",
+   "A French-speaking person, around 35 years old, medium-pitched male voice, authoritative delivery, natural conversational pace, clear diction."
+  ]
+ },
+ {
+  "id": "spoonkid",
+  "name": "Enfant à la cuillère",
+  "voix": "child-34",
+  "rechange": "child-4",
+  "noms": [
+   "Tom 35",
+   "Jules 5"
+  ],
+  "recettes": [
+   "A boy aged 7, calm and soothing delivery, playful, natural child voice.",
+   "A boy aged 9, calm and soothing delivery, playful, natural child voice."
+  ]
+ },
+ {
+  "id": "wizard",
+  "name": "Magicien gris",
+  "voix": "man-mature-low-6",
+  "rechange": null,
+  "noms": [
+   "Noah 67"
+  ],
+  "recettes": [
+   "A French-speaking person, around 50 years old, deep, low-pitched male voice, mischievous delivery, natural conversational pace, clear diction."
+  ]
+ },
+ {
+  "id": "demon",
+  "name": "Démon de feu",
+  "voix": "creature-demon-5",
+  "rechange": null,
+  "noms": [
+   "Demon 6"
+  ],
+  "recettes": [
+   "The voice of a demon: booming and proud, otherworldly character voice with distinctive texture, clear speech."
+  ]
+ },
+ {
+  "id": "halfling",
+  "name": "Petit être aux pieds poilus",
+  "voix": "man-young-high-1",
+  "rechange": "woman-mature-medium-7",
+  "noms": [
+   "Gaspard 22",
+   "Lea 228"
+  ],
+  "recettes": [
+   "A French-speaking person, in their early twenties, light, higher-pitched male voice, warm and friendly delivery, natural conversational pace, clear diction.",
+   "A French-speaking person, around 50 years old, medium-pitched female voice, melancholic delivery, natural conversational pace, clear diction."
+  ]
+ },
+ {
+  "id": "ai",
+  "name": "L’IA",
+  "voix": "woman-adult-low-4",
+  "rechange": "creature-robot-4",
+  "noms": [
+   "Salome 185",
+   "Robot 5"
+  ],
+  "recettes": [
+   "A French-speaking person, around 35 years old, low, husky female voice, calm and soothing delivery, natural conversational pace, clear diction.",
+   "The voice of a robot: sly and whispering, otherworldly character voice with distinctive texture, clear speech."
+  ]
+ },
+ {
+  "id": "turret",
+  "name": "La tourelle",
+  "voix": "creature-robot-2",
+  "rechange": "creature-robot-5",
+  "noms": [
+   "Robot 3",
+   "Robot 6"
+  ],
+  "recettes": [
+   "The voice of a robot: wise and slow, otherworldly character voice with distinctive texture, clear speech.",
+   "The voice of a robot: booming and proud, otherworldly character voice with distinctive texture, clear speech."
+  ]
+ }
+]

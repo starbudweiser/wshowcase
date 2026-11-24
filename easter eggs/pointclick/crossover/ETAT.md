@@ -17,6 +17,17 @@ Prototypes de rendu : https://claude.ai/artifact/Hbie6aV5LJGNajt7JZMpVR (`tools/
 - Rendu : 960 × 540, 16 millions de couleurs (double exact du canevas 480 × 270 de la saison 1). Le style peint
   FLUX ne change pas ; seules la définition et la palette changent.
 
+## Exigence de mise en scène (Stéphan, 24/11/2026, plus forte encore qu'en saison 1)
+« On va vers le mieux » (évolution années 90 → 2000) : les bugs restent une parodie dans les dialogues, jamais dans le
+rendu. Remarques faites sur la saison 1 (charrette dessinée devant ses passagers, bois coupé au bord de l'écran,
+charrette qui traverse une échoppe, passage derrière le pont par simple réduction de taille, membres figés pendant les
+déplacements, personnages plats comme découpés), donc pour toutes les scènes et animations de la saison 2 :
+- occultation correcte par des avant-plans (calques devant / derrière, personnages dans un véhicule assis dedans) ;
+- cadrages sans bord coupé ni vide ;
+- trajectoires qui suivent la perspective du décor (pont, rampes, chemins), avec une échelle continue selon la profondeur ;
+- vrais cycles de marche (profil, face, dos) pour chaque personnage qui se déplace, pas seulement le héros ;
+- personnages qui se tournent selon leur direction et vers leur interlocuteur ; animés aussi quand ils ne parlent pas.
+
 ## Fait
 - Scripts courts des 15 chapitres + rechange, avec les clins d'œil « Wabbajack sur… ».
 - Visuels d'ambiance de tous les chapitres, contrôlés, exportés en 960 × 540 (`img/`). Sources FLUX dans
@@ -56,4 +67,8 @@ Prototypes de rendu : https://claude.ai/artifact/Hbie6aV5LJGNajt7JZMpVR (`tools/
    - adapter les effets de `genie.js` écrits pour 480 × 270 (positions, tailles, faux écran de chargement) ;
    - ajouter dans `hints.js` les étapes des chapitres 11 à 26 (et de Sacré Graal), 3 indices gradués par étape
      en FR/EN, voix du génie générée depuis le casting mCASTING (clé `genie`).
-6. Textes FR/EN, voix (casting mCASTING d'abord), sons, intégration et essais.
+6. Textes FR/EN, voix, sons, intégration et essais. **Casting en cours** (24/11) : projet mCASTING « Jeu point & click —
+   saison 2 » (42 personnages, voix proposée + rechange, `tools/casting_s2.py` → `crossover/casting_s2_*.json`).
+   Choix de Stéphan : House a la voix du narrateur (gag, le narrateur s'en offusque), clones de la bibliothèque pour
+   l'archéologue, le savant, le paléontologue et le barbare ; voix de la saison 1 reprises pour Arthur, Perceval,
+   Karadoc et le magicien. Reste : écoute et validation par Stéphan, puis `write_casting`.
