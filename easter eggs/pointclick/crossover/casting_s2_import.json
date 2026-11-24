@@ -97,13 +97,15 @@
    "name": "Maître d’armes",
    "role": "lanky sneering pirate swordsman, smug, theatrical insults",
    "kind": "human",
-   "notes": "Chapitre 11.",
+   "notes": "Chapitre 11. Réplique culte, sur un ton très énervé, quand on lui tend le biscuit.",
    "lines": {
     "fr": [
+     "JE NE MANGE PAS… DE GRAINE !!!!",
      "Mes insultes ont fait pleurer des amiraux.",
      "Tu te bats comme un garde de Bordeciel."
     ],
     "en": [
+     "I DO NOT EAT… BIRDSEED!!!!",
      "My insults have made admirals weep.",
      "You fight like a Skyrim guard."
     ]
