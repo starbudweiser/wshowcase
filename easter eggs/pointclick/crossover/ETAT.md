@@ -28,6 +28,16 @@ déplacements, personnages plats comme découpés), donc pour toutes les scènes
 - vrais cycles de marche (profil, face, dos) pour chaque personnage qui se déplace, pas seulement le héros ;
 - personnages qui se tournent selon leur direction et vers leur interlocuteur ; animés aussi quand ils ne parlent pas.
 
+### Méthode des cycles de marche (imposée le 24/11/2026 après les retours sur la saison 1)
+Cycles faits pose par pose en FLUX rejetés (« il boite ») : corps qui pivote d'une image à l'autre, équipement qui
+change ou saute, pas inégaux, cheval qui trotte puis se cabre. Désormais, pour chaque personnage et chaque vue :
+1. une seule pose clé, vérifiée (zoom sur mains, pieds, équipement) ;
+2. une vidéo LTX de marche sur place à partir de cette pose, caméra qui suit le personnage ;
+3. extraction d'un cycle de 8 images (même cadre, même palette), contrôlé image par image avant de le montrer :
+   phase des jambes, bras opposés aux jambes, équipement constant.
+Outils de la saison 1, à reprendre : `tools/gen_walk_ltx.sh` et `tools/walk_cycle.py` (branche
+`claude/easter-egg-pointclick-6eb4be`, pas encore commités au 24/11 : attendre le signal de la session principale).
+
 ## Fait
 - Scripts courts des 15 chapitres + rechange, avec les clins d'œil « Wabbajack sur… ».
 - Visuels d'ambiance de tous les chapitres, contrôlés, exportés en 960 × 540 (`img/`). Sources FLUX dans
