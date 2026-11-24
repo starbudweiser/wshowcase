@@ -10,6 +10,7 @@ Prototypes de rendu : https://claude.ai/artifact/Hbie6aV5LJGNajt7JZMpVR (`tools/
 - 16 chapitres (11 à 26) : Monkey Island, Sam & Max, Minecraft, Indiana Jones, Retour vers le futur, Harry Potter,
   Table ronde, Conan + L'Histoire sans fin, intermède du docteur House (19), Jurassic Park, Stranger Things,
   Twin Peaks, Dexter, Matrix, Seigneur des Anneaux, Portal (finale, où House revient diagnostiquer Sheogorath).
+  Monkey Island : avec l'apprenti pirate blond (Guybrush) et le capitaine fantôme (LeChuck), vaincu à la bière de racine.
   House ne dit que ses répliques cultes, courtes et détournées (« Tout le monde ment », « C'est jamais le lupus »,
   « Les gens ne changent pas »).
 - Épisodes de rechange par langue : chapitre 17 = Kaamelott (FR) / Sacré Graal (EN).
@@ -30,6 +31,15 @@ Prototypes de rendu : https://claude.ai/artifact/Hbie6aV5LJGNajt7JZMpVR (`tools/
 ## À faire
 1. Planches de personnages validées par Stéphan le 23/11, après reprises d’après ses références (Dexter, sa sœur, Arthur, Perceval, Karadoc, Indiana, Conan, le paléontologue, Sam & Max ; Morpheus homme noir, Gandalf très grand). Suite : poses clés (planche avant toute animation).
 2. Moteur : canevas 960 × 540, saison 1 affichée ×2 sans changement ; interface et police mises à l'échelle.
+   **Héros orienté** (demande de Stéphan, 24/11) : comme en saison 1, il se tourne vers son interlocuteur et vers la
+   direction où on le fait marcher (vues gauche, droite, face, dos au rendu 960 × 540). Les visuels S2 le respectent déjà
+   (références `work/crossover/hero_left.png`, `hero_front.png`, `hero_right.png`, tirées des vues de la saison 1).
+   **Expressions du héros** (demande de Stéphan, 24/11) : plus de sourire figé au repos ; série de visages par vue
+   (neutre, perplexe, agacé, surpris, inquiet, blasé, satisfait, dégoûté) choisie par réplique et par réaction ;
+   visage neutre et clignements quand il ne parle pas. Les nouveaux visuels donnent une expression précise au héros.
+   **Vues du héros S2 faites** (24/11) : profil gauche, trois-quarts gauche, face, trois-quarts droit, profil droit, dos,
+   en pied, même costume (pagne de cuir plissé à sacoches), expression neutre : `work/crossover/hero_s2/sel_*.png`
+   (script `tools/gen_hero_s2_views.sh`). Scènes refaites avec elles : pont (Cri de profil), Indiana, Sam & Max, Monkey Island.
 3. Wabbajack : réserve d'effets génériques (une douzaine d'images faites une fois), réactions par point chaud,
    carnet des métamorphoses.
 4. Choix de l'épisode selon la langue (registre des chapitres avec variantes fr/en, l'autre version jouable en bonus).
