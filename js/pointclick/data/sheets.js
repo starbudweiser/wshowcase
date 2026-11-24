@@ -63,6 +63,19 @@ export const HERO = {
   idleFront: ['hero.front', 'hero.idle2'], talk: ['hero.front', 'hero.talk', 'hero.fTalk2', 'hero.talk'], blink: 'hero.fBlink',
   portrait: { neutral: 'hero.pNeutral', talk: 'hero.pTalk', blink: 'hero.pBlink', sleepy: 'hero.pSleepy' }
 };
+/* cycles de marche par vidéo LTX (24/11/2026, tools/gen_walk_ltx.sh + tools/walk_cycle.py) : 8 images d'un même mouvement continu,
+   même cadre et même palette (les cycles faits pose par pose en FLUX boitaient et changeaient d'une image à l'autre).
+   Sprites spr/lw_<cycle>_<n>.png ; vues : profil (walk), face (walkF), dos (walkB), trois-quarts (walkQF / walkQB), miroir à gauche ;
+   stride = pixels parcourus par image à l'échelle 1 (la marche avance à la distance, pas au temps). Repli sur les anciennes images
+   tant qu'un cycle manque. */
+const LW = (c, n = 8) => Array.from({ length: n }, (_, i) => { const k = 'lw.' + c + '.' + i; SPR[k] = 'lw_' + c + '_' + i; return k; });
+HERO.walkQF = LW('hero_qf'); HERO.walkQB = LW('hero_qb');
+const lw = (spr, views, stride, fps) => { const A = ANIM[spr] || (ANIM[spr] = { idle: [spr] }); if (A.walk) A.walkOld = A.walk; Object.entries(views).forEach(([v, c]) => (A[v] = LW(c))); A.stride = stride; if (fps) A.fps = Object.assign({}, A.fps, { walk: fps }); };
+lw('guard', { walk: 'guard_s', walkF: 'guard_f', walkB: 'guard_b' }, 9);
+lw('follower', { walk: 'follower_s', walkF: 'follower_f', walkB: 'follower_b' }, 9);
+lw('giant', { walk: 'giant_s' }, 15);
+lw('horse.ride', { walk: 'ride_s' }, 11);
+lw('horseman', { walk: 'horseman_g' }, 0, 12);   /* galop : au temps (12 images/s), il file à 150 px/s */
 export const ITEMS = { bucket: { spr: 'bucket' }, honey: { spr: 'honey' }, carrot: { spr: 'carrot' }, cheese: { spr: 'cheese' }, cabbage: { spr: 'cabbage' }, arrow: { spr: 'arrow' }, pumpkin: { spr: 'pumpkin' }, anvil: { spr: 'anvil' }, lamp: { spr: 'lamp' } };
 
 /* coucher de nuit (tools/sleep_frames.py) : planche assets/pointclick/sleep/<clé>.png de chaque sprite qui sait se coucher, dormir et se réveiller ;
@@ -100,3 +113,10 @@ export const INTRO_CART_N = 12;
 for (let i = 0; i < INTRO_CART_N; i++) SPR['intro.cart.' + i] = '../intro/cart/' + String(i).padStart(2, '0');
 Object.assign(SPR, { 'intro.cart': '../intro/cart/00', 'intro.comp_s': '../intro/comp_s', 'intro.thief_s': '../intro/thief_s' });
 ANIM['intro.cart'] = { idle: ['intro.cart.0'], walk: Array.from({ length: INTRO_CART_N }, (_, i) => 'intro.cart.' + i), fps: { idle: 1, walk: 12 } };
+/* charrette avec passagers assis dedans (24/11/2026, LTX, tools/gen_cart2.sh + intro_cart.py) : c3 = trois passagers (héros endormi),
+   c2 = deux passagers après l'éjection du héros, de profil (walk) ou de trois-quarts arrière (walkQB, montée vers le pont) */
+[['c3', 'cart3'], ['c2', 'cart2'], ['r2', 'rear2']].forEach(([k, d]) => { for (let i = 0; i < 12; i++) SPR['intro.' + k + '.' + i] = '../intro/' + d + '/' + String(i).padStart(2, '0'); });
+const CYC = k => Array.from({ length: 12 }, (_, i) => 'intro.' + k + '.' + i);
+ANIM['intro.c3'] = { idle: ['intro.c3.0'], walk: CYC('c3'), fps: { idle: 1, walk: 12 } };
+ANIM['intro.c2'] = { idle: ['intro.c2.0'], walk: CYC('c2'), walkQB: CYC('r2'), fps: { idle: 1, walk: 12 } };
+SPR['intro.c3'] = '../intro/cart3/00'; SPR['intro.c2'] = '../intro/cart2/00';

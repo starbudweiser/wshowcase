@@ -6,7 +6,7 @@ const GUARD_SPOT = [354, 204];
 export default {
   id: 'rue', bg: 'rue.png', persp: [198, 0.5, 268, 1.0],
   walk: [[[128, 268], [132, 238], [160, 224], [215, 212], [260, 206], [330, 198], [352, 200], [372, 214], [372, 268]]],
-  fg: [[[4, 190], [60, 188], [125, 190], [125, 264], [4, 264]]],   /* le comptoir passe devant le marchand */
+  fg: [{ polys: [[[4, 190], [60, 188], [125, 190], [125, 264], [4, 264]]], y: 262 }],   /* le comptoir cache le marchand (derrière lui), pas ce qui passe devant l'étal */
   start: { x: 146, y: 262, dir: 'r' },
   hot: [
     { id: 'mountain', rect: [322, 8, 450, 110] }, { id: 'mammoth', rect: [388, 130, 418, 160] }, { id: 'mill', rect: [425, 130, 475, 168] },
@@ -56,43 +56,63 @@ export default {
   /* fin de l'intro (intro.js) : la charrette des prisonniers sort de derrière l'étal, pile, éjecte le héros, puis s'éloigne en perspective
      par la route du pont (le garde s'écarte), roule sur le tablier derrière le parapet et sort à droite */
   async cartArrival(g) {
-    const hero = g.hero, Y = 257, LAND = [166, 262], k = () => g.persp(cart.y);
-    const cart = { id: 'driver', spr: 'intro.cart', x: -80, y: Y, visible: true, noHot: true, solid: false };
-    const riders = [['icomp', 'intro.comp_s', -80, 22, 1, 1.3], ['ithief', 'intro.thief_s', -52, 22, 1, 0.4], ['ihero', 'hero.pNeutral', -108, 58, 0.17, 2.1]]
+    /* 24/11/2026 : charrette générée avec ses passagers ASSIS DEDANS (intro/cart3, cart2, rear2 : cycles LTX) ; elle passe DEVANT l'étal,
+       au bord bas de l'image (avant, elle roulait à la profondeur de l'étal et le traversait) ; repli sur l'ancienne charrette vide */
+    const hero = g.hero, NEW = !!g.spr('intro.c3.0'), Y = NEW ? 268 : 257, STOP = NEW ? 300 : 262, LAND = NEW ? [150, 263] : [166, 262], k = () => g.persp(cart.y);
+    const cart = { id: 'driver', spr: NEW ? 'intro.c3' : 'intro.cart', x: NEW ? -150 : -80, y: Y, visible: true, noHot: true, solid: false, rawSpeed: true };
+    const riders = NEW ? [] : [['icomp', 'intro.comp_s', -80, 22, 1, 1.3], ['ithief', 'intro.thief_s', -52, 22, 1, 0.4], ['ihero', 'hero.pNeutral', -108, 58, 0.17, 2.1]]
       .map(([id, spr, dx, dy, k0, ph]) => ({ id, spr, dx, dy, k0, ph, x: cart.x, y: Y, scale: k0, visible: true, noHot: true, solid: false }));
     const fence = this.fenceEnt(g), puffs = [];
     const follow = () => { const s = k(); for (const r of riders) { r.scale = r.k0 * s; r.x = cart.x + r.dx * s; r.y = cart.y - r.dy * s; r.bob = cart.goal ? Math.abs(Math.sin(g.now * 6.2 + r.ph)) * 1.2 * s : 0; } return false; };
     const guard = g.ent('guard'), hen = g.ent('hen');
     const drop = () => { g.ents = g.ents.filter(e => e !== cart && e !== fence && !riders.includes(e)); };
     const clean = () => { drop(); g.ents = g.ents.filter(e => !puffs.includes(e)); hero.visible = true; hero.pose = null; hero.x = LAND[0]; hero.y = LAND[1]; hero.front = true;
-      if (guard) { guard.goal = null; guard.x = GUARD_SPOT[0]; guard.y = GUARD_SPOT[1]; guard.flip = false; } if (hen) hen.goal = null; };
+      if (guard) { guard.goal = null; guard.x = GUARD_SPOT[0]; guard.y = GUARD_SPOT[1]; guard.flip = false; } if (hen) { hen.goal = null; hen.x = 288; hen.y = 242; } };
     g.cineEnd = clean; hero.visible = false; follow(); g.ents.push(...riders, cart); if (fence) g.ents.push(fence);
     try {
-      g.sfx('creak'); cart.goal = [262, Y, 58]; await g.until(() => { follow(); return !cart.goal; }); g.chk();
+      g.sfx('creak'); cart.goal = [STOP, Y, 58]; await g.until(() => { follow(); return !cart.goal; }); g.chk();
       g.sfx('screech'); g.shake(260, 1.5);
       await g.say('driver', 'intro.driver1');
-      const hr = riders.pop(), s = k(); g.ents = g.ents.filter(e => e !== hr);
-      g.sfx('whoosh'); await g.fly('hero.fSurprise', [cart.x - 108 * s, Y - 70 * s], LAND, 760, 58, -6.28, 0.95);
+      const s = k(), im = g.spr(NEW ? 'intro.c3.0' : 'intro.cart'), seat = NEW && im ? [cart.x - im.width * s * 0.36, Y - im.height * s * 0.62] : [cart.x - 108 * s, Y - 70 * s];
+      if (NEW) cart.spr = 'intro.c2'; else { const hr = riders.pop(); g.ents = g.ents.filter(e => e !== hr); }   /* le héros quitte la charrette */
+      g.sfx('whoosh'); await g.fly('hero.fSurprise', seat, LAND, 760, 58, -6.28, 0.95);
       g.sfx('splat'); g.shake(320, 2.5);
       for (let i = 0; i < 14; i++) { const a = (i / 14) * Math.PI * 2; puffs.push({ id: 'puff' + i, spr: 'puff', x: LAND[0] + Math.cos(a) * 12, y: LAND[1] + 3 + Math.sin(a) * 3, vx: Math.cos(a) * (30 + (i % 4) * 7), k0: 0.6 + (i % 3) * 0.2, scale: 0.6, alpha: 0.75, visible: true, noHot: true, solid: false, z: 2 }); }
       g.ents.push(...puffs); hero.visible = true; hero.x = LAND[0]; hero.y = LAND[1]; hero.front = true; hero.pose = 'hero.fShrug';
-      this.cartLeave(g, cart, follow, drop, guard, hen);
+      this.cartLeave(g, cart, follow, drop, guard, hen, NEW);
       const t0 = g.now; await g.until(() => { const t = g.now - t0; for (const p of puffs) { p.x += p.vx * 0.016 * (1 - Math.min(1, t)); p.scale = p.k0 + t * 1.2; p.alpha = Math.max(0, 0.75 - t * 0.6); } return t > 1.25; });
       g.ents = g.ents.filter(e => !puffs.includes(e)); await g.wait(500); hero.pose = null;
     } finally { if (g.cineEnd === clean) g.cineEnd = null; }
   },
-  /* le départ continue pendant que le héros parle : route du pont (la poule s'enfuit, le garde s'écarte), tablier, sortie à droite */
-  async cartLeave(g, cart, follow, drop, guard, hen) {
+  /* le départ continue pendant que le héros parle. Nouvelle charrette (24/11/2026) : le garde s'écarte de la route avant qu'elle passe ;
+     elle monte la route vers le pont vue de trois-quarts arrière (la vue suit la direction, l'échelle suit la profondeur), puis
+     tourne sur le tablier et repasse de profil, l'arrière de la charrette restant au même endroit, entre les parapets, et sort à droite */
+  async cartLeave(g, cart, follow, drop, guard, hen, NEW) {
     const on = () => g.ents.includes(cart), go = async (x, y, sp) => { cart.goal = [x, y, sp]; await g.until(() => { follow(); return !cart.goal || !on(); }); };
-    if (hen) { g.sfx('cluck'); hen.goal = [326, 260, 70]; }
-    await go(290, 222, 52); if (!on()) return;
-    if (guard) guard.goal = [378, 213, 32];
-    await go(330, 196, 40); if (!on()) return;
-    await go(352, 188, 30); if (!on()) return;
-    await go(420, 184, 26); if (!on()) return;
-    if (guard) guard.goal = [GUARD_SPOT[0], GUARD_SPOT[1], 32];
+    if (!NEW) {
+      if (hen) { g.sfx('cluck'); hen.goal = [326, 260, 70]; }
+      await go(290, 222, 52); if (!on()) return;
+      if (guard) guard.goal = [378, 213, 32];
+      await go(330, 196, 40); if (!on()) return;
+      await go(352, 188, 30); if (!on()) return;
+      await go(420, 184, 26); if (!on()) return;
+      if (guard) guard.goal = [GUARD_SPOT[0], GUARD_SPOT[1], 32];
+      if (hen) hen.goal = [288, 242, 30];
+      await go(545, 177, 26); drop(); return;
+    }
+    const v = sp => sp * g.persp(cart.y);   /* vitesse à l'échelle : plus lente au fond */
+    if (hen) { g.sfx('cluck'); hen.goal = [236, 258, 70]; }
+    if (guard) guard.goal = [410, 234, 40];   /* il s'écarte franchement de la route du pont */
+    await go(318, 244, v(50)); if (!on()) return;
+    await go(332, 220, v(50)); if (!on()) return;
+    await go(342, 202, v(50)); if (!on()) return;
+    const rw = g.spr('intro.r2.0'), pw = g.spr('intro.c2.0'), s = g.persp(cart.y);
+    if (rw && pw) cart.x += (pw.width * 0.37 - rw.width * 0.18) * s;   /* virage : l'arrière de la charrette ne bouge pas */
+    await go(cart.x + 20, 192, v(50)); if (!on()) return;
+    await go(430, 190, v(50)); if (!on()) return;
+    if (guard) guard.goal = [GUARD_SPOT[0], GUARD_SPOT[1], 34];
     if (hen) hen.goal = [288, 242, 30];
-    await go(545, 177, 26);
+    await go(600, 188, v(50));
     drop();
   },
   /* parapet du pont : calque tiré du décor lui-même (poteaux et lisses sombres, les jours entre eux restent transparents) ;

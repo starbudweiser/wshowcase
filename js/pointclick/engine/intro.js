@@ -21,7 +21,8 @@ function blurred(im, k = 4) {
 
 /* précharge toutes les images de l'intro (appelé pendant l'écran titre : « Nouvelle partie » démarre aussitôt) */
 export function preloadIntro(g) {
-  const p = [...FILES.map(n => g.img(DIR + n + '.png')), fetch(DIR + 'cart/index.json').then(r => r.json()).then(j => Promise.all(Array.from({ length: j.n }, (_, i) => g.img(`${DIR}cart/${String(i).padStart(2, '0')}.png`)))).catch(() => {})];
+  const cyc = d => fetch(DIR + d + '/index.json').then(r => r.json()).then(j => Promise.all(Array.from({ length: j.n }, (_, i) => g.img(`${DIR}${d}/${String(i).padStart(2, '0')}.png`)))).catch(() => {});
+  const p = [...FILES.map(n => g.img(DIR + n + '.png')), cyc('cart'), cyc('cart3')];
   return Promise.all(p).catch(() => {});
 }
 
@@ -30,8 +31,10 @@ export class Intro {
   async load() {
     const g = this.g;
     await Promise.all(FILES.map(async n => { this.im[n] = await g.img(DIR + n + '.png'); }));
-    try { this.cartN = (await (await fetch(DIR + 'cart/index.json')).json()).n; } catch { this.cartN = 0; }
-    this.cart = await Promise.all(Array.from({ length: this.cartN }, (_, i) => g.img(`${DIR}cart/${String(i).padStart(2, '0')}.png`)));
+    /* cycle de la charrette : cart3 = passagers assis dedans (24/11/2026) ; sinon l'ancienne charrette vide + passagers en sprites */
+    for (const d of ['cart3', 'cart']) { try { this.cartN = (await (await fetch(DIR + d + '/index.json')).json()).n; this.cartDir = d; break; } catch { this.cartN = 0; } }
+    this.cart = await Promise.all(Array.from({ length: this.cartN }, (_, i) => g.img(`${DIR}${this.cartDir}/${String(i).padStart(2, '0')}.png`)));
+    this.inCart = this.cartDir === 'cart3';
     if (this.im.p2) this.p2blur = blurred(this.im.p2, 5);
     ['comp_back1', 'comp_back2', 'comp_back3', 'comp_back4'].forEach(n => { if (this.im[n]) this.im[n + 'b'] = blurred(this.im[n], 3); });
   }
@@ -65,6 +68,7 @@ export class Intro {
   }
   /* passagers vus de profil au-dessus du bord de la charrette (dessinés avant elle : le bord cache le bas du corps) */
   drawRiders(c, x, y, k, t, heroImg) {
+    if (this.inCart) return;   /* passagers déjà dans l'image de la charrette */
     const bob = (ph) => Math.round(Math.abs(Math.sin(t * 6.2 + ph)) * 1.4 * k);
     const put = (im, dx, dy, ph, kk = k) => { if (!im) return; const w = Math.round(im.width * kk), h = Math.round(im.height * kk); c.drawImage(im, Math.round(x + dx * k - w / 2), Math.round(y - dy * k - h - bob(ph)), w, h); };
     put(this.im.thief_s, -52, 22, 0.4); put(this.im.comp_s, -80, 22, 1.3);
@@ -112,7 +116,8 @@ export class Intro {
   inside(c, t, railY = 150) {
     const b = this.p2blur, roll = Math.sin(t * 6.2) * 1.1;
     if (b) { const w = b.width, x = (t * 34) % (2 * w); for (let k = -1; k < 3; k++) { const ox = k * w - x; if (ox > W || ox + w < 0) continue; c.save(); if (k % 2) { c.translate(ox + w, 0); c.scale(-1, 1); c.drawImage(b, 0, -10, w, H + 20); } else c.drawImage(b, ox, -10, w, H + 20); c.restore(); } }
-    if (this.im.rail) c.drawImage(this.im.rail, 0, Math.round(railY + roll));
+    /* la ridelle déborde des deux bords de l'image (elle faisait 474 px : 6 px vides à droite) */
+    const r = this.im.rail; if (r) { const w = W + 16, h = Math.round(r.height * w / r.width); c.drawImage(r, -8, Math.round(railY + roll), w, h); }
     return roll;
   }
   /* héros de face (portraits du jeu) : n = nom du portrait, parole = alternance avec pTalk */

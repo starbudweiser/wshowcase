@@ -63,6 +63,7 @@ export class Game {
     if (!HERO) return h.front || h.talk ? 'hero.front' : 'hero.side';
     const ok = n => n && this.spr(n), cyc = (arr, i) => { const f = arr.filter(ok); return f.length ? f[((i % f.length) + f.length) % f.length] : null; };
     const view = h.back ? 'b' : h.front ? 'f' : 's', t = this.now;
+    if (moving && h.quarter) { const q = cyc(h.quarter === 'qf' ? HERO.walkQF : HERO.walkQB, Math.floor(h.walkD / (6.5 * s))); if (q) return q; }
     if (moving) return (view === 's' ? cyc(HERO.walk, Math.floor(h.walkD / (5.2 * s))) || cyc(HERO.walkOld, Math.floor(h.walkD / (8 * s))) : view === 'f' ? cyc(HERO.walkF, Math.floor(h.walkD / (7 * s))) : cyc(HERO.walkB, Math.floor(h.walkD / (7 * s)))) || HERO.stand;
     if (h.pose && ok(h.pose)) return h.pose;
     if (view === 'b') return ok(HERO.standB) ? HERO.standB : HERO.stand;
@@ -70,9 +71,19 @@ export class Game {
     if (h.talk) return cyc(HERO.talkSide, Math.floor(t * 6)) || HERO.stand;
     return t % 6 < 1.1 && ok(HERO.idleSide[1]) ? HERO.idleSide[1] : HERO.stand;
   }
+  /* image d'un personnage : repos, parole, ou marche dans la vue de son déplacement (walk = profil, walkF = face, walkB = dos,
+     walkQF / walkQB = trois-quarts, repli sur la vue la plus proche) ; avec A.stride, la marche avance à la distance parcourue
+     (stride = pixels par image à l'échelle 1), donc les pieds ne glissent pas, quelle que soit la profondeur */
   frame(e) {
     const A = ANIM[e.spr]; if (!A) return e.spr;
-    const st = e.animState || (e.goal ? 'walk' : e.talk ? 'talk' : 'idle'), fr = A[st] || A.idle, fps = (A.fps && A.fps[st]) || 3;
+    const st = e.animState || (e.goal ? 'walk' : e.talk ? 'talk' : 'idle'), fps = (A.fps && A.fps[st]) || 3;
+    let fr = A[st] || A.idle;
+    if (st === 'walk') {
+      /* sans trois-quarts : profil pour une diagonale douce, face ou dos pour une pente forte (e.vr = pente du déplacement) */
+      const v = e.view || 's', steep = (e.vr || 0) > 1.1, alt = [...{ s: ['walk'], f: ['walkF', 'walkQF', 'walk'], b: ['walkB', 'walkQB', 'walk'], qf: steep ? ['walkQF', 'walkF', 'walk'] : ['walkQF', 'walk'], qb: steep ? ['walkQB', 'walkB', 'walk'] : ['walkQB', 'walk'] }[v], 'walkOld'];
+      const key = alt.find(k => A[k] && A[k].some(n => this.spr(n))); if (key) fr = A[key].filter(n => this.spr(n));
+      if (A.stride && e.walkD != null && key && key !== 'walkOld') return fr[Math.floor(e.walkD / (A.stride * this.sc(e))) % fr.length];
+    }
     return fr[Math.floor(this.now * fps + (e.ph || 0)) % fr.length];
   }
   /* image d'une zone du décor animée par images (assets/pointclick/anim/<id>_<n>.png), chargée à la demande */
@@ -275,7 +286,7 @@ export class Game {
   async goScene(id, how = {}) {
     const sc = (await import(`../scenes/${id}.js`)).default; this.st.scene = id;
     const bg = await this.casseBg(id, await this.img('assets/pointclick/' + sc.bg)); this.scene = sc; this.bg = bg; this.ambNext = this.now + 4; this.wk = null; this.wkAt = Math.max(this.wkAt ?? 0, this.now + 45); this.night = null; this.sky = sc.interior ? null : buildSky(bg); this.lastMove = this.now;
-    this.walk = new Walk(sc.walk.map(p => p.slice()), W, H);
+    this.walk = new Walk(sc.walk.map(p => p.slice()), W, H); this.fgExtra = null;
     this.hot = sc.hot || []; this.amb = makeAmbient(sc.ambient);
     await Promise.all((sc.ambient || []).filter(o => o.type === 'frames' && this.animIdx[o.id]).flatMap(o => Array.from({ length: this.animIdx[o.id].n }, (_, i) => Promise.resolve(this.img(`assets/pointclick/anim/${o.id}_${i}.png`)).catch(() => {}))));
     this.ents = (sc.ents || []).map(e => ({ visible: true, ph: Math.random() * 5, ...e }));
@@ -314,6 +325,10 @@ export class Game {
   }
   input(fn) { this.lastAct = this.now; if (this.night) { wakeNight(this); return; } if (this.locked || !this.started || this.titleEl) return; this.cancelAll(); this.run(fn); }
   persp(y) { const p = this.scene.persp; return clamp(p[1] + (p[3] - p[1]) * (y - p[0]) / (p[2] - p[0]), Math.min(p[1], p[3]) * 0.8, Math.max(p[1], p[3])); }
+  /* échelle d'un acteur : fixe (scale), relative à la profondeur (kz × perspective : il grandit en s'approchant), ou perspective seule */
+  sc(e) { return e.scale ?? (e.kz ? e.kz * this.persp(e.y) : this.persp(e.y)); }
+  /* vue selon la direction du déplacement : profil (s), face (f), dos (b), trois-quarts avant (qf) ou arrière (qb) */
+  viewOf(dx, dy) { const ax = Math.abs(dx), ay = Math.abs(dy); return ay > ax * 2.2 ? (dy > 0 ? 'f' : 'b') : ay > ax * 0.45 ? (dy > 0 ? 'qf' : 'qb') : 's'; }
   async walkTo(x, y) { this.chk(); this.hero.path = this.walk.path([this.hero.x, this.hero.y], [x, y], this.blockers()); await this.until(() => !this.hero.path.length); this.chk(); }
   face(x, y) {
     const h = this.hero, dx = x - h.x; h.front = false; h.back = false;
@@ -334,7 +349,7 @@ export class Game {
     await this.until(() => (this.now >= end && !talking()) || (this.skip && this.now - t0 > 0.6)); this.skip = false; if (au) au.pause(); this.sayAu = null;
     b.remove(); this.bubbles = this.bubbles.filter(x => x !== b); if (e) e.talk = false; this.chk();
   }
-  headPos(e) { const im = this.spr(e.spr), s = e.scale ?? this.persp(e.y); return [e.x, e.y - (e.float || 0) - (im ? im.height * s : 40) - 3]; }
+  headPos(e) { const im = this.spr(e.spr), s = this.sc(e); return [e.x, e.y - (e.float || 0) - (im ? im.height * s : 40) - 3]; }
   placeBubble(b, x, y) {
     const sw = this.stage.clientWidth, k = sw / W; b.style.left = x * k + 'px'; b.style.top = y * k + 'px';
     const w = b.offsetWidth, l = clamp(x * k, w / 2 + 6, sw - w / 2 - 6); b.style.left = l + 'px'; if (y * k - b.offsetHeight < 4) b.style.top = (b.offsetHeight + 6) + 'px';
@@ -411,7 +426,7 @@ export class Game {
     for (let i = this.hot.length - 1; i >= 0; i--) { const h = this.hot[i], r = h.rect; if (r ? (x >= r[0] && x <= r[2] && y >= r[1] && y <= r[3]) : hitPoly(x, y, h.poly)) return { id: h.id, name: 'n.' + h.id, at: h.at, dir: h.dir, ...this.center(h) }; }
     return null;
   }
-  entRect(e) { const im = this.spr(e.spr); if (!im) return null; const s = e.scale ?? this.persp(e.y), w = im.width * s, h = im.height * s; return [e.x - w / 2, e.y - h, e.x + w / 2, e.y]; }
+  entRect(e) { const im = this.spr(e.spr); if (!im) return null; const s = this.sc(e), w = im.width * s, h = im.height * s; return [e.x - w / 2, e.y - h, e.x + w / 2, e.y]; }
   /* clic sur la scène : sol = aller (tout de suite) ; objet tenu = l'utiliser ; sinon on attend : relâché vite = aller vers,
      maintenu = pièce des verbes */
   onDown(e) {
@@ -497,7 +512,7 @@ export class Game {
   /* part du corps du héros, debout en p, que recouvre le personnage e (au pixel près, d'après la transparence réelle des deux images) */
   cover(p, e) {   /* -> [part du corps, part des pieds (bas du corps)] */
     const hi = this.spr(HERO ? HERO.stand : 'hero.side'), ei = this.spr(this.frame(e)) || this.spr(e.spr); if (!hi || !ei) return [0, 0];
-    const hs = this.persp(p[1]), es = e.scale ?? this.persp(e.y), Hm = this.mask(hi), Em = this.mask(ei);
+    const hs = this.persp(p[1]), es = this.sc(e), Hm = this.mask(hi), Em = this.mask(ei);
     const hx0 = p[0] - hi.width * hs / 2, hy0 = p[1] - hi.height * hs, ex0 = e.x - ei.width * es / 2, ey0 = e.y - (e.bob || 0) - ei.height * es, fy = p[1] - hi.height * hs * 0.2;
     let n = 0, k = 0, nf = 0, kf = 0;
     for (let y = hy0; y < p[1]; y += 1.5) for (let x = hx0; x < hx0 + hi.width * hs; x += 1.5) {
@@ -562,18 +577,33 @@ export class Game {
       let moving = false;
       if (h.path.length) {
         const [tx, ty] = h.path[0], dx = tx - h.x, dy = ty - h.y, dist = Math.hypot(dx, dy), s = this.persp(h.y), step = 78 * s * dt + 6 * dt; moving = true;
-        if (Math.abs(dy) > Math.abs(dx) * 1.6 && this.spr('hero.fWalkA') && this.spr('hero.bWalkA')) { h.front = dy > 0; h.back = dy < 0; } else if (Math.abs(dx) > 0.2) { h.dir = dx > 0 ? 'r' : 'l'; h.front = false; h.back = false; }
+        /* vue selon la direction : profil, trois-quarts (s'il a ces images), face ou dos */
+        const q4 = HERO.walkQF && this.spr(HERO.walkQF[0]) && this.spr(HERO.walkQB[0]), v = q4 ? this.viewOf(dx, dy) : (Math.abs(dy) > Math.abs(dx) * 1.6 ? (dy > 0 ? 'f' : 'b') : 's');
+        if (Math.abs(dx) > 0.2) h.dir = dx > 0 ? 'r' : 'l';
+        if ((v === 'f' || v === 'b') && this.spr('hero.fWalkA') && this.spr('hero.bWalkA')) { h.front = v === 'f'; h.back = v === 'b'; h.quarter = null; }
+        else if (v === 'qf' || v === 'qb') { h.front = false; h.back = false; h.quarter = v; }
+        else if (Math.abs(dx) > 0.2) { h.front = false; h.back = false; h.quarter = null; }
         if (dist <= step) { h.x = tx; h.y = ty; h.path.shift(); } else { h.x += dx / dist * step; h.y += dy / dist * step; }
         h.walkD += step;
       }
       const s = this.persp(h.y);
+      if (!moving) h.quarter = null;   /* à l'arrêt : profil, face ou dos (pas de pose de repos en trois-quarts) */
       h.flip = h.dir === 'l' && !h.front && !h.back;
       if (moving) h.pose = null;
       h.spr = this.heroFrame(h, moving, s);
       if (moving) { h.bob = Math.abs(Math.sin(h.walkD / (5.2 * s) * Math.PI / 2)) * (this.spr('hero.w1') ? 0.7 : 1.2) * s; if (this.now >= (h.stepT || 0)) { snd.step(); h.stepT = this.now + 0.3; } } else h.bob = 0;
     }
     this.ents.forEach(e => {
-      if (e.goal) { const [gx, gy, sp] = e.goal, dx = gx - e.x, dy = gy - e.y, d = Math.hypot(dx, dy), st = sp * dt; if (d <= st) { e.x = gx; e.y = gy; e.goal = null; } else { e.x += dx / d * st; e.y += dy / d * st; if (ANIM[e.spr] && ANIM[e.spr].walk && Math.abs(dx) > 0.3) e.flip = dx < 0; } }
+      /* déplacement scripté : la vitesse suit la profondeur (plus lent au fond, sauf e.rawSpeed), la vue suit la direction */
+      if (e.goal) {
+        const [gx, gy, sp] = e.goal, dx = gx - e.x, dy = gy - e.y, d = Math.hypot(dx, dy);
+        if (e.goalS0 == null) e.goalS0 = this.persp(e.y);
+        const st = sp * dt * (e.rawSpeed ? 1 : this.persp(e.y) / e.goalS0);
+        if (d <= st) { e.x = gx; e.y = gy; e.goal = null; e.goalS0 = null; } else {
+          e.x += dx / d * st; e.y += dy / d * st; e.walkD = (e.walkD || 0) + st;
+          if (ANIM[e.spr] && ANIM[e.spr].walk && d > 0.5) { e.view = e.fixView || this.viewOf(dx, dy); e.vr = Math.abs(dy) / Math.max(0.01, Math.abs(dx)); if (Math.abs(dx) > 0.3 && e.view !== 'f' && e.view !== 'b') e.flip = dx < 0; }
+        }
+      } else if (e.goalS0 != null) e.goalS0 = null;
     });
     for (let i = this.barks.length - 1; i >= 0; i--) { const k = this.barks[i], e = this.ent(k.who); if (!e || this.now > k.end) { k.b.remove(); this.barks.splice(i, 1); } else { const [ax, ay] = this.headPos(e); this.placeBubble(k.b, ax, ay); } }
     if (this.cine) this.cine.update(dt);
@@ -609,8 +639,11 @@ export class Game {
     if (this.bg) c.drawImage(this.bg, 0, 0, W, H);
     if (this.sky) drawSky(c, this.sky, this.now);
     if (this.amb) this.amb.forEach(a => a.draw(this, c, this.now));
-    [...this.ents].filter(e => e.visible !== false).sort((a, b) => (a.y + (a.z || 0)) - (b.y + (b.z || 0))).forEach(e => this.drawEnt(e));
-    (this.scene.fg || []).forEach(p => { c.save(); c.beginPath(); p.forEach(([x, y], i) => (i ? c.lineTo(x, y) : c.moveTo(x, y))); c.closePath(); c.clip(); c.drawImage(this.bg, 0, 0, W, H); c.restore(); });
+    /* avant-plans du décor : { polys, y } se range en profondeur avec les acteurs (cache ce qui est derrière sa ligne de sol y,
+       pas ce qui passe devant) ; un simple polygone reste devant tout le monde ; this.fgExtra : avant-plans posés par un script */
+    const fg = [...(this.scene.fg || []), ...(this.fgExtra || [])], occ = fg.filter(o => !Array.isArray(o)).map(o => ({ occ: o, y: o.y, z: 0 }));
+    [...this.ents.filter(e => e.visible !== false), ...occ].sort((a, b) => (a.y + (a.z || 0)) - (b.y + (b.z || 0))).forEach(e => (e.occ ? this.drawOcc(e.occ.polys) : this.drawEnt(e)));
+    fg.filter(o => Array.isArray(o)).forEach(p => this.drawOcc([p]));
     c.restore();
     drawWinks(this, c);
     drawNight(this, c); drawGlass(this, c);
@@ -619,9 +652,11 @@ export class Game {
     if (this.actx && this.now - this.ambT > 0.12) { this.ambT = this.now; this.actx.drawImage(this.cv, 0, 0, 48, 27); }
     if (this.scaler) this.scaler.render();
   }
+  /* redessine le décor dans ces polygones : ce qu'il contient repasse devant les acteurs déjà dessinés */
+  drawOcc(polys) { const c = this.ctx; c.save(); c.beginPath(); polys.forEach(p => { p.forEach(([x, y], i) => (i ? c.lineTo(x, y) : c.moveTo(x, y))); c.closePath(); }); c.clip(); c.drawImage(this.bg, 0, 0, W, H); c.restore(); }
   drawEnt(e) {
     if (e.sleepF != null) { const k = this.sleepKey(e), sh = k && this.sleepSheet(k); if (sh) return this.drawSleep(e, this.sleepIdx[k], sh); }
-    const im = this.spr(this.frame(e)) || this.spr(e.spr); if (!im) return; const c = this.ctx, s = e.scale ?? this.persp(e.y), w = im.width * s, h = im.height * s;
+    const im = this.spr(this.frame(e)) || this.spr(e.spr); if (!im) return; const c = this.ctx, s = this.sc(e), w = im.width * s, h = im.height * s;
     c.save(); if (e.alpha !== undefined) c.globalAlpha = e.alpha; if (e.clipY != null) { c.beginPath(); c.rect(0, 0, W, Math.round(e.clipY)); c.clip(); }   /* clipY : caché sous cette ligne (le génie qui sort de terre) */
     c.translate(Math.round(e.x), Math.round(e.y - (e.bob || 0) - (e.float ? e.float + Math.sin(this.now * 2.4) * 2 : 0)));   /* float : flotte au-dessus du sol */
     if (e.nrot) c.translate(0, Math.min(1, Math.abs(e.nrot) / 1.5708) * Math.max(0, h - w) / 2);
@@ -632,7 +667,7 @@ export class Game {
   }
   /* image e.sleepF de la planche du coucher : cadre fixe ancré au sol (ax, ay) ; e.sleepDy l'enfonce (Nazim dans sa fosse), e.sleepClip coupe sous le rebord */
   drawSleep(e, A, sh) {
-    const c = this.ctx, s = e.scale ?? this.persp(e.y), i = Math.max(0, Math.min(A.n - 1, e.sleepF | 0)), sx = (i % A.cols) * A.w, sy = Math.floor(i / A.cols) * A.h;
+    const c = this.ctx, s = this.sc(e), i = Math.max(0, Math.min(A.n - 1, e.sleepF | 0)), sx = (i % A.cols) * A.w, sy = Math.floor(i / A.cols) * A.h;
     c.save(); if (e.alpha !== undefined) c.globalAlpha = e.alpha;
     if (e.sleepClip != null) { c.beginPath(); c.rect(0, 0, W, Math.round(e.sleepClip)); c.clip(); }
     c.translate(Math.round(e.x), Math.round(e.y + (e.sleepDy || 0) * s));

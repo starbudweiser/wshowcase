@@ -137,7 +137,7 @@ function animWake(g, o, now) {
 /* ───── le géant lance son gourdin (SLEEP.thr) : vol en cloche en tournoyant ; s'il vise un décor intact (CASSE), fracas, nuage de poussière et
    rondins qui volent, et le coin du décor passe à son état brisé derrière la poussière ; sinon le gourdin sort de l'écran et on entend un fracas lointain ───── */
 function thrLaunch(g, o, now) {
-  const T = g.sleepConf(o.e).thr, e = o.e, s = e.scale ?? g.persp(e.y), tg = T.targets && T.targets[g.st.scene], d = tg && tg.casse && CASSE[tg.casse];
+  const T = g.sleepConf(o.e).thr, e = o.e, s = g.sc(e), tg = T.targets && T.targets[g.st.scene], d = tg && tg.casse && CASSE[tg.casse];
   const casse = d && !g.st.flags[d.flag] ? tg.casse : null, from = [e.x + T.hand[0] * s, e.y + T.hand[1] * s], to = casse ? tg.to : [-70, from[1] - 150];
   const dist = Math.hypot(to[0] - from[0], to[1] - from[1]);
   Object.assign(o.thr, { st: 'fly', t0: now, from, to, s, casse, img: T.img, dur: Math.max(0.55, dist / 330), h: 26 + dist * 0.16 }); snd.whoosh();
@@ -272,7 +272,7 @@ export function drawNight(g, c) {
   c.save(); c.font = '12px VT323, monospace'; c.fillStyle = '#dfe8ff';
   for (const o of n.ents) {
     if (o.e.visible === false || !((o.mode === 'lie' && o.done) || o.ph === 'loop')) continue;
-    const z = o.mode === 'anim' && g.sleepConf(o.e).z, s = o.e.scale ?? g.persp(o.e.y), zx = z ? o.e.x + z[0] * s : o.e.x + 4, zy = z ? o.e.y + z[1] * s : o.e.y - 18;
+    const z = o.mode === 'anim' && g.sleepConf(o.e).z, s = g.sc(o.e), zx = z ? o.e.x + z[0] * s : o.e.x + 4, zy = z ? o.e.y + z[1] * s : o.e.y - 18;
     for (let k = 0; k < 3; k++) { const ph = (t * 0.5 + k / 3 + o.sx * 0.01) % 1; c.globalAlpha = Math.sin(ph * Math.PI) * 0.9; c.fillText(k === 1 ? 'Z' : 'z', zx + ph * 12 + k * 3, zy - ph * 22); }
   }
   for (const [zx, zy] of g.zExtra || []) for (let k = 0; k < 3; k++) { const ph = (t * 0.5 + k / 3 + zx * 0.01) % 1; c.globalAlpha = Math.sin(ph * Math.PI) * 0.9; c.fillText(k === 1 ? 'Z' : 'z', zx + ph * 10 + k * 3, zy - ph * 18); }

@@ -134,7 +134,7 @@ function pouf(g, r) {
   let any = false;
   for (const { e, c } of r.ents) {
     if (!e.visible || e.x < -10 || e.x > 490 || (e.alpha ?? 1) < 0.2) continue;
-    const im = g.spr(e.spr), s = e.scale ?? g.persp(e.y), h = im ? im.height * s : 30, w = im ? im.width * s : 30;
+    const im = g.spr(e.spr), s = g.sc(e), h = im ? im.height * s : 30, w = im ? im.width * s : 30;
     (g.poufs = g.poufs || []).push({ t0: g.now, x: e.x, y: e.y - (e.bob || 0) - h / 2, r: Math.max(w, h) }); any = true;
   }
   if (any) g.sfx('pop');

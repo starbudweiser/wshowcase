@@ -24,7 +24,7 @@ export default {
     { type: 'puffs', x: 140, y: 212, h: 44, wind: 8, n: 8 }
   ],
   ents: [
-    { id: 'giant', spr: 'giant', x: GIANT[0], y: GIANT[1], scale: 0.78, hot: true, at: [GIANT[0] - 52, GIANT[1] + 8] },
+    { id: 'giant', spr: 'giant', x: GIANT[0], y: GIANT[1], kz: 0.887, hot: true, at: [GIANT[0] - 52, GIANT[1] + 8] },
     { id: 'nazim', spr: 'nazim', x: NAZ[0], y: NAZ[1], hot: true, at: [372, 212] },
     blindEnt(BL)
   ],
