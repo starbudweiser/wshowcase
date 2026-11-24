@@ -310,7 +310,7 @@ PERSOS = [
 PLAN = {
  'fr': ["<b>Planches de personnages</b> : validation par Stéphan, puis poses clés (planche avant toute animation, jamais de retouche d’image).",
         "<b>Moteur</b> : canevas 960 × 540, saison 1 affichée ×2 sans changement ; interface et police mises à l’échelle.",
-        "<b>Héros orienté</b> (demande de Stéphan, 24/11) : comme en saison 1, il se tourne vers son interlocuteur et vers la direction où on le fait marcher ; vues de gauche, de droite, de face et de dos au rendu 960 × 540. Les visuels de la saison 2 le montrent déjà tourné vers celui à qui il parle.",
+        "<b>Héros orienté</b> (demande de Stéphan, 24/11) : comme en saison 1, il se tourne vers son interlocuteur et vers la direction où on le fait marcher ; six vues en pied (profils, trois-quarts, face, dos) au rendu 960 × 540. Quinze scènes de la saison 2 ont été recalculées avec ces vues : le héros y regarde celui à qui il parle, avec une expression précise.",
         "<b>Expressions du héros</b> (demande de Stéphan, 24/11) : fini le sourire figé au repos. Une série de visages par vue (neutre, perplexe, agacé, surpris, inquiet, blasé, satisfait, dégoûté), choisie par réplique et par réaction aux événements ; visage neutre et clignements quand il ne parle pas.",
         "<b>Wabbajack</b> : réserve d’effets génériques (une douzaine d’images faites une fois), réactions par point chaud, carnet des métamorphoses, bonus dans les chapitres 1 à 10.",
         "<b>Épisodes de rechange</b> : registre des chapitres avec variantes fr/en, l’autre version jouable en bonus.",
@@ -318,7 +318,7 @@ PLAN = {
         "<b>Textes, voix, sons</b> : répliques FR/EN, casting mCASTING d’abord, puis intégration et essais."],
  'en': ["<b>Character sheets</b>: approval by Stéphan, then key poses (sheet before any animation, never retouch a generated image).",
         "<b>Engine</b>: 960 × 540 canvas, season 1 shown at ×2 unchanged; UI and font scaled.",
-        "<b>Hero facing</b> (Stéphan’s request, 24/11): as in season 1, he turns toward whoever he talks to and toward the direction he is walking; left, right, front and back views at 960 × 540. Season 2 visuals already show him facing the person he speaks to.",
+        "<b>Hero facing</b> (Stéphan’s request, 24/11): as in season 1, he turns toward whoever he talks to and toward the direction he is walking; six full-body views (profiles, three-quarters, front, back) at 960 × 540. Fifteen season 2 scenes were recomputed from these views: the hero faces the person he speaks to, with a clear expression.",
         "<b>Hero expressions</b> (Stéphan’s request, 24/11): no more frozen smile when idle. A set of faces per view (neutral, puzzled, annoyed, surprised, worried, bored, pleased, disgusted), picked per line and as reactions to events; neutral face and blinking when he is not talking.",
         "<b>Wabbajack</b>: generic effect pool (a dozen images made once), per-hotspot reactions, book of transformations, bonus in chapters 1 to 10.",
         "<b>Swap episodes</b>: chapter registry with fr/en variants, the other version playable as a bonus.",

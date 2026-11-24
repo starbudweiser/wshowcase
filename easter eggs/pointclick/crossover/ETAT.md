@@ -39,7 +39,7 @@ Prototypes de rendu : https://claude.ai/artifact/Hbie6aV5LJGNajt7JZMpVR (`tools/
    visage neutre et clignements quand il ne parle pas. Les nouveaux visuels donnent une expression précise au héros.
    **Vues du héros S2 faites** (24/11) : profil gauche, trois-quarts gauche, face, trois-quarts droit, profil droit, dos,
    en pied, même costume (pagne de cuir plissé à sacoches), expression neutre : `work/crossover/hero_s2/sel_*.png`
-   (script `tools/gen_hero_s2_views.sh`). Scènes refaites avec elles : pont (Cri de profil), Indiana, Sam & Max, Monkey Island.
+   (script `tools/gen_hero_s2_views.sh`). Scènes refaites avec elles (héros tourné vers son interlocuteur, expression précise) : pont (Cri de profil), Indiana, Sam & Max, Monkey Island, puis Minecraft, Retour vers le futur, Harry Potter, Kaamelott, Conan, House, Jurassic Park, Stranger Things, Dexter, Matrix et Portal (`tools/gen_s2_scenes_vues2.sh`, `gen_s2_scenes_vues3.sh`).
 3. Wabbajack : réserve d'effets génériques (une douzaine d'images faites une fois), réactions par point chaud,
    carnet des métamorphoses.
 4. Choix de l'épisode selon la langue (registre des chapitres avec variantes fr/en, l'autre version jouable en bonus).
