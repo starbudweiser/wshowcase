@@ -24,5 +24,8 @@ for n in "$@"; do case $n in
   horseman_g) L horseman_g walks/horseman_gA_1.png "the headless horseman on his black horse, in strict right side profile. ACTION: the horse gallops to the right at a steady regular gallop, its legs moving in a natural galloping sequence, mane and tail flying, the rider's cloak fluttering; the rider stays in the saddle." 59;;
   guard_f) L guard_f walks/key/$KEY "the town guard seen exactly from the front. ACTION: he walks straight toward the viewer with $GAIT; he keeps his spear upright in his hand, its butt never touching the ground, and his shield steady on his other arm." 60;;
   guard_b) L guard_b walks/key/$KEY "the town guard seen exactly from behind. ACTION: he walks straight away from the viewer with $GAIT; he keeps his spear upright in his hand, its butt never touching the ground, and his shield steady on his other arm." 61;;
+  hero_s) L hero_s hw_1.png "the horned-helmet viking in strict right side profile, his round shield strapped on his back. ACTION: he walks to the right with $GAIT; his shield stays strapped on his back, same size and same place; serious focused face, no smile." 62;;
+  hero_f) L hero_f hf_walkA.png "the horned-helmet viking seen exactly from the front. ACTION: he walks straight toward the viewer with $GAIT; the top of his shield rim peeks behind his shoulders; serious focused face, no smile." 63;;
+  hero_b) L hero_b hb_stand.png "the horned-helmet viking seen exactly from behind, his round shield with the four-pointed iron star strapped flat in the middle of his back. ACTION: he walks straight away from the viewer with $GAIT; the shield stays exactly the same, strapped on his back, never disappearing." 64;;
 esac; done
 echo fini

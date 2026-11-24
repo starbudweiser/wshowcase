@@ -17,4 +17,7 @@ n=340
 for k in pot sack hat cabbage helmet basket boot mushroom banner partyhat; do
   n=$((n+1)); L lit_$k lit_$k.png "the overjoyed character skips happily toward the viewer in a regular joyful hop, both arms raised in celebration, a huge smile, hopping from one foot to the other in rhythm." $n
 done
+# 2e passage (24/11) : objet tenu qui changeait de forme (chasseur de fantômes, bricoleur) ou disparaissait (bâton de Merlin)
+W2="$W The object he holds stays exactly the same in his hand for the whole shot, same shape, same size, never changing and never disappearing."
+L wk_buster2 wk_buster_a.png "$W2" 361; L wk_handyman2 wk_handyman_a.png "$W2" 362; L wk_merlin2 wk_merlin_a.png "$W2" 363
 echo fini

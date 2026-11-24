@@ -29,18 +29,30 @@ def alpha(a):
     """fond = couleur des bords (magenta) ; écart fort = sujet, puis on bouche les trous intérieurs"""
     edge = np.concatenate([a[:4].reshape(-1, 3), a[-4:].reshape(-1, 3), a[:, :4].reshape(-1, 3), a[:, -4:].reshape(-1, 3)])
     bg = np.median(edge, axis=0); d = np.abs(a - bg).sum(axis=2)
-    m = Image.fromarray(((d > 95) * 255).astype(np.uint8)).filter(ImageFilter.MedianFilter(5)).filter(ImageFilter.MinFilter(3))
+    sub = d > 95
+    if '--hue' in sys.argv:   # 24/11 : peau rose proche du fond ; fond = vraiment magenta (bleu et rouge nettement au-dessus du vert)
+        sub = ~(((a[..., 2] - a[..., 1]) > 35) & ((a[..., 0] - a[..., 1]) > 60))
+    m = Image.fromarray((sub * 255).astype(np.uint8)).filter(ImageFilter.MedianFilter(5)).filter(ImageFilter.MinFilter(3))
     m = np.asarray(m) > 0; holes = binary_fill_holes(m) & ~m; lab, n = label(holes)
     # 24/11 : la peau et la robe du cheval, proches du magenta, faisaient des trous dans le sujet ; on bouche les trous intérieurs
     # dont la couleur n'est pas celle du fond (les vrais jours, entre les rayons ou sous les rênes, restent transparents)
     if n:
         mg = (a[..., 0] + a[..., 2]) / 2 - a[..., 1]          # teinte magenta : fort pour le fond, faible pour la peau ou le cheval
+        area = m.sum(); sizes = np.bincount(lab.ravel())
         for i, v in enumerate(mean(mg, lab, range(1, n + 1)), 1):
-            if v < 40: m = m | (lab == i)   # fond ombré près du sujet : ~60 ; peau, cheval : < 30
+            if v < 40 or sizes[i] < area * 0.006: m = m | (lab == i)   # fond ombré ~60 ; peau, cheval < 30 ; petits trous (visage rosé) bouchés
+    lab2, n2 = label(m)
+    if n2 > 1:   # points isolés (bouts de fouet, poussière) : on ne garde que les morceaux d'une taille sensible
+        sz = np.bincount(lab2.ravel()); keep = np.zeros(n2 + 1, bool); keep[1:] = sz[1:] >= max(80, m.sum() * 0.004); m = keep[lab2]
     return m
 
 
-masks = [alpha(a) for a in frames]
+if 'alpha' in opt:   # 24/11 : couche alpha d'un détourage vidéo (detourage-local : SAM + MatAnyone2) quand le fond ne se sépare pas par couleur
+    ta = tempfile.mkdtemp(); subprocess.run(['ffmpeg', '-v', 'error', '-i', opt['alpha'], '-pix_fmt', 'rgba', os.path.join(ta, '%03d.png')], check=True)
+    masks = [np.asarray(Image.open(f).convert('RGBA'))[..., 3] > 128 for f in sorted(glob.glob(os.path.join(ta, '*.png')))][:len(frames)]
+    frames = frames[:len(masks)]
+else:
+    masks = [alpha(a) for a in frames]
 # dérive horizontale : centre de la charrette (moitié gauche du sujet, sans les pattes) suivi d'image en image
 cx = []
 for m in masks:

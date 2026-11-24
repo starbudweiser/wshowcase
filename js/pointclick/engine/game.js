@@ -63,8 +63,8 @@ export class Game {
     if (!HERO) return h.front || h.talk ? 'hero.front' : 'hero.side';
     const ok = n => n && this.spr(n), cyc = (arr, i) => { const f = arr.filter(ok); return f.length ? f[((i % f.length) + f.length) % f.length] : null; };
     const view = h.back ? 'b' : h.front ? 'f' : 's', t = this.now;
-    if (moving && h.quarter) { const q = cyc(h.quarter === 'qf' ? HERO.walkQF : HERO.walkQB, Math.floor(h.walkD / (6.5 * s))); if (q) return q; }
-    if (moving) return (view === 's' ? cyc(HERO.walk, Math.floor(h.walkD / (5.2 * s))) || cyc(HERO.walkOld, Math.floor(h.walkD / (8 * s))) : view === 'f' ? cyc(HERO.walkF, Math.floor(h.walkD / (7 * s))) : cyc(HERO.walkB, Math.floor(h.walkD / (7 * s)))) || HERO.stand;
+    if (moving && h.quarter) { const q = cyc(h.quarter === 'qf' ? HERO.walkQF : HERO.walkQB, Math.floor(h.walkD / (7.5 * s))); if (q) return q; }
+    if (moving) return (view === 's' ? cyc(HERO.walk, Math.floor(h.walkD / (8 * s))) || cyc(HERO.walkW8 || [], Math.floor(h.walkD / (5.2 * s))) || cyc(HERO.walkOld, Math.floor(h.walkD / (8 * s))) : view === 'f' ? cyc(HERO.walkF, Math.floor(h.walkD / (7 * s))) : cyc(HERO.walkB, Math.floor(h.walkD / (7 * s)))) || HERO.stand;
     if (h.pose && ok(h.pose)) return h.pose;
     if (view === 'b') return ok(HERO.standB) ? HERO.standB : HERO.stand;
     if (view === 'f') { if (h.talk) return cyc(HERO.talk, Math.floor(t * 6)); if (ok(HERO.blink) && t % 4.3 < 0.13) return HERO.blink; return cyc(HERO.idleFront, Math.floor(t * 0.6 + 0.01)); }

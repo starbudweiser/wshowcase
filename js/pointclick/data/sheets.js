@@ -76,6 +76,17 @@ lw('follower', { walk: 'follower_s', walkF: 'follower_f', walkB: 'follower_b' },
 lw('giant', { walk: 'giant_s' }, 15);
 lw('horse.ride', { walk: 'ride_s' }, 11);
 lw('horseman', { walk: 'horseman_g' }, 0, 12);   /* galop : au temps (12 images/s), il file à 150 px/s */
+/* héros de profil, de face et de dos (les anciennes marches pose par pose : hauteur qui variait, bouclier qui disparaissait de dos) */
+HERO.walkW8 = HERO.walk; HERO.walk = LW('hero_s'); HERO.walkF = LW('hero_f'); HERO.walkB = LW('hero_b');
+/* caméos des clins d'œil (au temps : ils traversent l'écran à vitesse fixe) ; le ptérosaure et le hibou gardent leurs 2 images (en vol,
+   la vidéo les faisait changer de taille) */
+['explorer', 'kids', 'barbarian', 'wizard', 'halfling', 'simon', 'pirate', 'graham', 'agent', 'arthur', 'lancelot', 'karadoc', 'perceval', 'mevanwi',
+  'guenievre', 'leodagan', 'seli', 'tavernier', 'guethenoc', 'roparzh', 'troll', 'buster', 'handyman', 'merlin'].forEach(k => lw('wk.' + k, { walk: 'wk_' + k }, 0, 10));
+/* à l'arrêt (quand ils parlent) : l'image du cycle aux pieds les plus rapprochés, au lieu d'une pose figée en plein pas */
+const WKSTAND = { explorer: 3, kids: 1, barbarian: 2, wizard: 2, halfling: 4, simon: 3, pirate: 2, graham: 4, agent: 1, arthur: 0, lancelot: 7, karadoc: 5, perceval: 3, mevanwi: 0, guenievre: 0, leodagan: 2, seli: 4, tavernier: 3, guethenoc: 6, roparzh: 5, troll: 0, buster: 5, handyman: 4, merlin: 3 };
+Object.entries(WKSTAND).forEach(([k, n]) => { ANIM['wk.' + k].idleOld = ANIM['wk.' + k].idle; ANIM['wk.' + k].idle = ['lw.wk_' + k + '.' + n]; });
+/* aveuglés qui ont retrouvé la vue : sautillement de joie, sur place comme en partant */
+['pot', 'sack', 'hat', 'cabbage', 'helmet', 'basket', 'boot', 'mushroom', 'banner', 'partyhat'].forEach(k => { lw('lit.' + k, { walk: 'lit_' + k, idle: 'lit_' + k }, 0, 9); ANIM['lit.' + k].fps.idle = 9; });
 export const ITEMS = { bucket: { spr: 'bucket' }, honey: { spr: 'honey' }, carrot: { spr: 'carrot' }, cheese: { spr: 'cheese' }, cabbage: { spr: 'cabbage' }, arrow: { spr: 'arrow' }, pumpkin: { spr: 'pumpkin' }, anvil: { spr: 'anvil' }, lamp: { spr: 'lamp' } };
 
 /* coucher de nuit (tools/sleep_frames.py) : planche assets/pointclick/sleep/<clé>.png de chaque sprite qui sait se coucher, dormir et se réveiller ;
