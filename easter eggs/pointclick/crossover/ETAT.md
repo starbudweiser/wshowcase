@@ -35,8 +35,17 @@ change ou saute, pas inégaux, cheval qui trotte puis se cabre. Désormais, pour
 2. une vidéo LTX de marche sur place à partir de cette pose, caméra qui suit le personnage ;
 3. extraction d'un cycle de 8 images (même cadre, même palette), contrôlé image par image avant de le montrer :
    phase des jambes, bras opposés aux jambes, équipement constant.
-Outils de la saison 1, à reprendre : `tools/gen_walk_ltx.sh` et `tools/walk_cycle.py` (branche
-`claude/easter-egg-pointclick-6eb4be`, pas encore commités au 24/11 : attendre le signal de la session principale).
+Outils de la saison 1 (`easter eggs/pointclick/tools/`, branche `claude/easter-egg-pointclick-6eb4be`, commits
+0855793 et 6b6de78, non poussés au 24/11 ; à récupérer ici avec l'accord de Stéphan quand on animera) :
+- `gen_walk_ltx.sh` / `gen_walk_ltx2.sh` : vidéo LTX de marche sur place ; `LOOP=1` reprend la pose clé comme image de
+  fin (angle gardé, boucle parfaite) ;
+- `walk_cycle.py` : extraction du cycle ; options `--like`, `--spr`, `--colors`, `--minloop`/`--maxloop` (un galop
+  boucle en une douzaine d'images), `--despill=fort` (sujet sombre), `--hue`, `--alpha=<mov>` (couche alpha d'un
+  détourage SAM + MatAnyone2 quand la peau est trop proche du fond) ;
+- `lw_preview.py` : aperçu animé des cycles.
+Pièges : sans image de fin, LTX fait pivoter le personnage ou le laisse s'éloigner et rapetisser ; le flou de mouvement
+mêle le magenta du fond aux pieds et aux mains (l'extracteur prend l'image voisine la plus nette) ; avec MatAnyone2,
+désigner le sujet par un cadre (`-b`), pas par des points sur le torse, sinon il ne garde que les vêtements.
 
 ## Fait
 - Scripts courts des 15 chapitres + rechange, avec les clins d'œil « Wabbajack sur… ».
