@@ -75,7 +75,7 @@ for n, (lang, o) in enumerate(todo, 1):
     c = C[o['who']]; name = o['key'] + '.mp3'
     wav, rt, cloned = reference(c, lang)
     text = (f"[{o['emo']}] " if o.get('emo') else '') + speech(o[lang], lang, cloned)
-    takes = 1 if len(norm(o[lang])) <= 3 else TAKES                    # cris et répliques très courtes : Whisper juge mal
+    takes = 1 if len(norm(o[lang])) <= 2 else TAKES                    # cris et répliques très courtes : Whisper juge mal
     best, k = (None, -1, ''), 0
     for k in range(takes):
         tmp = tempfile.mkdtemp()

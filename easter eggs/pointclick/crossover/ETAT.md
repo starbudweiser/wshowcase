@@ -96,3 +96,9 @@ désigner le sujet par un cadre (`-b`), pas par des points sur le torse, sinon i
    porte-bonheur + T-rex), Schwarzenegger (capitaine fantôme + barbare).
    Maître d'armes : réplique culte en première ligne, « JE NE MANGE PAS… DE GRAINE !!!! », à générer **très énervé,
    hors de lui, en hurlant** (consigne d'émotion de cette réplique seulement ; style du personnage laissé vide).
+   **Chapitre pilote 11 (25/11)** : dialogues complets FR/EN dans `crossover/dialogues/ch11.json` (60 répliques : qui
+   parle, contexte, consigne d'émotion par réplique ; duel d'insultes à trois manches, chaque insulte avec bonne réplique
+   et réplique de garde de Skyrim). Voix générées par `tools/gen_voices_s2.py 11` (file calcul-lourd, python de
+   mCASTING ; « un » → « 1 » pour les voix clonées en français) dans `work/crossover/voices/<fr|en>/` (ignoré par git),
+   120 prises toutes reconnues par Whisper sauf le cri « FUS RO DAH ». Reste : validation du ton par Stéphan, puis les
+   15 autres chapitres sur le même modèle (un fichier `dialogues/chNN.json` par chapitre).
