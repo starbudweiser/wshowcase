@@ -107,6 +107,10 @@ désigner le sujet par un cadre (`-b`), pas par des points sur le torse, sinon i
    « Sautons »). Les prénoms des œuvres (« Diane », « Dex ») ont été retirés à la demande de Stéphan. Volume : le héros
    sortait 11 dB sous le narrateur (−29,6 contre −18,8 LUFS) ; toutes les répliques sont normalisées à −18 LUFS comme en
    saison 1 (`loudnorm=I=-18:TP=-2` + limiteur, désormais dans `gen_voices_s2.py`), originaux dans
-   `work/crossover/voices_brut/`. Reste : écoute
+   `work/crossover/voices_brut/`. Le Roi (Kaamelott) avait une voix trop sourde : égaliseur par personnage (`EQ` dans
+   `gen_voices_s2.py`, aigus remontés au niveau du narrateur) et jeu trop linéaire : consignes d'émotion renforcées
+   dans `ch17_kaamelott.json`, 4 prises par réplique et choix de la plus vivante (variation de hauteur et d'énergie,
+   `EXPR` et `vivacite()`) parmi celles que Whisper entend bien. Le chevalier lent a changé de voix dans mCASTING
+   (clone-af44afa8) : ses 22 prises sont regénérées. Reste : écoute
    par Stéphan, retouches éventuelles (supprimer le fichier de la réplique puis relancer `gen_voices_s2.py <chapitre>`),
    puis intégration dans le moteur.

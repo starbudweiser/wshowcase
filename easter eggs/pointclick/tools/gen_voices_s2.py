@@ -22,6 +22,21 @@ langs = [sys.argv[2]] if len(sys.argv) > 2 and sys.argv[2] in ('fr', 'en') else 
 only = set(sys.argv[3].split(',')) if len(sys.argv) > 3 else None
 TAKES, GOOD = 3, float(os.environ.get('GOOD', 0.86))
 NORM = 'loudnorm=I=-18:TP=-2,alimiter=limit=0.7:level=false'  # même niveau que les voix de la saison 1 (-18 LUFS par réplique)
+EXPR, TAKES_EXPR = {'arthur'}, 4   # jeu plus expressif (25/11) : 4 prises, on garde la plus vivante parmi les bien dites
+def vivacite(wav):                 # variation de hauteur (demi-tons) + 0,3 × variation d'énergie (dB) : plus c'est haut, moins c'est linéaire
+    import numpy as np
+    x = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', wav, '-f', 's16le', '-ac', '1', '-ar', '16000', '-'], capture_output=True).stdout, np.int16) / 32768.0
+    n = 640; fr = x[:len(x) // n * n].reshape(-1, n)
+    if not len(fr): return 0.0
+    db = 20 * np.log10(np.sqrt((fr ** 2).mean(1)) + 1e-9); v = db > db.max() - 30
+    f0 = []
+    for f in fr[db > db.max() - 20]:
+        f = f - f.mean(); ac = np.correlate(f, f, 'full')[n - 1:]; seg = ac[40:229]           # 70 à 400 Hz
+        if ac[0] <= 0 or seg.max() < 0.5 * ac[0]: continue                                     # trame non voisée
+        f0.append(16000 / (40 + int(np.argmax(seg >= 0.85 * seg.max()))))                      # plus petit retard proche du max : évite les octaves
+    iqr = lambda a: float(np.subtract(*np.percentile(a, [75, 25])))     # écart interquartile : insensible aux erreurs d'octave
+    return (iqr(12 * np.log2(np.array(f0))) if len(f0) > 3 else 0.0) + 0.3 * iqr(db[v])
+EQ = {'arthur':'highpass=f=90,equalizer=f=280:t=q:w=1:g=-3,equalizer=f=3500:t=q:w=1.2:g=3,treble=g=6:f=3000:t=s:w=0.6'}  # le Roi : voix trop sourde (25/11)
 
 cast = json.load(open(os.path.join(X, 'casting.json')))
 byname = {c['name']: c for c in cast['characters'].values()}
@@ -76,26 +91,26 @@ for n, (lang, o) in enumerate(todo, 1):
     c = C[o['who']]; name = o['key'] + '.mp3'
     wav, rt, cloned = reference(c, lang)
     text = (f"[{o['emo']}] " if o.get('emo') else '') + speech(o[lang], lang, cloned)
-    takes = 1 if len(norm(o[lang])) <= 2 else TAKES                    # cris et répliques très courtes : Whisper juge mal
-    best, k = (None, -1, ''), 0
+    expr = o['who'] in EXPR and len(norm(o[lang])) > 2
+    takes = 1 if len(norm(o[lang])) <= 2 else (TAKES_EXPR if expr else TAKES)   # cris et répliques très courtes : Whisper juge mal
+    cands, k = [], 0                                                     # (wav, score Whisper, texte entendu)
     for k in range(takes):
         tmp = tempfile.mkdtemp()
-        try:
-            generate_audio(text=text, model=TTS, lang_code=lang, ref_audio=wav, ref_text=rt, output_path=tmp, file_prefix='v', join_audio=True, verbose=False)
-            f = sorted(glob.glob(os.path.join(tmp, '*.wav')))
-            if not f: continue
-            hyp = STT.generate(f[0], language=lang).text
-            s = score(o[lang], hyp)
-            if s > best[1]:
-                if best[0]: shutil.rmtree(os.path.dirname(best[0]), ignore_errors=True)
-                best = (f[0], s, hyp); tmp = None
-        finally:
-            if tmp: shutil.rmtree(tmp, ignore_errors=True)
-        if best[1] >= GOOD: break
-    if best[0]:
-        subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', best[0], '-af', NORM, '-ac', '1', '-ar', '24000', '-b:a', '40k', os.path.join(out, lang, name)])
-        shutil.rmtree(os.path.dirname(best[0]), ignore_errors=True)
+        generate_audio(text=text, model=TTS, lang_code=lang, ref_audio=wav, ref_text=rt, output_path=tmp, file_prefix='v', join_audio=True, verbose=False)
+        f = sorted(glob.glob(os.path.join(tmp, '*.wav')))
+        if not f: shutil.rmtree(tmp, ignore_errors=True); continue
+        hyp = STT.generate(f[0], language=lang).text
+        cands.append((f[0], score(o[lang], hyp), hyp))
+        if not expr and cands[-1][1] >= GOOD: break
+    best, viv = (None, -1, ''), None
+    if cands:
+        best = max(cands, key=lambda c: c[1])
+        if expr:   # personnage à jouer avec plus d'émotion : parmi les prises bien dites, la plus vivante
+            ok = [c for c in cands if c[1] >= max(best[1] - 0.1, 0.7)] or [best]
+            vs = {c[0]: vivacite(c[0]) for c in ok}; best = max(ok, key=lambda c: vs[c[0]]); viv = round(vs[best[0]], 2)
+        subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', best[0], '-af', ','.join(filter(None, (EQ.get(o['who']), NORM))), '-ac', '1', '-ar', '24000', '-b:a', '40k', os.path.join(out, lang, name)])
+    for c in cands: shutil.rmtree(os.path.dirname(c[0]), ignore_errors=True)
     rep.write(json.dumps({'file': f'{lang}/{name}', 'who': o['who'], 'emo': o.get('emo', ''), 'score': round(best[1], 3), 'takes': k + 1,
-                          'text': o[lang], 'heard': best[2]}, ensure_ascii=False) + '\n'); rep.flush()
-    print(f'{n}/{len(todo)} {lang}/{name} {best[1]:.2f} ({k + 1})', flush=True)
+                          'vivacite': viv, 'text': o[lang], 'heard': best[2]}, ensure_ascii=False) + '\n'); rep.flush()
+    print(f'{n}/{len(todo)} {lang}/{name} {best[1]:.2f} ({k + 1})' + (f' vivacité {viv}' if viv is not None else ''), flush=True)
 print('done', flush=True)
