@@ -92,7 +92,7 @@ désigner le sujet par un cadre (`-b`), pas par des points sur le torse, sinon i
    Sheogorath, Chandler pour l'apprenti pirate, Astier, Karadoc, Dexter et Debra Morgan, Morgan Freeman, Smaug…).
    Casting retenu : `crossover/casting_s2_retenu.json` (suivi git) et `crossover/casting.json` écrit par `write_casting`
    (chemins locaux des échantillons, non suivi, comme celui de la saison 1). House garde la voix du narrateur (gag).
-   Voix partagées voulues ou à confirmer : l'aubergiste (professeur de potions + chevalier « Ni ! »), Smaug (dragon
+   Voix partagées, voulues (confirmé par Stéphan le 25/11) : l'aubergiste (professeur de potions + chevalier « Ni ! »), Smaug (dragon
    porte-bonheur + T-rex), Schwarzenegger (capitaine fantôme + barbare).
    Maître d'armes : réplique culte en première ligne, « JE NE MANGE PAS… DE GRAINE !!!! », à générer **très énervé,
    hors de lui, en hurlant** (consigne d'émotion de cette réplique seulement ; style du personnage laissé vide).
