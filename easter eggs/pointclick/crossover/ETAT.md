@@ -33,6 +33,18 @@ Prototypes de rendu : https://claude.ai/artifact/Hbie6aV5LJGNajt7JZMpVR (`tools/
 - Bible PDF FR/EN régénérée avec les chapitres 26 à 28 (visuels de chapitre et planches des nouveaux personnages à faire
   après validation des scripts).
 
+## Retours de Stéphan sur les voix, images et musiques (25-26/11/2026)
+- Mur des mots (21) : trois garçons distincts (le grand maigre, le rond à casquette, le petit timide), version 2
+  recalculée en entier (sourire bouche fermée, casquette sans écriture) : `crossover/img/r_stranger.jpg`
+  (`gen_s2_scenes_vues2.sh r_strangerx`, graine 2).
+- Générique de House (19) : version 8 retenue (trip-hop, battement de cœur, motif de clavecin), intro coupée, boucle de
+  40 mesures à 75 bpm calée sur la grosse caisse (`tools/music_groove.py` puis `tools/music_loop_bars.sh`) ; 2 tirages de
+  sa dernière consigne (célesta et boîte à musique) à départager. Kaamelott (17) : 3 versions d'après le générique du
+  livre V (grand orchestre sombre) à départager.
+- Héros : ton de base « sarcastique, positivement blasé » (façon Marty) ajouté à toutes ses répliques (`TONE` dans
+  `gen_voices_s2.py`), validé sur 3 exemples avant / après ; 436 répliques FR/EN regénérées (anciennes dans
+  `work/crossover/voices_heros_ancien/`).
+
 ## Exigence de mise en scène (Stéphan, 24/11/2026, plus forte encore qu'en saison 1)
 « On va vers le mieux » (évolution années 90 → 2000) : les bugs restent une parodie dans les dialogues, jamais dans le
 rendu. Remarques faites sur la saison 1 (charrette dessinée devant ses passagers, bois coupé au bord de l'écran,

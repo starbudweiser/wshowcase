@@ -22,6 +22,7 @@ langs = [sys.argv[2]] if len(sys.argv) > 2 and sys.argv[2] in ('fr', 'en') else 
 only = set(sys.argv[3].split(',')) if len(sys.argv) > 3 else None
 TAKES, GOOD = 3, float(os.environ.get('GOOD', 0.86))
 NORM = 'loudnorm=I=-18:TP=-2,alimiter=limit=0.7:level=false'  # même niveau que les voix de la saison 1 (-18 LUFS par réplique)
+TONE = {'hero': 'casual, upbeat, wisecracking, cheerfully unimpressed'}   # ton de base du héros (26/11) : sarcastique, positivement blasé
 EXPR, TAKES_EXPR = {'arthur', 'paleo', 'dexter'}, 4   # jeu plus expressif (25/11) : 4 prises, on garde la plus vivante parmi les bien dites
 def vivacite(wav):                 # variation de hauteur (demi-tons) + 0,3 × variation d'énergie (dB) : plus c'est haut, moins c'est linéaire
     import numpy as np
@@ -57,10 +58,12 @@ def lib_text(vid, lang):       # texte de l'échantillon d'une voix de la biblio
     return SAMPLE[lang][i].format(v['name'].split(' ')[0]) if i == 0 else SAMPLE[lang][1]
 
 dial = json.load(open(os.path.join(X, 'dialogues', f'ch{chap}.json')))
-items = [(l, o) for o in dial['lines'] for l in langs if not only or o['who'] in only]
+KEYS = set(filter(None, os.environ.get('KEYS', '').split(',')))     # essai : seulement ces répliques
+items = [(l, o) for o in dial['lines'] for l in langs if (not only or o['who'] in only) and (not KEYS or o['key'] in KEYS)]
 missing = sorted({o['who'] for _, o in items if o['who'] not in C})
 if missing: sys.exit(f'personnages absents du casting : {missing}')
-out = os.path.join(P, 'work', 'crossover', 'voices'); refs = os.path.join(out, '_refs')
+out = os.environ.get('VOIX_DIR') or os.path.join(P, 'work', 'crossover', 'voices')    # VOIX_DIR : dossier d'essai
+refs = os.path.join(P, 'work', 'crossover', 'voices', '_refs')
 for l in langs: os.makedirs(os.path.join(out, l), exist_ok=True)
 os.makedirs(refs, exist_ok=True)
 def ref_wav(vid, sample, tag):
@@ -106,7 +109,8 @@ rep = open(os.path.join(out, 'report.jsonl'), 'a')
 for n, (lang, o) in enumerate(todo, 1):
     c = C[o['who']]; name = o['key'] + '.mp3'
     wav, rt, cloned = reference(c, lang, o['who'])
-    text = (f"[{o['emo']}] " if o.get('emo') else '') + speech(o[lang], lang, cloned)
+    emo = ', '.join(filter(None, (TONE.get(o['who']), o.get('emo'))))
+    text = (f"[{emo}] " if emo else '') + speech(o[lang], lang, cloned)
     expr = o['who'] in EXPR and len(norm(o[lang])) > 2
     takes = 1 if len(norm(o[lang])) <= 2 else (TAKES_EXPR if expr else TAKES)   # cris et répliques très courtes : Whisper juge mal
     cands, k = [], 0                                                     # (wav, score Whisper, texte entendu)
@@ -128,7 +132,7 @@ for n, (lang, o) in enumerate(todo, 1):
             best = max(ok, key=lambda c: vs[c[0]][0]); viv = round(vs[best[0]][0], 2)
         subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', best[0], '-af', chaine(o['who']), '-ac', '1', '-ar', '24000', '-b:a', '40k', os.path.join(out, lang, name)])
     for c in cands: shutil.rmtree(os.path.dirname(c[0]), ignore_errors=True)
-    rep.write(json.dumps({'file': f'{lang}/{name}', 'who': o['who'], 'emo': o.get('emo', ''), 'score': round(best[1], 3), 'takes': k + 1,
+    rep.write(json.dumps({'file': f'{lang}/{name}', 'who': o['who'], 'emo': emo, 'score': round(best[1], 3), 'takes': k + 1,
                           'vivacite': viv, 'text': o[lang], 'heard': best[2]}, ensure_ascii=False) + '\n'); rep.flush()
     print(f'{n}/{len(todo)} {lang}/{name} {best[1]:.2f} ({k + 1})' + (f' vivacité {viv}' if viv is not None else ''), flush=True)
 print('done', flush=True)
