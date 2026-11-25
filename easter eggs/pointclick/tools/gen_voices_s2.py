@@ -11,13 +11,13 @@ seulement (sinon il dit « une »), comme Engine.speechText de mCASTING. Chaque 
 Entrées : crossover/dialogues/chNN.json, crossover/casting.json (write_casting), crossover/casting_s2_retenu.json (id → nom).
 Sortie : work/crossover/voices/<fr|en>/<clé>.mp3 (mono 24 kHz 40 kb/s, comme les voix du jeu) + report.jsonl.
 Relançable : saute les fichiers déjà faits. Usage (file calcul-lourd, python de mCASTING) :
-  calcul-lourd "$HOME/Library/Application Support/mCASTING/engine/venv/bin/python" tools/gen_voices_s2.py 11 [fr|en] [personnage,…]"""
+  calcul-lourd "$HOME/Library/Application Support/mCASTING/engine/venv/bin/python" tools/gen_voices_s2.py 11|17_graal [fr|en] [personnage,…]"""
 import sys, os, json, re, glob, shutil, subprocess, tempfile, difflib, unicodedata
 
 P = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))           # easter eggs/pointclick
 X = os.path.join(P, 'crossover')
 MC = os.path.expanduser('~/Library/Application Support/mCASTING')
-chap = int(sys.argv[1])
+chap = sys.argv[1]                                                          # 11, 12… ou 17_kaamelott, 17_graal
 langs = [sys.argv[2]] if len(sys.argv) > 2 and sys.argv[2] in ('fr', 'en') else ['fr', 'en']
 only = set(sys.argv[3].split(',')) if len(sys.argv) > 3 else None
 TAKES, GOOD = 3, float(os.environ.get('GOOD', 0.86))
