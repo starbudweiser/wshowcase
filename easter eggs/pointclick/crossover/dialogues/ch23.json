@@ -9,7 +9,7 @@
   {
    "key": "c23.wake.1",
    "who": "dexter",
-   "emo": "calm, polite, soft",
+   "emo": "sarcastic, falsely polite, amused",
    "ctx": "Réveil sur un canapé, en plein soleil : l’expert se penche, très poli",
    "fr": "Hé, toi. T’es enfin réveillé. Tu as de la confiture partout.",
    "en": "Hey, you. You’re finally awake. You’ve got jam all over you."
@@ -33,7 +33,7 @@
   {
    "key": "c23.wake.4",
    "who": "dexter",
-   "emo": "soft, inner voice",
+   "emo": "dark inner voice, dry sarcasm",
    "ctx": "Réveil : voix intérieure de l’expert",
    "fr": "Un Viking couvert de confiture, sur mon canapé. J’ai connu des mardis plus simples.",
    "en": "A Viking covered in jam, on my couch. I’ve had simpler Tuesdays."
@@ -65,7 +65,7 @@
   {
    "key": "c23.talk.dexter.1",
    "who": "dexter",
-   "emo": "calm, precise, interested",
+   "emo": "smug, a hint of menace",
    "ctx": "Parler à l’expert",
    "fr": "Permets-moi. Les projections, c’est mon métier.",
    "en": "Allow me. Spatter is my job."
@@ -73,7 +73,7 @@
   {
    "key": "c23.talk.dexter.2",
    "who": "dexter",
-   "emo": "analytical, pleased",
+   "emo": "relishing every detail, darkly amused",
    "ctx": "Il analyse les taches sur l’armure",
    "fr": "Confiture de fraise. Projetée de bas en haut, par un gâteau… sur lequel quelque chose de très lourd s’est assis.",
    "en": "Strawberry jam. Sprayed upwards, from a cake… that something very heavy sat on."
@@ -81,7 +81,7 @@
   {
    "key": "c23.talk.dexter.3",
    "who": "dexter",
-   "emo": "analytical, quiet satisfaction",
+   "emo": "proud, sinister satisfaction",
    "ctx": "Il analyse les taches sur l’armure",
    "fr": "Des écailles dans la crème : un dragon. Quinze trous de bougies. Un village en bois, au bord d’une rivière.",
    "en": "Scales in the frosting: a dragon. Fifteen candle holes. A wooden village by a river."
@@ -97,7 +97,7 @@
   {
    "key": "c23.talk.dexter.5",
    "who": "dexter",
-   "emo": "calm, observant",
+   "emo": "smug, condescending",
    "ctx": "Parler à l’expert",
    "fr": "Et tu cherches un fromage. Il y a des miettes de croûte sur tes gants.",
    "en": "And you’re looking for a cheese. There are rind crumbs on your gloves."
@@ -105,7 +105,7 @@
   {
    "key": "c23.talk.dexter.6",
    "who": "dexter",
-   "emo": "polite, apologetic",
+   "emo": "mock apologetic, sarcastic",
    "ctx": "Parler à l’expert",
    "fr": "Je n’ai pas de fromage. Seulement des beignets. J’en apporte au commissariat tous les matins.",
    "en": "I don’t have any cheese. Only donuts. I bring some to the station every morning."
@@ -121,7 +121,7 @@
   {
    "key": "c23.talk.dexter.7",
    "who": "dexter",
-   "emo": "soft, inner voice",
+   "emo": "dark inner voice, sardonic",
    "ctx": "Voix intérieure de l’expert, à l’arrivée de sa sœur",
    "fr": "Ma sœur. Elle jure beaucoup. C’est sa façon de dire bonjour.",
    "en": "My sister. She swears a lot. It’s how she says hello."
@@ -161,7 +161,7 @@
   {
    "key": "c23.talk.dexter.door",
    "who": "dexter",
-   "emo": "calm, a little too calm",
+   "emo": "sinister, menacing smile",
    "ctx": "Parler à l’expert de la porte",
    "fr": "Les beignets sont dans ma petite pièce. Je l’aime bien rangée.",
    "en": "The donuts are in my little room. I like to keep it tidy."
@@ -177,7 +177,7 @@
   {
    "key": "c23.use.password.dexter",
    "who": "dexter",
-   "emo": "polite, puzzled",
+   "emo": "irritated, cold sarcasm",
    "ctx": "Mot de passe + porte",
    "fr": "… Pardon ? Ce n’est pas un club. C’est une pièce.",
    "en": "… Sorry? It’s not a club. It’s a room."
@@ -193,7 +193,7 @@
   {
    "key": "c23.look.room.dexter",
    "who": "dexter",
-   "emo": "calm, sincere",
+   "emo": "creepy, ominous, too sincere",
    "ctx": "La pièce en plastique",
    "fr": "C’est pour le ménage. J’ai horreur des taches.",
    "en": "It’s for cleaning. I can’t stand stains."
@@ -217,7 +217,7 @@
   {
    "key": "c23.use.wab.room.dexter",
    "who": "dexter",
-   "emo": "disappointed, polite",
+   "emo": "disgusted, sarcastic",
    "ctx": "Wabbajack + pièce",
    "fr": "C’est… très gai. Je n’aime pas quand c’est gai.",
    "en": "It’s… very cheerful. I don’t like cheerful."
@@ -273,7 +273,7 @@
   {
    "key": "c23.station.dexter",
    "who": "dexter",
-   "emo": "soft, inner voice",
+   "emo": "dark inner voice, bitter irony",
    "ctx": "Voix intérieure de l’expert, devant les collègues déçus",
    "fr": "Douze collègues déçus. Je ne me suis jamais senti aussi normal.",
    "en": "Twelve disappointed colleagues. I’ve never felt so normal."
@@ -289,7 +289,7 @@
   {
    "key": "c23.wk.slides",
    "who": "dexter",
-   "emo": "calm, curious",
+   "emo": "intrigued, darkly amused",
    "ctx": "Wabbajack + lames de microscope : des tranches de fromage",
    "fr": "Mes lames de microscope sont devenues des tranches de fromage. L’échantillon est… savoureux.",
    "en": "My microscope slides turned into cheese slices. The sample is… delicious."
@@ -337,7 +337,7 @@
   {
    "key": "c23.wk.boat",
    "who": "dexter",
-   "emo": "calm, pleased",
+   "emo": "sardonic, menacing undertone",
    "ctx": "Wabbajack + photo du bateau : une barque nordique",
    "fr": "Mon bateau est devenu une barque. Il faudra ramer. Ça occupe les mains.",
    "en": "My boat became a rowboat. I’ll have to row. Keeps the hands busy."
@@ -361,7 +361,7 @@
   {
    "key": "c23.end.dexter",
    "who": "dexter",
-   "emo": "calm, impressed, soft",
+   "emo": "impressed, unsettled, dark chuckle",
    "ctx": "L’expert découvre Sheogorath",
    "fr": "Enfin quelqu’un de plus inquiétant que moi.",
    "en": "Finally someone more unsettling than me."

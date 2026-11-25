@@ -115,6 +115,8 @@ désigner le sujet par un cadre (`-b`), pas par des points sur le torse, sinon i
    réécrites à voix haute dans `ch20.json`, ses 30 prises regénérées en mode expressif. Puis Stéphan a remplacé son
    extrait source (`/Volumes/SSD Editing/VOICE CLONING/Sam Neill (Herve Bellon).m4a`, 5.1) sans recloner dans mCASTING :
    `REF_SRC` du générateur en tire 0,45-19,9 s du canal central et le transcrit par Whisper (cache dans `_refs/`).
-   À reporter dans mCASTING (reclonage) pour que la voix y soit à jour aussi. Reste : écoute
+   À reporter dans mCASTING (reclonage) pour que la voix y soit à jour aussi. Le chevalier gourmand paraissait trop
+   fort à volume égal : −4 dB (`GAIN`). L'expert scientifique était trop calme : consignes réécrites en tueur
+   sarcastique (`ch23.json`), 32 prises regénérées en mode expressif. Reste : écoute
    par Stéphan, retouches éventuelles (supprimer le fichier de la réplique puis relancer `gen_voices_s2.py <chapitre>`),
    puis intégration dans le moteur.
