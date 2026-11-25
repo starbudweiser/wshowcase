@@ -44,6 +44,8 @@ Prototypes de rendu : https://claude.ai/artifact/Hbie6aV5LJGNajt7JZMpVR (`tools/
 - Héros : ton de base « sarcastique, positivement blasé » (façon Marty) ajouté à toutes ses répliques (`TONE` dans
   `gen_voices_s2.py`), validé sur 3 exemples avant / après ; 436 répliques FR/EN regénérées (anciennes dans
   `work/crossover/voices_heros_ancien/`).
+- Kaamelott (17) en français seulement : l'anglais joue le Sacré Graal, donc pas de voix anglaises (les 38 déjà faites
+  sont mises de côté dans `work/crossover/voices_kaamelott_en_inutile/`).
 
 ## Exigence de mise en scène (Stéphan, 24/11/2026, plus forte encore qu'en saison 1)
 « On va vers le mieux » (évolution années 90 → 2000) : les bugs restent une parodie dans les dialogues, jamais dans le
