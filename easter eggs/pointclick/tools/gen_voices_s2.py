@@ -22,20 +22,21 @@ langs = [sys.argv[2]] if len(sys.argv) > 2 and sys.argv[2] in ('fr', 'en') else 
 only = set(sys.argv[3].split(',')) if len(sys.argv) > 3 else None
 TAKES, GOOD = 3, float(os.environ.get('GOOD', 0.86))
 NORM = 'loudnorm=I=-18:TP=-2,alimiter=limit=0.7:level=false'  # même niveau que les voix de la saison 1 (-18 LUFS par réplique)
-EXPR, TAKES_EXPR = {'arthur'}, 4   # jeu plus expressif (25/11) : 4 prises, on garde la plus vivante parmi les bien dites
+EXPR, TAKES_EXPR = {'arthur', 'paleo'}, 4   # jeu plus expressif (25/11) : 4 prises, on garde la plus vivante parmi les bien dites
 def vivacite(wav):                 # variation de hauteur (demi-tons) + 0,3 × variation d'énergie (dB) : plus c'est haut, moins c'est linéaire
     import numpy as np
     x = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', wav, '-f', 's16le', '-ac', '1', '-ar', '16000', '-'], capture_output=True).stdout, np.int16) / 32768.0
     n = 640; fr = x[:len(x) // n * n].reshape(-1, n)
     if not len(fr): return 0.0
     db = 20 * np.log10(np.sqrt((fr ** 2).mean(1)) + 1e-9); v = db > db.max() - 30
-    f0 = []
-    for f in fr[db > db.max() - 20]:
+    f0 = []; loud = fr[db > db.max() - 20]
+    for f in loud:
         f = f - f.mean(); ac = np.correlate(f, f, 'full')[n - 1:]; seg = ac[40:229]           # 70 à 400 Hz
         if ac[0] <= 0 or seg.max() < 0.5 * ac[0]: continue                                     # trame non voisée
         f0.append(16000 / (40 + int(np.argmax(seg >= 0.85 * seg.max()))))                      # plus petit retard proche du max : évite les octaves
     iqr = lambda a: float(np.subtract(*np.percentile(a, [75, 25])))     # écart interquartile : insensible aux erreurs d'octave
-    return (iqr(12 * np.log2(np.array(f0))) if len(f0) > 3 else 0.0) + 0.3 * iqr(db[v])
+    viv = (iqr(12 * np.log2(np.array(f0))) if len(f0) > 3 else 0.0) + 0.3 * iqr(db[v])
+    return viv, len(f0) / max(len(loud), 1)    # (vivacité, part de trames voisées : sous 0,45 la prise est chuchotée)
 EQ = {'arthur':'highpass=f=90,equalizer=f=280:t=q:w=1:g=-3,equalizer=f=3500:t=q:w=1.2:g=3,treble=g=6:f=3000:t=s:w=0.6'}  # le Roi : voix trop sourde (25/11)
 
 cast = json.load(open(os.path.join(X, 'casting.json')))
@@ -107,7 +108,9 @@ for n, (lang, o) in enumerate(todo, 1):
         best = max(cands, key=lambda c: c[1])
         if expr:   # personnage à jouer avec plus d'émotion : parmi les prises bien dites, la plus vivante
             ok = [c for c in cands if c[1] >= max(best[1] - 0.1, 0.7)] or [best]
-            vs = {c[0]: vivacite(c[0]) for c in ok}; best = max(ok, key=lambda c: vs[c[0]]); viv = round(vs[best[0]], 2)
+            vs = {c[0]: vivacite(c[0]) for c in ok}
+            ok = [c for c in ok if vs[c[0]][1] >= 0.45] or ok              # pas de prise chuchotée s'il y en a une à pleine voix
+            best = max(ok, key=lambda c: vs[c[0]][0]); viv = round(vs[best[0]][0], 2)
         subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', best[0], '-af', ','.join(filter(None, (EQ.get(o['who']), NORM))), '-ac', '1', '-ar', '24000', '-b:a', '40k', os.path.join(out, lang, name)])
     for c in cands: shutil.rmtree(os.path.dirname(c[0]), ignore_errors=True)
     rep.write(json.dumps({'file': f'{lang}/{name}', 'who': o['who'], 'emo': o.get('emo', ''), 'score': round(best[1], 3), 'takes': k + 1,

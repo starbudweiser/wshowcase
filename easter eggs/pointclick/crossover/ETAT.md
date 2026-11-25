@@ -111,6 +111,7 @@ désigner le sujet par un cadre (`-b`), pas par des points sur le torse, sinon i
    `gen_voices_s2.py`, aigus remontés au niveau du narrateur) et jeu trop linéaire : consignes d'émotion renforcées
    dans `ch17_kaamelott.json`, 4 prises par réplique et choix de la plus vivante (variation de hauteur et d'énergie,
    `EXPR` et `vivacite()`) parmi celles que Whisper entend bien. Le chevalier lent a changé de voix dans mCASTING
-   (clone-af44afa8) : ses 22 prises sont regénérées. Reste : écoute
+   (clone-af44afa8) : ses 22 prises sont regénérées. Le paléontologue chuchotait (consignes « whisper ») : consignes
+   réécrites à voix haute dans `ch20.json`, ses 30 prises regénérées en mode expressif. Reste : écoute
    par Stéphan, retouches éventuelles (supprimer le fichier de la réplique puis relancer `gen_voices_s2.py <chapitre>`),
    puis intégration dans le moteur.
