@@ -40,8 +40,8 @@ Prototypes de rendu : https://claude.ai/artifact/Hbie6aV5LJGNajt7JZMpVR (`tools/
 - Générique de House (19) : remplacé le 26/11 par le morceau de Stéphan « The Examination Room » (boucle de 32 mesures
   à 76 bpm, `assets/pointclick/music/s2_19_hopital.mp3`). Avant : version 8 retenue (trip-hop, battement de cœur, motif de clavecin), intro coupée, boucle de
   40 mesures à 75 bpm calée sur la grosse caisse (`tools/music_groove.py` puis `tools/music_loop_bars.sh`) ; 2 tirages de
-  sa dernière consigne (célesta et boîte à musique) à départager. Kaamelott (17) : 3 versions d'après le générique du
-  livre V (grand orchestre sombre) à départager.
+  sa dernière consigne (célesta et boîte à musique) à départager. Kaamelott (17) : morceau de Stéphan « Glass and Bone »
+  (26/11, boucle de 32 mesures à 76 bpm) ; avant, 3 versions d'après le générique du livre V.
 - Héros : ton de base « sarcastique, positivement blasé » (façon Marty) ajouté à toutes ses répliques (`TONE` dans
   `gen_voices_s2.py`), validé sur 3 exemples avant / après ; 436 répliques FR/EN regénérées (anciennes dans
   `work/crossover/voices_heros_ancien/`).
