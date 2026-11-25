@@ -86,8 +86,13 @@ désigner le sujet par un cadre (`-b`), pas par des points sur le torse, sinon i
    - adapter les effets de `genie.js` écrits pour 480 × 270 (positions, tailles, faux écran de chargement) ;
    - ajouter dans `hints.js` les étapes des chapitres 11 à 26 (et de Sacré Graal), 3 indices gradués par étape
      en FR/EN, voix du génie générée depuis le casting mCASTING (clé `genie`).
-6. Textes FR/EN, voix, sons, intégration et essais. **Casting en cours** (24/11) : projet mCASTING « Jeu point & click —
-   saison 2 » (42 personnages, voix proposée + rechange, `tools/casting_s2.py` → `crossover/casting_s2_*.json`).
-   Choix de Stéphan : House a la voix du narrateur (gag, le narrateur s'en offusque), clones de la bibliothèque pour
-   l'archéologue, le savant, le paléontologue et le barbare ; voix de la saison 1 reprises pour Arthur, Perceval,
-   Karadoc et le magicien. Reste : écoute et validation par Stéphan, puis `write_casting`.
+6. Textes FR/EN, voix, sons, intégration et essais. **Casting terminé** (25/11) : projet mCASTING « Jeu point & click —
+   saison 2 » (42 personnages). Propositions : `tools/casting_s2.py` → `crossover/casting_s2_import.json` et
+   `casting_s2_choix.json` ; Stéphan a retouché 25 voix dans mCASTING (surtout des clones qu'il a faits : Kartman pour
+   Sheogorath, Chandler pour l'apprenti pirate, Astier, Karadoc, Dexter et Debra Morgan, Morgan Freeman, Smaug…).
+   Casting retenu : `crossover/casting_s2_retenu.json` (suivi git) et `crossover/casting.json` écrit par `write_casting`
+   (chemins locaux des échantillons, non suivi, comme celui de la saison 1). House garde la voix du narrateur (gag).
+   Voix partagées voulues ou à confirmer : l'aubergiste (professeur de potions + chevalier « Ni ! »), Smaug (dragon
+   porte-bonheur + T-rex), Schwarzenegger (capitaine fantôme + barbare).
+   Maître d'armes : réplique culte en première ligne, « JE NE MANGE PAS… DE GRAINE !!!! », à générer **très énervé,
+   hors de lui, en hurlant** (consigne d'émotion de cette réplique seulement ; style du personnage laissé vide).
