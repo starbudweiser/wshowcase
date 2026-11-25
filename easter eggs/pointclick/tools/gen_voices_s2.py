@@ -21,6 +21,7 @@ chap = sys.argv[1]                                                          # 11
 langs = [sys.argv[2]] if len(sys.argv) > 2 and sys.argv[2] in ('fr', 'en') else ['fr', 'en']
 only = set(sys.argv[3].split(',')) if len(sys.argv) > 3 else None
 TAKES, GOOD = 3, float(os.environ.get('GOOD', 0.86))
+NORM = 'loudnorm=I=-18:TP=-2,alimiter=limit=0.7:level=false'  # même niveau que les voix de la saison 1 (-18 LUFS par réplique)
 
 cast = json.load(open(os.path.join(X, 'casting.json')))
 byname = {c['name']: c for c in cast['characters'].values()}
@@ -92,7 +93,7 @@ for n, (lang, o) in enumerate(todo, 1):
             if tmp: shutil.rmtree(tmp, ignore_errors=True)
         if best[1] >= GOOD: break
     if best[0]:
-        subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', best[0], '-ac', '1', '-ar', '24000', '-b:a', '40k', os.path.join(out, lang, name)])
+        subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', best[0], '-af', NORM, '-ac', '1', '-ar', '24000', '-b:a', '40k', os.path.join(out, lang, name)])
         shutil.rmtree(os.path.dirname(best[0]), ignore_errors=True)
     rep.write(json.dumps({'file': f'{lang}/{name}', 'who': o['who'], 'emo': o.get('emo', ''), 'score': round(best[1], 3), 'takes': k + 1,
                           'text': o[lang], 'heard': best[2]}, ensure_ascii=False) + '\n'); rep.flush()

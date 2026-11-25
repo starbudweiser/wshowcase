@@ -104,6 +104,9 @@ désigner le sujet par un cadre (`-b`), pas par des points sur le torse, sinon i
    **Dialogues et voix de toute la saison (25/11)** : chapitres 12 à 26 écrits sur ce modèle (le 17 en deux fichiers,
    `ch17_kaamelott.json` et `ch17_graal.json`, chacun en FR et EN) ; 889 répliques au total, 1 778 prises générées et
    contrôlées par Whisper (6 à réécouter : cris en langue des dragons, chanson de la tourelle, « Seau d’eau » entendu
-   « Sautons »). Les prénoms des œuvres (« Diane », « Dex ») ont été retirés à la demande de Stéphan. Reste : écoute
+   « Sautons »). Les prénoms des œuvres (« Diane », « Dex ») ont été retirés à la demande de Stéphan. Volume : le héros
+   sortait 11 dB sous le narrateur (−29,6 contre −18,8 LUFS) ; toutes les répliques sont normalisées à −18 LUFS comme en
+   saison 1 (`loudnorm=I=-18:TP=-2` + limiteur, désormais dans `gen_voices_s2.py`), originaux dans
+   `work/crossover/voices_brut/`. Reste : écoute
    par Stéphan, retouches éventuelles (supprimer le fichier de la réplique puis relancer `gen_voices_s2.py <chapitre>`),
    puis intégration dans le moteur.
