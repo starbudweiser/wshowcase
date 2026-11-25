@@ -155,8 +155,8 @@
    "en": "A whole world made of cheese! Finally, some tasteful scenery!"},
 
   {"key": "c13.end.hero", "who": "hero", "emo": "content, dry", "ctx": "Fin du chapitre",
-   "fr": "Une meule carrée. Elle roule mal, mais elle s’empile bien. Plus que treize mondes.",
-   "en": "A square wheel. It rolls badly, but it stacks nicely. Only thirteen worlds to go."},
+   "fr": "Une meule carrée. Elle roule mal, mais elle s’empile bien. Plus que quinze mondes.",
+   "en": "A square wheel. It rolls badly, but it stacks nicely. Only fifteen worlds to go."},
   {"key": "c13.end.villager", "who": "villager", "emo": "grunting, friendly", "ctx": "Fin du chapitre : le villageois salue",
    "fr": "Hmm. Au revoir. Hmm. Reviens. Hmm. Avec émeraude. Hmm.",
    "en": "Hmm. Goodbye. Hmm. Come back. Hmm. With emerald. Hmm."},

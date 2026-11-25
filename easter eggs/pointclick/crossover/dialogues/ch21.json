@@ -178,8 +178,8 @@
    "fr": "Je reviens toujours. En général, dans une charrette.",
    "en": "I always come back. Usually in a cart."},
   {"key": "c21.end.hero", "who": "hero", "emo": "content, dry", "ctx": "Fin du chapitre",
-   "fr": "Une meule de plus. Plus que cinq mondes.",
-   "en": "One more wheel. Only five worlds to go."},
+   "fr": "Une meule de plus. Plus que sept mondes.",
+   "en": "One more wheel. Only seven worlds to go."},
   {"key": "c21.end.narr", "who": "narr", "emo": "weary", "ctx": "Fin du chapitre",
    "fr": "Cinq. Croyez bien que je compte aussi.",
    "en": "Five. Believe me, I’m counting too."}

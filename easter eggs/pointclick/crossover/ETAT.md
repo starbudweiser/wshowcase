@@ -17,6 +17,22 @@ Prototypes de rendu : https://claude.ai/artifact/Hbie6aV5LJGNajt7JZMpVR (`tools/
 - Rendu : 960 × 540, 16 millions de couleurs (double exact du canevas 480 × 270 de la saison 1). Le style peint
   FLUX ne change pas ; seules la définition et la palette changent.
 
+## Ajouté par Stéphan (25/11/2026)
+- **Deux mondes de plus, avant la finale** : 26 = Friends (le café au canapé orange), 27 = Rick et Morty ; Portal
+  devient le 28 (fichier `dialogues/ch28.json`, clés `c28.*`). Saison de 18 chapitres (11 à 28). Les comptes du héros
+  (« Plus que N mondes »), de Sheogorath et du narrateur (« dix-huit meules ») sont corrigés et revoisés.
+- **Rick et Morty en style dessin animé** : seul chapitre qui sort du rendu peint (aplats, gros contours noirs, yeux
+  ronds à pupille en point, palette acide), héros compris (« Le héros, version dessin animé », `h_toon`).
+- Scripts courts dans `tools/s2_content.py` (à valider par Stéphan) ; 7 personnages ajoutés à mCASTING sans voix
+  (l’acteur charmeur, le blagueur, le paléontologue nerveux, la chanteuse à la guitare, le savant fou, le petit-fils
+  anxieux, la créature bleue serviable) : Stéphan fait leur casting, puis dialogues et voix comme les autres chapitres.
+- **Une musique par épisode** (19 : les 18 chapitres, le 17 en deux versions), Flow Music, consignes dans
+  `crossover/musiques_s2.json` : genre, instruments et ambiance du thème original, sans mélodie, paroles ni titre.
+  Faites le 25/11 (Flow Music, session « Today at 10:44 PM ») : WAV dans `work/crossover/music/raw/`, boucles sans
+  couture (`tools/music_loop.sh`, −20 LUFS) dans `assets/pointclick/music/s2_*.mp3`. À écouter et valider par Stéphan.
+- Bible PDF FR/EN régénérée avec les chapitres 26 à 28 (visuels de chapitre et planches des nouveaux personnages à faire
+  après validation des scripts).
+
 ## Exigence de mise en scène (Stéphan, 24/11/2026, plus forte encore qu'en saison 1)
 « On va vers le mieux » (évolution années 90 → 2000) : les bugs restent une parodie dans les dialogues, jamais dans le
 rendu. Remarques faites sur la saison 1 (charrette dessinée devant ses passagers, bois coupé au bord de l'écran,

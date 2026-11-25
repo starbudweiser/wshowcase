@@ -148,8 +148,8 @@
    "en": "Answer it. The phone is the way out."},
 
   {"key": "c24.end.hero", "who": "hero", "emo": "content, dry", "ctx": "Fin du chapitre",
-   "fr": "Une meule de plus. Plus que deux mondes.",
-   "en": "One more wheel. Only two worlds to go."},
+   "fr": "Une meule de plus. Plus que quatre mondes.",
+   "en": "One more wheel. Only four worlds to go."},
   {"key": "c24.end.narr", "who": "narr", "emo": "weary", "ctx": "Fin du chapitre",
    "fr": "Deux. Si quelqu’un me tend une fiole bleue pour oublier ce chapitre, je la prends.",
    "en": "Two. If anyone offers me a blue vial to forget this chapter, I’ll take it."}

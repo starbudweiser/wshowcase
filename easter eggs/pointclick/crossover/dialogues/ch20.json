@@ -161,8 +161,8 @@
    "fr": "Prends ta meule et file. Et ne reviens pas avec d’autres oiseaux.",
    "en": "Take your cheese and go. And don’t come back with any more birds."},
   {"key": "c20.end.hero", "who": "hero", "emo": "content, dry", "ctx": "Fin du chapitre",
-   "fr": "Une meule bien fraîche, et une poule géante qui m’en voudra toute sa vie. Plus que six mondes.",
-   "en": "A nicely chilled cheese, and a giant chicken that’ll hold a grudge forever. Only six worlds to go."},
+   "fr": "Une meule bien fraîche, et une poule géante qui m’en voudra toute sa vie. Plus que huit mondes.",
+   "en": "A nicely chilled cheese, and a giant chicken that’ll hold a grudge forever. Only eight worlds to go."},
   {"key": "c20.end.narr", "who": "narr", "emo": "weary", "ctx": "Fin du chapitre : le héros s’en va, toujours accroupi",
    "fr": "Six. Et il marche encore accroupi, au cas où. Je ne lui dirai pas que le mot a disparu.",
    "en": "Six. And he’s still crouching, just in case. I won’t tell him the word’s gone."}

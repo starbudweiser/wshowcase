@@ -690,7 +690,7 @@
    "name": "L’IA",
    "role": "cold passive-aggressive female AI running tests, calm synthetic voice",
    "kind": "human",
-   "notes": "Chapitre 26. Effet robotique à ajouter au montage.",
+   "notes": "Chapitre 28. Effet robotique à ajouter au montage.",
    "lines": {
     "fr": [
      "Hé, toi. Tu es enfin réveillé. Il y aura du gâteau à la fin du test.",
@@ -707,7 +707,7 @@
    "name": "La tourelle",
    "role": "small cute polite security turret, high childlike synthetic voice",
    "kind": "creature",
-   "notes": "Chapitre 26.",
+   "notes": "Chapitre 28.",
    "lines": {
     "fr": [
      "Je suis là pour porter vos fardeaux.",
@@ -716,6 +716,125 @@
     "en": [
      "I am sworn to carry your burdens.",
      "Are you still there?"
+    ]
+   }
+  },
+  {
+   "id": "charmer",
+   "name": "L’acteur charmeur",
+   "role": "charming not-too-bright actor, warm flirty swagger, slow confident drawl",
+   "kind": "human",
+   "notes": "Chapitre 26 (le café).",
+   "lines": {
+    "fr": [
+     "Hé, toi. T’es enfin réveillé. … Comment tu vas ?",
+     "L’acteur ne partage pas la nourriture."
+    ],
+    "en": [
+     "Hey, you. You’re finally awake. … How you doin’?",
+     "The actor doesn’t share food."
+    ]
+   }
+  },
+  {
+   "id": "joker",
+   "name": "Le blagueur",
+   "role": "sarcastic office worker, dry nasal delivery, stresses the wrong word for effect",
+   "kind": "human",
+   "notes": "Chapitre 26 (le café).",
+   "lines": {
+    "fr": [
+     "Est-ce que je pourrais être PLUS réveillé ?",
+     "Oh, génial. Un Viking. Sur notre canapé."
+    ],
+    "en": [
+     "Could I BE any more awake?",
+     "Oh, great. A Viking. On our couch."
+    ]
+   }
+  },
+  {
+   "id": "nervpaleo",
+   "name": "Le paléontologue nerveux",
+   "role": "nervous whiny palaeontologist, voice cracks when upset, explodes into shouting",
+   "kind": "human",
+   "notes": "Chapitre 26 (le café). Pas le même que le paléontologue du chapitre 20.",
+   "lines": {
+    "fr": [
+     "PIVOT ! PIVOT ! PIVOOOT !",
+     "QUI A MANGÉ MON SANDWICH ?"
+    ],
+    "en": [
+     "PIVOT! PIVOT! PIVOOOT!",
+     "WHO ATE MY SANDWICH?"
+    ]
+   }
+  },
+  {
+   "id": "singer",
+   "name": "La chanteuse à la guitare",
+   "role": "quirky dreamy hippie singer, sweet odd voice, sings slightly off-key",
+   "kind": "human",
+   "notes": "Chapitre 26 (le café). Chanson « Fromage qui pue » (paroles originales).",
+   "lines": {
+    "fr": [
+     "Fromage qui pue, tout seul dans ta cave… même les rats font un détour…",
+     "Il me manque une rime. Tu as une rime, toi ?"
+    ],
+    "en": [
+     "Smelly cheese, all alone in your cellar… even the rats walk round you…",
+     "I’m missing a rhyme. Do you have a rhyme?"
+    ]
+   }
+  },
+  {
+   "id": "madsci",
+   "name": "Le savant fou",
+   "role": "cynical drunk genius grandpa, raspy, burps in the middle of sentences",
+   "kind": "human",
+   "notes": "Chapitre 27, dessin animé. Joue aussi le cornichon.",
+   "lines": {
+    "fr": [
+     "Hé, toi. T’es — *rot* — enfin réveillé.",
+     "Je suis un cornichon ! Fus Ro Dub Dub !"
+    ],
+    "en": [
+     "Hey, you. You’re — *burp* — finally awake.",
+     "I’m a pickle! Fus Ro Dub Dub!"
+    ]
+   }
+  },
+  {
+   "id": "grandson",
+   "name": "Le petit-fils anxieux",
+   "role": "anxious stuttering teenage boy, voice cracks, panics easily",
+   "kind": "human",
+   "notes": "Chapitre 27, dessin animé.",
+   "lines": {
+    "fr": [
+     "Oh là là, oh là là… Il y a un Viking dans le garage !",
+     "Pourquoi c’est toujours moi qui trouve le fromage ?"
+    ],
+    "en": [
+     "Oh geez, oh geez… There’s a Viking in the garage!",
+     "Why am I always the one who finds the cheese?"
+    ]
+   }
+  },
+  {
+   "id": "bluegenie",
+   "name": "La créature bleue serviable",
+   "role": "eager cheerful blue creature, bright enthusiastic voice, gets more and more stressed",
+   "kind": "creature",
+   "notes": "Chapitre 27, dessin animé. Plusieurs créatures, même voix.",
+   "lines": {
+    "fr": [
+     "Bonjour ! Je suis là pour exaucer UNE demande ! Regarde-moi !",
+     "Une meule ? Facile ! … Ce n’est PAS facile !"
+    ],
+    "en": [
+     "Hi there! I’m here to grant ONE request! Look at me!",
+     "A wheel of cheese? Easy! … This is NOT easy!"
     ]
    }
   }

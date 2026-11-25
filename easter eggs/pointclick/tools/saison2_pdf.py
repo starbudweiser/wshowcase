@@ -78,7 +78,7 @@ def chapter(ch, L, T, alt_key=None):
     typ = T[{'jeu': 'game', 'film': 'film', 'films': 'films', 'serie': 'serie'}[d['t']]]
     s = [f'<div class="chap page"><div class="kick">{e(T["s_ch"])}</div>',
          f'<h3><span class="num">{n}</span>{e(d["title"][L])}<span class="tag">{e(d["ref"][L])}</span><span class="tag">{e(typ)}</span></h3>',
-         f'<img src="{u(os.path.join(IMG, d["img"] + ".jpg"))}">',
+         (f'<img src="{u(os.path.join(IMG, d["img"] + ".jpg"))}">' if os.path.exists(os.path.join(IMG, d["img"] + ".jpg")) else f'<div class="ph">{e(T["per_wait"])}</div>'),
          f'<div class="lab">{e(T["wake"])}</div><p class="quote">{e(d["wake"][L])}</p>',
          f'<div class="lab">{e(T["steps"])}</div><ol>' + ''.join(f'<li>{e(x)}</li>' for x in d['steps'][L]) + '</ol>',
          f'<div class="lab">{e(T["wabon"])}</div><ul>' + ''.join(f'<li>{e(x)}</li>' for x in d['wab'][L]) + '</ul>',

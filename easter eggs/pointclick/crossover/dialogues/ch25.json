@@ -142,8 +142,8 @@
    "fr": "Va, Nordique. Et la prochaine fois, laisse-moi parler en premier.",
    "en": "Go, Nord. And next time, let me speak first."},
   {"key": "c25.end.hero", "who": "hero", "emo": "content, dry", "ctx": "Fin du chapitre",
-   "fr": "Une meule de plus. Plus qu’un monde.",
-   "en": "One more wheel. Only one world to go."},
+   "fr": "Une meule de plus. Plus que trois mondes.",
+   "en": "One more wheel. Only three worlds to go."},
   {"key": "c25.end.narr", "who": "narr", "emo": "weary, hopeful", "ctx": "Fin du chapitre",
    "fr": "Plus qu’un. Je sens déjà la fondue. À moins que ce soit le démon qui fume encore.",
    "en": "Just one. I can already smell the fondue. Unless that’s the demon still smoking."}

@@ -164,8 +164,8 @@
    "en": "Not that tune, please. He’ll hum it for the next three chapters."},
 
   {"key": "c12.end.hero", "who": "hero", "emo": "content, dry", "ctx": "Fin du chapitre",
-   "fr": "Une meule de plus, arrachée à un lapin. Plus que quatorze mondes.",
-   "en": "One more wheel, pried from a rabbit. Only fourteen worlds to go."},
+   "fr": "Une meule de plus, arrachée à un lapin. Plus que seize mondes.",
+   "en": "One more wheel, pried from a rabbit. Only sixteen worlds to go."},
   {"key": "c12.end.sam", "who": "sam", "emo": "warm, polite", "ctx": "Fin du chapitre : le duo salue le héros",
    "fr": "Revenez quand vous voulez, monsieur. Nous avons toujours des crimes absurdes sous la main.",
    "en": "Do come back anytime, sir. We always have absurd crimes on hand."},

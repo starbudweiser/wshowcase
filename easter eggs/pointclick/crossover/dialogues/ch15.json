@@ -142,8 +142,8 @@
    "fr": "Si tu me croises dans le passé, ne me dis rien ! Enfin, parle-moi du fromage.",
    "en": "If you run into me in the past, don’t tell me anything! Well, tell me about the cheese."},
   {"key": "c15.end.hero", "who": "hero", "emo": "content, dry", "ctx": "Fin du chapitre",
-   "fr": "Un fromage de soixante-dix ans, livré par une charrette qui me suit de monde en monde. Plus que onze mondes.",
-   "en": "A seventy-year-old cheese, delivered by a cart that follows me from world to world. Only eleven worlds to go."},
+   "fr": "Un fromage de soixante-dix ans, livré par une charrette qui me suit de monde en monde. Plus que treize mondes.",
+   "en": "A seventy-year-old cheese, delivered by a cart that follows me from world to world. Only thirteen worlds to go."},
   {"key": "c15.end.narr", "who": "narr", "emo": "weary", "ctx": "Fin du chapitre",
    "fr": "Le savant a voyagé dans le temps. Moi, j’aimerais juste avancer jusqu’à la fin du chapitre.",
    "en": "The scientist travelled through time. All I want is to fast-forward to the end of the chapter."}

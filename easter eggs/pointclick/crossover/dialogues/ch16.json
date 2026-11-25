@@ -143,8 +143,8 @@
    "fr": "Reviens quand tu veux, petit. Mais la prochaine fois, lave le seau.",
    "en": "Come back anytime, kid. But next time, wash the bucket."},
   {"key": "c16.end.hero", "who": "hero", "emo": "content, dry", "ctx": "Fin du chapitre",
-   "fr": "Une meule de banquet, cinq points et une maison à mon nom. Plus que dix mondes.",
-   "en": "A feast cheese, five points and a house in my name. Only ten worlds to go."},
+   "fr": "Une meule de banquet, cinq points et une maison à mon nom. Plus que douze mondes.",
+   "en": "A feast cheese, five points and a house in my name. Only twelve worlds to go."},
   {"key": "c16.end.narr", "who": "narr", "emo": "weary", "ctx": "Fin du chapitre",
    "fr": "Un château entier rempli de magie, et il en repart avec un fromage. Il y a des gens qui ne changent jamais. On me paie quand même.",
    "en": "A whole castle full of magic, and he leaves with a cheese. Some people never change. I still get paid."}
