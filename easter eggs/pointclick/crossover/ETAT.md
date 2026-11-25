@@ -37,7 +37,8 @@ Prototypes de rendu : https://claude.ai/artifact/Hbie6aV5LJGNajt7JZMpVR (`tools/
 - Mur des mots (21) : trois garçons distincts (le grand maigre, le rond à casquette, le petit timide), version 2
   recalculée en entier (sourire bouche fermée, casquette sans écriture) : `crossover/img/r_stranger.jpg`
   (`gen_s2_scenes_vues2.sh r_strangerx`, graine 2).
-- Générique de House (19) : version 8 retenue (trip-hop, battement de cœur, motif de clavecin), intro coupée, boucle de
+- Générique de House (19) : remplacé le 26/11 par le morceau de Stéphan « The Examination Room » (boucle de 32 mesures
+  à 76 bpm, `assets/pointclick/music/s2_19_hopital.mp3`). Avant : version 8 retenue (trip-hop, battement de cœur, motif de clavecin), intro coupée, boucle de
   40 mesures à 75 bpm calée sur la grosse caisse (`tools/music_groove.py` puis `tools/music_loop_bars.sh`) ; 2 tirages de
   sa dernière consigne (célesta et boîte à musique) à départager. Kaamelott (17) : 3 versions d'après le générique du
   livre V (grand orchestre sombre) à départager.
