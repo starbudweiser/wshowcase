@@ -63,9 +63,22 @@ for l in langs: os.makedirs(os.path.join(out, l), exist_ok=True)
 os.makedirs(refs, exist_ok=True)
 def ref_wav(vid, sample, tag):
     dst = os.path.join(refs, f'{vid}.{tag}.wav')
-    if not os.path.exists(dst): subprocess.run(['/usr/bin/afconvert', '-f', 'WAVE', '-d', 'LEI16@24000', '-c', '1', sample, dst], check=True)
+    if not os.path.exists(dst) or os.path.getmtime(sample) > os.path.getmtime(dst):     # refait si l'extrait a changé
+        subprocess.run(['/usr/bin/afconvert', '-f', 'WAVE', '-d', 'LEI16@24000', '-c', '1', sample, dst], check=True)
     return dst
-def reference(c, lang):        # (extrait wav, transcription, voix clonée ?)
+# Extraits remplacés par Stéphan hors de mCASTING (fichier source, début, fin en s) : canal central si 5.1, transcription Whisper
+REF_SRC = {'paleo': ('/Volumes/SSD Editing/VOICE CLONING/Sam Neill (Herve Bellon).m4a', 0.45, 19.9)}   # 25/11
+def ref_src(who):
+    src, a, b = REF_SRC[who]; tag = f'{who}.src.{int(os.path.getmtime(src))}.{a}-{b}'
+    dst, txt = os.path.join(refs, tag + '.wav'), os.path.join(refs, tag + '.txt')
+    if not os.path.exists(dst):
+        ch = subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'stream=channels', '-of', 'csv=p=0', src], capture_output=True, text=True).stdout.split()
+        pan = ['-af', 'pan=mono|c0=FC'] if ch and int(ch[0]) == 6 else ['-ac', '1']
+        subprocess.run(['ffmpeg', '-y', '-v', 'error', '-ss', str(a), '-to', str(b), '-i', src, *pan, '-ar', '24000', '-c:a', 'pcm_s16le', dst], check=True)
+    if not os.path.exists(txt): open(txt, 'w').write(STT.generate(dst, language='fr').text.strip())
+    return dst, open(txt).read()
+def reference(c, lang, who=None):   # (extrait wav, transcription, voix clonée ?)
+    if who in REF_SRC: return (*ref_src(who), True)
     if c.get('ref_audio'): return ref_wav(c['voice_id'], c['ref_audio'], 'clone'), c['ref_text'], True
     if c['samples'].get(lang): return ref_wav(c['voice_id'], c['samples'][lang], lang), lib_text(c['voice_id'], lang), False
     return ref_wav(c['voice_id'], c['timbre_ref_audio'], 'fr'), c.get('timbre_ref_text') or lib_text(c['voice_id'], 'fr'), False
@@ -90,7 +103,7 @@ STT = load_stt('mlx-community/whisper-large-v3-turbo-asr-fp16')
 rep = open(os.path.join(out, 'report.jsonl'), 'a')
 for n, (lang, o) in enumerate(todo, 1):
     c = C[o['who']]; name = o['key'] + '.mp3'
-    wav, rt, cloned = reference(c, lang)
+    wav, rt, cloned = reference(c, lang, o['who'])
     text = (f"[{o['emo']}] " if o.get('emo') else '') + speech(o[lang], lang, cloned)
     expr = o['who'] in EXPR and len(norm(o[lang])) > 2
     takes = 1 if len(norm(o[lang])) <= 2 else (TAKES_EXPR if expr else TAKES)   # cris et répliques très courtes : Whisper juge mal

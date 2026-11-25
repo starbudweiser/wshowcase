@@ -112,6 +112,9 @@ désigner le sujet par un cadre (`-b`), pas par des points sur le torse, sinon i
    dans `ch17_kaamelott.json`, 4 prises par réplique et choix de la plus vivante (variation de hauteur et d'énergie,
    `EXPR` et `vivacite()`) parmi celles que Whisper entend bien. Le chevalier lent a changé de voix dans mCASTING
    (clone-af44afa8) : ses 22 prises sont regénérées. Le paléontologue chuchotait (consignes « whisper ») : consignes
-   réécrites à voix haute dans `ch20.json`, ses 30 prises regénérées en mode expressif. Reste : écoute
+   réécrites à voix haute dans `ch20.json`, ses 30 prises regénérées en mode expressif. Puis Stéphan a remplacé son
+   extrait source (`/Volumes/SSD Editing/VOICE CLONING/Sam Neill (Herve Bellon).m4a`, 5.1) sans recloner dans mCASTING :
+   `REF_SRC` du générateur en tire 0,45-19,9 s du canal central et le transcrit par Whisper (cache dans `_refs/`).
+   À reporter dans mCASTING (reclonage) pour que la voix y soit à jour aussi. Reste : écoute
    par Stéphan, retouches éventuelles (supprimer le fichier de la réplique puis relancer `gen_voices_s2.py <chapitre>`),
    puis intégration dans le moteur.
