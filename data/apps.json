@@ -143,7 +143,8 @@
       "qNOTES",
       "mSTICK",
       "mPASTE",
-      "mPARLE"
+      "mPARLE",
+      "mKOBO"
      ]
     },
     {
@@ -1157,6 +1158,25 @@
     ]
    },
    "deskIdx": 2
+  },
+  {
+   "id": "mKOBO",
+   "space": "util",
+   "repo": "mKOBO",
+   "accent": "#ff6b4a",
+   "kind": "app",
+   "desk": true,
+   "demo": "mKOBO",
+   "shots": 1,
+   "download": true,
+   "version": "1.1.1",
+   "tag": {
+    "fr": "Trouve des livres, BD et livres audio gratuits et légaux, et envoie-les sur ta liseuse Kobo ou dans Google Drive, avec la boutique Kobo intégrée.",
+    "en": "Find free, legal books, comics and audiobooks and send them to your Kobo e-reader or to Google Drive, with the Kobo store built in.",
+    "es": "Encuentra libros, cómics y audiolibros gratuitos y legales y envíalos a tu lector Kobo o a Google Drive, con la tienda Kobo integrada.",
+    "it": "Trova libri, fumetti e audiolibri gratuiti e legali e inviali al tuo lettore Kobo o a Google Drive, con il negozio Kobo integrato."
+   },
+   "deskIdx": 7
   }
  ]
 }
