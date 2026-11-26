@@ -109,7 +109,8 @@
       "mBACKUP",
       "mCLOUD",
       "qLOOKS",
-      "mPDF"
+      "mPDF",
+      "mDOWN"
      ]
     },
     {
@@ -127,7 +128,9 @@
       "mSTAGRAM",
       "mFONTS",
       "mFRAMES",
-      "mTAPES"
+      "mTAPES",
+      "mSLICE",
+      "mSOUND"
      ]
     },
     {
@@ -1177,6 +1180,110 @@
     "it": "Trova libri, fumetti e audiolibri gratuiti e legali e inviali al tuo lettore Kobo o a Google Drive, con il negozio Kobo integrato."
    },
    "deskIdx": 7
+  },
+  {
+   "id": "mSLICE",
+   "space": "util",
+   "repo": "mSLICE",
+   "accent": "#5c59d6",
+   "kind": "app",
+   "desk": false,
+   "demo": "mSLICE",
+   "shots": 1,
+   "download": true,
+   "version": "1.20.2",
+   "tag": {
+    "fr": "Coupe des morceaux dans tes vidéos et fichiers audio avec les touches I et O, et les exporte sans recompression, en une fraction de seconde.",
+    "en": "Cut pieces out of video and audio files with the I and O keys, and export them without re-encoding in a fraction of a second.",
+    "es": "Corta fragmentos de tus vídeos y archivos de audio con las teclas I y O, y los exporta sin recodificar en una fracción de segundo.",
+    "it": "Taglia spezzoni dai tuoi video e file audio con i tasti I e O, e li esporta senza ricodifica in una frazione di secondo."
+   },
+   "features": {
+    "fr": [
+     "Bistouri aux touches I / O : plusieurs morceaux par fichier, poignées à glisser sur la timeline.",
+     "Timeline précise : vignettes, forme d’onde, zoom, lecture J K L, image par image et image clé par image clé.",
+     "Export sans recompression (copie directe des flux) : instantané et sans perte ; ou recompression matérielle H.264, H.265, ProRes.",
+     "Un fichier par morceau ou un seul fichier fusionné ; les originaux ne sont jamais modifiés.",
+     "Onglet Trouver : scènes, sons et personnages repérés en local avec les modèles de macOS, puis changés en morceaux.",
+     "Clic droit dans le Finder et agent IA facultatif (panneau de discussion ou serveur MCP)."
+    ],
+    "en": [
+     "I / O scalpel: several pieces per file, handles to drag on the timeline.",
+     "Precise timeline: thumbnails, waveform, zoom, J K L playback, frame by frame and keyframe by keyframe.",
+     "Export without re-encoding (direct stream copy): instant and lossless; or hardware re-encoding to H.264, H.265, ProRes.",
+     "One file per piece or one merged file; originals are never modified.",
+     "Find tab: scenes, sounds and characters spotted locally with macOS’s built-in models, then turned into pieces.",
+     "Finder right-click and an optional AI agent (chat panel or MCP server)."
+    ]
+   }
+  },
+  {
+   "id": "mSOUND",
+   "space": "util",
+   "repo": "mSOUND",
+   "accent": "#09c4b7",
+   "kind": "app",
+   "desk": false,
+   "demo": "mSOUND",
+   "shots": 1,
+   "download": true,
+   "version": "1.3.0",
+   "tag": {
+    "fr": "Convertit tes fichiers audio d’un clic droit dans le Finder, et les coupe et retouche dans un éditeur de forme d’onde.",
+    "en": "Convert audio files with a right-click in the Finder, and cut and edit them in a waveform editor.",
+    "es": "Convierte tus archivos de audio con un clic derecho en el Finder, y córtalos y edítalos en un editor de forma de onda.",
+    "it": "Converti i tuoi file audio con un clic destro nel Finder, e tagliali e modificali in un editor di forma d’onda."
+   },
+   "features": {
+    "fr": [
+     "Clic droit dans le Finder : conversion directe, sans sous-menu, entre MP3, AAC, FLAC, WAV, AIFF et ALAC.",
+     "Sélection de formats mélangés vers un seul format ; jauge de progression sur l’icône du fichier.",
+     "Éditeur de forme d’onde non destructif : couper, copier, coller, marqueurs, normaliser, fondus, gain.",
+     "Annulation illimitée, bande d’aperçu, détection des silences.",
+     "Mise à jour automatique ; 4 langues."
+    ],
+    "en": [
+     "Finder right-click: direct conversion, no submenu, between MP3, AAC, FLAC, WAV, AIFF and ALAC.",
+     "Mixed-format selections to one target format; progress gauge on the file icon.",
+     "Non-destructive waveform editor: cut, copy, paste, markers, normalize, fades, gain.",
+     "Unlimited undo, overview strip, silence detection.",
+     "Automatic updates; 4 languages."
+    ]
+   }
+  },
+  {
+   "id": "mDOWN",
+   "space": "util",
+   "repo": "mDOWN",
+   "accent": "#03a492",
+   "kind": "menubar",
+   "desk": false,
+   "demo": "mDOWN",
+   "shots": 1,
+   "download": true,
+   "version": "1.0.3",
+   "tag": {
+    "fr": "Télécharge les vidéos et sons des pages web depuis la barre des menus, avec un moteur yt-dlp qui se met à jour tout seul.",
+    "en": "Download videos and audio from web pages from the menu bar, with a yt-dlp engine that updates itself.",
+    "es": "Descarga vídeos y audio de páginas web desde la barra de menús, con un motor yt-dlp que se actualiza solo.",
+    "it": "Scarica video e audio dalle pagine web dalla barra dei menu, con un motore yt-dlp che si aggiorna da solo."
+   },
+   "features": {
+    "fr": [
+     "Coller un lien, ou clic droit « Télécharger avec mDOWN » dans le navigateur (extension Chromium, signet Safari).",
+     "Léger : vit dans la barre des menus, 30 à 40 Mo de mémoire.",
+     "Moteur yt-dlp mis à jour seul : empreinte vérifiée, auto-test, retour arrière automatique en cas de régression.",
+     "Serveur MCP : un agent télécharge, suit et annule, seulement dans les dossiers autorisés.",
+     "Liaison facultative avec wCLAUDE pour les vidéos réservées à un compte."
+    ],
+    "en": [
+     "Paste a link, or right-click “Download with mDOWN” in the browser (Chromium extension, Safari bookmarklet).",
+     "Light: lives in the menu bar, 30–40 MB of memory.",
+     "Self-updating yt-dlp engine: checksum-verified, self-tested, rolled back automatically on regression.",
+     "MCP server: an agent downloads, tracks and cancels, only in the folders you allow.",
+     "Optional link with wCLAUDE for account-only videos."
+    ]
+   }
   }
  ]
 }
