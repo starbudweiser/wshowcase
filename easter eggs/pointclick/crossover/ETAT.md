@@ -58,8 +58,9 @@ Prototypes de rendu : https://claude.ai/artifact/Hbie6aV5LJGNajt7JZMpVR (`tools/
   - Friends (26) : le café s'appelle « La Cruche percée » (« The Ragged Flagon » en anglais), enseigne écrite sur la
     scène, une image par langue (`r_friends_fr.jpg` / `r_friends_en.jpg`, même graine ; `saison2_pdf.py` prend l'image
     de la langue si elle existe). Costumes et décor d'après les photos de Stéphan (jamais les visages) : fiches
-    `c_charmer2_2`, `c_joker2_1`, `c_nervpaleo2_1`, `c_singer2_1` (`gen_s2_friends.sh`). Scène : 5e passe en cours
-    (`r_friendsfr5`), chacun vu de la tête aux pieds.
+    `c_charmer2_2`, `c_joker2_1`, `c_nervpaleo2_1`, `c_singer2_1` (`gen_s2_friends.sh`). Scène : 6e passe retenue
+    (`r_friendsfr6` / `r_friendsen6`, graine 2) : chacun vu de la tête aux pieds, plus de table basse devant le canapé
+    (elle cachait les bottes du héros), tasses sur une desserte contre le mur.
   - Règle de Stéphan : les personnages seront animés, donc jamais un membre caché par un objet ou un autre personnage,
     ni sur les fiches ni sur les scènes.
 

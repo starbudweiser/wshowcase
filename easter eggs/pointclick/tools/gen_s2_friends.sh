@@ -46,6 +46,11 @@ SC4="${SC3/second, standing beside the couch and leaning toward the hero with a 
 SC4="${SC4/From left to right:/The low coffee table stands in the foreground at the far left, in front of the hero's knees only, and hides nobody's legs or feet; every person is seen entirely from head to feet. From left to right:}"
 P[r_friendsfr5]="$SC4\"LA CRUCHE PERCÉE\". $STS"; R[r_friendsfr5]=${R[r_friends]}; S[r_friendsfr5]=1280x720
 P[r_friendsen5]="$SC4\"THE RAGGED FLAGON\". $STS"; R[r_friendsen5]=${R[r_friends]}; S[r_friendsen5]=1280x720
+# 6e passe (26/11) : la table basse cachait encore les bottes du héros : plus de table devant le canapé.
+SC5="${SC4/a rustic low wooden coffee table with peeling pale green paint and big coffee mugs/a rustic wooden side table with peeling pale green paint standing against the back wall, holding big coffee mugs}"
+SC5="${SC5/The low coffee table stands*legs or feet;/There is NO table in front of the couch: the hero's legs and fur boots rest on the rug in full view;}"
+P[r_friendsfr6]="$SC5\"LA CRUCHE PERCÉE\". $STS"; R[r_friendsfr6]=${R[r_friends]}; S[r_friendsfr6]=1280x720
+P[r_friendsen6]="$SC5\"THE RAGGED FLAGON\". $STS"; R[r_friendsen6]=${R[r_friends]}; S[r_friendsen6]=1280x720
 ids=("$@"); [ ${#ids} -eq 0 ] && ids=(c_charmer c_joker c_nervpaleo c_singer r_friends)
 for id in $ids; do
   for s in ${=SEEDS:-1 2}; do
