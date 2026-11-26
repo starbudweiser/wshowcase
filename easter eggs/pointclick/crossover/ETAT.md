@@ -49,6 +49,19 @@ Prototypes de rendu : https://claude.ai/artifact/Hbie6aV5LJGNajt7JZMpVR (`tools/
   sont mises de côté dans `work/crossover/voices_kaamelott_en_inutile/`).
 - Sacré Graal (17) en anglais seulement, pour la même raison (28 voix françaises mises de côté dans
   `work/crossover/voices_graal_fr_inutile/`).
+- Graphismes des chapitres 26 et 27 (26/11), avant le casting des voix :
+  - Rick et Morty (27) : seul chapitre en dessin animé. Stéphan a gardé le héros en aplats d'un premier essai et le
+    dessin des personnages d'un autre : scène recalculée en entier avec les deux en référence, puis encore une fois pour
+    que chacun soit entier et séparé (le savant avait un bras caché). Retenu : `crossover/img/r_rick.jpg`
+    (`gen_s2_rick.sh r_rickn`, graine 2). Fiches (`gen_s2_rick_persos.sh`) : savant `c_madsci2_1` (deux bras visibles),
+    petit-fils, créature bleue et héros cartoon en variante 2 (`hero_s2/sel_toon.png`).
+  - Friends (26) : le café s'appelle « La Cruche percée » (« The Ragged Flagon » en anglais), enseigne écrite sur la
+    scène, une image par langue (`r_friends_fr.jpg` / `r_friends_en.jpg`, même graine ; `saison2_pdf.py` prend l'image
+    de la langue si elle existe). Costumes et décor d'après les photos de Stéphan (jamais les visages) : fiches
+    `c_charmer2_2`, `c_joker2_1`, `c_nervpaleo2_1`, `c_singer2_1` (`gen_s2_friends.sh`). Scène : 5e passe en cours
+    (`r_friendsfr5`), chacun vu de la tête aux pieds.
+  - Règle de Stéphan : les personnages seront animés, donc jamais un membre caché par un objet ou un autre personnage,
+    ni sur les fiches ni sur les scènes.
 
 ## Exigence de mise en scène (Stéphan, 24/11/2026, plus forte encore qu'en saison 1)
 « On va vers le mieux » (évolution années 90 → 2000) : les bugs restent une parodie dans les dialogues, jamais dans le
