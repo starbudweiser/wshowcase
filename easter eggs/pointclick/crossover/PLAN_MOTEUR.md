@@ -109,5 +109,6 @@ FLUX, une à la fois (file calcul-lourd) : plusieurs jours de calcul, avec une p
 - **Twin Peaks (22), petit homme en rouge** (validé par Stéphan) : ses 6 répliques `envers` ont leur voix retournée
   (FR/EN, livrées) ; le moteur les sous-titre toujours, en bas de l'écran façon télévision (`ENVERS` dans
   `js/pointclick/lang/s2_meta.js`, généré par `tools/s2_lang.py`), et joue ses boucles à l'envers pendant ces répliques.
-  Dans la scène : son entité porte `rev: true` (toutes ses animations à l'envers) ; pendant `c22.use.wab.redman`
+  La réplique du héros sous Wabbajack (`c22.use.wab.redman.hero`) est aussi `envers` : voix retournée et sous-titre forcé,
+  mais ses animations restent à l'endroit. Dans la scène : l'entité du petit homme porte `rev: true` (toutes ses animations à l'envers) ; pendant `c22.use.wab.redman`
   (« dans le bon sens », à l'endroit, sans sous-titre forcé), poser `fwd: true` le temps de la réplique.

@@ -423,7 +423,7 @@ export class Game {
     const b = el('div', 'pc-b', text); b.style.color = COLORS[who] || '#fff'; this.ov.append(b); this.bubbles.push(b);
     const env = ENV.has(key);   /* dite à l'envers : sous-titre façon télévision en bas de l'écran, toujours affiché, et le personnage s'anime à l'envers */
     if (env) { b.classList.add('pc-sub'); this.placeBubble(b, W / 2, H - 8); } else { const [ax, ay] = (this.cinePos && this.cinePos[who]) || (e ? this.headPos(e) : [W / 2, 40]); this.placeBubble(b, ax, ay); }
-    if (e) { e.talk = who; e.revLine = env; }
+    if (e) { e.talk = who; e.revLine = env && !e.isHero; }   /* le héros dit sa réplique à l'envers (voix retournée) mais s'anime à l'endroit */
     const au = this.voicePlay(key, key[0] === '=' ? -1 : this.T.idx); this.sayAu = au;
     this.skip = false; const t0 = this.now, end = t0 + Math.max(1.7, text.length * 0.06); this.sayT0 = t0;
     const talking = () => au && !au.ended && !au.error && !au.paused && this.voiceOn;
