@@ -106,6 +106,19 @@ export default {
   'hint.s2_15.cable.1': 'The cable must touch the clock’s hand.', 'hint.s2_15.cable.2': 'Its other end hangs from the street lamp.', 'hint.s2_15.cable.3': 'Take the cable from the street lamp, then use it on the clock.',
   'hint.s2_15.storm.1': 'All that’s missing is a storm… on demand.', 'hint.s2_15.storm.2': 'Your Voice can call the storm.', 'hint.s2_15.storm.3': 'Use the Shout on the clock.',
   /* genie hints (text only in the mock-up) */
+  /* chapter 22: the red room, the town diner */
+  'n.redman': 'little man in red', 'n.loglady': 'log lady', 'n.agent': 'federal agent', 'n.s22curtains': 'red curtains', 'n.s22floor': 'zigzag floor', 'n.s22exit': 'gap between the curtains',
+  'n.s22lamp': 'floor lamp', 'n.owls22': 'owls', 'n.recorder22': 'tape recorder', 'n.s22counter': 'counter', 'n.s22pies': 'pie display', 'n.s22door': 'diner door',
+  'n.coffee22': 'black coffee', 'n.pie22': 'slice of cherry pie', 'n.cheese22': 'velvet wheel', 'n.sheo22': 'Sheogorath',
+  'look.agent': 'An impeccable agent talking to his tape recorder. He smiles at the pie like an old friend.', 'look.loglady': 'A lady cradling a log. The log looks well cared for.', 'look.sheo': 'Sheogorath, at home. He looks like he’s been waiting for his coffee since the Merethic Era.', 'look.s22lamp': 'A floor lamp. It lights everything red. Even my thoughts.', 'look.s22exit': 'A gap between the curtains. On the other side, it smells of coffee.',
+  'look.s22counter': 'A counter. Back home we drink mead at one; here, coffee as black as a moonless night.', 'look.s22pies': 'Cherry pies. As red as the curtains in the other room.',
+  'look.s22door': 'The diner door. Outside, pine trees as far as the eye can see. Reminds me of the Rift.', 'look.owls22': 'Two stuffed owls. They stare at me. Maybe they are not what they seem.',
+  'look.chickens22': 'Two stuffed hens. At least they are what they seem.', 'look.recorder22': 'A little box that records your voice. Back home, we pay a bard for that.',
+  'look.coffee22': 'A black coffee, certified damn fine.', 'look.pie22': 'A slice of cherry pie. If I eat it, Sheogorath will turn me into cheese.', 'look.cheese22': 'A wheel with a red velvet rind. It matches the curtains.',
+  's22.need.both': 'He wants a coffee AND a slice of pie. I don’t have both.', 's22.wk.back': 'And it’s back to normal. Even here, the Wabbajack’s magic doesn’t last.',
+  'hint.s2_22.sheo.1': 'The master of the house may have something to say.', 'hint.s2_22.sheo.2': 'Sheogorath is at home here. Talk to him.', 'hint.s2_22.sheo.3': 'Talk to Sheogorath.',
+  'hint.s2_22.pie.1': 'Sheogorath wants a good coffee and a slice of cherry pie.', 'hint.s2_22.pie.2': 'The town diner, beyond the curtains, serves both. Someone there loves them.', 'hint.s2_22.pie.3': 'Talk to the agent at the diner, then give the pie to Sheogorath.',
+  'hint.s2_22b.agent.1': 'This agent swears by coffee and pie.', 'hint.s2_22b.agent.2': 'He is generous. Talk to him.', 'hint.s2_22b.agent.3': 'Talk to the agent, then go back to the red room.',
   /* chapter 21: the living room with the alphabet wall, the basement */
   'n.kid': 'boy with a walkie-talkie', 'n.girl': 'girl with powers', 'n.flower': 'flower-headed creature', 'n.daffodil21': 'giant daffodil', 'n.s21wall': 'alphabet wall',
   'n.fridge21': 'upside-down fridge', 'n.waffles21': 'waffle box', 'n.walkie21': 'walkie-talkie', 'n.s21stairs': 'stairs', 'n.s21game': 'role-playing game', 'n.s21tv': 'television', 'n.s21sofa': 'sofa', 'n.cheese21': 'squashed wheel',

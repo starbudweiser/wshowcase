@@ -45,6 +45,9 @@ k trex_i $PS/c_trex.png 380 "--n=24 --despill=all"; k trex_t $PS/c_trex.png 380 
 k kid_i $PS/c_kid2.png 320 "--n=24"; k kid_t $PS/c_kid2.png 320 "--n=20"
 k girl_i $PS/c_girl.png 330 "--n=24"; k girl_t $PS/c_girl.png 330 "--n=20"
 k flower_i $PS/c_flower.png 440 "--n=24"
+k redman_i $PS/c_redman3_1.png 300 "--n=24"; k redman_t $PS/c_redman3_1.png 300 "--n=20"
+k loglady_i $PS/c_loglady3.png 380 "--n=24"; k loglady_t $PS/c_loglady3.png 380 "--n=20"
+k agent_i $PS/c_agent.png 400 "--n=24"; k agent_t $PS/c_agent.png 400 "--n=20"
 k parrot_i $PS/c_parrot.png 110 "--n=24 --despill=all"; k parrot_t $PS/c_parrot.png 110 "--n=20 --despill=all"
 # --despill=all : nettoyage du rose du fond sur toute la silhouette, seulement pour qui ne porte aucun magenta ni violet
 ids=("$@"); [ ${#ids} -eq 0 ] && ids=(${(k)K})

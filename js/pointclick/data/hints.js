@@ -31,6 +31,8 @@ const STEPS = {
   s2_20: [['s2_20.crouch', g => g.flag('crouched')], ['s2_20.monster', () => false]],
   s2_20b: [['s2_20b.small', g => g.flag('rolls')], ['s2_20b.fridge', () => false]],
   s2_21: [['s2_21.wall', g => g.flag('lights')], ['s2_21.flower', g => g.flag('daffodil')], ['s2_21.girl', () => false]],
+  s2_22: [['s2_22.sheo', g => g.flag('sheoAsk')], ['s2_22.pie', () => false]],
+  s2_22b: [['s2_22b.agent', g => g.flag('order')], ['s2_22.pie', () => false]],
   s2_15: [['s2_15.cart', g => g.flag('cartSteel')], ['s2_15.horse', g => g.flag('cartUp')], ['s2_15.cable', g => g.flag('cableOn')], ['s2_15.storm', () => false]],
   s2_12b: [['s2_12b.roll', g => g.has('sweetroll') || g.flag('traded')], ['s2_12b.cheese', g => g.flag('traded')]],
   s2_11: [['s2_11.cracker', g => g.has('cracker') || g.flag('learned')], ['s2_11.parrot', g => g.flag('learned')], ['s2_11.duel', g => g.flag('duelWon')],
