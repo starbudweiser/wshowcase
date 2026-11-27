@@ -156,6 +156,14 @@ FLUX, une à la fois (file calcul-lourd) : plusieurs jours de calcul, avec une p
   rires enregistrés après chaque chute (trois rires de foule de la banque de sons), cage d'escalier au canapé coincé
   (« FUS… RO… PIVOT ! »), appartement au frigo gardé (brioche = échange), retour au café pour la chanson du fromage
   (notes qui flottent, rime soufflée) ; Wabbajack : canapé en banc, guitare en luth, blagueur en garde, dinosaure en dragon.
+- Chapitre 27 (« Fus Ro Dub Dub ») : le seul en dessin animé, héros redessiné compris (scene.hero2 / heroLife / heroMirror :
+  vues clés d'après la fiche sel_toon, cycles LTX, la gauche en miroir ; Wabbajack sur soi : peint un instant). Garage, portail vert
+  tourbillonnant dessiné par le moteur, boîte à bouton, fromages qui parlent et qui crient, trente créatures bleues paniquées,
+  savant en cornichon, petit-fils enfin écouté.
+- Chapitre 28 (finale, 3 scènes) : salle de test 19 (numéro peint par le moteur, porte qui s'ouvre sous la meule), voix du
+  plafond portée par la caméra (pomme de terre au Wabbajack), portails bleu et orange dessinés par le moteur (Rivebois vu à travers
+  l'orange), gâteau en carton rendu vrai ; épilogue à Rivebois : fondue géante, invités des autres mondes, héros au seau (forceLife),
+  Sheogorath au casque, le médecin et le lupus, tourelle de l'après-générique, écran « Fin de la saison 2 ».
 - Objets de toute la saison dans la besace : Wabbajack, le Cri (repli générique `s2.shout.none` + onde de choc), les septims.
 - Personnages animés en boucles LTX pour les chapitres 11 à 25 (reprises quand le visage dérivait ou que le personnage tournait).
 ### Chaîne de production d'un chapitre (outils)
@@ -170,7 +178,7 @@ FLUX, une à la fois (file calcul-lourd) : plusieurs jours de calcul, avec une p
   sprites des métamorphoses (poulet en caoutchouc à poulie, mammouth à trois têtes) ; voix de la réplique du narrateur
   sur la transition (`nar.s2up`) et des répliques écrites à la main (regards, biscuit) ; expressions du héros (8 visages,
   face et profils, en boucles de parole LTX par émotion).
-- Chapitres 27 et 28 sur la même chaîne.
+- Saison 2 complète (chapitres 11 à 28) : validation par Stéphan, voix des répliques écrites à la main.
 - Génie des indices en HD, prologue (fête de la S1 → Sheogorath), validation des décors et animations par Stéphan.
 - **Twin Peaks (22), petit homme en rouge** (validé par Stéphan) : ses 6 répliques `envers` ont leur voix retournée
   (FR/EN, livrées) ; le moteur les sous-titre toujours, en bas de l'écran façon télévision (`ENVERS` dans

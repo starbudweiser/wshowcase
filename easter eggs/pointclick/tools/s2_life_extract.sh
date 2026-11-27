@@ -13,6 +13,8 @@ ALT[creeper_i]=creeper_i2   # 2e prise : toujours face à nous (1re : elle tourn
 ALT[bk_t]=bk_t2   # 2e prise : épée immobile (1re : épée floue aux reflets verts)
 ALT[agentm_i]=agentm_i2; ALT[agentm_t]=agentm_t2   # 2es prises d'après l'agent en pied (1res : planche coupée aux genoux)
 ALT[luckdragon_i]=luckdragon_i2; ALT[luckdragon_t]=luckdragon_t2   # 2es prises en plan large (1res : gros plan sur la tête)
+ALT[toon_wr]=toon_wr2; ALT[toon_wb]=toon_wb2   # 2es prises : pas lents et nets (1res : jambes floues de profil, pivot de dos)
+ALT[joker_i]=joker_i2   # 2e prise : mains levées immobiles (1re : mains floues et orangées)
 k hero_wf $HS/sel_front.png 400 "--walk --n=12 --despill=all"; k hero_wb $HS/sel_back.png 400 "--walk --n=12 --despill=all"
 k hero_iql $HS/sel_34_left.png 400 "--n=24 --despill=all"; k hero_iqr $HS/sel_34_right.png 400 "--n=24 --despill=all"; k hero_if $HS/sel_front.png 400 "--n=24 --despill=all"
 k hero_tql $HS/sel_34_left.png 400 "--n=20 --despill=all"; k hero_tqr $HS/sel_34_right.png 400 "--n=20 --despill=all"; k hero_tf $HS/sel_front.png 400 "--n=20 --despill=all"
@@ -61,6 +63,11 @@ k charmer_i $PS/c_charmer2_2.png 410 "--n=24"; k charmer_t $PS/c_charmer2_2.png 
 k joker_i $PS/c_joker2_1.png 400 "--n=24"; k joker_t $PS/c_joker2_1.png 400 "--n=20"
 k nervpaleo_i $PS/c_nervpaleo2_1.png 400 "--n=24"; k nervpaleo_t $PS/c_nervpaleo2_1.png 400 "--n=20"
 k singer_i $PS/c_singer2_1.png 390 "--n=24"; k singer_t $PS/c_singer2_1.png 390 "--n=20"
+k toon_wr work/s2play/toon/sel_toon_pr.png 400 "--walk --n=12"; k toon_wf work/s2play/toon/sel_toon_f.png 400 "--walk --n=12"; k toon_wb work/s2play/toon/sel_toon_b.png 400 "--walk --n=12"
+k toon_iqr work/s2play/toon/sel_toon_qr.png 400 "--n=24"; k toon_if work/s2play/toon/sel_toon_f.png 400 "--n=24"; k toon_tqr work/s2play/toon/sel_toon_qr.png 400 "--n=20"; k toon_tf work/s2play/toon/sel_toon_f.png 400 "--n=20"
+k madsci_i $PS/c_madsci2_1.png 400 "--n=24"; k madsci_t $PS/c_madsci2_1.png 400 "--n=20"; k grandson_i $PS/c_grandson_2.png 360 "--n=24"; k grandson_t $PS/c_grandson_2.png 360 "--n=20"
+k bluegenie_i $PS/c_bluegenie_1.png 300 "--n=24"; k bluegenie_t $PS/c_bluegenie_1.png 300 "--n=20"; k turret_i $PS/c_turret.png 220 "--n=24"
+k hero_bucket_i work/s2play/persos/hero_bucket_1.png 400 "--n=24"; k hero_bucket_t work/s2play/persos/hero_bucket_1.png 400 "--n=20"
 k parrot_i $PS/c_parrot.png 110 "--n=24 --despill=all"; k parrot_t $PS/c_parrot.png 110 "--n=20 --despill=all"
 # --despill=all : nettoyage du rose du fond sur toute la silhouette, seulement pour qui ne porte aucun magenta ni violet
 ids=("$@"); [ ${#ids} -eq 0 ] && ids=(${(k)K})

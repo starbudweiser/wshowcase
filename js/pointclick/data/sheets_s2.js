@@ -19,22 +19,30 @@ export const ITEMS = {
   cracker: { spr: 's2:i_cracker' }, map: { spr: 's2:i_map' }, grog: { spr: 's2:i_grog' }, rootbeer: { spr: 's2:i_rootbeer' }, cheese_nl: { spr: 's2:i_cheese_nl' },
   sweetroll: { spr: 's2:i_sweetroll' }, cheese12: { spr: 's2:i_cheese12' },
   shout: { spr: 's2:i_shout' }, septims: { spr: 's2:i_septims' },
-  wood13: { spr: 's2:i_wood13' }, waterbucket13: { spr: 's2:i_waterbucket13' }, cheesecube: { spr: 's2:i_cheesecube' }, idol: { spr: 's2:p_idol14' }, cheese14: { spr: 's2:i_cheese14' }, cable15: { spr: 's2:i_cable15' }, cheese15: { spr: 's2:i_cheese15' }, flower16: { spr: 's2:i_flower16' }, cheese16: { spr: 's2:i_cheese16' }, grail17: { spr: 's2:p_grail17' }, cheese17k: { spr: 's2:i_cheese17k' }, lavender: { spr: 's2:i_lavender17' }, cheese17g: { spr: 's2:i_cheese17g' }, cheese18: { spr: 's2:i_cheese18' }, marker19: { spr: 's2:i_marker19' }, potion19: { spr: 's2:i_potion19' }, cheese19: { spr: 's2:p_sandwich19' }, butterfly20: { spr: 's2:i_butterfly20' }, cheese20: { spr: 's2:i_cheese20' }, cheese21: { spr: 's2:i_cheese21' }, coffee22: { spr: 's2:i_coffee22' }, pie22: { spr: 's2:i_pie22' }, cheese22: { spr: 's2:i_cheese22' }, cheese23: { spr: 's2:i_cheese23' }, cheese24: { spr: 's2:i_cheese24' }, ring25: { spr: 's2:p_ring25' }, cheese25: { spr: 's2:i_cheese25' }, cheese26: { spr: 's2:i_cheese26' }, mug26: { spr: 's2:p_mug26' }, bucket26: { spr: 's2:i_waterbucket13' }
+  wood13: { spr: 's2:i_wood13' }, waterbucket13: { spr: 's2:i_waterbucket13' }, cheesecube: { spr: 's2:i_cheesecube' }, idol: { spr: 's2:p_idol14' }, cheese14: { spr: 's2:i_cheese14' }, cable15: { spr: 's2:i_cable15' }, cheese15: { spr: 's2:i_cheese15' }, flower16: { spr: 's2:i_flower16' }, cheese16: { spr: 's2:i_cheese16' }, grail17: { spr: 's2:p_grail17' }, cheese17k: { spr: 's2:i_cheese17k' }, lavender: { spr: 's2:i_lavender17' }, cheese17g: { spr: 's2:i_cheese17g' }, cheese18: { spr: 's2:i_cheese18' }, marker19: { spr: 's2:i_marker19' }, potion19: { spr: 's2:i_potion19' }, cheese19: { spr: 's2:p_sandwich19' }, butterfly20: { spr: 's2:i_butterfly20' }, cheese20: { spr: 's2:i_cheese20' }, cheese21: { spr: 's2:i_cheese21' }, coffee22: { spr: 's2:i_coffee22' }, pie22: { spr: 's2:i_pie22' }, cheese22: { spr: 's2:i_cheese22' }, cheese23: { spr: 's2:i_cheese23' }, cheese24: { spr: 's2:i_cheese24' }, ring25: { spr: 's2:p_ring25' }, cheese25: { spr: 's2:i_cheese25' }, cheese26: { spr: 's2:i_cheese26' }, mug26: { spr: 's2:p_mug26' }, bucket26: { spr: 's2:i_waterbucket13' }, cheese27: { spr: 's2:i_cheese27' }, cheese28: { spr: 's2:p_cheese28' }, portalbucket: { spr: 's2:i_waterbucket13' }
 };
 
 /* héros S2 : six vues en pied (poses fixes de repli) ; cycles LTX : marche (profils, face, dos), repos vivant et parole par vue */
 export const HERO2 = { l: 's2:hero_pl', r: 's2:hero_pr', ql: 's2:hero_ql', qr: 's2:hero_qr', f: 's2:hero_f', b: 's2:hero_b' };
 export const HERO_LIFE = { walk: { r: 'hero_wr', l: 'hero_wl', f: 'hero_wf', b: 'hero_wb' }, idle: { ql: 'hero_iql', qr: 'hero_iqr', f: 'hero_if' }, talk: { ql: 'hero_tql', qr: 'hero_tqr', f: 'hero_tf' } };
 export function heroFrame2(g, h, moving, s) {
-  if (h.forceSpr) return h.forceSpr;   /* forme imposée par une scène (héros en cubes du chapitre 13) */
-  if (moving) {
-    const v = h.back || h.quarter === 'qb' ? 'b' : h.front ? 'f' : h.dir === 'l' ? 'l' : 'r', base = HERO_LIFE.walk[v], A = g.s2anim && g.s2anim[base];
-    const f = A && g.life(base, Math.floor(h.walkD / ((A.stride || 9) * s))); if (f) return f;
-    return v === 'b' ? HERO2.b : v === 'f' ? HERO2.f : HERO2[v];
+  if (h.forceSpr) {   /* forme imposée par une scène (héros en cubes du chapitre 13) ; forceLife : ses boucles de repos et de parole (héros au seau de l'épilogue) */
+    const L = h.forceLife; if (L && !moving) { const f = (h.talk && L.talk && g.lifeAt(L.talk, g.now)) || (L.idle && g.lifeIdle(L.idle, g.now, 1)); if (f) return f; }
+    return h.forceSpr;
   }
-  const view = h.back ? 'b' : h.front ? 'f' : h.dir === 'l' ? 'ql' : 'qr'; if (view === 'b') return HERO2.b;
-  const f = (h.talk && g.lifeAt(HERO_LIFE.talk[view], g.now)) || g.lifeIdle(HERO_LIFE.idle[view], g.now, 1);   /* parle, sinon repos vivant */
-  return f || HERO2[view];
+  /* scene.hero2 / heroLife : autre jeu de vues et de boucles (héros en dessin animé du chapitre 27) ; heroMirror : vue tirée
+     d'une autre en miroir ({ l: 'r', ql: 'qr' }) ; g.toonOff rend le héros peint un instant */
+  const sc = !g.toonOff && g.scene && g.scene.hero2 ? g.scene : null, H2 = sc ? sc.hero2 : HERO2, HL = sc ? sc.heroLife : HERO_LIFE, M = sc && sc.heroMirror;
+  if (moving) {
+    let v = h.back || h.quarter === 'qb' ? 'b' : h.front ? 'f' : h.dir === 'l' ? 'l' : 'r'; if (M && M[v]) { h.flip = true; v = M[v]; }
+    const base = HL.walk[v], A = g.s2anim && g.s2anim[base];
+    const f = A && g.life(base, Math.floor(h.walkD / ((A.stride || 9) * s))); if (f) return f;
+    return v === 'b' ? H2.b : v === 'f' ? H2.f : H2[v];
+  }
+  let view = h.back ? 'b' : h.front ? 'f' : h.dir === 'l' ? 'ql' : 'qr'; if (view === 'b') return H2.b;
+  if (M && M[view]) { h.flip = true; view = M[view]; }
+  const f = (h.talk && g.lifeAt(HL.talk[view], g.now)) || g.lifeIdle(HL.idle[view], g.now, 1);   /* parle, sinon repos vivant */
+  return f || H2[view];
 }
 /* personnages : sprite de base -> boucles LTX (repos vivant, parole) ; anim.json donne le nombre d'images et la cadence */
 export const LIFE = {
@@ -47,7 +55,7 @@ export const LIFE = {
   's2:hat16': { idle: 'hat_i', talk: 'hat_t' }, 's2:potions': { idle: 'potions_i', talk: 'potions_t' }, 's2:bat16': { idle: 'bat16_i' }, 's2:owl16': { idle: 'owl16_i' },
   's2:arthur': { idle: 'arthur_i', talk: 'arthur_t' }, 's2:perceval': { idle: 'perceval_i', talk: 'perceval_t' }, 's2:karadoc': { idle: 'karadoc_i', talk: 'karadoc_t' },
   's2:coconut': { idle: 'coconut_i', talk: 'coconut_t' }, 's2:ni': { idle: 'ni_i', talk: 'ni_t' }, 's2:bk': { idle: 'bk_i', talk: 'bk_t' }, 's2:rabbit17': { idle: 'rabbit17_i' },
-  's2:barbarian': { idle: 'barbarian_i', talk: 'barbarian_t' }, 's2:luckdragon': { idle: 'luckdragon_i', talk: 'luckdragon_t' }, 's2:house': { idle: 'house_i', talk: 'house_t' }, 's2:paleo': { idle: 'paleo_i', talk: 'paleo_t' }, 's2:trex': { idle: 'trex_i', talk: 'trex_t' }, 's2:kid': { idle: 'kid_i', talk: 'kid_t' }, 's2:girl': { idle: 'girl_i', talk: 'girl_t' }, 's2:flower': { idle: 'flower_i' }, 's2:redman': { idle: 'redman_i', talk: 'redman_t' }, 's2:loglady': { idle: 'loglady_i', talk: 'loglady_t' }, 's2:agent': { idle: 'agent_i', talk: 'agent_t' }, 's2:dexter': { idle: 'dexter_i', talk: 'dexter_t' }, 's2:sister': { idle: 'sister_i', talk: 'sister_t' }, 's2:morpheus': { idle: 'morph_i', talk: 'morph_t' }, 's2:agentm': { idle: 'agentm_i', talk: 'agentm_t' }, 's2:spoonkid': { idle: 'spoonkid_i' }, 's2:wizard': { idle: 'wizard_i', talk: 'wizard_t' }, 's2:demon': { idle: 'demon_i' }, 's2:halfling': { idle: 'halfling_i', talk: 'halfling_t' }, 's2:charmer': { idle: 'charmer_i', talk: 'charmer_t' }, 's2:joker': { idle: 'joker_i', talk: 'joker_t' }, 's2:nervpaleo': { idle: 'nervpaleo_i', talk: 'nervpaleo_t' }, 's2:singer': { idle: 'singer_i', talk: 'singer_t' }
+  's2:barbarian': { idle: 'barbarian_i', talk: 'barbarian_t' }, 's2:luckdragon': { idle: 'luckdragon_i', talk: 'luckdragon_t' }, 's2:house': { idle: 'house_i', talk: 'house_t' }, 's2:paleo': { idle: 'paleo_i', talk: 'paleo_t' }, 's2:trex': { idle: 'trex_i', talk: 'trex_t' }, 's2:kid': { idle: 'kid_i', talk: 'kid_t' }, 's2:girl': { idle: 'girl_i', talk: 'girl_t' }, 's2:flower': { idle: 'flower_i' }, 's2:redman': { idle: 'redman_i', talk: 'redman_t' }, 's2:loglady': { idle: 'loglady_i', talk: 'loglady_t' }, 's2:agent': { idle: 'agent_i', talk: 'agent_t' }, 's2:dexter': { idle: 'dexter_i', talk: 'dexter_t' }, 's2:sister': { idle: 'sister_i', talk: 'sister_t' }, 's2:morpheus': { idle: 'morph_i', talk: 'morph_t' }, 's2:agentm': { idle: 'agentm_i', talk: 'agentm_t' }, 's2:spoonkid': { idle: 'spoonkid_i' }, 's2:wizard': { idle: 'wizard_i', talk: 'wizard_t' }, 's2:demon': { idle: 'demon_i' }, 's2:halfling': { idle: 'halfling_i', talk: 'halfling_t' }, 's2:charmer': { idle: 'charmer_i', talk: 'charmer_t' }, 's2:joker': { idle: 'joker_i', talk: 'joker_t' }, 's2:nervpaleo': { idle: 'nervpaleo_i', talk: 'nervpaleo_t' }, 's2:singer': { idle: 'singer_i', talk: 'singer_t' }, 's2:madsci': { idle: 'madsci_i', talk: 'madsci_t' }, 's2:grandson': { idle: 'grandson_i', talk: 'grandson_t' }, 's2:bluegenie': { idle: 'bluegenie_i', talk: 'bluegenie_t' }, 's2:turret': { idle: 'turret_i' }
 };
 export const lifeBases = sc => [...new Set([...Object.values(HERO_LIFE).flatMap(o => Object.values(o)), ...(sc.ents || []).flatMap(e => Object.values(LIFE[e.spr] || {}))])];
 export const PRELOAD = [...Object.values(HERO2), ...Object.values(ITEMS).map(i => i.spr)];
