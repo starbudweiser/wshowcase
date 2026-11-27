@@ -121,7 +121,7 @@ FLUX, une à la fois (file calcul-lourd) : plusieurs jours de calcul, avec une p
   dans le ciel, roue qui tremble ou tourne à l'envers sous le Cri, meule géante qui tourne seule (miettes), barbare poète,
   lecteur qui tombe dans le livre ; pays du Néant (vortex qui tourne et aspire le paysage, marais de fondue, dragon blanc
   en chien, vrai dragon qui passe vexé, Sheogorath crié du fond du cœur, envol à dos de dragon, Néant changé en gruyère).
-  Reste : boucles LTX du dragon blanc (2es prises en plan large en calcul ; 1res : gros plan sur la tête).
+  Dragon blanc en boucles LTX (2es prises en plan large ; 1res rejetées : gros plan sur la tête).
 - Objets de toute la saison dans la besace : Wabbajack, le Cri (repli générique `s2.shout.none` + onde de choc), les septims.
 - Personnages animés en boucles LTX pour les chapitres 11 à 18 (reprises quand le visage dérivait ou que le personnage tournait).
 ### Chaîne de production d'un chapitre (outils)

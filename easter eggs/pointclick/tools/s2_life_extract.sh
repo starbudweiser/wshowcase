@@ -11,6 +11,7 @@ ALT[hero_tqr]=hero_tqr2; ALT[hero_if]=hero_if2   # 2e prises : visage pince-sans
 ALT[max_i]=max_i3; ALT[max_t]=max_t3   # 3es prises : même visage du début à la fin (1res : il devenait un lapin mignon)
 ALT[creeper_i]=creeper_i2   # 2e prise : toujours face à nous (1re : elle tournait sur elle-même)
 ALT[bk_t]=bk_t2   # 2e prise : épée immobile (1re : épée floue aux reflets verts)
+ALT[luckdragon_i]=luckdragon_i2; ALT[luckdragon_t]=luckdragon_t2   # 2es prises en plan large (1res : gros plan sur la tête)
 k hero_wf $HS/sel_front.png 400 "--walk --n=12 --despill=all"; k hero_wb $HS/sel_back.png 400 "--walk --n=12 --despill=all"
 k hero_iql $HS/sel_34_left.png 400 "--n=24 --despill=all"; k hero_iqr $HS/sel_34_right.png 400 "--n=24 --despill=all"; k hero_if $HS/sel_front.png 400 "--n=24 --despill=all"
 k hero_tql $HS/sel_34_left.png 400 "--n=20 --despill=all"; k hero_tqr $HS/sel_34_right.png 400 "--n=20 --despill=all"; k hero_tf $HS/sel_front.png 400 "--n=20 --despill=all"

@@ -140,6 +140,14 @@
   "fps": 7.5,
   "n": 20
  },
+ "luckdragon_i": {
+  "fps": 8.0,
+  "n": 24
+ },
+ "luckdragon_t": {
+  "fps": 7.5,
+  "n": 20
+ },
  "max_i": {
   "fps": 8.0,
   "n": 24
