@@ -106,6 +106,15 @@ export default {
   'hint.s2_15.cable.1': 'The cable must touch the clock’s hand.', 'hint.s2_15.cable.2': 'Its other end hangs from the street lamp.', 'hint.s2_15.cable.3': 'Take the cable from the street lamp, then use it on the clock.',
   'hint.s2_15.storm.1': 'All that’s missing is a storm… on demand.', 'hint.s2_15.storm.2': 'Your Voice can call the storm.', 'hint.s2_15.storm.3': 'Use the Shout on the clock.',
   /* genie hints (text only in the mock-up) */
+  /* chapter 23: the sunny apartment */
+  'n.dexter': 'forensic expert', 'n.sister': 'police sister', 'n.s23door': 'locked door', 'n.room23': 'little room', 'n.donuts23': 'donut box', 'n.photo23': 'boat photo',
+  'n.slides23': 'microscope slides', 'n.s23sofa': 'sofa', 'n.s23window': 'window', 'n.cheese23': 'donut wheel',
+  'look.dexter': 'Short-sleeved shirt, polite smile, latex gloves. He arranges his slides the way others arrange trophies.', 'look.sister': 'His sister, a police officer. She swears faster than a guard says “arrow in the knee”.', 'look.s23sofa': 'The sofa I woke up on. There is a jam stain shaped like Skyrim.', 'look.s23window': 'Palm trees, sunshine. Far too hot for fur armour.',
+  'look.picnic23': 'A picnic spot in a closet. I’d gladly settle here next season.', 'look.slidescheese23': 'Neatly lined-up slices of cheese. A sample I would approve.',
+  'look.cheese23': 'A wheel with a hole like a donut. The best of both worlds.', 's23.door.locked': 'Locked. And he’s watching me watch the door.',
+  's23.wk.back': 'And it’s back to normal. Even here, the Wabbajack’s magic doesn’t last.',
+  'hint.s2_23.door.1': 'The donuts are in his little room, locked.', 'hint.s2_23.door.2': 'Back home, some doors open with a password. “Silence, my brother.”', 'hint.s2_23.door.3': 'Talk to the expert, then use the door twice.',
+  'hint.s2_23.donuts.1': 'Twelve donuts, not one cheese.', 'hint.s2_23.donuts.2': 'A donut is a cheese wheel with a hole. Your staff can fill it.', 'hint.s2_23.donuts.3': 'Use the Wabbajack on the donut box.',
   /* chapter 22: the red room, the town diner */
   'n.redman': 'little man in red', 'n.loglady': 'log lady', 'n.agent': 'federal agent', 'n.s22curtains': 'red curtains', 'n.s22floor': 'zigzag floor', 'n.s22exit': 'gap between the curtains',
   'n.s22lamp': 'floor lamp', 'n.owls22': 'owls', 'n.recorder22': 'tape recorder', 'n.s22counter': 'counter', 'n.s22pies': 'pie display', 'n.s22door': 'diner door',

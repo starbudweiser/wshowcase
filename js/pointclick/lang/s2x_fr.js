@@ -105,6 +105,15 @@ export default {
   'hint.s2_15.horse.1': 'Le cheval ne dépasse pas douze lieues à l’heure.', 'hint.s2_15.horse.2': 'Les chevaux de chez toi grimpent partout, même les murs.', 'hint.s2_15.horse.3': 'Utilise le Wabbajack sur le cheval de la charrette.',
   'hint.s2_15.cable.1': 'Le câble doit toucher l’aiguille de l’horloge.', 'hint.s2_15.cable.2': 'Son autre bout pend au réverbère.', 'hint.s2_15.cable.3': 'Prends le câble au réverbère, puis utilise-le sur l’horloge.',
   'hint.s2_15.storm.1': 'Il ne manque qu’un orage… sur commande.', 'hint.s2_15.storm.2': 'Ta Voix sait appeler la tempête.', 'hint.s2_15.storm.3': 'Utilise le Cri sur l’horloge.',
+  /* chapitre 23 : l'appartement ensoleillé */
+  'n.dexter': 'expert de la police scientifique', 'n.sister': 'sœur policière', 'n.s23door': 'porte fermée', 'n.room23': 'petite pièce', 'n.donuts23': 'boîte de beignets', 'n.photo23': 'photo du bateau',
+  'n.slides23': 'lames de microscope', 'n.s23sofa': 'canapé', 'n.s23window': 'fenêtre', 'n.cheese23': 'meule-beignet',
+  'look.dexter': 'Chemise à manches courtes, sourire poli, gants en latex. Il range ses lames comme d’autres rangent leurs trophées.', 'look.sister': 'Sa sœur, policière. Elle jure plus vite qu’un garde ne dit « flèche dans le genou ».', 'look.s23sofa': 'Le canapé où je me suis réveillé. Il y a une trace de confiture en forme de Bordeciel.', 'look.s23window': 'Des palmiers, du soleil. Il fait trop chaud pour une armure en fourrure.',
+  'look.picnic23': 'Une aire de pique-nique dans un placard. Je m’y installerais bien pour la saison prochaine.', 'look.slidescheese23': 'Des tranches de fromage bien alignées. Un échantillon que je validerais.',
+  'look.cheese23': 'Une meule percée comme un beignet. Le meilleur des deux mondes.', 's23.door.locked': 'Fermée à clé. Et il me regarde regarder la porte.',
+  's23.wk.back': 'Et ça redevient comme avant. Même ici, le Wabbajack a la magie courte.',
+  'hint.s2_23.door.1': 'Les beignets sont dans sa petite pièce, fermée à clé.', 'hint.s2_23.door.2': 'Chez toi, certaines portes s’ouvrent avec un mot de passe. « Silence, mon frère. »', 'hint.s2_23.door.3': 'Parle à l’expert, puis utilise la porte deux fois.',
+  'hint.s2_23.donuts.1': 'Douze beignets, pas un fromage.', 'hint.s2_23.donuts.2': 'Un beignet, c’est une meule qui a un trou. Ton bâton peut le boucher.', 'hint.s2_23.donuts.3': 'Utilise le Wabbajack sur la boîte de beignets.',
   /* chapitre 22 : la chambre rouge, le café de la ville */
   'n.redman': 'petit homme en rouge', 'n.loglady': 'dame à la bûche', 'n.agent': 'agent fédéral', 'n.s22curtains': 'rideaux rouges', 'n.s22floor': 'sol en zigzag', 'n.s22exit': 'passage entre les rideaux',
   'n.s22lamp': 'lampadaire', 'n.owls22': 'hiboux', 'n.recorder22': 'magnétophone', 'n.s22counter': 'comptoir', 'n.s22pies': 'vitrine à tartes', 'n.s22door': 'porte du café',
