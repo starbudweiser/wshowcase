@@ -130,8 +130,13 @@ FLUX, une à la fois (file calcul-lourd) : plusieurs jours de calcul, avec une p
   s'accroupir (utiliser le héros sur lui-même) affiche « [ CACHÉ ] » au-dessus de lui (crochet `scene.draw` du moteur),
   monstre changé en poule géante qui poursuit le héros, chèvre sur le toit, guirlandes, papillon d'ambre, mammouth à
   chapeau ; cuisine en inox : petits monstres changés en brioches qui fixent le héros, meule glacée au frigo.
+- Chapitre 21 (le mur des mots) jouable : salon des années 80 ; l'alphabet du mur et sa guirlande sont dessinés par le
+  moteur (`scene.drawBack`, lettres justes) et les ampoules épellent les mots dans la langue du jeu (COURS / RUN, FRIGO /
+  FRIDGE, SHEOGORATH ÉTAIT LÀ / WAS HERE) ; créature sortie du mur changée en jonquille, fille aux pouvoirs qui fait léviter
+  le frigo tête en bas (meule dessous), gaufres en brioches, radio de chez nous ; sous-sol : gag du maître du jeu, héros en
+  figurine. Garçon, fille et créature en boucles LTX.
 - Objets de toute la saison dans la besace : Wabbajack, le Cri (repli générique `s2.shout.none` + onde de choc), les septims.
-- Personnages animés en boucles LTX pour les chapitres 11 à 20 (reprises quand le visage dérivait ou que le personnage tournait).
+- Personnages animés en boucles LTX pour les chapitres 11 à 21 (reprises quand le visage dérivait ou que le personnage tournait).
 ### Chaîne de production d'un chapitre (outils)
 1. Décor vide : `tools/gen_s2_decors.sh` (3 graines) → `tools/s2_assets.py decor` + `tools/s2_retro.py decor`.
 2. Personnages et objets : fiche validée détourée (`s2_assets.py sprite`), objets `tools/gen_s2_items.sh`.
@@ -144,7 +149,7 @@ FLUX, une à la fois (file calcul-lourd) : plusieurs jours de calcul, avec une p
   sprites des métamorphoses (poulet en caoutchouc à poulie, mammouth à trois têtes) ; voix de la réplique du narrateur
   sur la transition (`nar.s2up`) et des répliques écrites à la main (regards, biscuit) ; expressions du héros (8 visages,
   face et profils, en boucles de parole LTX par émotion).
-- Chapitres 21 à 28 sur la même chaîne.
+- Chapitres 22 à 28 sur la même chaîne.
 - Génie des indices en HD, prologue (fête de la S1 → Sheogorath), validation des décors et animations par Stéphan.
 - **Twin Peaks (22), petit homme en rouge** (validé par Stéphan) : ses 6 répliques `envers` ont leur voix retournée
   (FR/EN, livrées) ; le moteur les sous-titre toujours, en bas de l'écran façon télévision (`ENVERS` dans

@@ -777,7 +777,7 @@ export class Game {
     if (this.bg) c.drawImage(this.bg, 0, 0, W, H);
     if (this.sky) drawSky(c, this.sky, this.now);
     if (this.amb) this.amb.forEach(a => a.draw(this, c, this.now));
-    if (this.scene.hd) { this.drawVideos(c); drawFxBack(this, c); }
+    if (this.scene.hd) { this.drawVideos(c); drawFxBack(this, c); if (this.scene.drawBack) this.scene.drawBack(this, c); }   /* drawBack : dessin d'une scène sur le décor, derrière les acteurs (alphabet du chapitre 21) */
     /* avant-plans du décor : { polys, y } se range en profondeur avec les acteurs (cache ce qui est derrière sa ligne de sol y,
        pas ce qui passe devant) ; un simple polygone reste devant tout le monde ; this.fgExtra : avant-plans posés par un script */
     const fg = [...(this.scene.fg || []), ...(this.fgExtra || [])], occ = fg.filter(o => !Array.isArray(o)).map(o => ({ occ: o, y: o.y, z: 0 }));

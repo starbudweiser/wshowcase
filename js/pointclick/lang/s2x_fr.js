@@ -105,6 +105,16 @@ export default {
   'hint.s2_15.horse.1': 'Le cheval ne dépasse pas douze lieues à l’heure.', 'hint.s2_15.horse.2': 'Les chevaux de chez toi grimpent partout, même les murs.', 'hint.s2_15.horse.3': 'Utilise le Wabbajack sur le cheval de la charrette.',
   'hint.s2_15.cable.1': 'Le câble doit toucher l’aiguille de l’horloge.', 'hint.s2_15.cable.2': 'Son autre bout pend au réverbère.', 'hint.s2_15.cable.3': 'Prends le câble au réverbère, puis utilise-le sur l’horloge.',
   'hint.s2_15.storm.1': 'Il ne manque qu’un orage… sur commande.', 'hint.s2_15.storm.2': 'Ta Voix sait appeler la tempête.', 'hint.s2_15.storm.3': 'Utilise le Cri sur l’horloge.',
+  /* chapitre 21 : le salon au mur alphabet, le sous-sol */
+  'n.kid': 'garçon au talkie-walkie', 'n.girl': 'fille aux pouvoirs', 'n.flower': 'créature à tête de fleur', 'n.daffodil21': 'jonquille géante', 'n.s21wall': 'mur alphabet',
+  'n.fridge21': 'frigo à l’envers', 'n.waffles21': 'boîte de gaufres', 'n.walkie21': 'talkie-walkie', 'n.s21stairs': 'escalier', 'n.s21game': 'partie de jeu de rôle', 'n.s21tv': 'télévision', 'n.s21sofa': 'canapé', 'n.cheese21': 'meule écrasée',
+  'look.daffodil21': 'Une jonquille géante. Elle me sourit. Je préférais quand elle grognait, au moins je savais où j’en étais.', 'look.s21stairs': 'Un escalier vers le sous-sol. On y entend rouler des dés.',
+  'look.s21tv': 'Une boîte à images. Elle ne montre que de la neige. Comme Fortdhiver.', 'look.s21sofa': 'Un canapé orange. Il a vu passer des générations de miettes.',
+  'look.s21game': 'Une carte, des figurines, des dés. Une quête sur une table. Chez moi, on se contente de la vraie.', 'look.cheese21': 'Une meule écrasée par un frigo. Elle a eu une vie difficile, comme moi.',
+  's21.monster.first': 'Pas tant que cette chose sort du mur.', 's21.fridge.heavy': 'Trop lourd, même pour un Nordique. Il faudrait le soulever… par la pensée.', 's21.wk.back': 'Et ça redevient comme avant. Même ici, le Wabbajack a la magie courte.',
+  'hint.s2_21.wall.1': 'Ce mur a des lettres et des ampoules. Chez toi, un mur qui brille enseigne des mots.', 'hint.s2_21.wall.2': 'Regarde bien le mur alphabet.', 'hint.s2_21.wall.3': 'Regarde le mur alphabet et lis les ampoules.',
+  'hint.s2_21.flower.1': 'La créature du mur fait peur à tout le monde.', 'hint.s2_21.flower.2': 'Elle a déjà une tête de fleur. Ton bâton peut finir le travail.', 'hint.s2_21.flower.3': 'Utilise le Wabbajack sur la créature.',
+  'hint.s2_21.girl.1': 'La fille peut tout soulever par la pensée, mais seulement quand elle a mangé.', 'hint.s2_21.girl.2': 'Elle veut des gaufres. Tu n’as qu’une brioche sucrée.', 'hint.s2_21.girl.3': 'Donne la brioche sucrée à la fille.',
   /* chapitre 20 : l'enclos sous la pluie, la cuisine */
   'n.paleo': 'paléontologue', 'n.trex': 'monstre', 'n.chicken20': 'poule géante', 'n.goat20': 'chèvre', 'n.s20fence': 'clôture cassée', 'n.amber20': 'ambre', 'n.s20hut': 'abri',
   'n.raptors20': 'petits monstres', 'n.rolls20': 'brioches qui me fixent', 'n.s20fridge': 'frigo', 'n.s20door': 'porte battante', 'n.s20shelves': 'plans de travail', 'n.butterfly20': 'papillon', 'n.cheese20': 'meule glacée',

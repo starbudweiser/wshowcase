@@ -106,6 +106,16 @@ export default {
   'hint.s2_15.cable.1': 'The cable must touch the clock’s hand.', 'hint.s2_15.cable.2': 'Its other end hangs from the street lamp.', 'hint.s2_15.cable.3': 'Take the cable from the street lamp, then use it on the clock.',
   'hint.s2_15.storm.1': 'All that’s missing is a storm… on demand.', 'hint.s2_15.storm.2': 'Your Voice can call the storm.', 'hint.s2_15.storm.3': 'Use the Shout on the clock.',
   /* genie hints (text only in the mock-up) */
+  /* chapter 21: the living room with the alphabet wall, the basement */
+  'n.kid': 'boy with a walkie-talkie', 'n.girl': 'girl with powers', 'n.flower': 'flower-headed creature', 'n.daffodil21': 'giant daffodil', 'n.s21wall': 'alphabet wall',
+  'n.fridge21': 'upside-down fridge', 'n.waffles21': 'waffle box', 'n.walkie21': 'walkie-talkie', 'n.s21stairs': 'stairs', 'n.s21game': 'role-playing game', 'n.s21tv': 'television', 'n.s21sofa': 'sofa', 'n.cheese21': 'squashed wheel',
+  'look.daffodil21': 'A giant daffodil. It smiles at me. I preferred it growling; at least I knew where I stood.', 'look.s21stairs': 'Stairs down to the basement. I can hear dice rolling.',
+  'look.s21tv': 'A picture box. It only shows snow. Like Winterhold.', 'look.s21sofa': 'An orange sofa. It has seen generations of crumbs.',
+  'look.s21game': 'A map, figurines, dice. A quest on a table. Back home, we make do with the real thing.', 'look.cheese21': 'A wheel squashed by a fridge. It has had a hard life, like me.',
+  's21.monster.first': 'Not while that thing is coming out of the wall.', 's21.fridge.heavy': 'Too heavy, even for a Nord. It would have to be lifted… by thought.', 's21.wk.back': 'And it’s back to normal. Even here, the Wabbajack’s magic doesn’t last.',
+  'hint.s2_21.wall.1': 'This wall has letters and bulbs. Back home, a glowing wall teaches words.', 'hint.s2_21.wall.2': 'Take a good look at the alphabet wall.', 'hint.s2_21.wall.3': 'Look at the alphabet wall and read the bulbs.',
+  'hint.s2_21.flower.1': 'The creature from the wall scares everybody.', 'hint.s2_21.flower.2': 'It already has a flower for a head. Your staff can finish the job.', 'hint.s2_21.flower.3': 'Use the Wabbajack on the creature.',
+  'hint.s2_21.girl.1': 'The girl can lift anything with her mind, but only once she has eaten.', 'hint.s2_21.girl.2': 'She wants waffles. All you have is a sweet roll.', 'hint.s2_21.girl.3': 'Give the sweet roll to the girl.',
   /* chapter 20: the rainy paddock, the kitchen */
   'n.paleo': 'paleontologist', 'n.trex': 'monster', 'n.chicken20': 'giant hen', 'n.goat20': 'goat', 'n.s20fence': 'broken fence', 'n.amber20': 'amber', 'n.s20hut': 'shelter',
   'n.raptors20': 'little monsters', 'n.rolls20': 'staring sweet rolls', 'n.s20fridge': 'fridge', 'n.s20door': 'swinging door', 'n.s20shelves': 'worktops', 'n.butterfly20': 'butterfly', 'n.cheese20': 'frozen wheel',
