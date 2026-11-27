@@ -140,7 +140,7 @@ export class Game {
   }
   /* zones du décor animées par vidéo en boucle (mer, galion…) : HD = vidéo ; années 90 = images converties comme en saison 1 */
   startVideos(sc) {
-    (this.vids || []).forEach(v => { v.el.pause(); v.el.removeAttribute('src'); v.el.load(); }); this.vids = [];
+    (this.vids || []).forEach(v => { if (v.el) { v.el.pause(); v.el.removeAttribute('src'); v.el.load(); } }); this.vids = [];   /* les zones années 90 (v.low) n'ont pas de vidéo */
     for (const V of sc.video || []) {
       if (this.s2low) { if (V.low && this.animIdx) { this.vids.push({ V, low: true }); for (let i = 0; i < V.low.n; i++) Promise.resolve(this.img(`assets/pointclick/s2/90/anim/${V.low.id}/${i}.png`)).catch(() => {}); } continue; }
       const v = document.createElement('video'); Object.assign(v, { muted: true, loop: true, playsInline: true, autoplay: true, preload: 'auto', src: V.src }); v.setAttribute('playsinline', ''); v.muted = true;
