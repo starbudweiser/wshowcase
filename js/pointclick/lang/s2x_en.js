@@ -106,6 +106,14 @@ export default {
   'hint.s2_15.cable.1': 'The cable must touch the clock’s hand.', 'hint.s2_15.cable.2': 'Its other end hangs from the street lamp.', 'hint.s2_15.cable.3': 'Take the cable from the street lamp, then use it on the clock.',
   'hint.s2_15.storm.1': 'All that’s missing is a storm… on demand.', 'hint.s2_15.storm.2': 'Your Voice can call the storm.', 'hint.s2_15.storm.3': 'Use the Shout on the clock.',
   /* genie hints (text only in the mock-up) */
+  /* chapter 24: the rooftop under the code rain */
+  'n.morpheus': 'man in a leather coat', 'n.agentm': 'agent', 'n.agentm2': 'agent', 'n.agentm3': 'agent', 'n.spoonkid': 'spoon boy', 'n.cheese24': 'ghost wheel',
+  'n.cat24': 'black cat', 'n.s24phone': 'phone booth', 'n.s24code': 'code rain', 'n.s24chair': 'leather armchair', 'n.s24tank': 'water tank', 'n.cheeseOk24': 'wheel that exists',
+  'look.s24chair': 'A red leather armchair on a rooftop. It’s waiting for someone who takes himself very seriously.', 'look.s24tank': 'A water tank. Back home we drink from the stream and complain less.',
+  'look.cheeseOk24': 'A wheel that exists. I checked with my teeth.', 'look.hens24': 'Two identical hens. The world has hiccups.', 'look.agentsGone': 'No more agents. They must have rebooted.',
+  's24.agents.block': 'The agents are blocking my way.', 's24.wk.back': 'And it’s back to normal. Even here, the Wabbajack’s magic doesn’t last.',
+  'hint.s2_24.agents.1': 'The agents want to confiscate your inventory. Be faster than them.', 'hint.s2_24.agents.2': 'Your Voice can slow down time.', 'hint.s2_24.agents.3': 'Use the Shout on the agents.',
+  'hint.s2_24.spoon.1': 'The boy says the cheese does not exist. But his spoon does.', 'hint.s2_24.spoon.2': 'Your staff turns one thing into another. Even a spoon into cheese.', 'hint.s2_24.spoon.3': 'Use the Wabbajack on the spoon boy.',
   /* chapter 23: the sunny apartment */
   'n.dexter': 'forensic expert', 'n.sister': 'police sister', 'n.s23door': 'locked door', 'n.room23': 'little room', 'n.donuts23': 'donut box', 'n.photo23': 'boat photo',
   'n.slides23': 'microscope slides', 'n.s23sofa': 'sofa', 'n.s23window': 'window', 'n.cheese23': 'donut wheel',

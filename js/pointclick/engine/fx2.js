@@ -181,6 +181,16 @@ export function drawFx2(g, c) {
     for (const q of R2._p) { const y = (q.y + t * q.v) % 290 - 20, x = (q.x - t * q.v * 0.18) % 520; const xx = x < 0 ? x + 520 : x; c.moveTo(xx, y); c.lineTo(xx - q.l * 0.18, y + q.l); }
     c.globalAlpha = 0.8; c.stroke(); c.globalAlpha = 1;
   }
+  if (F && F.code) {   /* pluie de code vert : colonnes de signes qui tombent, tête claire et traîne qui s'efface */
+    const Cd = F.code, n = Cd.n || 46, GL = '01アイウエオカキクケコサシスセソタチツテトナニヌネノ7$+<>=';
+    Cd._c = Cd._c || Array.from({ length: n }, (_, i) => ({ x: (i + 0.5) * 480 / n + R(-3, 3), y: R(-200, 270), v: R(40, 90), len: 6 + (Math.random() * 10 | 0), seed: Math.random() * 1e4 }));
+    c.font = '7px monospace'; c.textAlign = 'center'; c.globalCompositeOperation = 'lighter';
+    for (const q of Cd._c) {
+      const hy = ((q.y + t * q.v) % 420) - 60;
+      for (let k = 0; k < q.len; k++) { const y = hy - k * 7; if (y < -8 || y > (Cd.bottom || 270)) continue; const ch = GL[(Math.floor(q.seed + k * 7 + t * 6 * (k === 0 ? 3 : 1)) % GL.length + GL.length) % GL.length]; c.globalAlpha = (Cd.a ?? 0.45) * (k === 0 ? 1 : (1 - k / q.len) * 0.7); c.fillStyle = k === 0 ? '#d8ffd8' : '#3dff6a'; c.fillText(ch, q.x, y); }
+    }
+    c.globalCompositeOperation = 'source-over'; c.globalAlpha = 1;
+  }
   if (F && F.snow) {   /* neige : flocons ronds qui tombent en se balançant, deux plans de profondeur ; apparition douce depuis S.t0 */
     const S = F.snow, n = S.n || 130; S._p = S._p || Array.from({ length: n }, (_, i) => ({ x: R(0, 480), y: R(0, 290), v: R(16, 30) * (i % 3 ? 1 : 0.55), s: i % 3 ? R(0.7, 1.4) : R(0.4, 0.75), ph: R(0, TAU), sw: R(0.6, 1.3) }));
     const a0 = S.t0 ? Math.min(1, (t - S.t0) / 2.5) : 1; c.fillStyle = S.col || '#f4f8ff';

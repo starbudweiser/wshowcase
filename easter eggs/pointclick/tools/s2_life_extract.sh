@@ -11,6 +11,7 @@ ALT[hero_tqr]=hero_tqr2; ALT[hero_if]=hero_if2   # 2e prises : visage pince-sans
 ALT[max_i]=max_i3; ALT[max_t]=max_t3   # 3es prises : même visage du début à la fin (1res : il devenait un lapin mignon)
 ALT[creeper_i]=creeper_i2   # 2e prise : toujours face à nous (1re : elle tournait sur elle-même)
 ALT[bk_t]=bk_t2   # 2e prise : épée immobile (1re : épée floue aux reflets verts)
+ALT[agentm_i]=agentm_i2; ALT[agentm_t]=agentm_t2   # 2es prises d'après l'agent en pied (1res : planche coupée aux genoux)
 ALT[luckdragon_i]=luckdragon_i2; ALT[luckdragon_t]=luckdragon_t2   # 2es prises en plan large (1res : gros plan sur la tête)
 k hero_wf $HS/sel_front.png 400 "--walk --n=12 --despill=all"; k hero_wb $HS/sel_back.png 400 "--walk --n=12 --despill=all"
 k hero_iql $HS/sel_34_left.png 400 "--n=24 --despill=all"; k hero_iqr $HS/sel_34_right.png 400 "--n=24 --despill=all"; k hero_if $HS/sel_front.png 400 "--n=24 --despill=all"
@@ -50,6 +51,9 @@ k loglady_i $PS/c_loglady3.png 380 "--n=24"; k loglady_t $PS/c_loglady3.png 380 
 k agent_i $PS/c_agent.png 400 "--n=24"; k agent_t $PS/c_agent.png 400 "--n=20"
 k dexter_i $PS/c_analyst3_1.png 400 "--n=24"; k dexter_t $PS/c_analyst3_1.png 400 "--n=20"
 k sister_i $PS/c_sister4_2.png 380 "--n=24"; k sister_t $PS/c_sister4_2.png 380 "--n=20"
+k morph_i $PS/c_morph2_2.png 410 "--n=24"; k morph_t $PS/c_morph2_2.png 410 "--n=20"
+k agentm_i work/s2play/persos/agentm24_1.png 410 "--n=24"; k agentm_t work/s2play/persos/agentm24_1.png 410 "--n=20"
+k spoonkid_i $PS/c_spoonkid2.png 300 "--n=24"
 k parrot_i $PS/c_parrot.png 110 "--n=24 --despill=all"; k parrot_t $PS/c_parrot.png 110 "--n=20 --despill=all"
 # --despill=all : nettoyage du rose du fond sur toute la silhouette, seulement pour qui ne porte aucun magenta ni violet
 ids=("$@"); [ ${#ids} -eq 0 ] && ids=(${(k)K})

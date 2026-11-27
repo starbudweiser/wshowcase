@@ -105,6 +105,14 @@ export default {
   'hint.s2_15.horse.1': 'Le cheval ne dépasse pas douze lieues à l’heure.', 'hint.s2_15.horse.2': 'Les chevaux de chez toi grimpent partout, même les murs.', 'hint.s2_15.horse.3': 'Utilise le Wabbajack sur le cheval de la charrette.',
   'hint.s2_15.cable.1': 'Le câble doit toucher l’aiguille de l’horloge.', 'hint.s2_15.cable.2': 'Son autre bout pend au réverbère.', 'hint.s2_15.cable.3': 'Prends le câble au réverbère, puis utilise-le sur l’horloge.',
   'hint.s2_15.storm.1': 'Il ne manque qu’un orage… sur commande.', 'hint.s2_15.storm.2': 'Ta Voix sait appeler la tempête.', 'hint.s2_15.storm.3': 'Utilise le Cri sur l’horloge.',
+  /* chapitre 24 : le toit sous la pluie de code */
+  'n.morpheus': 'homme au manteau de cuir', 'n.agentm': 'agent', 'n.agentm2': 'agent', 'n.agentm3': 'agent', 'n.spoonkid': 'enfant à la cuillère', 'n.cheese24': 'meule fantôme',
+  'n.cat24': 'chat noir', 'n.s24phone': 'cabine téléphonique', 'n.s24code': 'pluie de code', 'n.s24chair': 'fauteuil de cuir', 'n.s24tank': 'château d’eau', 'n.cheeseOk24': 'meule qui existe',
+  'look.s24chair': 'Un fauteuil de cuir rouge, sur un toit. Il attend quelqu’un qui se prend très au sérieux.', 'look.s24tank': 'Un château d’eau. Chez nous, on boit au ruisseau, et on se plaint moins.',
+  'look.cheeseOk24': 'Une meule qui existe. Je l’ai vérifié avec les dents.', 'look.hens24': 'Deux poules identiques. Le monde a le hoquet.', 'look.agentsGone': 'Plus d’agents. Ils ont dû redémarrer.',
+  's24.agents.block': 'Les agents me barrent le chemin.', 's24.wk.back': 'Et ça redevient comme avant. Même ici, le Wabbajack a la magie courte.',
+  'hint.s2_24.agents.1': 'Les agents veulent confisquer ton inventaire. Sois plus rapide qu’eux.', 'hint.s2_24.agents.2': 'Ta Voix sait ralentir le temps.', 'hint.s2_24.agents.3': 'Utilise le Cri sur les agents.',
+  'hint.s2_24.spoon.1': 'L’enfant dit que le fromage n’existe pas. Mais sa cuillère, elle, existe.', 'hint.s2_24.spoon.2': 'Ton bâton change une chose en une autre. Même une cuillère en fromage.', 'hint.s2_24.spoon.3': 'Utilise le Wabbajack sur l’enfant à la cuillère.',
   /* chapitre 23 : l'appartement ensoleillé */
   'n.dexter': 'expert de la police scientifique', 'n.sister': 'sœur policière', 'n.s23door': 'porte fermée', 'n.room23': 'petite pièce', 'n.donuts23': 'boîte de beignets', 'n.photo23': 'photo du bateau',
   'n.slides23': 'lames de microscope', 'n.s23sofa': 'canapé', 'n.s23window': 'fenêtre', 'n.cheese23': 'meule-beignet',
