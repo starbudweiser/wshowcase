@@ -76,7 +76,7 @@ export default {
       case 's14altar': case 'idol':
         if (!back && !F('sausages')) { await g.say('hero', 's14.pit.first'); return true; }
         if (verb === 'look') { await g.say('hero', 'c14.look.idol'); if (!F('idolTalk')) { g.set('idolTalk'); await g.say('indy', 'c14.idol.indy'); } return true; }
-        if (verb === 'use' && item && CHEESES.includes(item)) { await g.cut(() => this.swap(g, item)); return true; }
+        if (verb === 'use' && item && CHEESES.includes(item) && g.ent('idol')) {   /* pas sur l'idole déjà dans la besace */ await g.cut(() => this.swap(g, item)); return true; }
         if (verb === 'use' && item === 'idol') { await g.say('hero', 'def.useWith'); return true; }
         if ((verb === 'take' || verb === 'use') && !item && id === 'idol') { await g.say('hero', 'c14.look.idol'); await g.say('indy', 'c14.idol.indy'); return true; }
         break;

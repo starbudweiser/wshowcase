@@ -1,0 +1,39 @@
+{
+ "chapter": "24_extra",
+ "title": "Répliques d’interaction (regards, actions, Wabbajack)",
+ "note": "Répliques écrites pendant l’intégration, hors des dialogues du chapitre ; textes tirés de lang/*.js, même casting.",
+ "lines": [
+  {
+   "key": "s24.agents.block",
+   "who": "hero",
+   "emo": "mildly annoyed, wry",
+   "ctx": "Interaction (s2_24.js)",
+   "fr": "Les agents me barrent le chemin.",
+   "en": "The agents are blocking my way."
+  },
+  {
+   "key": "look.s24chair",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_24.js)",
+   "fr": "Un fauteuil de cuir rouge, sur un toit. Il attend quelqu’un qui se prend très au sérieux.",
+   "en": "A red leather armchair on a rooftop. It’s waiting for someone who takes himself very seriously."
+  },
+  {
+   "key": "look.s24tank",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_24.js)",
+   "fr": "Un château d’eau. Chez nous, on boit au ruisseau, et on se plaint moins.",
+   "en": "A water tank. Back home we drink from the stream and complain less."
+  },
+  {
+   "key": "s24.wk.back",
+   "who": "hero",
+   "emo": "resigned, dry",
+   "ctx": "Interaction (s2_24.js)",
+   "fr": "Et ça redevient comme avant. Même ici, le Wabbajack a la magie courte.",
+   "en": "And it’s back to normal. Even here, the Wabbajack’s magic doesn’t last."
+  }
+ ]
+}

@@ -53,7 +53,9 @@ def norm(t):
     return re.sub(r"[^a-z0-9 ]+", ' ', t.replace('’', "'").replace("'", ' ')).split()
 def score(ref, hyp): return difflib.SequenceMatcher(None, norm(ref), norm(hyp)).ratio()
 
-todo = [o for o in items if not os.path.exists(os.path.join(out, o['lang'], o['key'] + ('' if o['idx'] < 0 else f".v{o['idx']}") + '.mp3'))][:limit]
+GAME = os.path.join(R, 'assets', 'pointclick', 'voice')   # déjà livrées au jeu : on ne les refait pas (27/11)
+fname = lambda o: o['key'] + ('' if o['idx'] < 0 else f".v{o['idx']}") + '.mp3'
+todo = [o for o in items if not os.path.exists(os.path.join(out, o['lang'], fname(o))) and not os.path.exists(os.path.join(GAME, o['lang'], fname(o)))][:limit]
 print('à faire', len(todo), 'sur', len(items), flush=True)
 if not todo: print('done', flush=True); sys.exit(0)
 

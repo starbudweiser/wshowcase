@@ -96,6 +96,7 @@ export function buildMenu(g, o) {
       add(T('ui.new'), o.newGame);
       if (o.chapters.filter(c => !c.locked).length > 1) add(T('ui.chapters'), () => { page = 'chap'; sel = 0; render(); });
       if (o.chapters2) add(T('ui.season2'), () => { page = 'chap2'; sel = 0; render(); });
+      else if (o.s2Locked) add(T('ui.season2.lock'), null, 'lock');   /* grisée tant que la saison 1 n'est pas finie */
       add(T('ui.options'), () => { page = 'opt'; sel = 0; render(); });
     } else if (page === 'opt') {
       add(T('ui.fullscreen'), o.fullscreen);

@@ -1,0 +1,119 @@
+{
+ "chapter": "26_extra",
+ "title": "Répliques d’interaction (regards, actions, Wabbajack)",
+ "note": "Répliques écrites pendant l’intégration, hors des dialogues du chapitre ; textes tirés de lang/*.js, même casting.",
+ "lines": [
+  {
+   "key": "look.charmer",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_26.js)",
+   "fr": "Un sourire en coin, un sandwich à la main. Il a l’air de draguer même le frigo.",
+   "en": "A crooked smile, a sandwich in hand. He looks like he is flirting with the fridge."
+  },
+  {
+   "key": "look.joker",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_26.js)",
+   "fr": "Il a une blague pour chaque silence. Et il trouve beaucoup de silences.",
+   "en": "He has a joke for every silence. And he finds a lot of silences."
+  },
+  {
+   "key": "look.singer",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_26.js)",
+   "fr": "Elle sourit au plafond. Le plafond a l’air de lui répondre.",
+   "en": "She smiles at the ceiling. The ceiling seems to answer."
+  },
+  {
+   "key": "look.nervpaleo",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_26.js)",
+   "fr": "Un homme nerveux avec un dinosaure en plastique. Il le tient comme un porte-bonheur. Ça ne marche pas.",
+   "en": "A nervous man with a plastic dinosaur. He holds it like a lucky charm. It is not working."
+  },
+  {
+   "key": "look.s26counter",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_26.js)",
+   "fr": "Un comptoir, une machine à café qui siffle, des brioches sous cloche.",
+   "en": "A counter, a hissing coffee machine, sweet rolls under a glass dome."
+  },
+  {
+   "key": "s26.counter.none",
+   "who": "hero",
+   "emo": "mildly annoyed, wry",
+   "ctx": "Interaction (s2_26.js)",
+   "fr": "Plus de brioche. Elles disparaissent vite, ici aussi.",
+   "en": "No more sweet rolls. They vanish fast here too."
+  },
+  {
+   "key": "s26.counter.take",
+   "who": "hero",
+   "emo": "pleased, upbeat",
+   "ctx": "Interaction (s2_26.js)",
+   "fr": "Une brioche sucrée sous la cloche. Je la prends : chez moi, on me les vole, ici je me rattrape.",
+   "en": "A sweet roll under the dome. I take it: back home they steal mine, here I catch up."
+  },
+  {
+   "key": "look.s26door",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_26.js)",
+   "fr": "La porte du café. En face, l’immeuble au frigo.",
+   "en": "The coffee house door. Across the street, the building with the fridge."
+  },
+  {
+   "key": "s26.wk.back",
+   "who": "hero",
+   "emo": "resigned, dry",
+   "ctx": "Interaction (s2_26.js)",
+   "fr": "Et ça redevient comme avant. Ici aussi, le Wabbajack a la magie courte.",
+   "en": "And it goes back to normal. Here too, the Wabbajack has short magic."
+  },
+  {
+   "key": "look.bucket26",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_26.js)",
+   "fr": "Un seau. Il était temps.",
+   "en": "A bucket. About time."
+  },
+  {
+   "key": "look.mug26",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_26.js)",
+   "fr": "Une tasse grande comme un seau. Ici, on boit le café comme l’hydromel chez moi : beaucoup, et sans poser de questions.",
+   "en": "A mug the size of a bucket. They drink coffee here like we drink mead back home: a lot, and no questions asked."
+  },
+  {
+   "key": "look.s26flatdoor",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_26b.js)",
+   "fr": "La porte de l’appartement. On l’a passée, le canapé aussi.",
+   "en": "The apartment door. We got through it, and so did the couch."
+  },
+  {
+   "key": "s26.stairs.block",
+   "who": "hero",
+   "emo": "mildly annoyed, wry",
+   "ctx": "Interaction (s2_26b.js)",
+   "fr": "Le canapé bouche tout l’escalier. Même un chat ne passerait pas.",
+   "en": "The couch plugs the whole staircase. Not even a cat could get through."
+  },
+  {
+   "key": "look.fridge26",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_26c.js)",
+   "fr": "Le frigo. Le mot dit de ne pas toucher. Le mot ne me connaît pas.",
+   "en": "The fridge. The note says do not touch. The note does not know me."
+  }
+ ]
+}

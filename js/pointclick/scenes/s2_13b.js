@@ -20,6 +20,9 @@ export default {
 
   async enter(g, how) {
     if (g.has('cheesecube')) g.ents = g.ents.filter(e => e.id !== 'cheesecube');
+    /* monté (Wabbajack) sans le seau du puits : un autre seau d'eau l'attend en haut, sinon il resterait coincé (le saut demande le seau ;
+       trouvé par tools/check_softlock.mjs, 27/11/2026) */
+    if (!g.flag('bucketTaken') && !g.has('waterbucket13')) g.ents.push({ id: 'bucket13', spr: 's2:i_waterbucket13', x: 386, y: 225, scale: 0.4, hot: true, solid: false, visible: true, ph: 0, at: [362, 230], name: 'n.waterbucket13' });
     if (how.cube) { g.hero.forceSpr = 's2:hero_cube'; g.hero.alpha = 0; }
     if (how.intro) g.fx.fade = { from: 1, to: 1, t0: g.now, ms: 0.01, a: 1 };
   },
@@ -37,7 +40,11 @@ export default {
     switch (id) {
       case 'cheesecube':
         if (verb === 'look') { await g.say('hero', 'c13.look.cheese'); return true; }
-        if (verb === 'take' || (verb === 'use' && !item)) { const c = g.ent('cheesecube'); twinkle(g, c.x, c.y - 10, '#ffd166'); g.ents = g.ents.filter(x => x !== c); g.sfx('pop'); g.give('cheesecube'); await g.say('hero', 'take.cheesecube'); return true; }
+        if (verb === 'take' || (verb === 'use' && !item)) { const c = g.ent('cheesecube'); if (!c) break; twinkle(g, c.x, c.y - 10, '#ffd166'); g.ents = g.ents.filter(x => x !== c); g.sfx('pop'); g.give('cheesecube'); await g.say('hero', 'take.cheesecube'); return true; }
+        break;
+      case 'bucket13':
+        if (verb === 'look') { await g.say('hero', 'c13.look.waterbucket'); return true; }
+        if (verb === 'take' || (verb === 'use' && !item)) { const b = g.ent('bucket13'); if (b) { twinkle(g, b.x, b.y - 8, '#9ad8ff'); g.ents = g.ents.filter(x => x !== b); } g.set('bucketTaken'); g.sfx('pop'); g.give('waterbucket13'); await g.say('hero', 'c13.look.waterbucket'); await g.say('hero', 's13.take.bucket'); return true; }
         break;
       case 's13view': if (verb === 'look') { await g.say('hero', 'c13.look.ground'); return true; } break;
       case 's13edge':

@@ -1,0 +1,583 @@
+{
+ "chapter": "manques",
+ "title": "Répliques d’interaction manquantes (relevé du 27/11)",
+ "note": "Textes tirés de lang/*.js ; seules les langues sans fichier sont générées.",
+ "lines": [
+  {
+   "key": "look.agentsGone",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Plus d’agents. Ils ont dû redémarrer.",
+   "en": "No more agents. They must have rebooted."
+  },
+  {
+   "key": "look.bench26",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Un vrai banc de taverne. Le dos s’en souviendra.",
+   "en": "A real tavern bench. Your back will remember it."
+  },
+  {
+   "key": "look.cable15",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Le bout du câble, avec une pince en cuivre. Ça chatouille rien qu’à le regarder.",
+   "en": "The end of the cable, with a copper clamp. It tingles just looking at it."
+  },
+  {
+   "key": "look.cauldron28",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Une marmite géante de fondue. Dix-huit meules dedans. Ça sent la victoire.",
+   "en": "A giant fondue cauldron. Eighteen wheels in it. It smells like victory."
+  },
+  {
+   "key": "look.cheese12",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Un morceau de la plus grosse meule du monde. C’est-à-dire une meule normale.",
+   "en": "A piece of the world’s largest cheese. In other words, a normal cheese."
+  },
+  {
+   "key": "look.cheese14",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Une meule géante, un peu aplatie à ma forme. Elle tient dans mon sac. Ne demandez pas comment.",
+   "en": "A giant cheese wheel, slightly flattened to my shape. It fits in my bag. Don’t ask how."
+  },
+  {
+   "key": "look.cheese15",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Un fromage de 1955. Il a plus d’âge que tous mes amis réunis.",
+   "en": "A cheese from 1955. It’s older than all my friends put together."
+  },
+  {
+   "key": "look.cheese16",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "La meule du banquet, avec un ruban. Elle a un goût de victoire et de cinq points.",
+   "en": "The banquet wheel, with a ribbon. It tastes of victory and five points."
+  },
+  {
+   "key": "look.cheese17g",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Un stilton sorti du Graal. Il sent fort, comme toute relique qui se respecte.",
+   "en": "A stilton out of the Grail. It smells strong, like any self-respecting relic."
+  },
+  {
+   "key": "look.cheese17k",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Un fromage de Bretagne dont personne ne connaît le nom. Il sent la mer et les chevaliers.",
+   "en": "A cheese from Brittany whose name nobody knows. It smells of the sea and of knights."
+  },
+  {
+   "key": "look.cheese18",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Un gruyère. Avec les trous, il pèse moins lourd. Mon dos dit merci.",
+   "en": "A gruyère. With the holes, it weighs less. My back says thank you."
+  },
+  {
+   "key": "look.cheese20",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Une meule glacée. Elle sent le frigo et la victoire.",
+   "en": "A frozen wheel. It smells of fridge and victory."
+  },
+  {
+   "key": "look.cheese22",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Une meule à la croûte de velours rouge. Elle va avec les rideaux.",
+   "en": "A wheel with a red velvet rind. It matches the curtains."
+  },
+  {
+   "key": "look.cheese23",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Une meule percée comme un beignet. Le meilleur des deux mondes.",
+   "en": "A wheel with a hole like a donut. The best of both worlds."
+  },
+  {
+   "key": "look.cheese26",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "La meule du sandwich. Un peu de laitue dessus, mais je ne suis pas difficile.",
+   "en": "The sandwich cheese wheel. A bit of lettuce on it, but I am not picky."
+  },
+  {
+   "key": "look.cheese27",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Une meule avec une petite couronne. Elle vient d’un monde où les fromages sont rois.",
+   "en": "A cheese wheel with a tiny crown. It comes from a world where cheeses are kings."
+  },
+  {
+   "key": "look.cheeseOk24",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Une meule qui existe. Je l’ai vérifié avec les dents.",
+   "en": "A wheel that exists. I checked with my teeth."
+  },
+  {
+   "key": "look.cheese_nl",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Un fromage de Hollande. Enfin une meule. Le seau en réclame d’autres.",
+   "en": "A Dutch cheese. Finally, a wheel. The bucket wants more of them."
+  },
+  {
+   "key": "look.chicken20",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Une poule grande comme une tour. Elle me regarde comme si j’avais volé ses œufs.",
+   "en": "A hen as tall as a tower. She looks at me as if I’d stolen her eggs."
+  },
+  {
+   "key": "look.coffee22",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Un café noir, certifié sacrément bon.",
+   "en": "A black coffee, certified damn fine."
+  },
+  {
+   "key": "look.couch26b",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Le canapé est passé. Il trône maintenant dans l’appartement, un peu de travers.",
+   "en": "The couch made it. Now it sits in the apartment, slightly crooked."
+  },
+  {
+   "key": "look.cracker",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Un biscuit de mer. On pourrait caler une table avec.",
+   "en": "A ship’s cracker. You could level a table with it."
+  },
+  {
+   "key": "look.grenade17",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Une grenade sacrée, posée sur une souche. Le mode d’emploi tient dans un livre entier.",
+   "en": "A holy hand grenade, resting on a stump. The instructions fill an entire book."
+  },
+  {
+   "key": "look.guard17",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Un garde de chez nous, assis, une flèche dans le genou. Il en a pour la journée à raconter sa vie.",
+   "en": "A guard from back home, sitting down, an arrow in his knee. He’ll be telling his life story all day."
+  },
+  {
+   "key": "look.hens24",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Deux poules identiques. Le monde a le hoquet.",
+   "en": "Two identical hens. The world has hiccups."
+  },
+  {
+   "key": "look.lavender",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "De la lavande de Blancherive. Pour une potion de résistance au poison, ou pour sentir bon.",
+   "en": "Lavender from Whiterun. For a poison resistance potion, or just to smell nice."
+  },
+  {
+   "key": "look.pie22",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Une part de tarte aux cerises. Si je la mange, Sheogorath me changera en fromage.",
+   "en": "A slice of cherry pie. If I eat it, Sheogorath will turn me into cheese."
+  },
+  {
+   "key": "look.portalbucket",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Le seau de Sheogorath. Toute une saison sur ma tête, et il cache encore des tours.",
+   "en": "Sheogorath’s bucket. A whole season on my head, and it still hides tricks."
+  },
+  {
+   "key": "look.potion19",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Une potion de guérison des maladies. Elle soigne tout, sauf ce que j’ai.",
+   "en": "A cure disease potion. It cures everything except what I have."
+  },
+  {
+   "key": "look.rootbeer",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "De la bière de racine. Ça mousse, ça colle, et ça fait fuir les fantômes.",
+   "en": "Root beer. Foamy, sticky, and it scares ghosts away."
+  },
+  {
+   "key": "look.s17banners",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Des bannières rouges. Pas un dragon dessus. Une chance, pour eux.",
+   "en": "Red banners. Not a single dragon on them. Lucky them."
+  },
+  {
+   "key": "look.s17banquet",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Un banquet entier sur la table ronde. Le Wabbajack a enfin compris ce qu’on attendait de lui.",
+   "en": "A whole banquet on the round table. The Wabbajack finally understood what was expected of it."
+  },
+  {
+   "key": "look.s17bones",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Des os partout devant la grotte. Le lapin a beaucoup d’appétit, ou beaucoup d’amis morts.",
+   "en": "Bones everywhere in front of the cave. The rabbit has a big appetite, or a lot of dead friends."
+  },
+  {
+   "key": "look.s17boulder",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Un grand rocher plat. Parfait pour pique-niquer, ou pour planter une épée.",
+   "en": "A big flat boulder. Perfect for a picnic, or for planting a sword."
+  },
+  {
+   "key": "look.s17bridge",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Un pont de planches au-dessus d’un torrent. Bien gardé.",
+   "en": "A plank bridge over a stream. Well guarded."
+  },
+  {
+   "key": "look.s17castle",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Un château au loin. Quelqu’un y crie des insultes avec un accent. Et il a des vaches.",
+   "en": "A castle in the distance. Someone up there shouts insults with an accent. And he has cows."
+  },
+  {
+   "key": "look.s17door",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "La porte de la salle. La grotte du Graal est par là, paraît-il.",
+   "en": "The hall’s door. The Grail cave is that way, apparently."
+  },
+  {
+   "key": "look.s17fire",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Une grande cheminée. Il y fait plus chaud que dans toute la province de Bordeciel.",
+   "en": "A big fireplace. It’s warmer in here than in the whole province of Skyrim."
+  },
+  {
+   "key": "look.s17flames",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Un rocher qui crache des flammes de temps en temps. Il y a sûrement un enchanteur derrière.",
+   "en": "A crag that spits flames now and then. There’s surely an enchanter behind it."
+  },
+  {
+   "key": "look.s17road",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "La route continue derrière les chevaliers. Ils ne laissent passer personne sans buisson.",
+   "en": "The road goes on behind the knights. They let nobody through without a shrubbery."
+  },
+  {
+   "key": "look.s17spoon",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Une cuillère plantée dans une meule. Celui qui la retirera sera roi… des fromagers.",
+   "en": "A spoon stuck in a wheel of cheese. Whoever pulls it out shall be king… of the cheesemongers."
+  },
+  {
+   "key": "look.s17stream",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Un torrent glacé. Chez nous, il y aurait des saumons qui sautent dedans.",
+   "en": "An icy stream. Back home, there would be salmon leaping in it."
+  },
+  {
+   "key": "look.s17trees",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "De vieux chênes. Chez nous, il y aurait déjà un Parjure caché derrière.",
+   "en": "Old oaks. Back home, there would already be a Forsworn hiding behind them."
+  },
+  {
+   "key": "look.septims",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Des septims. Ici, personne ne sait ce que c’est. Ce qui ne m’empêche pas de les proposer.",
+   "en": "Septims. Nobody here knows what they are. That doesn’t stop me offering them."
+  },
+  {
+   "key": "look.shout",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "La Voix des dragons. Trois mots, et les gens volent. En théorie.",
+   "en": "The Voice of the dragons. Three words, and people fly. In theory."
+  },
+  {
+   "key": "look.shrub17",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Un petit buisson de lavande. Joli, mais pas assez joli, paraît-il.",
+   "en": "A little lavender bush. Pretty, but not pretty enough, apparently."
+  },
+  {
+   "key": "look.sweetroll",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Une brioche sucrée. Dans tous les mondes, quelqu’un finit par me la voler.",
+   "en": "A sweet roll. In every world, someone ends up stealing it from me."
+  },
+  {
+   "key": "look.topiary17",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Un buisson-mammouth, avec ses défenses et sa trompe. Je suis plutôt fier de moi.",
+   "en": "A mammoth hedge, tusks, trunk and all. I’m rather proud of myself."
+  },
+  {
+   "key": "look.wabbajack",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Le bâton de Sheogorath. Il transforme n’importe quoi en n’importe quoi d’autre. Surtout en n’importe quoi.",
+   "en": "Sheogorath’s staff. It turns anything into anything else. Mostly into nonsense."
+  },
+  {
+   "key": "look.waterbucket13",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Un seau plein d’eau. Je ne sais pas encore à quoi il servira, mais un seau ne se refuse jamais.",
+   "en": "A bucket full of water. I don’t know what it’s for yet, but you never turn down a bucket."
+  },
+  {
+   "key": "look.wheel14",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Une meule de la taille d’un rocher. Le paradis roule vers moi.",
+   "en": "A cheese wheel the size of a boulder. Paradise is rolling toward me."
+  },
+  {
+   "key": "look.wood13",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Un bloc de bois parfaitement cubique. Arraché à mains nues. Mes jointures s’en souviendront.",
+   "en": "A perfectly cubic block of wood. Torn off bare-handed. My knuckles will remember it."
+  },
+  {
+   "key": "s11.wk.fail",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Le Wabbajack fait pouf. Rien n’a changé, à part l’odeur.",
+   "en": "The Wabbajack goes poof. Nothing changed, except the smell."
+  },
+  {
+   "key": "s14.idol.take",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Je prends l’idole. Rien ne bouge. Pour l’instant.",
+   "en": "I take the idol. Nothing moves. For now."
+  },
+  {
+   "key": "s15.cable.first",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Il me faudrait le câble, d’abord.",
+   "en": "I’d need the cable first."
+  },
+  {
+   "key": "s17g.cave.blocked",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Pas avec ce lapin devant l’entrée.",
+   "en": "Not with that rabbit in front of the entrance."
+  },
+  {
+   "key": "s17g.road.blocked",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Ils ne bougeront pas sans leur buisson.",
+   "en": "They won’t move without their shrubbery."
+  },
+  {
+   "key": "s17g.wk.back",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Et ça redevient comme avant. Même ici, le Wabbajack a la magie courte.",
+   "en": "And it’s back to normal. Even here, the Wabbajack’s magic doesn’t last."
+  },
+  {
+   "key": "s18.leave.first",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Le barbare ne bougera pas tant que la roue ne tourne pas.",
+   "en": "The barbarian won’t move as long as the wheel isn’t turning."
+  },
+  {
+   "key": "s2.shout.none.v0",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "FUS RO DAH ! … Rien. Même l’écho a honte.",
+   "en": "FUS RO DAH! … Nothing. Even the echo is embarrassed."
+  },
+  {
+   "key": "s2.shout.none.v1",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "FUS RO DAH ! Il ne s’est rien passé, à part dans mes oreilles.",
+   "en": "FUS RO DAH! Nothing happened, except in my ears."
+  },
+  {
+   "key": "s2.shout.none.v2",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "FUS RO… Non. Le public n’est pas réceptif.",
+   "en": "FUS RO… No. Tough crowd."
+  },
+  {
+   "key": "s21.wk.back",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Et ça redevient comme avant. Même ici, le Wabbajack a la magie courte.",
+   "en": "And it’s back to normal. Even here, the Wabbajack’s magic doesn’t last."
+  },
+  {
+   "key": "s23.door.locked",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Fermée à clé. Et il me regarde regarder la porte.",
+   "en": "Locked. And he’s watching me watch the door."
+  },
+  {
+   "key": "s28.wk.back",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Et ça redevient comme avant. Même ici, le Wabbajack a la magie courte.",
+   "en": "And it goes back to normal. Even here, the Wabbajack has short magic."
+  },
+  {
+   "key": "take.guybrush",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "On ne ramasse pas les apprentis. Ils repoussent.",
+   "en": "You don’t pick up apprentices. They grow back."
+  },
+  {
+   "key": "take.parrot",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Il pince. J’ai déjà assez de cicatrices à expliquer.",
+   "en": "It bites. I already have enough scars to explain."
+  },
+  {
+   "key": "take.s13well",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Le seau d’eau est posé sur la margelle. Je le prends.",
+   "en": "The bucket of water sits on the rim. I’ll take it."
+  },
+  {
+   "key": "take.s17roll",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Une brioche sucrée, oubliée sur la caisse. Je la garde. Chez nous, c’est presque une monnaie.",
+   "en": "A sweet roll, forgotten on the crate. I’ll keep it. Back home, it’s practically currency."
+  },
+  {
+   "key": "take.statue",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Elle est scellée au tonneau. Comme ma patience.",
+   "en": "It’s sealed to the barrel. Like my patience."
+  },
+  {
+   "key": "use.cracker.guybrush",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Il dit qu’il est au régime. Il n’a que la peau sur les os.",
+   "en": "He says he’s on a diet. He’s all skin and bones."
+  },
+  {
+   "key": "use.s12light",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (manque relevé le 27/11)",
+   "fr": "Je ne sais pas l’allumer. Je ne suis même pas sûr de vouloir.",
+   "en": "I don’t know how to light it. I’m not even sure I want to."
+  }
+ ]
+}

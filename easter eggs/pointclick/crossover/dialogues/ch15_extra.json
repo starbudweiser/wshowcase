@@ -1,0 +1,95 @@
+{
+ "chapter": "15_extra",
+ "title": "Répliques d’interaction (regards, actions, Wabbajack)",
+ "note": "Répliques écrites pendant l’intégration, hors des dialogues du chapitre ; textes tirés de lang/*.js, même casting.",
+ "lines": [
+  {
+   "key": "look.board",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_15.js)",
+   "fr": "Une planche à roues. Ici, on roule sur une planche. Chez nous, on glisse sur un bouclier.",
+   "en": "A plank on wheels. Here you roll on a plank. Back home we slide on a shield."
+  },
+  {
+   "key": "s15.horse.first",
+   "who": "hero",
+   "emo": "mildly annoyed, wry",
+   "ctx": "Interaction (s2_15.js)",
+   "fr": "Il faut d’abord une machine digne de ce nom.",
+   "en": "First we need a machine worthy of the name."
+  },
+  {
+   "key": "s15.cable.top",
+   "who": "hero",
+   "emo": "pleased, upbeat",
+   "ctx": "Interaction (s2_15.js)",
+   "fr": "Il faut d’abord monter là-haut. Avec ce cheval, ça va prendre une éternité.",
+   "en": "I need to get up there first. With this horse, it’ll take forever."
+  },
+  {
+   "key": "s15.cable.done",
+   "who": "hero",
+   "emo": "pleased, upbeat",
+   "ctx": "Interaction (s2_15.js)",
+   "fr": "Le câble est accroché. Il ne manque plus que la foudre.",
+   "en": "The cable is hooked. All we need now is lightning."
+  },
+  {
+   "key": "take.s15cable",
+   "who": "hero",
+   "emo": "casual, sly",
+   "ctx": "Interaction (s2_15.js)",
+   "fr": "Je décroche le bout du câble du réverbère. Il pique un peu.",
+   "en": "I unhook the end of the cable from the lamp post. It stings a little."
+  },
+  {
+   "key": "s15.wk.back",
+   "who": "hero",
+   "emo": "resigned, dry",
+   "ctx": "Interaction (s2_15.js)",
+   "fr": "Et ça redevient comme avant. Le Wabbajack a la magie courte, ici aussi.",
+   "en": "And it goes back to normal. The Wabbajack’s magic is short-lived here too."
+  },
+  {
+   "key": "look.s15bench",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_15.js)",
+   "fr": "Un banc mouillé. Il a l’air d’avoir vécu des choses.",
+   "en": "A wet bench. It looks like it has been through things."
+  },
+  {
+   "key": "look.s15lamp",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_15.js)",
+   "fr": "Un réverbère. Le câble du clocher y est attaché.",
+   "en": "A street lamp. The cable from the clock tower is tied to it."
+  },
+  {
+   "key": "look.s15shops",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_15.js)",
+   "fr": "Des boutiques fermées. Il est tard, et il pleut des cordes.",
+   "en": "Closed shops. It’s late, and it’s raining cats and dogs."
+  },
+  {
+   "key": "look.doc",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_15.js)",
+   "fr": "Un savant aux cheveux en pétard. Il parle aux machines. Elles ont l’air de lui répondre.",
+   "en": "A scientist with exploding hair. He talks to machines. They seem to answer."
+  },
+  {
+   "key": "look.photo15",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_15.js)",
+   "fr": "Une photo de famille, posée sur le banc. Tout le monde sourit. Ça doit être un sortilège.",
+   "en": "A family photo on the bench. Everyone is smiling. Must be a spell."
+  }
+ ]
+}

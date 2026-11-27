@@ -1,0 +1,87 @@
+{
+ "chapter": "25_extra",
+ "title": "Répliques d’interaction (regards, actions, Wabbajack)",
+ "note": "Répliques écrites pendant l’intégration, hors des dialogues du chapitre ; textes tirés de lang/*.js, même casting.",
+ "lines": [
+  {
+   "key": "look.demon25",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_25.js)",
+   "fr": "Un démon de feu avec un fouet. Chez moi, on appellerait ça un atronach. Et on fuirait.",
+   "en": "A fire demon with a whip. Back home we would call it an atronach. And we would run."
+  },
+  {
+   "key": "look.s25exit",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_25.js)",
+   "fr": "Le pont continue de l’autre côté. Le crabe l’a pris.",
+   "en": "The bridge goes on to the other side. The crab took it."
+  },
+  {
+   "key": "s25.demon.block",
+   "who": "hero",
+   "emo": "mildly annoyed, wry",
+   "ctx": "Interaction (s2_25.js)",
+   "fr": "Le démon bloque le pont. Il faut s’en occuper d’abord.",
+   "en": "The demon is blocking the bridge. I have to deal with it first."
+  },
+  {
+   "key": "look.s25bridge",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_25.js)",
+   "fr": "Un pont de pierre sans rambarde. Chez nous, ce serait le raccourci préféré des draugrs.",
+   "en": "A stone bridge without railings. Back home, it would be the draugr’s favourite shortcut."
+  },
+  {
+   "key": "s25.shout.again",
+   "who": "hero",
+   "emo": "mildly annoyed, wry",
+   "ctx": "Interaction (s2_25.js)",
+   "fr": "Il retombe… et il remonte. Le Cri ne fait que le retarder.",
+   "en": "Down he goes… and up he comes. The Shout only delays him."
+  },
+  {
+   "key": "s25.wk.back",
+   "who": "hero",
+   "emo": "resigned, dry",
+   "ctx": "Interaction (s2_25.js)",
+   "fr": "Et ça redevient comme avant. Même ici, le Wabbajack a la magie courte.",
+   "en": "And it’s back to normal. Even here, the Wabbajack’s magic doesn’t last."
+  },
+  {
+   "key": "look.cheese25",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_25b.js)",
+   "fr": "La quarantième meule. Promise à quelqu’un de très exigeant.",
+   "en": "The fortieth wheel. Promised to someone very demanding."
+  },
+  {
+   "key": "look.hens25",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_25b.js)",
+   "fr": "Deux poules sur un rocher. Elles n’emmèneront personne nulle part.",
+   "en": "Two hens on a rock. They won’t take anyone anywhere."
+  },
+  {
+   "key": "look.eagles25",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_25b.js)",
+   "fr": "Deux aigles géants sur un rocher. Ils ont l’air de pouvoir emmener n’importe qui n’importe où.",
+   "en": "Two giant eagles on a rock. They look like they could take anyone anywhere."
+  },
+  {
+   "key": "look.s25door",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_25b.js)",
+   "fr": "Une porte ronde, verte, parfaitement ronde. Chez nous, les portes sont carrées et on s’y cogne quand même.",
+   "en": "A round green door, perfectly round. Back home doors are square and we still bump into them."
+  }
+ ]
+}

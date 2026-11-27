@@ -100,3 +100,30 @@
 .pc-tm.grid .pc-ti.back{grid-column:1/-1;grid-row:-2/-1;justify-self:center}
 .pc-tfoot{position:absolute;left:0;right:0;bottom:calc(var(--u)*2px);display:flex;justify-content:space-between;padding:0 calc(var(--u)*5px);font-size:calc(var(--u)*7px);color:#b8c2d6;opacity:.8;text-shadow:1px 1px 0 #000;pointer-events:none}
 .pc-tach.done{color:#e8b84a}
+
+/* saison 2 : faux CD-ROM d'installation des années 90 (game.js cdInstall) */
+.pc-cd{position:absolute;inset:0;z-index:6;background:#000;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .4s;cursor:pointer;font-family:'PCPixel',ui-monospace,Menlo,monospace}
+.pc-cd::after{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.28) 0 1px,transparent 1px 3px)}
+.pc-cd.on{opacity:1}.pc-cd.gone{opacity:0;transition:opacity .8s}
+.pc-cdwin{width:calc(var(--u)*300px);background:#c3c3c3;border:calc(var(--u)*1px) solid #000;box-shadow:inset calc(var(--u)*1px) calc(var(--u)*1px) 0 #fff,inset calc(var(--u)*-1px) calc(var(--u)*-1px) 0 #7b7b7b,calc(var(--u)*3px) calc(var(--u)*3px) 0 rgba(0,0,0,.6);
+  transform:scale(.6);opacity:0;transition:transform .35s cubic-bezier(.2,1.4,.4,1),opacity .2s}
+.pc-cd.on .pc-cdwin{transform:scale(1);opacity:1}
+.pc-cdhead{height:calc(var(--u)*13px);margin:calc(var(--u)*2px);display:flex;align-items:center;justify-content:center;background:repeating-linear-gradient(0deg,#9a9a9a 0 1px,#e6e6e6 1px 2px)}
+.pc-cdhead span{background:#c3c3c3;padding:0 calc(var(--u)*6px);font-size:calc(var(--u)*10px);color:#000}
+.pc-cdbody{display:flex;gap:calc(var(--u)*10px);align-items:center;padding:calc(var(--u)*8px) calc(var(--u)*12px) calc(var(--u)*12px)}
+.pc-cddisc{flex:none;width:calc(var(--u)*62px);height:calc(var(--u)*62px);border-radius:50%;position:relative;transform:translateX(calc(var(--u)*260px)) rotate(0);opacity:0;
+  background:radial-gradient(circle,#c3c3c3 0 11%,#e8e8e8 11% 14%,transparent 14.5%),conic-gradient(from 0deg,#e8f6ff,#ffd6f2,#fff3c4,#c9ffe6,#cfe2ff,#f5d0ff,#e8f6ff);
+  box-shadow:0 0 0 calc(var(--u)*1px) #6b6b6b;transition:transform .8s cubic-bezier(.2,.9,.3,1),opacity .3s}
+.pc-cddisc::after{content:'';position:absolute;inset:0;border-radius:50%;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.75) 48%,transparent 60%)}
+.pc-cddisc.in{transform:translateX(0);opacity:1}
+.pc-cddisc.spin{animation:pc-cdspin .9s linear infinite}.pc-cddisc.fast{animation-duration:.18s}
+@keyframes pc-cdspin{to{transform:rotate(360deg)}}
+.pc-cdtxt{flex:1;min-width:0;color:#000;font-size:calc(var(--u)*9px);line-height:1.15}
+.pc-cdtxt b{display:block;font-weight:normal;font-size:calc(var(--u)*10px);margin-bottom:calc(var(--u)*5px)}
+.pc-cdst{margin:0 0 calc(var(--u)*5px);min-height:2.3em}
+.pc-cdbar{height:calc(var(--u)*10px);background:#fff;border:calc(var(--u)*1px) solid #000;box-shadow:inset calc(var(--u)*1px) calc(var(--u)*1px) 0 #7b7b7b}
+.pc-cdbar i{display:block;height:100%;width:0;background:repeating-linear-gradient(90deg,#2a3ab8 0 calc(var(--u)*6px),#4f63e8 calc(var(--u)*6px) calc(var(--u)*8px))}
+.pc-cdpc{margin:calc(var(--u)*3px) 0 0;text-align:right}
+.pc-cd.suck .pc-cdwin{transform:scale(.02) rotate(540deg);opacity:0;transition:transform .6s cubic-bezier(.6,0,.9,.4),opacity .6s ease-in}
+.pc-cdflash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+.pc-cd.flash .pc-cdflash{opacity:1;transition:opacity .15s}
