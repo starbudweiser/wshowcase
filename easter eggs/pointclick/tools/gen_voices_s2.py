@@ -97,7 +97,8 @@ def speech(text, lang, cloned):
     t = re.sub(r'\s+', ' ', text.replace('*', '')).strip()
     return re.sub(r"(?<![^\W\d_])(?<!\d)[Uu][Nn](?![^\W_])", '1', t) if lang == 'fr' and cloned else t
 
-todo = [(l, o) for l, o in items if not os.path.exists(os.path.join(out, l, o['key'] + '.mp3'))]
+GAME = os.path.join(P, '..', '..', 'assets', 'pointclick', 'voice')   # déjà livrées au jeu : on ne les refait pas (27/11)
+todo = [(l, o) for l, o in items if not os.path.exists(os.path.join(out, l, o['key'] + '.mp3')) and not os.path.exists(os.path.join(GAME, l, o['key'] + '.mp3'))]
 print('à faire', len(todo), 'sur', len(items), flush=True)
 if not todo: print('done', flush=True); sys.exit(0)
 
