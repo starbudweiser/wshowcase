@@ -106,6 +106,15 @@ export default {
   'hint.s2_15.cable.1': 'The cable must touch the clock’s hand.', 'hint.s2_15.cable.2': 'Its other end hangs from the street lamp.', 'hint.s2_15.cable.3': 'Take the cable from the street lamp, then use it on the clock.',
   'hint.s2_15.storm.1': 'All that’s missing is a storm… on demand.', 'hint.s2_15.storm.2': 'Your Voice can call the storm.', 'hint.s2_15.storm.3': 'Use the Shout on the clock.',
   /* genie hints (text only in the mock-up) */
+  /* chapter 19: the hospital (interlude) */
+  'n.house': 'doctor', 'n.board19': 'whiteboard', 'n.mri19': 'MRI scanner', 'n.xray19': 'X-ray', 'n.sandwich19': 'sandwich', 'n.marker19': 'marker', 'n.potion19': 'cure disease potion',
+  'n.s19bed': 'bed', 'n.s19desk': 'desk', 'n.helmet19': 'my helmet', 'n.cheese19': 'cheese sandwich',
+  'look.s19bed': 'The bed I woke up in. Not a cart. That worries me.', 'look.s19desk': 'A desk, cold coffee, files. And a sandwich that isn’t his.',
+  'look.marker19': 'A marker. Back home we write with a quill, and we get it wrong just the same.', 'look.potion19': 'A cure disease potion. It cures everything except what I have.',
+  'take.marker19': 'I take the marker. It smells funny. Not as much as alchemy.', 'look.helmet19': 'My helmet, stuck to the machine. It ripped it off the way a dragon rips off a roof.',
+  'take.helmet19': 'I take my helmet back. Nobody saw anything. Nobody will say anything.', 's19.sandwich.watched': 'He’s watching me. Even limping, he sees everything.',
+  's19.mri.again': 'Once is enough. My ears are still cold.', 's19.wk.back': 'And it’s back to normal. Here too, the Wabbajack’s magic doesn’t last.',
+  'hint.s2_19.sandwich.1': 'The doctor keeps an eye on his sandwich.', 'hint.s2_19.sandwich.2': 'He needs distracting. Or changing, for a few seconds.', 'hint.s2_19.sandwich.3': 'Use the Wabbajack on the doctor, then take the sandwich during the alert.',
   /* chapter 18: the wheel of pain, the country eaten by the Nothing */
   'n.barbarian': 'barbarian', 'n.wheel18': 'wheel of pain', 'n.s18sky': 'sky', 'n.reader18': 'reader', 'n.s18chain': 'broken chain', 'n.s18mountains': 'mountains',
   'n.luckdragon': 'luck dragon', 'n.nothing18': 'Nothing', 'n.s18swamp': 'swamp of sadness', 'n.s18hill': 'hill', 'n.cheese18': 'gruyère',

@@ -105,6 +105,15 @@ export default {
   'hint.s2_15.horse.1': 'Le cheval ne dépasse pas douze lieues à l’heure.', 'hint.s2_15.horse.2': 'Les chevaux de chez toi grimpent partout, même les murs.', 'hint.s2_15.horse.3': 'Utilise le Wabbajack sur le cheval de la charrette.',
   'hint.s2_15.cable.1': 'Le câble doit toucher l’aiguille de l’horloge.', 'hint.s2_15.cable.2': 'Son autre bout pend au réverbère.', 'hint.s2_15.cable.3': 'Prends le câble au réverbère, puis utilise-le sur l’horloge.',
   'hint.s2_15.storm.1': 'Il ne manque qu’un orage… sur commande.', 'hint.s2_15.storm.2': 'Ta Voix sait appeler la tempête.', 'hint.s2_15.storm.3': 'Utilise le Cri sur l’horloge.',
+  /* chapitre 19 : l'hôpital (intermède) */
+  'n.house': 'médecin', 'n.board19': 'tableau blanc', 'n.mri19': 'IRM', 'n.xray19': 'radio', 'n.sandwich19': 'sandwich', 'n.marker19': 'marqueur', 'n.potion19': 'potion de guérison des maladies',
+  'n.s19bed': 'lit', 'n.s19desk': 'bureau', 'n.helmet19': 'mon casque', 'n.cheese19': 'sandwich au fromage',
+  'look.s19bed': 'Le lit où je me suis réveillé. Pas une charrette. Ça m’inquiète.', 'look.s19desk': 'Un bureau, un café froid, des dossiers. Et un sandwich qui n’est pas à lui.',
+  'look.marker19': 'Un marqueur. Chez nous, on écrit à la plume, et on rate tout pareil.', 'look.potion19': 'Une potion de guérison des maladies. Elle soigne tout, sauf ce que j’ai.',
+  'take.marker19': 'Je prends le marqueur. Il sent bizarre. Pas autant que l’alchimie.', 'look.helmet19': 'Mon casque, collé à la machine. Elle l’a arraché comme un dragon arrache un toit.',
+  'take.helmet19': 'Je récupère mon casque. Personne n’a rien vu. Personne ne dira rien.', 's19.sandwich.watched': 'Il me surveille. Même en boitant, il voit tout.',
+  's19.mri.again': 'Une fois suffit. J’ai encore froid aux oreilles.', 's19.wk.back': 'Et ça redevient comme avant. Ici aussi, le Wabbajack a la magie courte.',
+  'hint.s2_19.sandwich.1': 'Le docteur garde son sandwich à l’œil.', 'hint.s2_19.sandwich.2': 'Il faudrait le distraire. Ou le changer, quelques secondes.', 'hint.s2_19.sandwich.3': 'Utilise le Wabbajack sur le docteur, puis prends le sandwich pendant l’alerte.',
   /* chapitre 18 : la roue de la douleur, le pays dévoré par le Néant */
   'n.barbarian': 'barbare', 'n.wheel18': 'roue de la douleur', 'n.s18sky': 'ciel', 'n.reader18': 'lecteur', 'n.s18chain': 'chaîne brisée', 'n.s18mountains': 'montagnes',
   'n.luckdragon': 'dragon porte-bonheur', 'n.nothing18': 'Néant', 'n.s18swamp': 'marais de la tristesse', 'n.s18hill': 'colline', 'n.cheese18': 'gruyère',
