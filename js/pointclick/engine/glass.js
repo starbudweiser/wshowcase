@@ -43,7 +43,7 @@ function flyDraw(c, f, t) {
 const FW = 61;                                    /* largeur du visage à l'écran : celle du portrait de nuit, et celle de toutes les poses de nettoyage */
 const HOME = [W / 2, 112];                        /* où se tient son visage quand il parle */
 const PN = HERO_N.nNeutral, PSC = FW / PN[2];     /* portraits de nuit (même cadrage pour tous) : visage et échelle */
-const FIST = [95 - PN[0], 161 - PN[1]];           /* poing contre la vitre (hero_nKnockC), par rapport au visage, en pixels du portrait */
+const FIST = [124 - PN[0], 158 - PN[1]];          /* poing contre la vitre (hero_nKnockC, portraits hp3 du 27/11), par rapport au visage, en pixels du portrait */
 const KINDS = {   /* façon de frotter, rayon nettoyé, vitesse du point de contact */
   palm: { move: 'circles', r: 30, v: 150 }, rag: { move: 'zigzag', r: 30, v: 180 }, leaf: { move: 'zigzag', r: 32, v: 140 }, duster: { move: 'flicks', r: 26, v: 260 },
   sleeve: { move: 'strokes', r: 36, v: 200 }, finger: { move: 'scrape', r: 13, v: 110 }, breath: { move: 'circles', r: 34, v: 140 }

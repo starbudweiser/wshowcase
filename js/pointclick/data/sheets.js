@@ -60,7 +60,7 @@ NEWB.forEach(k => {
 /* nuit du héros, vue de face (tools/hero_nuit_sprites.py) : approche (en pied, genoux, taille), portrait, gestes avec image intermédiaire (…A),
    frappe en 3 temps ; HERO_N = visage [centre x, centre y, largeur] en pixels du sprite, pour enchaîner l'approche à taille de visage égale */
 ['Ap1', 'Ap2', 'Ap3', 'Neutral', 'Talk', 'Blink', 'PointA', 'Point', 'ShrugA', 'Shrug', 'PleadA', 'Plead', 'ThinkA', 'Think', 'WaveA', 'Wave', 'KnockA', 'KnockB', 'KnockC'].forEach(k => (SPR['hero.n' + k] = 'hero_n' + k));
-export const HERO_N = {'nAp1': [319.5, 119.5, 50], 'nAp2': [318.0, 161.5, 87], 'nAp3': [319.0, 215.0, 111], 'nNeutral': [149.5, 102.0, 54]};
+export const HERO_N = {'nAp1': [319.5, 119.5, 50], 'nAp2': [318.0, 161.5, 87], 'nAp3': [319.0, 215.0, 111], 'nNeutral': [151.0, 104.5, 71]};
 export const HERO = {
   walk: ['hero.w1', 'hero.w2', 'hero.w3', 'hero.w4', 'hero.w5', 'hero.w6', 'hero.w7', 'hero.w8'], walkOld: ['hero.walkA', 'hero.walkP', 'hero.walkB', 'hero.walkP'],
   walkF: ['hero.fWalkA', 'hero.fWalkP', 'hero.fWalkB', 'hero.fWalkP'], walkB: ['hero.bWalkA', 'hero.bStand', 'hero.bWalkB', 'hero.bStand'],

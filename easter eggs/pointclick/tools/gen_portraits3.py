@@ -33,6 +33,16 @@ POSES = [  # nom, référence, graine de départ, consigne
 for k in ('point', 'shrug', 'plead', 'think', 'wave', 'lean'):
     POSES.append((k + '_t', k, 3300 + len(POSES) * 10, B + " Exactly the same pose and gesture, same hands, but his mouth is wide open talking."))
 
+# images de la nuit (27/11) : intermédiaires des gestes et poing écrasé contre la vitre
+POSES += [
+    ('pointA', 'base', 3700, HB + " He is raising his right hand toward the viewer at chest height, the index finger starting to point, halfway through the gesture, mouth closed."),
+    ('shrugA', 'base', 3710, B + " He is starting to shrug: both hands rising on each side at the bottom of the picture, palms beginning to turn up, eyebrows rising, mouth closed. The head is exactly as big as in the reference."),
+    ('pleadA', 'base', 3720, B + " He is bringing both hands together in front of his chest at the bottom of the picture, about to press them together, eyebrows rising, mouth closed."),
+    ('thinkA', 'base', 3730, B + " He is raising his right hand toward his chin, halfway through the gesture, the hand at the bottom of the picture, eyes starting to look up, mouth closed."),
+    ('waveA', 'base', 3740, HB + " He is raising his open right hand at shoulder height, halfway through a wave, smile widening, mouth closed."),
+    ('knockC', 'knock1', 3750, B + " Exactly the same pose, same armored gauntlet, but his fist is now pressed flat against the glass of the screen right in front of the viewer, the steel knuckles squashed against the window pane, wincing grimace."),
+]
+
 def mesure(path):
     a = np.asarray(Image.open(path).convert('RGB')).astype(int); h, w, _ = a.shape
     bg = np.median(np.concatenate([a[:20, :20].reshape(-1, 3), a[:20, -20:].reshape(-1, 3)]), axis=0)
