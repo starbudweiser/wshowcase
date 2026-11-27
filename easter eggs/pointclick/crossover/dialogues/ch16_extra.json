@@ -1,0 +1,119 @@
+{
+ "chapter": "16_extra",
+ "title": "Répliques d’interaction (regards, actions, Wabbajack)",
+ "note": "Répliques écrites pendant l’intégration, hors des dialogues du chapitre ; textes tirés de lang/*.js, même casting.",
+ "lines": [
+  {
+   "key": "look.bucket16",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_16.js)",
+   "fr": "Un seau qui me regarde de travers. Le Wabbajack a de l’humour, le seau beaucoup moins.",
+   "en": "A bucket giving me a dirty look. The Wabbajack has a sense of humour; the bucket, much less."
+  },
+  {
+   "key": "look.stool16",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_16.js)",
+   "fr": "Un tabouret. Celui de l’auberge de Rivebois tient mieux debout.",
+   "en": "A stool. The one at the Riverwood inn stands up better."
+  },
+  {
+   "key": "look.owl16",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_16.js)",
+   "fr": "Une chouette. Elle me fixe comme un garde qui a vu ma prime.",
+   "en": "An owl. It stares at me like a guard who has seen my bounty."
+  },
+  {
+   "key": "s16.owl.talk",
+   "who": "hero",
+   "emo": "dry, wry",
+   "ctx": "Interaction (s2_16.js)",
+   "fr": "Elle ne répond pas. Chez nous, les animaux qui parlent sont des princes daedriques déguisés.",
+   "en": "No answer. Back home, talking animals are Daedric princes in disguise."
+  },
+  {
+   "key": "look.s16high",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_16.js)",
+   "fr": "La table des professeurs. Ils mangent en hauteur, pour mieux nous juger.",
+   "en": "The teachers’ table. They eat up high, the better to judge us."
+  },
+  {
+   "key": "look.s16window",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_16.js)",
+   "fr": "Un grand vitrail. Pas un seul dragon dessus. Ils ont de la chance.",
+   "en": "A great stained-glass window. Not a single dragon on it. Lucky them."
+  },
+  {
+   "key": "s16.wk.back",
+   "who": "hero",
+   "emo": "resigned, dry",
+   "ctx": "Interaction (s2_16.js)",
+   "fr": "Et ça redevient comme avant. Même ici, la magie du Wabbajack ne dure pas.",
+   "en": "And it’s back to normal. Even here, the Wabbajack’s magic doesn’t last."
+  },
+  {
+   "key": "look.potions",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_16b.js)",
+   "fr": "Tout en noir, les cheveux gras, un regard qui retire des points rien qu’en se posant.",
+   "en": "All in black, greasy hair, and a stare that takes points away just by landing on you."
+  },
+  {
+   "key": "take.flower16",
+   "who": "hero",
+   "emo": "casual, sly",
+   "ctx": "Interaction (s2_16b.js)",
+   "fr": "Je prends la fleur. Elle sent la montagne, et un peu la route.",
+   "en": "I take the flower. It smells of mountains, and a little of the road."
+  },
+  {
+   "key": "s16.cauldron.empty",
+   "who": "hero",
+   "emo": "mildly annoyed, wry",
+   "ctx": "Interaction (s2_16b.js)",
+   "fr": "Il faut quelque chose à mettre dedans. Chez nous, une potion de soin commence par une fleur.",
+   "en": "It needs something in it. Back home, a healing potion starts with a flower."
+  },
+  {
+   "key": "look.s16desk",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_16b.js)",
+   "fr": "Le bureau du professeur. Des copies corrigées à l’encre rouge. Surtout rouge.",
+   "en": "The professor’s desk. Papers marked in red ink. Mostly red."
+  },
+  {
+   "key": "look.s16benches",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_16b.js)",
+   "fr": "Des paillasses pleines de petits chaudrons. Aucun ne sent bon.",
+   "en": "Workbenches full of little cauldrons. None of them smells nice."
+  },
+  {
+   "key": "look.s16shelves",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_16b.js)",
+   "fr": "Des bocaux, des herbes, des crânes de rat. On dirait la cave d’Arcadia, en plus rangé.",
+   "en": "Jars, herbs, rat skulls. It looks like Arcadia’s cellar, only tidier."
+  },
+  {
+   "key": "look.flower16",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_16b.js)",
+   "fr": "Une fleur de montagne bleue. J’en ai cueilli des milliers au bord des routes sans savoir pourquoi. Maintenant, je sais.",
+   "en": "A blue mountain flower. I’ve picked thousands of them by the roadside without knowing why. Now I know."
+  }
+ ]
+}

@@ -1,0 +1,103 @@
+{
+ "chapter": "22_extra",
+ "title": "Répliques d’interaction (regards, actions, Wabbajack)",
+ "note": "Répliques écrites pendant l’intégration, hors des dialogues du chapitre ; textes tirés de lang/*.js, même casting.",
+ "lines": [
+  {
+   "key": "s22.need.both",
+   "who": "hero",
+   "emo": "mildly annoyed, wry",
+   "ctx": "Interaction (s2_22.js)",
+   "fr": "Il veut un café ET une part de tarte. Je n’ai pas tout.",
+   "en": "He wants a coffee AND a slice of pie. I don’t have both."
+  },
+  {
+   "key": "look.s22exit",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_22.js)",
+   "fr": "Un passage entre les rideaux. De l’autre côté, ça sent le café.",
+   "en": "A gap between the curtains. On the other side, it smells of coffee."
+  },
+  {
+   "key": "look.s22lamp",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_22.js)",
+   "fr": "Un lampadaire. Il éclaire tout en rouge. Même mes idées.",
+   "en": "A floor lamp. It lights everything red. Even my thoughts."
+  },
+  {
+   "key": "s22.wk.back",
+   "who": "hero",
+   "emo": "resigned, dry",
+   "ctx": "Interaction (s2_22.js)",
+   "fr": "Et ça redevient comme avant. Même ici, le Wabbajack a la magie courte.",
+   "en": "And it’s back to normal. Even here, the Wabbajack’s magic doesn’t last."
+  },
+  {
+   "key": "look.agent",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_22b.js)",
+   "fr": "Un agent impeccable qui parle à son magnétophone. Il sourit à la tarte comme à une vieille amie.",
+   "en": "An impeccable agent talking to his tape recorder. He smiles at the pie like an old friend."
+  },
+  {
+   "key": "look.loglady",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_22b.js)",
+   "fr": "Une dame qui berce une bûche. La bûche a l’air bien soignée.",
+   "en": "A lady cradling a log. The log looks well cared for."
+  },
+  {
+   "key": "look.chickens22",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_22b.js)",
+   "fr": "Deux poules empaillées. Là, au moins, elles sont ce qu’elles semblent.",
+   "en": "Two stuffed hens. At least they are what they seem."
+  },
+  {
+   "key": "look.owls22",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_22b.js)",
+   "fr": "Deux hiboux empaillés. Ils me fixent. Ils ne sont peut-être pas ce qu’ils semblent.",
+   "en": "Two stuffed owls. They stare at me. Maybe they are not what they seem."
+  },
+  {
+   "key": "look.recorder22",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_22b.js)",
+   "fr": "Une petite boîte qui enregistre la voix. Chez nous, on paie un barde pour ça.",
+   "en": "A little box that records your voice. Back home, we pay a bard for that."
+  },
+  {
+   "key": "look.s22pies",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_22b.js)",
+   "fr": "Des tartes aux cerises. Rouges comme les rideaux de l’autre pièce.",
+   "en": "Cherry pies. As red as the curtains in the other room."
+  },
+  {
+   "key": "look.s22counter",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_22b.js)",
+   "fr": "Un comptoir. Chez nous, on y boit de l’hydromel ; ici, du café noir comme une nuit sans lune.",
+   "en": "A counter. Back home we drink mead at one; here, coffee as black as a moonless night."
+  },
+  {
+   "key": "look.s22door",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_22b.js)",
+   "fr": "La porte du café. Dehors, des sapins à perte de vue. Ça me rappelle la Brèche.",
+   "en": "The diner door. Outside, pine trees as far as the eye can see. Reminds me of the Rift."
+  }
+ ]
+}

@@ -1,0 +1,111 @@
+{
+ "chapter": "13_extra",
+ "title": "Répliques d’interaction (regards, actions, Wabbajack)",
+ "note": "Répliques écrites pendant l’intégration, hors des dialogues du chapitre ; textes tirés de lang/*.js, même casting.",
+ "lines": [
+  {
+   "key": "s13.take.bucket",
+   "who": "hero",
+   "emo": "pleased, upbeat",
+   "ctx": "Interaction (s2_13.js)",
+   "fr": "Un seau. Ici aussi, il y a des seaux. Ce monde n’est pas perdu.",
+   "en": "A bucket. They have buckets here too. This world isn’t lost."
+  },
+  {
+   "key": "s13.creeper.back",
+   "who": "hero",
+   "emo": "dry, wry",
+   "ctx": "Interaction (s2_13.js)",
+   "fr": "Et elle revient d’un tas de cubes, comme si de rien n’était. Ici, rien ne meurt vraiment. Pratique.",
+   "en": "And it comes back from a heap of cubes as if nothing happened. Nothing really dies here. Handy."
+  },
+  {
+   "key": "s13.wk.back",
+   "who": "hero",
+   "emo": "resigned, dry",
+   "ctx": "Interaction (s2_13.js)",
+   "fr": "Et tout redevient comme avant. Le Wabbajack a la magie courte, ici aussi.",
+   "en": "And everything goes back to normal. The Wabbajack’s magic is short-lived here too."
+  },
+  {
+   "key": "look.s13sun",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_13.js)",
+   "fr": "Un soleil carré. Il a dû être conçu par un maçon.",
+   "en": "A square sun. It must have been designed by a bricklayer."
+  },
+  {
+   "key": "look.s13fall",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_13.js)",
+   "fr": "Une cascade en blocs. L’eau tombe en cubes. Ça doit faire mal.",
+   "en": "A block waterfall. The water falls in cubes. That must hurt."
+  },
+  {
+   "key": "look.s13dirt",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_13.js)",
+   "fr": "Un bloc de terre. Rien de plus banal. Ici, c’est presque un monument.",
+   "en": "A dirt block. Nothing could be more ordinary. Here, it’s almost a monument."
+  },
+  {
+   "key": "look.s13well",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_13.js)",
+   "fr": "Un puits en cubes. Le seul objet rond du monde, à part moi.",
+   "en": "A cube well. The only round thing in this world, apart from me."
+  },
+  {
+   "key": "look.s13door",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_13.js)",
+   "fr": "Une porte murée, en blocs. Il faudrait une sacrée force pour l’ouvrir. Ou une sacrée bêtise.",
+   "en": "A walled-up door made of blocks. It would take tremendous strength to open it. Or tremendous stupidity."
+  },
+  {
+   "key": "look.villager",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_13.js)",
+   "fr": "Un villageois à grand nez, les bras croisés. Il a l’air d’attendre quelque chose depuis trois cents ans.",
+   "en": "A big-nosed villager, arms folded. He seems to have been waiting for something for three hundred years."
+  },
+  {
+   "key": "look.sheep",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_13.js)",
+   "fr": "Un mouton en cubes. Il bêle en carré.",
+   "en": "A cube sheep. It bleats in squares."
+  },
+  {
+   "key": "take.cheesecube",
+   "who": "hero",
+   "emo": "casual, sly",
+   "ctx": "Interaction (s2_13b.js)",
+   "fr": "Une meule cubique. Elle s’empile toute seule dans mon sac.",
+   "en": "A cubic cheese. It stacks itself in my bag."
+  },
+  {
+   "key": "s13.cheese.first",
+   "who": "hero",
+   "emo": "mildly annoyed, wry",
+   "ctx": "Interaction (s2_13b.js)",
+   "fr": "Je n’ai pas encore la meule. On ne saute pas d’une tour les mains vides.",
+   "en": "I don’t have the cheese yet. You don’t jump off a tower empty-handed."
+  },
+  {
+   "key": "look.cheesecube",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_13b.js)",
+   "fr": "Une meule cubique. Elle tient parfaitement dans mon sac.",
+   "en": "A cubic cheese. It fits perfectly in my bag."
+  }
+ ]
+}

@@ -1,0 +1,143 @@
+{
+ "chapter": "28_extra",
+ "title": "Répliques d’interaction (regards, actions, Wabbajack)",
+ "note": "Répliques écrites pendant l’intégration, hors des dialogues du chapitre ; textes tirés de lang/*.js, même casting.",
+ "lines": [
+  {
+   "key": "look.potato28",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_28.js)",
+   "fr": "Une pomme de terre avec un œil. Elle me déteste. Je le sens.",
+   "en": "A potato with an eye. It hates me. I can feel it."
+  },
+  {
+   "key": "look.ai28",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_28.js)",
+   "fr": "Une caméra avec un œil jaune. Elle me regarde comme on regarde une expérience ratée.",
+   "en": "A camera with a yellow eye. It looks at me like a failed experiment."
+  },
+  {
+   "key": "look.cube28",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_28.js)",
+   "fr": "Un cube avec un cœur dessiné dessus. On dirait qu’il attend qu’on l’aime.",
+   "en": "A cube with a heart drawn on it. It looks like it is waiting to be loved."
+  },
+  {
+   "key": "look.dispenser28",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_28.js)",
+   "fr": "Un tube de verre qui descend du plafond. Il a l’air de distribuer des choses lourdes.",
+   "en": "A glass tube coming down from the ceiling. It looks like it hands out heavy things."
+  },
+  {
+   "key": "s28.dispenser.empty",
+   "who": "hero",
+   "emo": "mildly annoyed, wry",
+   "ctx": "Interaction (s2_28.js)",
+   "fr": "Le tube ne crache plus rien. Une meule par personne.",
+   "en": "The tube spits nothing more. One wheel per person."
+  },
+  {
+   "key": "look.cheese28",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_28.js)",
+   "fr": "Une meule lestée, numérotée, garantie sans trou.",
+   "en": "A weighted cheese wheel, numbered, guaranteed hole-free."
+  },
+  {
+   "key": "s28.button.keep",
+   "who": "hero",
+   "emo": "mildly annoyed, wry",
+   "ctx": "Interaction (s2_28.js)",
+   "fr": "Si je reprends la meule maintenant, la porte se referme sur mon nez.",
+   "en": "If I take the cheese back now, the door slams in my face."
+  },
+  {
+   "key": "look.door28o",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_28.js)",
+   "fr": "La porte est ouverte. Tant que la meule reste assise.",
+   "en": "The door is open. As long as the cheese stays seated."
+  },
+  {
+   "key": "look.door28",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_28.js)",
+   "fr": "Une porte lourde, fermée. Le bouton a l’air d’être la clé.",
+   "en": "A heavy door, closed. The button looks like the key."
+  },
+  {
+   "key": "s28.door.closed",
+   "who": "hero",
+   "emo": "mildly annoyed, wry",
+   "ctx": "Interaction (s2_28.js)",
+   "fr": "La porte est fermée. Il faut quelque chose de lourd sur ce bouton.",
+   "en": "The door is closed. Something heavy needs to sit on that button."
+  },
+  {
+   "key": "look.wall28",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_28b.js)",
+   "fr": "Un grand mur blanc, tout lisse. Il a l’air d’attendre qu’on y fasse un trou.",
+   "en": "A big smooth white wall. It looks like it is waiting for someone to make a hole in it."
+  },
+  {
+   "key": "look.ledge28",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_28b.js)",
+   "fr": "Une corniche, tout là-haut. Un gâteau dessus. Trop haut, même pour un Nordique.",
+   "en": "A ledge, way up there. A cake on it. Too high, even for a Nord."
+  },
+  {
+   "key": "look.cakereal28",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_28b.js)",
+   "fr": "Un vrai gâteau : trois étages, de la confiture, quinze bougies.",
+   "en": "A real cake: three tiers, jam, fifteen candles."
+  },
+  {
+   "key": "s28.ledge.far",
+   "who": "hero",
+   "emo": "mildly annoyed, wry",
+   "ctx": "Interaction (s2_28b.js)",
+   "fr": "Trop haut. Il me faudrait un autre chemin.",
+   "en": "Too high. I need another way."
+  },
+  {
+   "key": "look.portalblue28",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_28b.js)",
+   "fr": "Un portail bleu, ici.",
+   "en": "A blue portal, here."
+  },
+  {
+   "key": "look.portalorange28",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_28b.js)",
+   "fr": "Un portail orange. Par lui, on voit Rivebois : des lampions, une marmite qui fume.",
+   "en": "An orange portal. Through it you can see Riverwood: lanterns, a steaming cauldron."
+  },
+  {
+   "key": "s28.cake.first",
+   "who": "hero",
+   "emo": "mildly annoyed, wry",
+   "ctx": "Interaction (s2_28b.js)",
+   "fr": "D’abord, un gâteau qui ne soit pas en carton.",
+   "en": "First, a cake that is not made of cardboard."
+  }
+ ]
+}
