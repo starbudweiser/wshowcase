@@ -1,6 +1,6 @@
 /* Season 2: hand-written texts (names, unvoiced looks, interface, genie hints). Voiced dialogue lives in s2_en.js. */
 export default {
-  'ui.season2': 'Season 2', 'ui.season2.lock': 'Season 2 · finish season 1', 'ui.bonus': 'Bonus:', 'ui.soon': '(soon)',
+  'ui.season2': 'Season 2', 'cd.title': 'Installer', 'cd.name': 'The Bucket of Rivebois · Season 2', 'cd.insert': 'Please insert CD-ROM #2…', 'cd.s1': 'Reading CD-ROM…', 'cd.s2': 'Unpacking 16,777,216 colours…', 'cd.s3': 'Smoothing pixels (one by one, by hand)…', 'cd.s4': 'Adding a third dimension… cancelled (budget)', 'cd.s5': 'Installing the Wabbajack… careful, it bites', 'cd.s6': 'Almost done… really almost…', 'cd.done': 'Installation complete. Rebooting the world.', 'ui.season2.lock': 'Season 2 · finish season 1', 'ui.bonus': 'Bonus:', 'ui.soon': '(soon)',
   'ui.retroOn': 'Season 2: 90s graphics', 'ui.retroOff': 'Season 2: 2000s graphics',
   's2end.title': 'To be continued…', 's2end.sub': 'The next chapter of season 2 is still simmering in Sheogorath’s cauldron.',
   'n.wabbajack': 'Wabbajack', 'look.wabbajack': 'Sheogorath’s staff. It turns anything into anything else. Mostly into nonsense.',

@@ -284,7 +284,8 @@ export class Game {
       filter: this.scaler ? () => this.filter : null, nextFilter: () => this.setFilter(L[(L.indexOf(this.filter) + 1) % L.length], true),
       music: () => snd.musicOn !== false, setMusic: v => { this.setMusic(v); if (v && !inGame) snd.music(true, 'title'); },
       voice: () => this.voiceOn, setVoice: v => this.setVoice(v), amb: () => this.ambOn, setAmb: v => this.setAmbience(v),
-      retro: s2Open() ? () => this.s2retro : null, setRetro: v => { this.s2retro = !!v; store.set('pc.s2retro', !!v); this.applyLook(); },
+      retro: () => this.s2retro,   /* toujours visible : on peut choisir le rendu de la saison 2 avant d'y arriver */
+      setRetro: v => { this.s2retro = !!v; store.set('pc.s2retro', !!v); this.applyLook(); },
       toggleLang: () => this.setLang(this.lang === 'fr' ? 'en' : 'fr'),
       ach: T('ach.menu', { n, t: BLINDS.length }), achDone: ac.done.includes('fiatlux')
     });
@@ -452,43 +453,67 @@ export class Game {
     setTimeout(() => t.classList.add('out'), ms); setTimeout(() => t.remove(), ms + 600);
   }
   /* vignette d'ouverture d'un chapitre de la saison 2 : l'illustration plein écran (dessinée sur le canevas) et le titre ; un clic
-     la passe. En rendu années 90, sa version convertie comme en saison 1. o.upgrade (début de la saison 2) : elle apparaît en rendu
-     années 90, puis deux balayages lumineux la font passer aux couleurs puis à la définition des années 2000. Elle s'efface sur la scène. */
+     la passe. En rendu années 90, sa version convertie comme en saison 1. o.upgrade (début de la saison 2, rendu années 2000) : faux
+     CD-ROM d'installation des années 90 (cdInstall), puis la vignette jaillit en HD, des gros pixels jusqu'à la pleine définition. */
   async card(src, title, o = {}) {
     this.chk(); const lowSrc = src.replace('s2/cards/', 's2/90/cards/').replace(/\.webp$/, '.png'), up = o.upgrade && !this.s2low;
-    const [hi, lo] = await Promise.all([this.s2low ? null : this.img(src), this.s2low || up ? this.img(lowSrc) : null]);
+    const [hi, lo] = await Promise.all([this.s2low ? null : this.img(src), this.s2low ? this.img(lowSrc) : null]);
     const d = el('div', 'pc-s2card'); d.append(el('h2', '', title)); d.onpointerdown = () => { this.skip = true; };
-    this.cardFx = { im: this.s2low || up ? lo : hi, a: 0 }; this.stage.append(d);
     try {
-      const t0 = this.now; requestAnimationFrame(() => d.classList.add('on'));
-      await this.until(() => { this.cardFx.a = Math.min(1, (this.now - t0) / 0.6); return this.cardFx.a >= 1; }); this.chk();
-      if (up && lo && hi) { await this.wait(1500); await this.upgradeRender(lo, hi); }
-      this.skip = false; const t1 = this.now; await this.until(() => this.now - t1 > (up ? 2.5 : 4.5) || (this.skip && this.now - t1 > 0.6)); this.skip = false; this.chk();
+      if (up && hi) {
+        await this.cdInstall(); this.cardFx = { im: hi, a: 1, mosaic: 40, ring: this.now }; this.stage.append(d);
+        this.fx.fade = { from: 0, to: 0, t0: this.now, ms: 0.01, a: 0 };
+        for (let i = 0; i < 40; i++) { const an = Math.random() * Math.PI * 2, r = 20 + Math.random() * 160; twinkle(this, W / 2 + Math.cos(an) * r, H / 2 + Math.sin(an) * r * 0.6, ['#ffffff', '#bfe6ff', '#ffe9a8', '#ffb0f0'][i % 4]); }
+        const t0 = this.now; await this.until(() => { const u = Math.min(1, (this.now - t0) / 1.5); this.cardFx.mosaic = 1 + 39 * Math.pow(1 - u, 2.4); return u >= 1; });
+        this.cardFx.mosaic = 1; requestAnimationFrame(() => d.classList.add('on')); this.sfx('jingle');
+      } else {
+        this.cardFx = { im: this.s2low ? lo : hi, a: 0 }; this.stage.append(d);
+        const t0 = this.now; requestAnimationFrame(() => d.classList.add('on'));
+        await this.until(() => { this.cardFx.a = Math.min(1, (this.now - t0) / 0.6); return this.cardFx.a >= 1; }); this.chk();
+      }
+      this.skip = false; const t1 = this.now; await this.until(() => this.now - t1 > (up ? 3 : 4.5) || (this.skip && this.now - t1 > 0.6)); this.skip = false; this.chk();
       d.classList.remove('on'); const t2 = this.now; this.fade(0, 800);
       await this.until(() => { this.cardFx.a = Math.max(0, 1 - (this.now - t2) / 0.8); return this.cardFx.a <= 0; });
     } finally { d.remove(); this.cardFx = null; }
   }
-  /* années 90 -> années 2000 : 1er balayage, les 16 millions de couleurs (même définition 480 × 270) ; 2e balayage, la définition 960 × 540 ;
-     une ligne de lumière descend en semant des étincelles */
-  async upgradeRender(lo, hi) {
-    const mid = Object.assign(document.createElement('canvas'), { width: W, height: H }), x = mid.getContext('2d'); x.imageSmoothingQuality = 'high'; x.drawImage(hi, 0, 0, W, H);
-    const C = this.cardFx; for (const [a, b] of [[lo, mid], [mid, hi]]) {
-      C.im = a; C.next = b; const t0 = this.now, dur = 1.1; this.sfx('whoosh'); let lastSp = 0;
+  /* faux CD-ROM des années 90 : fenêtre d'installation grise, le disque glisse dans la fenêtre et tourne, la barre de progression
+     accélère (et cale à 99 %), puis la fenêtre est aspirée dans le disque qui fonce vers nous ; éclair blanc, onde de choc. Un clic abrège. */
+  async cdInstall() {
+    const T = this.T, o = el('div', 'pc-cd'), win = el('div', 'pc-cdwin'), bar = el('div', 'pc-cdbar'), fill = el('i'), disc = el('div', 'pc-cddisc');
+    const head = el('div', 'pc-cdhead'); head.append(el('span', '', T('cd.title')));
+    const body = el('div', 'pc-cdbody'), txt = el('div', 'pc-cdtxt'), st = el('p', 'pc-cdst', T('cd.insert')), pc = el('p', 'pc-cdpc', '');
+    bar.append(fill); txt.append(el('b', '', T('cd.name')), st, bar, pc); body.append(disc, txt); win.append(head, body);
+    const flash = el('div', 'pc-cdflash'); o.append(win, flash); o.onpointerdown = () => { this.skip = true; }; this.stage.append(o);
+    const steps = [1, 2, 3, 4, 5, 6].map(i => T('cd.s' + i)), set = (u) => { fill.style.width = (u * 100).toFixed(1) + '%'; pc.textContent = Math.floor(u * 100) + ' %'; };
+    try {
+      this.skip = false; requestAnimationFrame(() => o.classList.add('on')); await this.wait(500);
+      this.sfx('click'); disc.classList.add('in'); await this.wait(900); disc.classList.add('spin'); this.sfx('fileFx', 'cd_seek', 0.5);
+      const t0 = this.now, dur = 5.2; let k = -1;
       await this.until(() => {
-        const u = Math.min(1, (this.now - t0) / dur), e = u * u * (3 - 2 * u); C.split = e * 1.03; C.line = Math.sin(u * Math.PI);
-        if (this.now - lastSp > 0.05 && u < 1) { lastSp = this.now; for (let i = 0; i < 3; i++) twinkle(this, Math.random() * W, C.split * H, i % 2 ? '#bfe6ff' : '#fff2c0'); }
-        return u >= 1;
-      }); this.chk();
-      C.im = b; C.next = null; C.split = 0; C.line = 0; await this.wait(a === lo ? 450 : 100);
-    }
-    this.sfx('jingle');
+        const t = (this.now - t0) / dur, u = t < 0.82 ? 0.99 * (1 - Math.pow(1 - t / 0.82, 1.7)) : t < 0.97 ? 0.99 : 1;   /* accélère, cale à 99 %, puis 100 % */
+        set(u); const i = Math.min(steps.length - 1, Math.floor(Math.min(t, 0.999) * steps.length)); if (i !== k) { k = i; st.textContent = steps[i]; }
+        if (t > 0.5) disc.classList.add('fast');
+        return t >= 1 || this.skip;
+      });
+      set(1); st.textContent = T('cd.done'); this.skip = false; await this.wait(450);
+      this.sfx('fileFx', 'cd_pop', 0.6); o.classList.add('suck'); await this.wait(650);
+      this.sfx('fileFx', 'cd_boom', 0.55); o.classList.add('flash'); await this.wait(220);
+    } finally { o.classList.add('gone'); setTimeout(() => o.remove(), 900); this.skip = false; }
   }
   drawCard(c) {
     const C = this.cardFx; if (!C || !C.im) return;
-    const put = im => { c.imageSmoothingEnabled = dn(im) > 1; c.drawImage(im, 0, 0, W, H); };
-    c.save(); c.globalAlpha = C.a; put(C.im);
-    if (C.next && C.split > 0) { const y = Math.min(H, C.split * H); c.save(); c.beginPath(); c.rect(0, 0, W, y); c.clip(); put(C.next); c.restore();
-      if (C.line > 0) { const g = c.createLinearGradient(0, y - 7, 0, y + 7); g.addColorStop(0, 'rgba(160,210,255,0)'); g.addColorStop(0.5, `rgba(235,248,255,${0.85 * C.line})`); g.addColorStop(1, 'rgba(160,210,255,0)'); c.globalCompositeOperation = 'lighter'; c.fillStyle = g; c.fillRect(0, y - 7, W, 14); } }
+    c.save(); c.globalAlpha = C.a;
+    if (C.mosaic > 1.05) {   /* gros pixels qui s'affinent jusqu'à la pleine définition */
+      const b = C.mosaic, w = Math.max(1, Math.ceil(W / b)), h = Math.max(1, Math.ceil(H / b));
+      const m = this.mosCv || (this.mosCv = document.createElement('canvas')); if (m.width !== w || m.height !== h) { m.width = w; m.height = h; }
+      const x = m.getContext('2d'); x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high'; x.drawImage(C.im, 0, 0, w, h);
+      c.imageSmoothingEnabled = false; c.drawImage(m, 0, 0, w, h, 0, 0, w * b, h * b);
+    } else { c.imageSmoothingEnabled = dn(C.im) > 1; c.drawImage(C.im, 0, 0, W, H); }
+    if (C.ring) {   /* onde de choc lumineuse depuis le centre */
+      const u = (this.now - C.ring) / 1.1;
+      if (u < 1) { c.globalCompositeOperation = 'lighter'; for (const [k, col] of [[1, '200,235,255'], [0.75, '255,230,170']]) { const r = 10 + u * k * 330; c.strokeStyle = `rgba(${col},${(1 - u) * 0.9})`; c.lineWidth = 14 * (1 - u) + 1; c.beginPath(); c.ellipse(W / 2, H / 2, r, r * 0.62, 0, 0, Math.PI * 2); c.stroke(); }
+        c.fillStyle = `rgba(255,255,255,${Math.max(0, 0.7 - u * 1.6)})`; c.fillRect(0, 0, W, H); }
+    }
     c.restore();
   }
   /* un aveugle a retrouvé la lumière : compte, toast, succès */
