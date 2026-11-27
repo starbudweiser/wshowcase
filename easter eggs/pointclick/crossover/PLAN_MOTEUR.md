@@ -1,0 +1,72 @@
+# Saison 2 dans le moteur — plan d'intégration (27/11/2026)
+
+## Décidé par Stéphan (27/11/2026)
+- **Maquette d'abord** : chapitre 11 jouable vite (décor vide FLUX, fiches détourées en poses fixes) pour tester
+  énigmes et dialogues ; animations LTX (parole, marche) ensuite, avant toute mise en ligne.
+- **Illustrations `r_*` = vignette d'ouverture** de chaque chapitre (plein écran avec le titre), puis décor jouable.
+- **Expressions du héros sur face et profils** (8 visages) ; trois-quarts et dos restent neutres.
+- **Saison 2 ouverte après la fin de la saison 1** (chapitres 11-28 dans le menu) ; en local, `?s2` ouvre tout.
+- **Effets visuels animés de qualité et pertinents, surtout** (27/11) : chaque scène et chaque action marquante a son
+  effet, dessiné en pleine définition (`js/pointclick/engine/fx2.js` : lumière additive, halos, ondes de choc, éclairs,
+  fumée, étincelles) : éclair du Wabbajack, métamorphoses, aura des fantômes et des créatures magiques, feux d'artifice,
+  lumières vivantes du décor (lanternes, fenêtres, reflets de lune, lucioles, brume, néons…), apparitions de Sheogorath.
+
+## Constat
+- **Prêt** : 19 dialogues (999 répliques, FR/EN), 1 881 voix (82 Mo, mp3 40 kb/s comme la saison 1), 19 musiques déjà
+  dans `assets/pointclick/music/s2_*.mp3`, 56 fiches de personnages, 23 illustrations de scène.
+- **Manque pour jouer** :
+  - les illustrations `crossover/img/r_*.jpg` ont les personnages peints dedans et un cadrage serré : ce sont des
+    affiches, pas des décors où l'on marche ;
+  - les fiches `crossover/persos/*.jpg` sont une pose de présentation sur fond magenta : aucun sprite de jeu ;
+  - héros S2 : 6 vues fixes (`work/crossover/hero_s2/sel_*.png`), aucun cycle de marche, aucune parole ;
+  - aucun objet d'inventaire, aucune transformation du Wabbajack, aucun point chaud ni zone de marche ;
+  - prologue (fête du chapitre 10 → Sheogorath → seau-portail) : aucune réplique écrite.
+
+## Architecture du moteur
+1. **Coordonnées logiques inchangées (480 × 270)** pour l'interface, la pièce des verbes, les bulles, les zones de
+   marche, les points chauds et les scripts. Une scène S2 déclare `hd: true` : canevas 960 × 540, dessin à ×2, sprites
+   S2 à densité 2 (pleine définition), lissage activé. Les scènes S1 gardent leur canevas 480 × 270 : rendu et filtres
+   (pixels nets, Scale2x…) identiques au pixel près.
+2. **Registre** `js/pointclick/scenes/index.js` : chapitres `s2_11` à `s2_28` ; le 17 en deux variantes
+   (`lang: 'fr'` Kaamelott, `lang: 'en'` Sacré Graal), l'autre version jouable en bonus dans le menu.
+3. **Textes** : `tools/s2_lang.py` convertit `crossover/dialogues/*.json` en `js/pointclick/lang/s2_fr.js` et
+   `s2_en.js` (mêmes clés `cNN.*`), chargés avec la saison 1. Une couleur de bulle par personnage.
+4. **Voix** : copie de `work/crossover/voices/<fr|en>/` vers `assets/pointclick/voice/<fr|en>/` (suivi par git comme
+   la saison 1, +82 Mo). **Musique** : `music: 's2_11_pirates'`… par scène.
+5. **Héros S2** : planche `HERO2` (profils, trois-quarts, face, dos), orientation selon la marche et l'interlocuteur
+   (comme en S1), expression choisie par réplique d'après `emo` (table emo → 8 visages), neutre et clignements au repos.
+6. **Wabbajack** : dans la besace dès le chapitre 11 ; « utiliser le Wabbajack sur X » → effet commun (éclair + pouf
+   de fumée, une douzaine d'images faites une fois), puis sprite transformé ou réplique ; carnet des métamorphoses.
+7. Nuit, clins d'œil et vitrail de la S1 coupés en S2 au départ (faits pour 480 × 270 et les personnages S1).
+8. Génie des indices en HD et étapes 11-28 : après le premier chapitre jouable.
+
+## Production graphique manquante (images entières, poses validées sur planche, cycles LTX)
+Par chapitre :
+- 1 décor vide 960 × 540 (FLUX, illustration en référence, même lieu sans personnages, cadrage plus large, sol
+  praticable, avant-plans séparés si besoin) ; Friends en FR et en EN ;
+- par personnage : pose clé de jeu (tourné vers son interlocuteur) + parole (vidéo LTX sur place → 4-5 images) ;
+  cycle de marche LTX (profil, face, dos) seulement s'il se déplace ;
+- 3 à 5 objets (icône de besace + objet posé) ;
+- 4 cibles du Wabbajack → sprite transformé (ou effet seul quand le gag est sonore).
+Commun : héros S2 complet, héros dessin animé (chapitre 27), Sheogorath (fin de chaque chapitre), Wabbajack, effet.
+Ordre de grandeur : ~20 décors, ~45 personnages, ~70 objets, ~75 transformations, ~80 vidéos LTX et ~500 images
+FLUX, une à la fois (file calcul-lourd) : plusieurs jours de calcul, avec une planche à valider par chapitre.
+
+## Ordre des étapes
+1. Moteur : `hd`, registre, textes, voix, musique, héros S2 provisoire (vues fixes).
+2. Chapitre 11 de bout en bout : décor vide, poses et parole des personnages, objets, transformations → planches →
+   animations → intégration → essais dans le navigateur, son coupé → commit local.
+3. Héros S2 complet (cycles LTX des 4 vues, parole, clignements, expressions), utile à tous les chapitres.
+4. Chapitres 12 à 28, par lots de 2 ou 3, planche validée à chaque lot.
+5. Génie HD et indices, prologue (à écrire), passage depuis la fin de la S1, Wabbajack en bonus dans la S1.
+
+## Chapitre 11 en détail
+- Décor : quai de nuit, navire fantôme à gauche, taverne à droite (perroquet sur son perchoir), tonneaux, statue de
+  singe (cible du Wabbajack).
+- Personnages : apprenti pirate, maître d'armes, perroquet, capitaine fantôme, Sheogorath, héros.
+- Objets : biscuit, carte au trésor, chope de grog → bière de racine, fromage de Hollande, Wabbajack.
+- Déroulé : réveil (l'apprenti) → biscuit au perroquet, il récite les réparties → duel en trois manches (choix,
+  l'apprenti souffle) → carte → le capitaine fantôme confisque le fromage → Wabbajack sur la chope → bière de racine
+  sur le fantôme → feu d'artifice vert → fromage → Sheogorath → chapitre 12.
+- Trou du script : d'où vient le biscuit ? Proposition : sur un tonneau devant la taverne ; réplique « prendre » à
+  écrire et à voiser (réplique générique en attendant).

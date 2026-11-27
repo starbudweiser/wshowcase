@@ -1,10 +1,14 @@
 /* Textes du jeu : français (rédigé en premier). Une valeur en tableau = réplique tirée au hasard. */
 import X from './fr2.js';
 import G from './genie_fr.js';   /* génie des indices */
+import S2 from './s2_fr.js';   /* saison 2 : dialogues voisés */
+import S2X from './s2x_fr.js';   /* saison 2 : noms, regards, interface */
 import { darkKeys } from './dark.js';
 export default {
   ...X,
   ...G,
+  ...S2,
+  ...S2X,
   /* interface */
   'v.walk': 'Aller vers', 'v.take': 'Prendre', 'v.use': 'Utiliser', 'v.talk': 'Parler à', 'v.look': 'Regarder', 'ui.with': 'avec',
   'ui.new': 'Nouvelle partie', 'ui.continue': 'Continuer', 'ui.resume': 'Reprendre', 'ui.musicOn': 'Musique : oui', 'ui.musicOff': 'Musique : non',

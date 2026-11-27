@@ -95,6 +95,7 @@ export function buildMenu(g, o) {
       if (!o.inGame && o.hasSave) add(T('ui.continue'), o.cont);
       add(T('ui.new'), o.newGame);
       if (o.chapters.filter(c => !c.locked).length > 1) add(T('ui.chapters'), () => { page = 'chap'; sel = 0; render(); });
+      if (o.chapters2) add(T('ui.season2'), () => { page = 'chap2'; sel = 0; render(); });
       add(T('ui.options'), () => { page = 'opt'; sel = 0; render(); });
     } else if (page === 'opt') {
       add(T('ui.fullscreen'), o.fullscreen);
@@ -103,10 +104,10 @@ export function buildMenu(g, o) {
       tog('ui.music', o.music, o.setMusic); tog('ui.voice', o.voice, o.setVoice); tog('ui.amb', o.amb, o.setAmb);
       add(g.lang === 'fr' ? 'English' : 'Français', o.toggleLang);
       add(T('ui.back'), () => { page = 'main'; sel = 0; render(); }, 'back');
-    } else if (page === 'chap') {
-      const n = o.chapters.length;
-      if (n > 4) { rows = Math.ceil(n / 2); box.classList.add('grid'); box.style.setProperty('--rows', rows); }   /* 1 à 5 à gauche, 6 à 10 à droite */
-      o.chapters.forEach(c => add(c.label, c.go, c.locked ? 'lock' : ''));
+    } else if (page === 'chap' || page === 'chap2') {
+      const chs = page === 'chap' ? o.chapters : o.chapters2, n = chs.length; box.classList.remove('dense');
+      if (n > 4) { rows = Math.ceil(n / 2); box.classList.add('grid'); box.style.setProperty('--rows', rows); if (n > 12) box.classList.add('dense'); }   /* 1 à 5 à gauche, 6 à 10 à droite */
+      chs.forEach(c => add(c.label, c.go, c.locked ? 'lock' : ''));
       add(T('ui.back'), () => { page = 'main'; sel = 0; render(); }, 'back');
     }
     focus(Math.min(sel, list.length - 1)); if (!ok(sel)) focus(list.findIndex((b, k) => ok(k)));
@@ -117,9 +118,9 @@ export function buildMenu(g, o) {
   root.key = e => {
     const k = e.key;
     if (k === 'ArrowDown' || k === 'ArrowUp') { e.preventDefault(); let t = sel; do t = (t + (k === 'ArrowDown' ? 1 : list.length - 1)) % list.length; while (!ok(t)); focus(t); snd.click(); }
-    else if (rows && (k === 'ArrowLeft' || k === 'ArrowRight') && sel < o.chapters.length) {
+    else if (rows && (k === 'ArrowLeft' || k === 'ArrowRight') && sel < list.length - 1) {
       e.preventDefault(); const t = sel + (k === 'ArrowRight' ? rows : -rows);
-      if (ok(t) && t < o.chapters.length) { focus(t); snd.click(); }
+      if (ok(t) && t < list.length - 1) { focus(t); snd.click(); }
     }
     else if (k === 'Enter' || k === ' ') { e.preventDefault(); if (list[sel]) list[sel].click(); }
     else if (k === 'Escape') { if (page !== 'main') { page = 'main'; sel = 0; render(); } else if (o.inGame) o.resume(); }

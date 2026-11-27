@@ -19,12 +19,21 @@ import { makeAmbient } from './ambient.js';
 import { playIntro, preloadIntro } from './intro.js';
 import { TitleArt, buildMenu } from './title.js';
 import { rubLamp } from './genie.js';
+import { updateFx2, drawFx2 } from './fx2.js';
 import * as SH from '../data/sheets.js';
+import * as S2 from '../data/sheets_s2.js';
+import { CHAPTERS2 } from '../scenes/index.js';
 const { SPR, ITEMS } = SH, ANIM = SH.ANIM || {}, HERO = SH.HERO || null, SLEEP = SH.SLEEP || {};
+Object.assign(ITEMS, S2.ITEMS);
 
 export const W = 480, H = 270;
 const HOLD_S = 0.32, CHARGE_S = 0.09, DRAWER_H = 46;   // appui long avant la pièce, délai avant l'anneau de chargement, hauteur du tiroir
 const COLORS = { hero: '#ffe08a', rider: '#ffe08a', merchant: '#ffa45c', guard: '#9ad0ff', horse: '#f0c890', hen: '#ffffff', blind_pot: '#e6e0a0', blind_sack: '#e6e0a0', blind_hat: '#e6e0a0', giant: '#ffb070', nazim: '#c9a8ff', farmer: '#9fe08a', pmerchant: '#ffa45c', pguard: '#9ad0ff', pgiant: '#ffb070', phorseman: '#ff9a5c', gguard: '#9ad0ff', horseman: '#ff9a5c', follower: '#ffb0c8', butterfly: '#9ad8ff', blind_cabbage: '#e6e0a0', blind_helmet: '#e6e0a0', blind_basket: '#e6e0a0', blind_boot: '#e6e0a0', blind_mushroom: '#e6e0a0', blind_banner: '#e6e0a0', blind_partyhat: '#e6e0a0', narr: '#cfe0ff', genie: '#8fd3ff' };
+Object.assign(COLORS, S2.COLORS);
+/* densité d'une image : 2 pour la saison 2 (960 × 540), 1 sinon ; tailles en unités logiques (480 × 270) */
+const dn = im => (im && im.dens) || 1, iw = im => im.width / dn(im), ih = im => im.height / dn(im);
+/* saison 2 ouverte : fin de la saison 1 atteinte, ou adresse avec ?s2 (essais en local) */
+const s2Open = () => store.get('pc.s1done', false) || /[?&]s2\b/.test(location.search), s2All = () => /[?&]s2\b/.test(location.search);
 class Cancel {}
 const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
@@ -56,10 +65,11 @@ export class Game {
     if (this.titleArt) this.titleArt.setLang(l);
     if (!first) { this.renderPanel(); this.renderLine(); if (this.titleEl) { const ig = this.titleIn; this.showTitle(ig, 'opt'); } }
   }
-  img(src) { return this.imgs[src] || (this.imgs[src] = new Promise(res => { const i = new Image(); i.onload = () => { this.imgs[src] = i; res(i); }; i.onerror = () => res(null); i.src = src; }).then(i => (this.imgs[src] = i))); }
+  img(src) { return this.imgs[src] || (this.imgs[src] = new Promise(res => { const i = new Image(); i.onload = () => { if (src.includes('/s2/')) i.dens = 2; this.imgs[src] = i; res(i); }; i.onerror = () => res(null); i.src = src; }).then(i => (this.imgs[src] = i))); }
   /* image d'animation d'un personnage selon son état : repos, parole, déplacement */
   /* image du héros : orientation (profil, face, dos) x état (marche, parole, repos) ; les images manquantes sont ignorées */
   heroFrame(h, moving, s) {
+    if (this.scene && this.scene.hd) return S2.heroFrame2(h, moving);
     if (!HERO) return h.front || h.talk ? 'hero.front' : 'hero.side';
     const ok = n => n && this.spr(n), cyc = (arr, i) => { const f = arr.filter(ok); return f.length ? f[((i % f.length) + f.length) % f.length] : null; };
     const view = h.back ? 'b' : h.front ? 'f' : 's', t = this.now;
@@ -91,7 +101,11 @@ export class Game {
     const p = `assets/pointclick/anim/${id}_${i}.png`, im = this.imgs[p]; if (im && im.width) return im;
     this._ld = this._ld || {}; if (!this._ld[p]) { this._ld[p] = 1; Promise.resolve(this.img(p)).catch(() => {}); } return null;
   }
-  spr(name) { const i = this.imgs[`assets/pointclick/spr/${SPR[name] || name}.png`]; return i && i.width ? i : null; }
+  sprPath(name) { return name.startsWith('s2:') ? `assets/pointclick/s2/spr/${name.slice(3)}.png` : `assets/pointclick/spr/${SPR[name] || name}.png`; }
+  spr(name) { const i = name && this.imgs[this.sprPath(name)]; return i && i.width ? i : null; }
+  heroStand() { return this.scene && this.scene.hd ? S2.HERO2.r : HERO ? HERO.stand : 'hero.side'; }
+  /* définition du canevas : 1 = 480 × 270 (saison 1, au pixel près), 2 = 960 × 540 (saison 2) ; les coordonnées logiques ne changent pas */
+  setRes(k) { this.k = k; this.cv.width = W * k; this.cv.height = H * k; this.ctx.imageSmoothingEnabled = false; this.ctx.imageSmoothingQuality = 'high'; }
   /* coucher de nuit : clé de la planche d'animation du personnage (null s'il n'en a pas encore), planche chargée, réglages */
   sleepKey(e) { const d = SLEEP[e.spr]; return d && this.sleepIdx && this.sleepIdx[d.k] ? d.k : null; }
   sleepSheet(k) { const i = this.imgs[`assets/pointclick/sleep/${k}.png`]; return i && i.width ? i : null; }
@@ -106,7 +120,7 @@ export class Game {
   build() {
     const r = this.root; r.innerHTML = ''; r.classList.add('pc');
     this.stage = el('div', 'pc-stage'); this.view = this.stage;
-    this.cv = el('canvas'); this.cv.width = W; this.cv.height = H; this.ctx = this.cv.getContext('2d'); this.ctx.imageSmoothingEnabled = false;
+    this.cv = el('canvas'); this.cv.width = W; this.cv.height = H; this.ctx = this.cv.getContext('2d'); this.ctx.imageSmoothingEnabled = false; this.k = 1;
     this.ov = el('div', 'pc-ov'); this.askEl = el('div', 'pc-ask');
     this.out = el('canvas', 'pc-out'); this.scaler = Scaler.create(this.cv, this.out); this.filter = store.get('pc.filter', 'sharp'); if (this.scaler) { this.scaler.mode = this.filter; this.cv.classList.add('pc-src'); }
     this.ambient = el('canvas', 'pc-ambient'); this.ambient.width = 48; this.ambient.height = 27; this.actx = this.ambient.getContext('2d'); this.ambT = 0;
@@ -159,7 +173,7 @@ export class Game {
     for (let i = 0; i < 8; i++) {
       const id = inv[i], b = el('button', 'pc-slot' + (id && this.sel === id ? ' held' : '')); b.disabled = !id;
       if (id) {
-        const c = document.createElement('canvas'); c.width = 40; c.height = 34; const im = this.spr(ITEMS[id].spr); if (im) { const k = Math.min(38 / im.width, 32 / im.height); const w = im.width * k, h = im.height * k; const x = c.getContext('2d'); x.imageSmoothingEnabled = false; x.drawImage(im, (40 - w) / 2, 34 - h - 1, w, h); } b.append(c);
+        const c = document.createElement('canvas'); c.width = 40; c.height = 34; const im = this.spr(ITEMS[id].spr); if (im) { const k = Math.min(38 / im.width, 32 / im.height); const w = im.width * k, h = im.height * k; const x = c.getContext('2d'); x.imageSmoothingEnabled = dn(im) > 1; x.imageSmoothingQuality = 'high'; x.drawImage(im, (40 - w) / 2, 34 - h - 1, w, h); } b.append(c);
         b.addEventListener('pointerdown', e => { e.preventDefault(); this.slotDown(e, id); });
         b.addEventListener('pointerenter', () => { this.hoverItem = id; this.renderLine(); });
         b.addEventListener('pointerleave', () => { if (this.hoverItem === id) { this.hoverItem = null; this.renderLine(); } });
@@ -208,6 +222,7 @@ export class Game {
       inGame: !!inGame, hasSave: hasSave(), page,
       resume: () => this.hideTitle(), cont: () => this.continueGame(), newGame: () => this.newGame(),
       chapters: CHAPTERS.map((x, i) => rs.includes(x.id) ? { id: x.id, label: T('ch.' + x.id), go: () => this.startAt(x) } : { id: x.id, label: (i + 1) + '. ???', locked: true }),   /* scènes pas encore atteintes : grisées, titre caché */
+      chapters2: s2Open() ? this.s2Chapters(rs) : null,
       fullscreen: () => this.toggleFullscreen(),
       filter: this.scaler ? () => this.filter : null, nextFilter: () => this.setFilter(L[(L.indexOf(this.filter) + 1) % L.length], true),
       music: () => snd.musicOn !== false, setMusic: v => { this.setMusic(v); if (v && !inGame) snd.music(true, 'title'); },
@@ -216,6 +231,13 @@ export class Game {
       ach: T('ach.menu', { n, t: BLINDS.length }), achDone: ac.done.includes('fiatlux')
     });
     this.stage.append(d); this.titleEl = d;
+  }
+  /* chapitres de la saison 2 : ceux de la langue du jeu (17 = Kaamelott en français, Sacré Graal en anglais), puis l'autre version en bonus ;
+     ouverts quand atteints (le 11 dès la fin de la saison 1), tous avec ?s2 ; chapitres pas encore construits grisés */
+  s2Chapters(rs) {
+    const T = this.T, l = this.lang === 'fr' ? 'fr' : 'en', main = CHAPTERS2.filter(c => !c.lang || c.lang === l), bonus = CHAPTERS2.filter(c => c.lang && c.lang !== l);
+    const open = c => c.built && (s2All() || rs.includes(c.id) || c.id === 's2_11' || (c.bonusOf && rs.includes(c.bonusOf)));
+    return [...main, ...bonus.map(c => ({ ...c, bonus: true }))].map(c => open(c) ? { id: c.id, label: (c.bonus ? T('ui.bonus') + ' ' : '') + T('ch.' + c.id), go: () => this.startAt(c) } : { id: c.id, label: c.built ? T('ch.' + c.id).replace(/\. .*/, '. ???') : T('ch.' + c.id) + ' ' + T('ui.soon'), locked: true });
   }
   /* commutateur de musique (bouton ♪ du panneau et bouton du menu), préférence mémorisée */
   setMusic(on, quiet) {
@@ -273,7 +295,7 @@ export class Game {
   /* sélecteur de scène : repart au début d'un chapitre déjà atteint, avec l'état attendu à son entrée */
   async startAt(ch) {
     this.hideTitle(); clearSave(); this.cancelAll(); this.cutN = 0; this.saveLater = false; this.locked = false; this.sel = null; this.fx = {};
-    this.st = { scene: ch.id, flags: { ...ch.flags }, inv: ['lamp', ...ch.inv.filter(x => x !== 'lamp')], hero: null }; snd.music(snd.musicOn !== false, ch.id); this.started = true;
+    this.st = { scene: ch.id, flags: { ...ch.flags }, inv: ['lamp', ...ch.inv.filter(x => x !== 'lamp')], hero: null }; snd.music(snd.musicOn !== false, ch.music || ch.id); this.started = true;
     await this.goScene(ch.id, { intro: true });
   }
   async continueGame() {
@@ -285,14 +307,15 @@ export class Game {
   save() { if (this.cutN > 0) { this.saveLater = true; return; } if (this.st && this.started) writeSave({ scene: this.st.scene, flags: this.st.flags, inv: this.st.inv, hero: this.hero ? { x: this.hero.x, y: this.hero.y, dir: this.hero.dir } : null }); }
   async goScene(id, how = {}) {
     const sc = (await import(`../scenes/${id}.js`)).default; this.st.scene = id;
-    const bg = await this.casseBg(id, await this.img('assets/pointclick/' + sc.bg)); this.scene = sc; this.bg = bg; this.ambNext = this.now + 4; this.wk = null; this.wkAt = Math.max(this.wkAt ?? 0, this.now + 45); this.night = null; this.sky = sc.interior ? null : buildSky(bg); this.lastMove = this.now;
+    const bg = await this.casseBg(id, await this.img('assets/pointclick/' + sc.bg)); this.scene = sc; this.bg = bg; this.ambNext = this.now + 4; this.wk = null; this.wkAt = Math.max(this.wkAt ?? 0, this.now + 45); this.night = null; this.sky = sc.interior || sc.hd ? null : buildSky(bg); this.lastMove = this.now;
+    if (sc.hd) await Promise.all([...S2.PRELOAD, ...(sc.preload || []), ...(sc.ents || []).map(e => e.spr)].filter(n => n && n.startsWith('s2:')).map(n => Promise.resolve(this.img(this.sprPath(n))).catch(() => {})));
     this.walk = new Walk(sc.walk.map(p => p.slice()), W, H); this.fgExtra = null;
     this.hot = sc.hot || []; this.amb = makeAmbient(sc.ambient);
     await Promise.all((sc.ambient || []).filter(o => o.type === 'frames' && this.animIdx[o.id]).flatMap(o => Array.from({ length: this.animIdx[o.id].n }, (_, i) => Promise.resolve(this.img(`assets/pointclick/anim/${o.id}_${i}.png`)).catch(() => {}))));
     this.ents = (sc.ents || []).map(e => ({ visible: true, ph: Math.random() * 5, ...e }));
     this.ents.forEach(e => { const k = this.sleepKey(e), t = this.sleepConf(e).thr; if (k) Promise.resolve(this.img(`assets/pointclick/sleep/${k}.png`)).catch(() => {}); if (k && t) Promise.resolve(this.img(t.img)).catch(() => {}); });   /* planches du coucher de nuit, prêtes bien avant la nuit */
     const st = how.restored && this.st.hero ? this.st.hero : sc.start;
-    this.hero = { id: 'hero', who: 'hero', spr: HERO ? HERO.stand : 'hero.side', x: st.x, y: st.y, dir: st.dir || 'r', path: [], walkD: 0, hot: true, isHero: true, visible: true };
+    this.hero = { id: 'hero', who: 'hero', spr: this.heroStand(), x: st.x, y: st.y, dir: st.dir || 'r', path: [], walkD: 0, hot: true, isHero: true, visible: true };
     this.ents.push(this.hero);
     this.clearBarks(); this.hover = null; this.renderPanel(); this.renderLine();
     if (this.started) snd.music(snd.musicOn !== false, sc.music || id);
@@ -349,7 +372,7 @@ export class Game {
     await this.until(() => (this.now >= end && !talking()) || (this.skip && this.now - t0 > 0.6)); this.skip = false; if (au) au.pause(); this.sayAu = null;
     b.remove(); this.bubbles = this.bubbles.filter(x => x !== b); if (e) e.talk = false; this.chk();
   }
-  headPos(e) { const im = this.spr(e.spr), s = this.sc(e); return [e.x, e.y - (e.float || 0) - (im ? im.height * s : 40) - 3]; }
+  headPos(e) { const im = this.spr(e.spr), s = this.sc(e); return [e.x, e.y - (e.float || 0) - (im ? ih(im) * s : 40) - 3]; }
   placeBubble(b, x, y) {
     const sw = this.stage.clientWidth, k = sw / W; b.style.left = x * k + 'px'; b.style.top = y * k + 'px';
     const w = b.offsetWidth, l = clamp(x * k, w / 2 + 6, sw - w / 2 - 6); b.style.left = l + 'px'; if (y * k - b.offsetHeight < 4) b.style.top = (b.offsetHeight + 6) + 'px';
@@ -365,6 +388,13 @@ export class Game {
   toast(title, text, ms = 4200) {
     const t = el('div', 'pc-toast'); t.append(el('b', '', title), el('span', '', text)); this.stage.append(t); snd.jingle();
     setTimeout(() => t.classList.add('out'), ms); setTimeout(() => t.remove(), ms + 600);
+  }
+  /* vignette d'ouverture d'un chapitre de la saison 2 : l'illustration plein écran et le titre ; un clic la passe */
+  async card(src, title) {
+    this.chk(); const d = el('div', 'pc-s2card'), im = new Image(); im.src = src; d.append(im, el('h2', '', title)); d.onpointerdown = () => { this.skip = true; };
+    this.stage.append(d); await new Promise(r => (im.complete ? r() : (im.onload = im.onerror = r)));
+    try { requestAnimationFrame(() => d.classList.add('on')); this.skip = false; const t0 = this.now; await this.until(() => this.now - t0 > 5 || (this.skip && this.now - t0 > 0.6)); this.skip = false; d.classList.remove('on'); await this.wait(500); }
+    finally { d.remove(); }
   }
   /* un aveugle a retrouvé la lumière : compte, toast, succès */
   award(id) { if (award(id)) this.toast(this.T('ach.' + id + '.title'), this.T('ach.' + id + '.text')); }
@@ -389,6 +419,7 @@ export class Game {
     this.ents = this.ents.filter(x => x !== e); this.chk();
   }
   async end(pre) { /* fin du jeu : textes `<pre>.title` et `<pre>.sub` */
+    if (this.scene && !this.scene.hd) store.set('pc.s1done', true);
     await this.fade(1, 1200); clearSave(); this.started = false; const d = el('div', 'pc-title socle'), c = el('div', 'pc-card'); const T = this.T;
     c.append(el('h1', '', T(pre + '.title')), el('p', '', T(pre + '.sub')), el('p', 'pc-fine', T('end.love')));
     const row = el('div', 'pc-btns'), a = el('button', 'sbtn acc', T('end.again')); a.onclick = () => { d.remove(); this.newGame(); }; row.append(a); c.append(row); d.append(c); this.stage.append(d); this.titleEl = d; snd.jingle();
@@ -408,15 +439,15 @@ export class Game {
   /* ambiances sonores du décor (boucles + sons ponctuels), interrupteur ≈ mémorisé */
   setAmbience(on, quiet) { this.ambId = null; this.ambOn = !!on; store.set('pc.amb', !!on); this.ambBtn.classList.toggle('off', !on); this.ambBtn.title = this.T ? this.T(on ? 'ui.ambOn' : 'ui.ambOff') : ''; snd.ambSwitch(on); if (!quiet && on) this.ambT = -9; }
   updateAmbience() {
-    if (!this.scene || !this.started) return; const n = this.night, deep = n && n.level >= 2 && n.st !== 'wake', sc = this.scene.id, A = deep ? ['night', 0.55] : AMB[sc];
-    if (A && A[0] !== this.ambId) { this.ambId = A[0]; snd.ambient(A[0], A[1]); }
+    if (!this.scene || !this.started) return; const n = this.night, deep = n && n.level >= 2 && n.st !== 'wake', sc = this.scene.id, A = deep ? ['night', 0.55] : this.scene.amb || AMB[sc];
+    if (A && A[0] !== this.ambId) { this.ambId = A[0]; snd.ambient(A[0], A[1]); } else if (!A && this.ambId) { this.ambId = null; snd.ambStop(); }   /* scène sans ambiance (saison 2) : on coupe celle d'avant */
     if (this.now - this.ambT > 0.3) { this.ambT = this.now; snd.ambVol(this.hiBusy() || this.lowBusy() ? 0.5 : 1); }
     if (this.now >= this.ambNext) { this.ambNext = this.now + 5 + Math.random() * 9; if (!this.hiBusy() && !this.lowBusy() && !this.titleEl) { const k = snd.oneshotFor(sc, deep, !!this.scene.interior); if (k) snd.oneshot(k); } }
   }
   /* centre d'une zone cliquable (rectangle ou polygone) : sert à tourner le héros vers elle */
   center(h) { if (h.rect) return { cx: (h.rect[0] + h.rect[2]) / 2, cy: (h.rect[1] + h.rect[3]) / 2 }; const p = h.poly || [], n = p.length || 1; return { cx: p.reduce((a, q) => a + q[0], 0) / n, cy: p.reduce((a, q) => a + q[1], 0) / n }; }
   /* obstacles mobiles pour la recherche de chemin : les personnages et objets posés au sol */
-  blockers() { return this.ents.filter(e => !e.isHero && e.visible !== false && !e.noHot && !e.nhide && e.solid !== false && e.hot).map(e => [e.x, e.y, 9, 4]); }
+  blockers() { return this.ents.filter(e => !e.isHero && e.visible !== false && !e.noHot && !e.nhide && e.solid !== false && e.hot).map(e => [e.x, e.y, ...(this.scene.blockR || [9, 4])]); }
 
   /* ───────── actions ───────── */
   pick(x, y) {
@@ -426,7 +457,7 @@ export class Game {
     for (let i = this.hot.length - 1; i >= 0; i--) { const h = this.hot[i], r = h.rect; if (r ? (x >= r[0] && x <= r[2] && y >= r[1] && y <= r[3]) : hitPoly(x, y, h.poly)) return { id: h.id, name: 'n.' + h.id, at: h.at, dir: h.dir, ...this.center(h) }; }
     return null;
   }
-  entRect(e) { const im = this.spr(e.spr); if (!im) return null; const s = this.sc(e), w = im.width * s, h = im.height * s; return [e.x - w / 2, e.y - h, e.x + w / 2, e.y]; }
+  entRect(e) { const im = this.spr(e.spr); if (!im) return null; const s = this.sc(e), w = iw(im) * s, h = ih(im) * s; return [e.x - w / 2, e.y - h, e.x + w / 2, e.y]; }
   /* clic sur la scène : sol = aller (tout de suite) ; objet tenu = l'utiliser ; sinon on attend : relâché vite = aller vers,
      maintenu = pièce des verbes */
   onDown(e) {
@@ -511,8 +542,8 @@ export class Game {
     m = { w: im.width, h: im.height, a }; c.set(im, m); return m; }
   /* part du corps du héros, debout en p, que recouvre le personnage e (au pixel près, d'après la transparence réelle des deux images) */
   cover(p, e) {   /* -> [part du corps, part des pieds (bas du corps)] */
-    const hi = this.spr(HERO ? HERO.stand : 'hero.side'), ei = this.spr(this.frame(e)) || this.spr(e.spr); if (!hi || !ei) return [0, 0];
-    const hs = this.persp(p[1]), es = this.sc(e), Hm = this.mask(hi), Em = this.mask(ei);
+    const hi = this.spr(this.heroStand()), ei = this.spr(this.frame(e)) || this.spr(e.spr); if (!hi || !ei) return [0, 0];
+    const hs = this.persp(p[1]) / dn(hi), es = this.sc(e) / dn(ei), Hm = this.mask(hi), Em = this.mask(ei);
     const hx0 = p[0] - hi.width * hs / 2, hy0 = p[1] - hi.height * hs, ex0 = e.x - ei.width * es / 2, ey0 = e.y - (e.bob || 0) - ei.height * es, fy = p[1] - hi.height * hs * 0.2;
     let n = 0, k = 0, nf = 0, kf = 0;
     for (let y = hy0; y < p[1]; y += 1.5) for (let x = hx0; x < hx0 + hi.width * hs; x += 1.5) {
@@ -576,7 +607,7 @@ export class Game {
     if (h && this.scene) {
       let moving = false;
       if (h.path.length) {
-        const [tx, ty] = h.path[0], dx = tx - h.x, dy = ty - h.y, dist = Math.hypot(dx, dy), s = this.persp(h.y), step = 78 * s * dt + 6 * dt; moving = true;
+        const [tx, ty] = h.path[0], dx = tx - h.x, dy = ty - h.y, dist = Math.hypot(dx, dy), s = this.persp(h.y), step = (78 * s * dt + 6 * dt) * (this.scene.walkK || 1); moving = true;
         /* vue selon la direction : profil, trois-quarts (s'il a ces images), face ou dos */
         const q4 = HERO.walkQF && this.spr(HERO.walkQF[0]) && this.spr(HERO.walkQB[0]), v = q4 ? this.viewOf(dx, dy) : (Math.abs(dy) > Math.abs(dx) * 1.6 ? (dy > 0 ? 'f' : 'b') : 's');
         if (Math.abs(dx) > 0.2) h.dir = dx > 0 ? 'r' : 'l';
@@ -588,7 +619,7 @@ export class Game {
       }
       const s = this.persp(h.y);
       if (!moving) h.quarter = null;   /* à l'arrêt : profil, face ou dos (pas de pose de repos en trois-quarts) */
-      h.flip = h.dir === 'l' && !h.front && !h.back;
+      h.flip = !this.scene.hd && h.dir === 'l' && !h.front && !h.back;   /* S2 : vues gauche et droite dessinées, pas de miroir */
       if (moving) h.pose = null;
       h.spr = this.heroFrame(h, moving, s);
       if (moving) { h.bob = Math.abs(Math.sin(h.walkD / (5.2 * s) * Math.PI / 2)) * (this.spr('hero.w1') ? 0.7 : 1.2) * s; if (this.now >= (h.stepT || 0)) { snd.step(); h.stepT = this.now + 0.3; } } else h.bob = 0;
@@ -607,10 +638,12 @@ export class Game {
     });
     for (let i = this.barks.length - 1; i >= 0; i--) { const k = this.barks[i], e = this.ent(k.who); if (!e || this.now > k.end) { k.b.remove(); this.barks.splice(i, 1); } else { const [ax, ay] = this.headPos(e); this.placeBubble(k.b, ax, ay); } }
     if (this.cine) this.cine.update(dt);
+    updateFx2(this, dt);
     if (this.titleOn && this.titleArt) this.titleArt.update(dt);
     if (this.scene && this.scene.tick) this.scene.tick(this, dt);
-    if (!this.cine) { updateWinks(this, dt); updateGlass(this, dt); } this.updateAmbience();
-    if (this.night) updateNight(this, dt); else if (this.started && !this.titleEl && this.alive && !this.cine && !this.cineEnd) { if (this.locked || this.bubbles.length || this.barks.length || this.narr) this.lastMove = Math.max(this.lastMove, this.now - IDLE_NIGHT + 25); else if (this.now - this.lastMove > IDLE_NIGHT && !(this.gl && this.gl.run) && document.visibilityState === 'visible' && this.hero) startNight(this); }
+    const s1 = !(this.scene && this.scene.hd);   /* clins d'œil, vitrail et nuit : faits pour la saison 1 */
+    if (!this.cine && s1) { updateWinks(this, dt); updateGlass(this, dt); } this.updateAmbience();
+    if (this.night) updateNight(this, dt); else if (s1 && this.started && !this.titleEl && this.alive && !this.cine && !this.cineEnd) { if (this.locked || this.bubbles.length || this.barks.length || this.narr) this.lastMove = Math.max(this.lastMove, this.now - IDLE_NIGHT + 25); else if (this.now - this.lastMove > IDLE_NIGHT && !(this.gl && this.gl.run) && document.visibilityState === 'visible' && this.hero) startNight(this); }
     this.pumpNarr(); this.updateUi();
     for (let i = this.waiters.length - 1; i >= 0; i--) { const w = this.waiters[i]; if (w.cond()) { this.waiters.splice(i, 1); w.res(); } }
     const f = this.fx.fade; if (f) { const t = clamp((this.now - f.t0) / f.ms, 0, 1); f.a = f.from + (f.to - f.from) * t; if (t >= 1) { f.a = f.to; if (f.to === 0) delete this.fx.fade; } }
@@ -631,7 +664,9 @@ export class Game {
   }
   draw() {
     this.drawUi();
-    const c = this.ctx;
+    const c = this.ctx, k = this.scene && this.scene.hd && !this.titleOn && !this.cine ? 2 : 1;
+    if (k !== this.k) this.setRes(k);
+    if (c) c.setTransform(this.k, 0, 0, this.k, 0, 0);
     if (c && this.titleOn && this.titleArt && !this.cine) { this.titleArt.draw(c); if (this.actx && this.now - this.ambT > 0.12) { this.ambT = this.now; this.actx.drawImage(this.cv, 0, 0, 48, 27); } if (this.scaler) this.scaler.render(); return; }
     if (c && this.cine) { this.cine.draw(c); if (this.fx.fade) { c.fillStyle = `rgba(0,0,0,${this.fx.fade.a})`; c.fillRect(0, 0, W, H); } if (this.actx && this.now - this.ambT > 0.12) { this.ambT = this.now; this.actx.drawImage(this.cv, 0, 0, 48, 27); } if (this.scaler) this.scaler.render(); return; }
     if (!c || !this.scene || !this.bg || !this.bg.width) { if (c) { c.fillStyle = '#000'; c.fillRect(0, 0, W, H); if (this.scaler) this.scaler.render(); } return; }
@@ -644,9 +679,9 @@ export class Game {
     const fg = [...(this.scene.fg || []), ...(this.fgExtra || [])], occ = fg.filter(o => !Array.isArray(o)).map(o => ({ occ: o, y: o.y, z: 0 }));
     [...this.ents.filter(e => e.visible !== false), ...occ].sort((a, b) => (a.y + (a.z || 0)) - (b.y + (b.z || 0))).forEach(e => (e.occ ? this.drawOcc(e.occ.polys) : this.drawEnt(e)));
     fg.filter(o => Array.isArray(o)).forEach(p => this.drawOcc([p]));
+    drawFx2(this, c);
     c.restore();
-    drawWinks(this, c);
-    drawNight(this, c); drawGlass(this, c);
+    if (!this.scene.hd) { drawWinks(this, c); drawNight(this, c); drawGlass(this, c); }
     if (this.overFx) this.overFx(c);   /* plein écran par-dessus la scène (faux écran de chargement du génie) */
     if (this.fx.fade) { c.fillStyle = `rgba(0,0,0,${this.fx.fade.a})`; c.fillRect(0, 0, W, H); }
     if (this.actx && this.now - this.ambT > 0.12) { this.ambT = this.now; this.actx.drawImage(this.cv, 0, 0, 48, 27); }
@@ -656,14 +691,14 @@ export class Game {
   drawOcc(polys) { const c = this.ctx; c.save(); c.beginPath(); polys.forEach(p => { p.forEach(([x, y], i) => (i ? c.lineTo(x, y) : c.moveTo(x, y))); c.closePath(); }); c.clip(); c.drawImage(this.bg, 0, 0, W, H); c.restore(); }
   drawEnt(e) {
     if (e.sleepF != null) { const k = this.sleepKey(e), sh = k && this.sleepSheet(k); if (sh) return this.drawSleep(e, this.sleepIdx[k], sh); }
-    const im = this.spr(this.frame(e)) || this.spr(e.spr); if (!im) return; const c = this.ctx, s = this.sc(e), w = im.width * s, h = im.height * s;
-    c.save(); if (e.alpha !== undefined) c.globalAlpha = e.alpha; if (e.clipY != null) { c.beginPath(); c.rect(0, 0, W, Math.round(e.clipY)); c.clip(); }   /* clipY : caché sous cette ligne (le génie qui sort de terre) */
+    const im = this.spr(this.frame(e)) || this.spr(e.spr); if (!im) return; const c = this.ctx, s = this.sc(e), w = iw(im) * s, h = ih(im) * s;
+    c.save(); c.imageSmoothingEnabled = dn(im) > 1; if (e.alpha !== undefined) c.globalAlpha = e.alpha; if (e.clipY != null) { c.beginPath(); c.rect(0, 0, W, Math.round(e.clipY)); c.clip(); }   /* clipY : caché sous cette ligne (le génie qui sort de terre) */
     c.translate(Math.round(e.x), Math.round(e.y - (e.bob || 0) - (e.float ? e.float + Math.sin(this.now * 2.4) * 2 : 0)));   /* float : flotte au-dessus du sol */
     if (e.nrot) c.translate(0, Math.min(1, Math.abs(e.nrot) / 1.5708) * Math.max(0, h - w) / 2);
     if (e.rot || e.nrot) { c.translate(0, -h / 2); c.rotate((e.rot || 0) + (e.nrot || 0)); c.translate(0, h / 2); }
     if (e.flip) c.scale(-1, 1);
     if (e.talk) c.scale(1, 1 + 0.018 * Math.sin(this.now * 26));
-    c.drawImage(im, Math.round(-w / 2), Math.round(-h), Math.round(w), Math.round(h)); c.restore();
+    if (dn(im) > 1) c.drawImage(im, -w / 2, -h, w, h); else c.drawImage(im, Math.round(-w / 2), Math.round(-h), Math.round(w), Math.round(h)); c.restore();
   }
   /* image e.sleepF de la planche du coucher : cadre fixe ancré au sol (ax, ay) ; e.sleepDy l'enfonce (Nazim dans sa fosse), e.sleepClip coupe sous le rebord */
   drawSleep(e, A, sh) {

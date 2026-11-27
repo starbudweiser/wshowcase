@@ -114,7 +114,7 @@ export function itemCursor(img, id, k) {
   const key = `i${id}|${k}`; if (curCache.has(key)) return curCache.get(key);
   if (!img) return crossCursor(true, k);
   const box = 22, s = Math.min(box / img.width, box / img.height, 2), w = Math.max(1, Math.round(img.width * s)), h = Math.max(1, Math.round(img.height * s));
-  const base = document.createElement('canvas'); base.width = box + 2; base.height = box + 2; const x = base.getContext('2d'); x.imageSmoothingEnabled = false;
+  const base = document.createElement('canvas'); base.width = box + 2; base.height = box + 2; const x = base.getContext('2d'); x.imageSmoothingEnabled = (img.dens || 1) > 1; x.imageSmoothingQuality = 'high';   /* objets S2 pleine couleur : réduits en douceur */
   const ox = Math.round((box + 2 - w) / 2), oy = Math.round((box + 2 - h) / 2);
   x.filter = 'drop-shadow(1px 1px 0 rgba(0,0,0,.85))'; x.drawImage(img, ox, oy, w, h); x.filter = 'none';
   let kk = k; while (kk > 1 && (box + 2) * kk > 128) kk--;
