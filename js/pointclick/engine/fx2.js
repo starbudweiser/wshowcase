@@ -89,6 +89,18 @@ export function splash(g, x, y) {
   for (let i = 0; i < 10; i++) P.push({ k: 'smoke', x: x + R(-12, 12), y: y + R(-4, 2), vx: R(-14, 14), vy: R(-10, -2), g: 0, drag: 1.2, t: 0, life: R(0.6, 1), s: R(5, 8), grow: R(8, 14), rot: R(0, TAU), vr: R(-1, 1) });
   g.sfx('whoosh');
 }
+/* foudre : arc électrique du ciel vers (x1, y1), flash de tout l'écran, impact, tonnerre */
+export function lightning(g, x0, y0, x1, y1) {
+  const P = parts(g); P.push({ k: 'bolt', a: [x0, y0], b: [x1, y1], t: 0, life: 0.45, col: '#bcd8ff', seed: 0, big: true }, { k: 'bolt', a: [x0 + 6, y0], b: [x1, y1], t: 0.05, life: 0.35, col: '#ffffff', seed: 0, big: true });
+  P.push({ k: 'flash', x: x1, y: y1, t: 0, life: 0.4, r0: 8, r1: 70, col: '#dfeaff' }, { k: 'ring', x: x1, y: y1, t: 0, life: 0.5, r0: 4, r1: 46, col: '#bcd8ff' });
+  for (let i = 0; i < 30; i++) { const a = R(0, TAU), v = R(40, 130); P.push({ k: 'spark', x: x1, y: y1, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 20, g: 120, drag: 1.4, t: 0, life: R(0.3, 0.7), s: R(0.6, 1.3), col: i % 2 ? '#dfeaff' : '#9ab8ff' }); }
+  g.fx.sky = { t0: g.now, a: 0.85 }; g.sfx('thunder'); g.shake(500, 4);
+}
+/* traînées de feu au sol, de (x0, y) à (x1, y), deux sillons parallèles qui brûlent un moment */
+export function fireTrails(g, x0, x1, y, gap = 10) {
+  const P = parts(g), n = 40;
+  for (const dy of [-gap / 2, gap / 2]) for (let i = 0; i < n; i++) { const x = x0 + (x1 - x0) * i / n; P.push({ k: 'spark', x, y: y + dy, vx: R(-4, 4), vy: R(-26, -8), g: -10, drag: 0.6, t: -i * 0.012, life: R(1.2, 2.2), s: R(1, 2.2), col: i % 3 ? '#ff9a2a' : '#ffe08a', tw: true }); }
+}
 /* éclats de bois (caisse forcée, tonneau brisé) */
 export function splinters(g, x, y, n = 26) {
   const P = parts(g), cols = ['#8a5a2b', '#a87440', '#6b4220', '#c9965a'];
@@ -118,7 +130,10 @@ export function updateFx2(g, dt) {
   }
 }
 function emitAmbient(g, dt) {
-  const P = parts(g);
+  const P = parts(g), F = g.scene.fx;
+  if (F && F.storm && g.now > (F._next || (F._next = g.now + 4))) {   /* orage : éclair lointain au hasard, flash du ciel, grondement */
+    F._next = g.now + R(6, 14); g.fx.sky = { t0: g.now, a: R(0.35, 0.6) }; setTimeout(() => g.sfx('thunder', true), R(300, 1400));
+  }
   for (const e of g.ents) {
     const A = e.aura; if (!A || e.visible === false || !A.wisps) continue;
     if ((e._wisp = (e._wisp || 0) + dt) < 1 / A.wisps) continue; e._wisp = 0;
@@ -153,11 +168,18 @@ export function drawFxBack(g, c) {
 export function drawFx2(g, c) {
   const P = g.parts, F = g.scene && g.scene.fx, t = g.now;
   c.save();
+  if (F && F.rain) {   /* pluie : traits obliques qui tombent en boucle, deux plans de profondeur */
+    const R2 = F.rain, n = R2.n || 140; R2._p = R2._p || Array.from({ length: n }, (_, i) => ({ x: R(0, 520), y: R(-20, 270), v: R(260, 380) * (i % 3 ? 1 : 0.7), l: i % 3 ? R(7, 11) : R(4, 6) }));
+    c.strokeStyle = R2.col || 'rgba(190,210,235,.55)'; c.lineWidth = 0.6; c.beginPath();
+    for (const q of R2._p) { const y = (q.y + t * q.v) % 290 - 20, x = (q.x - t * q.v * 0.18) % 520; const xx = x < 0 ? x + 520 : x; c.moveTo(xx, y); c.lineTo(xx - q.l * 0.18, y + q.l); }
+    c.globalAlpha = 0.8; c.stroke(); c.globalAlpha = 1;
+  }
   if (F && F.flies) for (const Fl of F.flies) {
     const [x0, y0, x1, y1] = Fl.rect; Fl._p = Fl._p || Array.from({ length: Fl.n || 8 }, () => ({ ax: R(x0, x1), ay: R(y0, y1), ph: R(0, TAU), sp: R(0.3, 0.7) }));
     c.globalCompositeOperation = 'lighter';
     for (const q of Fl._p) { const x = q.ax + Math.sin(t * q.sp + q.ph) * 14, y = q.ay + Math.sin(t * q.sp * 1.7 + q.ph * 2) * 7, a = 0.5 + 0.5 * Math.sin(t * 2.3 + q.ph * 3); c.globalAlpha = a * 0.9; c.drawImage(halo(Fl.col || '#d8ff8a'), x - 3, y - 3, 6, 6); }
   }
+  const SK = g.fx.sky; if (SK) { const u = (t - SK.t0) / 0.5; if (u >= 1) g.fx.sky = null; else { c.globalCompositeOperation = 'lighter'; c.globalAlpha = SK.a * (1 - u) * (u < 0.15 || u > 0.3 ? 1 : 0.4); c.fillStyle = '#c8d8ff'; c.fillRect(0, 0, 480, 270); c.globalCompositeOperation = 'source-over'; c.globalAlpha = 1; } }
   if (P && P.length) {
     c.globalCompositeOperation = 'source-over';
     for (const p of P) {   /* fumée et confettis : mélange normal */
@@ -184,11 +206,12 @@ export function drawFx2(g, c) {
 }
 /* arc électrique en zigzag, redessiné toutes les 40 ms, halo coloré + cœur blanc */
 function drawBolt(c, p, u) {
-  const k = Math.floor(p.t / 0.04); if (k !== p.seed || !p.pts) { p.seed = k; const [ax, ay] = p.a, [bx, by] = p.b, n = 9, dx = bx - ax, dy = by - ay, L = Math.hypot(dx, dy) || 1, nx = -dy / L, ny = dx / L; p.pts = Array.from({ length: n + 1 }, (_, i) => { const f = i / n, j = i && i < n ? R(-1, 1) * Math.min(14, L * 0.12) * Math.sin(f * Math.PI) : 0; return [ax + dx * f + nx * j, ay + dy * f + ny * j]; }); }
+  const k = Math.floor(p.t / 0.04); if (k !== p.seed || !p.pts) { p.seed = k; const [ax, ay] = p.a, [bx, by] = p.b, n = p.big ? 16 : 9, dx = bx - ax, dy = by - ay, L = Math.hypot(dx, dy) || 1, nx = -dy / L, ny = dx / L; p.pts = Array.from({ length: n + 1 }, (_, i) => { const f = i / n, j = i && i < n ? R(-1, 1) * Math.min(14, L * 0.12) * Math.sin(f * Math.PI) : 0; return [ax + dx * f + nx * j, ay + dy * f + ny * j]; }); }
   const path = () => { c.beginPath(); p.pts.forEach(([x, y], i) => (i ? c.lineTo(x, y) : c.moveTo(x, y))); };
   const a = u < 0.7 ? 1 : (1 - u) / 0.3;
-  c.globalAlpha = a * 0.45; c.strokeStyle = p.col; c.lineWidth = 5; path(); c.stroke();
-  c.globalAlpha = a * 0.9; c.lineWidth = 2; path(); c.stroke();
-  c.globalAlpha = a; c.strokeStyle = '#ffffff'; c.lineWidth = 0.8; path(); c.stroke();
+  const W2 = p.big ? 2.2 : 1;
+  c.globalAlpha = a * 0.45; c.strokeStyle = p.col; c.lineWidth = 5 * W2; path(); c.stroke();
+  c.globalAlpha = a * 0.9; c.lineWidth = 2 * W2; path(); c.stroke();
+  c.globalAlpha = a; c.strokeStyle = '#ffffff'; c.lineWidth = 0.8 * W2; path(); c.stroke();
   c.drawImage(halo(p.col), p.b[0] - 10, p.b[1] - 10, 20, 20);
 }

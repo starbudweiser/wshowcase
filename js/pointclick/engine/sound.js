@@ -233,6 +233,7 @@ export const snd = {
   unlock: ensure,
   /* pas enregistrés : une des n prises au hasard, hauteur légèrement variée (jamais deux pas identiques) */
   stepFile(kind, n = 6, vol = 0.45) { sfxPlay(`step_${kind}_${Math.random() * n | 0}`, vol * (0.85 + Math.random() * 0.3), 0.92 + Math.random() * 0.16); },
+  thunder(far) { noise({ d: far ? 3.2 : 2.4, f: far ? 140 : 260, q: 0.4, g: far ? 0.12 : 0.3, type: 'lowpass' }); noise({ d: 0.35, f: 900, q: 0.6, g: far ? 0 : 0.12, type: 'bandpass' }); },   /* tonnerre (près : craquement + grondement ; loin : grondement sourd) */
   step() { noise({ d: 0.06, f: 500 + Math.random() * 300, q: 0.8, g: 0.07, type: 'lowpass' }); },
   click() { tone({ f: 900, to: 600, d: 0.04, g: 0.05, type: 'triangle' }); },
   pop() { tone({ f: 420, to: 1100, d: 0.12, g: 0.1, type: 'triangle' }); tone({ f: 1320, d: 0.16, t: 0.1, g: 0.06, type: 'sine' }); },

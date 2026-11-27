@@ -23,6 +23,8 @@ k villager_i $PS/c_villager.png 360 "--n=24"; k villager_t $PS/c_villager.png 36
 k creeper_i $PS/c_creeper.png 330 "--n=24 --despill=all"; k creeper_w $PS/c_creeper.png 330 "--walk --n=12 --despill=all"
 k indy_i $PS/c_archeo2_1.png 380 "--n=24"; k indy_t $PS/c_archeo2_1.png 380 "--n=20"
 k snakes14_i work/s2play/items/p_snakes14_1.png 180 "--n=24 --despill=all"
+k doc_i $PS/c_doc2.png 400 "--n=24"; k doc_t $PS/c_doc2.png 400 "--n=20"
+k boy15_i work/s2play/persos/boy15_1.png 330 "--n=24"
 k parrot_i $PS/c_parrot.png 110 "--n=24 --despill=all"; k parrot_t $PS/c_parrot.png 110 "--n=20 --despill=all"
 # --despill=all : nettoyage du rose du fond sur toute la silhouette, seulement pour qui ne porte aucun magenta ni violet
 ids=("$@"); [ ${#ids} -eq 0 ] && ids=(${(k)K})
