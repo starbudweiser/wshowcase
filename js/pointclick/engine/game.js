@@ -19,6 +19,7 @@ import { makeAmbient } from './ambient.js';
 import { playIntro, preloadIntro } from './intro.js';
 import { TitleArt, buildMenu } from './title.js';
 import { rubLamp } from './genie.js';
+import { lofi } from './lofi.js';
 import { updateFx2, drawFx2, drawFxBack, twinkle, shout } from './fx2.js';
 import * as SH from '../data/sheets.js';
 import * as S2 from '../data/sheets_s2.js';
@@ -316,7 +317,7 @@ export class Game {
   hushNarr() { const n = this.narr; if (n) { n.b.remove(); if (n.au) n.au.pause(); this.narr = null; this.lastNarr = this.now; } }
   voicePlay(key, idx) {
     if (!this.voiceOn || !key || key[0] === '=') return null;
-    try { const a = new Audio(`assets/pointclick/voice/${this.lang === 'fr' ? 'fr' : 'en'}/${key}${idx >= 0 ? '.v' + idx : ''}.mp3`); a.volume = this.vvol ?? 0.95; a.play().catch(() => {}); return a; } catch { return null; }
+    try { const a = new Audio(`assets/pointclick/voice/${this.lang === 'fr' ? 'fr' : 'en'}/${key}${idx >= 0 ? '.v' + idx : ''}.mp3`); a.volume = this.vvol ?? 0.95; if (!(this.scene && this.scene.hd)) lofi(a, this.vvol ?? 0.95);   /* saison 1 : son « années 90 » (lofi.js) */ a.play().catch(() => {}); return a; } catch { return null; }
   }
   /* le narrateur : commentaires sarcastiques qui ne bloquent jamais le jeu (file d'attente, un seul à la fois) */
   narrate(key, o = {}) {
