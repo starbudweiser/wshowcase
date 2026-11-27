@@ -817,6 +817,7 @@ export class Game {
     if (L && !e.noLight && !low) src = S2.lit(im, L, e, scr);
     if (e.tint) src = S2.tinted(src, e.tint, e.tintK ?? 0.75, scr[1]);   /* couleur imposée (mouton du Wabbajack), luminosité gardée */
     c.save(); c.imageSmoothingEnabled = !low; c.globalAlpha = a;
+    if (e.clip) { c.beginPath(); e.clip.forEach(([x, y], i) => (i ? c.lineTo(x, y) : c.moveTo(x, y))); c.closePath(); c.clip(); }   /* e.clip : visible seulement dans ce polygone (serpents au fond d'une fosse) */
     c.translate(low ? Math.round(e.x) : e.x, (low ? Math.round(e.y - (e.bob || 0) - fl) : e.y - (e.bob || 0) - fl));
     if (e.rot) { c.translate(0, -h / 2); c.rotate(e.rot); c.translate(0, h / 2); }
     if (e.flip) c.scale(-1, 1);

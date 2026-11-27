@@ -96,6 +96,9 @@ FLUX, une à la fois (file calcul-lourd) : plusieurs jours de calcul, avec une p
   chien loup-garou, pelote de seaux, meule géante cachée derrière la pelote, brioche de l'échoppe).
 - Chapitre 13 (monde en cubes) jouable : pied de la tour (créature verte qui fait sauter le mur, soleil rond, mouton
   qui change de couleur, paysage en fromage), haut de la tour (héros en cubes, meule cubique), saut amorti par le seau d'eau.
+- Chapitre 14 (temple de l'idole) jouable : réveil sur la dalle piégée (fléchettes), fosse aux serpents changée en
+  saucisses (on traverse en mangeant), meule de la besace contre l'idole, rocher qui dévale changé en meule géante ;
+  métamorphoses de l'archéologue (anguille, casque à cornes, garde de Skyrim), idole en poule dorée.
 - Objets de toute la saison dans la besace : Wabbajack, le Cri (repli générique `s2.shout.none` + onde de choc), les septims.
 - Personnages animés en boucles LTX pour les chapitres 11 à 13 (reprises quand le visage dérivait ou que le personnage tournait).
 ### Chaîne de production d'un chapitre (outils)
@@ -110,7 +113,7 @@ FLUX, une à la fois (file calcul-lourd) : plusieurs jours de calcul, avec une p
   sprites des métamorphoses (poulet en caoutchouc à poulie, mammouth à trois têtes) ; voix de la réplique du narrateur
   sur la transition (`nar.s2up`) et des répliques écrites à la main (regards, biscuit) ; expressions du héros (8 visages,
   face et profils, en boucles de parole LTX par émotion).
-- Chapitres 14 à 28 sur la même chaîne.
+- Chapitres 15 à 28 sur la même chaîne.
 - Génie des indices en HD, prologue (fête de la S1 → Sheogorath), validation des décors et animations par Stéphan.
 - **Twin Peaks (22), petit homme en rouge** (validé par Stéphan) : ses 6 répliques `envers` ont leur voix retournée
   (FR/EN, livrées) ; le moteur les sous-titre toujours, en bas de l'écran façon télévision (`ENVERS` dans
