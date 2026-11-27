@@ -106,6 +106,15 @@ export default {
   'hint.s2_15.cable.1': 'The cable must touch the clock’s hand.', 'hint.s2_15.cable.2': 'Its other end hangs from the street lamp.', 'hint.s2_15.cable.3': 'Take the cable from the street lamp, then use it on the clock.',
   'hint.s2_15.storm.1': 'All that’s missing is a storm… on demand.', 'hint.s2_15.storm.2': 'Your Voice can call the storm.', 'hint.s2_15.storm.3': 'Use the Shout on the clock.',
   /* genie hints (text only in the mock-up) */
+  /* chapter 25: the bridge over the abyss, the hill with the round door */
+  'n.wizard': 'grey wizard', 'n.demon': 'fire demon', 'n.crab25': 'mud crab', 'n.halfling': 'small hairy-footed fellow', 'n.ring25': 'ring', 'n.s25chasm': 'chasm',
+  'n.s25bridge': 'stone bridge', 'n.hens25': 'hens', 'n.eagles25': 'eagles', 'n.cheeses25': 'table of forty wheels', 'n.s25door': 'round door', 'n.s25exit': 'way out', 'n.cheese25': 'fortieth wheel',
+  'look.s25bridge': 'A stone bridge without railings. Back home, it would be the draugr’s favourite shortcut.', 'look.eagles25': 'Two giant eagles on a rock. They look like they could take anyone anywhere.',
+  'look.hens25': 'Two hens on a rock. They won’t take anyone anywhere.', 'look.s25door': 'A round green door, perfectly round. Back home doors are square and we still bump into them.',
+  'look.s25exit': 'The bridge goes on to the other side. The crab took it.', 'look.cheese25': 'The fortieth wheel. Promised to someone very demanding.',
+  'look.demon25': 'A fire demon with a whip. Back home we would call it an atronach. And we would run.', 's25.shout.again': 'Down he goes… and up he comes. The Shout only delays him.', 's25.demon.block': 'The demon is blocking the bridge. I have to deal with it first.', 's25.wk.back': 'And it’s back to normal. Even here, the Wabbajack’s magic doesn’t last.',
+  'hint.s2_25.demon.1': 'The demon blocks the bridge, and the Shout only delays it.', 'hint.s2_25.demon.2': 'Back home, the beginners’ worst monster walks sideways…', 'hint.s2_25.demon.3': 'Use the Wabbajack on the demon, then cross the bridge.',
+  'hint.s2_25b.eat.1': 'Whoever eats the most wheels wins the last one.', 'hint.s2_25b.eat.2': 'Back home, you eat in the middle of a fight, with time stopped.', 'hint.s2_25b.eat.3': 'Talk to the little fellow, then use the table of wheels.',
   /* chapter 24: the rooftop under the code rain */
   'n.morpheus': 'man in a leather coat', 'n.agentm': 'agent', 'n.agentm2': 'agent', 'n.agentm3': 'agent', 'n.spoonkid': 'spoon boy', 'n.cheese24': 'ghost wheel',
   'n.cat24': 'black cat', 'n.s24phone': 'phone booth', 'n.s24code': 'code rain', 'n.s24chair': 'leather armchair', 'n.s24tank': 'water tank', 'n.cheeseOk24': 'wheel that exists',

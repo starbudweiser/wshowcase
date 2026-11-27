@@ -105,6 +105,15 @@ export default {
   'hint.s2_15.horse.1': 'Le cheval ne dépasse pas douze lieues à l’heure.', 'hint.s2_15.horse.2': 'Les chevaux de chez toi grimpent partout, même les murs.', 'hint.s2_15.horse.3': 'Utilise le Wabbajack sur le cheval de la charrette.',
   'hint.s2_15.cable.1': 'Le câble doit toucher l’aiguille de l’horloge.', 'hint.s2_15.cable.2': 'Son autre bout pend au réverbère.', 'hint.s2_15.cable.3': 'Prends le câble au réverbère, puis utilise-le sur l’horloge.',
   'hint.s2_15.storm.1': 'Il ne manque qu’un orage… sur commande.', 'hint.s2_15.storm.2': 'Ta Voix sait appeler la tempête.', 'hint.s2_15.storm.3': 'Utilise le Cri sur l’horloge.',
+  /* chapitre 25 : le pont sur l'abîme, la colline au trou rond */
+  'n.wizard': 'magicien gris', 'n.demon': 'démon de feu', 'n.crab25': 'crabe de vase', 'n.halfling': 'petit être aux pieds poilus', 'n.ring25': 'anneau', 'n.s25chasm': 'gouffre',
+  'n.s25bridge': 'pont de pierre', 'n.hens25': 'poules', 'n.eagles25': 'aigles', 'n.cheeses25': 'table aux quarante meules', 'n.s25door': 'porte ronde', 'n.s25exit': 'sortie', 'n.cheese25': 'quarantième meule',
+  'look.s25bridge': 'Un pont de pierre sans rambarde. Chez nous, ce serait le raccourci préféré des draugrs.', 'look.eagles25': 'Deux aigles géants sur un rocher. Ils ont l’air de pouvoir emmener n’importe qui n’importe où.',
+  'look.hens25': 'Deux poules sur un rocher. Elles n’emmèneront personne nulle part.', 'look.s25door': 'Une porte ronde, verte, parfaitement ronde. Chez nous, les portes sont carrées et on s’y cogne quand même.',
+  'look.s25exit': 'Le pont continue de l’autre côté. Le crabe l’a pris.', 'look.cheese25': 'La quarantième meule. Promise à quelqu’un de très exigeant.',
+  'look.demon25': 'Un démon de feu avec un fouet. Chez moi, on appellerait ça un atronach. Et on fuirait.', 's25.shout.again': 'Il retombe… et il remonte. Le Cri ne fait que le retarder.', 's25.demon.block': 'Le démon bloque le pont. Il faut s’en occuper d’abord.', 's25.wk.back': 'Et ça redevient comme avant. Même ici, le Wabbajack a la magie courte.',
+  'hint.s2_25.demon.1': 'Le démon bloque le pont, et le Cri ne fait que le retarder.', 'hint.s2_25.demon.2': 'Chez toi, le pire monstre des débutants marche de côté…', 'hint.s2_25.demon.3': 'Utilise le Wabbajack sur le démon, puis traverse le pont.',
+  'hint.s2_25b.eat.1': 'Celui qui mange le plus de meules gagne la dernière.', 'hint.s2_25b.eat.2': 'Chez toi, on mange en plein combat, le temps arrêté.', 'hint.s2_25b.eat.3': 'Parle au petit être, puis utilise la table aux meules.',
   /* chapitre 24 : le toit sous la pluie de code */
   'n.morpheus': 'homme au manteau de cuir', 'n.agentm': 'agent', 'n.agentm2': 'agent', 'n.agentm3': 'agent', 'n.spoonkid': 'enfant à la cuillère', 'n.cheese24': 'meule fantôme',
   'n.cat24': 'chat noir', 'n.s24phone': 'cabine téléphonique', 'n.s24code': 'pluie de code', 'n.s24chair': 'fauteuil de cuir', 'n.s24tank': 'château d’eau', 'n.cheeseOk24': 'meule qui existe',

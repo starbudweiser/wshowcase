@@ -61,7 +61,7 @@ export default {
         const ch = ROWS[r][i], x = WALL.x0 + w * (i + 0.5), y = WALL.y0 + r * WALL.dy, k = r * 9 + i;
         c.save(); c.translate(x, y + 6); c.rotate(Math.sin(k * 7.3) * 0.08); c.font = 'bold 15px "Arial Black", Impact, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
         c.globalAlpha = 0.82; c.fillStyle = '#1c1612'; c.fillText(ch, 0, 0); c.globalAlpha = 0.25; c.fillText(ch, 0.6, 0.5); c.restore();   /* peinture noire un peu irrégulière */
-        const on = this.lit.includes(ch) || (this.flick && Math.sin(t * 13 + k * 3.1) > 0.97), col = BULB[k % BULB.length];
+        const on = (this.lit || []).includes(ch) || (this.flick && Math.sin(t * 13 + k * 3.1) > 0.97), col = BULB[k % BULB.length];
         c.globalAlpha = on ? 1 : 0.55; c.fillStyle = col; c.beginPath(); c.arc(x, yb + 3.5, 1.8, 0, Math.PI * 2); c.fill();
         if (on) { c.globalCompositeOperation = 'lighter'; const gr = c.createRadialGradient(x, yb + 3.5, 0, x, yb + 3.5, 14); gr.addColorStop(0, col); gr.addColorStop(1, 'rgba(0,0,0,0)'); c.globalAlpha = 0.85; c.fillStyle = gr; c.fillRect(x - 14, yb - 10, 28, 28); c.globalCompositeOperation = 'source-over'; }
       }
