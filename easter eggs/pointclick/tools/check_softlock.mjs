@@ -8,7 +8,7 @@
    État = salle + drapeaux + inventaire + personnages (visible, actif, sprite) + propriétés propres de l'objet scène.
    Signale : états d'où la sortie du chapitre est devenue impossible (blocage), objets jamais obtenus, drapeaux jamais posés,
    dialogues sans fin, actions qui plantent, répliques sans texte (fr / en).
-   Usage : node check_softlock.mjs [s1|s2|<id de chapitre>…] [--max 20000] [--json sortie.json]
+   Usage : node check_softlock.mjs [s1|s2|<id de chapitre>…] [--max 20000] [--json sortie.json] [--game <dossier js du jeu>]
    Limites : l'état interne aux modules des scènes (variables `let` hors de l'objet scène) n'est pas remis à zéro entre deux
    branches ; le temps (g.now) avance à chaque attente ; les événements des tick() ne sont pas joués (ils sont visuels). */
 import { register } from 'node:module';
@@ -17,7 +17,8 @@ import path from 'node:path';
 import { writeFileSync } from 'node:fs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
-const GAME = path.resolve(HERE, '../../../js/pointclick');
+/* dossier du jeu (scenes/, lang/, engine/) : --game <dossier>, sinon celui de wSHOWCASE */
+const gi = process.argv.indexOf('--game'), GAME = gi > 0 ? path.resolve(process.argv[gi + 1]) : path.resolve(HERE, '../../../js/pointclick');
 
 /* bouchons des modules du moteur : chaque export devient une fonction « trou noir » ; les options { peak } sont appelées */
 const HOOKS = `
@@ -216,7 +217,7 @@ async function checkChapter(ch, max) {
 
 /* ───── main ───── */
 const args = process.argv.slice(2); let max = 20000, json = null; const pick = [];
-for (let i = 0; i < args.length; i++) { if (args[i] === '--max') max = +args[++i]; else if (args[i] === '--json') json = args[++i]; else pick.push(args[i]); }
+for (let i = 0; i < args.length; i++) { if (args[i] === '--max') max = +args[++i]; else if (args[i] === '--game') i++; else if (args[i] === '--json') json = args[++i]; else pick.push(args[i]); }
 let list = [...CHAPTERS, ...CHAPTERS2.filter(c => c.built)];
 if (pick.length) list = list.filter(c => pick.includes(c.id) || (pick.includes('s1') && !c.id.startsWith('s2_')) || (pick.includes('s2') && c.id.startsWith('s2_')));
 const res = [];

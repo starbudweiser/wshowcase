@@ -114,3 +114,13 @@ Elle ne s'active qu'avec `?lightfx` ; sans ce paramètre, rien n'est calculé.
   - pour un héros : non ;
   - pour un secondaire immobile (respiration, tête, bras qui fait signe, queue, ailes) : plausible, en mouvements de faible amplitude.
 - **Trouvé en passant** : l'image 3 du cycle LTX `hero_wr` a un liseré rose et une tache verte entre les bottes (reste de détourage) : `ltx_f3.png`. À vérifier côté saison 2.
+
+## 9. Décisions de Stéphan (27/11/2026) et suites
+- Validé :
+  - vérificateur gardé ;
+  - blocage du chapitre 13 corrigé : un seau d'eau attend en haut de la tour si le héros y monte sans celui du puits ;
+  - les 3 plantages corrigés ;
+  - lumière tramée active d'elle-même en rendu 90 (s2_11), absente en 2000 ;
+  - Codixel réservé aux petits mouvements des secondaires ;
+  - Dot et Anti-Slop écartés.
+- Pipeline de référence pour les futurs jeux : skill `jeu-point-click` et dossier modèle `/Volumes/SSD Editing/POINT AND CLICK WORKFLOW/` (`PIPELINE.md`, outils, modèles).
