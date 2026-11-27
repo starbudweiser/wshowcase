@@ -89,6 +89,8 @@
 .pc-tm.grid{display:grid;grid-template-columns:auto auto;grid-template-rows:repeat(var(--rows),auto) auto;grid-auto-flow:column;column-gap:calc(var(--u)*4px);justify-items:start}
 .pc-tm.grid .pc-ti{font-size:calc(var(--u)*10px)}
 .pc-ti.lock{color:#857a66;cursor:default}
+/* saison 2 : réplique dite à l'envers (petit homme en rouge) : sous-titre façon télévision, blanc cerné de noir, en bas de l'écran */
+.pc-b.pc-sub{color:#fff !important;max-width:80%;font-size:calc(var(--u)*11px);letter-spacing:.02em;text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000,0 0 calc(var(--u)*3px) #000}
 .pc-tm.grid.dense .pc-ti{font-size:calc(var(--u)*8.5px)}
 /* saison 2 : titre de la vignette d'ouverture (l'illustration est dessinée sur le canevas) */
 .pc-s2card{position:absolute;inset:0;z-index:5;opacity:0;transition:opacity .5s;cursor:pointer}

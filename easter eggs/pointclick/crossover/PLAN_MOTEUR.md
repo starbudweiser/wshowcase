@@ -106,3 +106,8 @@ FLUX, une à la fois (file calcul-lourd) : plusieurs jours de calcul, avec une p
   face et profils, en boucles de parole LTX par émotion).
 - Chapitres 12 à 28 sur la même chaîne (12 en préparation : décors, voiture / charrette, meule géante, pelote, Sam et Max).
 - Génie des indices en HD, prologue (fête de la S1 → Sheogorath), validation des décors et animations par Stéphan.
+- **Twin Peaks (22), petit homme en rouge** (validé par Stéphan) : ses 6 répliques `envers` ont leur voix retournée
+  (FR/EN, livrées) ; le moteur les sous-titre toujours, en bas de l'écran façon télévision (`ENVERS` dans
+  `js/pointclick/lang/s2_meta.js`, généré par `tools/s2_lang.py`), et joue ses boucles à l'envers pendant ces répliques.
+  Dans la scène : son entité porte `rev: true` (toutes ses animations à l'envers) ; pendant `c22.use.wab.redman`
+  (« dans le bon sens », à l'endroit, sans sous-titre forcé), poser `fwd: true` le temps de la réplique.

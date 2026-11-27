@@ -23,6 +23,7 @@ import { updateFx2, drawFx2, drawFxBack, twinkle } from './fx2.js';
 import * as SH from '../data/sheets.js';
 import * as S2 from '../data/sheets_s2.js';
 import { CHAPTERS2 } from '../scenes/index.js';
+import { ENVERS } from '../lang/s2_meta.js';
 const { SPR, ITEMS } = SH, ANIM = SH.ANIM || {}, HERO = SH.HERO || null, SLEEP = SH.SLEEP || {};
 Object.assign(ITEMS, S2.ITEMS);
 
@@ -30,6 +31,7 @@ export const W = 480, H = 270;
 const HOLD_S = 0.32, CHARGE_S = 0.09, DRAWER_H = 46;   // appui long avant la pièce, délai avant l'anneau de chargement, hauteur du tiroir
 const COLORS = { hero: '#ffe08a', rider: '#ffe08a', merchant: '#ffa45c', guard: '#9ad0ff', horse: '#f0c890', hen: '#ffffff', blind_pot: '#e6e0a0', blind_sack: '#e6e0a0', blind_hat: '#e6e0a0', giant: '#ffb070', nazim: '#c9a8ff', farmer: '#9fe08a', pmerchant: '#ffa45c', pguard: '#9ad0ff', pgiant: '#ffb070', phorseman: '#ff9a5c', gguard: '#9ad0ff', horseman: '#ff9a5c', follower: '#ffb0c8', butterfly: '#9ad8ff', blind_cabbage: '#e6e0a0', blind_helmet: '#e6e0a0', blind_basket: '#e6e0a0', blind_boot: '#e6e0a0', blind_mushroom: '#e6e0a0', blind_banner: '#e6e0a0', blind_partyhat: '#e6e0a0', narr: '#cfe0ff', genie: '#8fd3ff' };
 Object.assign(COLORS, S2.COLORS);
+const ENV = new Set(ENVERS);   /* répliques dites à l'envers (petit homme en rouge) : toujours sous-titrées, animations à l'envers */
 /* densité d'une image : 2 pour la saison 2 (960 × 540), 1 sinon ; tailles en unités logiques (480 × 270) */
 const dn = im => (im && im.dens) || 1, iw = im => im.width / dn(im), ih = im => im.height / dn(im);
 /* saison 2 ouverte : fin de la saison 1 atteinte, ou adresse avec ?s2 (essais en local) */
@@ -86,13 +88,13 @@ export class Game {
      walkQF / walkQB = trois-quarts, repli sur la vue la plus proche) ; avec A.stride, la marche avance à la distance parcourue
      (stride = pixels par image à l'échelle 1), donc les pieds ne glissent pas, quelle que soit la profondeur */
   /* image n d'une boucle S2 prête (toutes ses images chargées), sinon null */
-  life(base, n) { const A = this.s2anim && this.s2anim[base]; if (!A || !this.s2ready[base]) return null; return `s2a:${base}/${((n % A.n) + A.n) % A.n}`; }
-  lifeAt(base, t) { const A = this.s2anim && this.s2anim[base]; return A ? this.life(base, Math.floor(t * (A.fps || 10))) : null; }
+  life(base, n, rev) { const A = this.s2anim && this.s2anim[base]; if (!A || !this.s2ready[base]) return null; const i = ((n % A.n) + A.n) % A.n; return `s2a:${base}/${rev ? (A.n - 1 - i) % A.n : i}`; }
+  lifeAt(base, t, rev) { const A = this.s2anim && this.s2anim[base]; return A ? this.life(base, Math.floor(t * (A.fps || 10)), rev) : null; }
   /* repos : la boucle, puis la pose de départ tenue un moment (durée qui varie d'une fois à l'autre) : jamais un mouvement mécanique */
-  lifeIdle(base, t, seed = 0) {
+  lifeIdle(base, t, seed = 0, rev) {
     const A = this.s2anim && this.s2anim[base]; if (!A) return null; const D = A.n / (A.fps || 10), P = D + 2.6;
     const k = Math.floor(t / P), u = t - k * P, o = 2.4 * (((Math.sin((k + 1) * 12.9898 + seed * 78.233) * 43758.5453) % 1 + 1) % 1);   /* départ de la boucle décalé au hasard dans la période */
-    return this.life(base, u >= o && u < o + D ? Math.floor((u - o) * (A.fps || 10)) : 0);
+    return this.life(base, u >= o && u < o + D ? Math.floor((u - o) * (A.fps || 10)) : 0, rev);
   }
   /* charge les images d'une boucle S2 ; elle ne joue qu'une fois complète (pas d'image manquante en cours de lecture) */
   loadLife(base) {
@@ -100,7 +102,9 @@ export class Game {
     Promise.all(Array.from({ length: A.n }, (_, i) => this.img(this.sprPath(`s2a:${base}/${i}`)))).then(r => { if (this.s2low === low) this.s2ready[base] = r.every(Boolean); else this.s2ready[base] = undefined; });
   }
   frame(e) {
-    const L = S2.LIFE[e.spr]; if (L && this.scene && this.scene.hd) { const t = this.now + (e.ph || 0), f = e.talk && L.talk ? this.lifeAt(L.talk, t) || this.lifeIdle(L.idle, t, e.ph) : L.idle && this.lifeIdle(L.idle, t, e.ph); return f || e.spr; }
+    const L = S2.LIFE[e.spr]; if (L && this.scene && this.scene.hd) {   /* e.rev (petit homme en rouge) : toutes ses boucles à l'envers, sauf e.fwd (sous Wabbajack) */
+      const t = this.now + (e.ph || 0), r = (e.rev || e.revLine) && !e.fwd, f = e.talk && L.talk ? this.lifeAt(L.talk, t, r) || this.lifeIdle(L.idle, t, e.ph, r) : L.idle && this.lifeIdle(L.idle, t, e.ph, r); return f || e.spr;
+    }
     const A = ANIM[e.spr]; if (!A) return e.spr;
     const st = e.animState || (e.goal ? 'walk' : e.talk ? 'talk' : 'idle'), fps = (A.fps && A.fps[st]) || 3;
     let fr = A[st] || A.idle;
@@ -417,13 +421,14 @@ export class Game {
     if (this.voiceOn && this.hiBusy()) { const w0 = this.now; await this.until(() => !this.hiBusy() || this.now - w0 > 9); this.chk(); }
     const text = key.startsWith('=') ? key.slice(1) : this.T(key, vars), e = who === 'narr' ? null : this.ent(who);
     const b = el('div', 'pc-b', text); b.style.color = COLORS[who] || '#fff'; this.ov.append(b); this.bubbles.push(b);
-    const [ax, ay] = (this.cinePos && this.cinePos[who]) || (e ? this.headPos(e) : [W / 2, 40]); this.placeBubble(b, ax, ay);
-    if (e) e.talk = who;
+    const env = ENV.has(key);   /* dite à l'envers : sous-titre façon télévision en bas de l'écran, toujours affiché, et le personnage s'anime à l'envers */
+    if (env) { b.classList.add('pc-sub'); this.placeBubble(b, W / 2, H - 8); } else { const [ax, ay] = (this.cinePos && this.cinePos[who]) || (e ? this.headPos(e) : [W / 2, 40]); this.placeBubble(b, ax, ay); }
+    if (e) { e.talk = who; e.revLine = env; }
     const au = this.voicePlay(key, key[0] === '=' ? -1 : this.T.idx); this.sayAu = au;
     this.skip = false; const t0 = this.now, end = t0 + Math.max(1.7, text.length * 0.06); this.sayT0 = t0;
     const talking = () => au && !au.ended && !au.error && !au.paused && this.voiceOn;
     await this.until(() => (this.now >= end && !talking()) || (this.skip && this.now - t0 > 0.6)); this.skip = false; if (au) au.pause(); this.sayAu = null;
-    b.remove(); this.bubbles = this.bubbles.filter(x => x !== b); if (e) e.talk = false; this.chk();
+    b.remove(); this.bubbles = this.bubbles.filter(x => x !== b); if (e) { e.talk = false; e.revLine = false; } this.chk();
   }
   headPos(e) { const im = this.spr(e.spr), s = this.sc(e); return [e.x, e.y - (e.float || 0) - (im ? ih(im) * s : 40) - 3]; }
   placeBubble(b, x, y) {
