@@ -19,7 +19,7 @@ export const ITEMS = {
   cracker: { spr: 's2:i_cracker' }, map: { spr: 's2:i_map' }, grog: { spr: 's2:i_grog' }, rootbeer: { spr: 's2:i_rootbeer' }, cheese_nl: { spr: 's2:i_cheese_nl' },
   sweetroll: { spr: 's2:i_sweetroll' }, cheese12: { spr: 's2:i_cheese12' },
   shout: { spr: 's2:i_shout' }, septims: { spr: 's2:i_septims' },
-  wood13: { spr: 's2:i_wood13' }, waterbucket13: { spr: 's2:i_waterbucket13' }, cheesecube: { spr: 's2:i_cheesecube' }, idol: { spr: 's2:p_idol14' }, cheese14: { spr: 's2:i_cheese14' }, cable15: { spr: 's2:i_cable15' }, cheese15: { spr: 's2:i_cheese15' }, flower16: { spr: 's2:i_flower16' }, cheese16: { spr: 's2:i_cheese16' }, grail17: { spr: 's2:p_grail17' }, cheese17k: { spr: 's2:i_cheese17k' }, lavender: { spr: 's2:i_lavender17' }, cheese17g: { spr: 's2:i_cheese17g' }
+  wood13: { spr: 's2:i_wood13' }, waterbucket13: { spr: 's2:i_waterbucket13' }, cheesecube: { spr: 's2:i_cheesecube' }, idol: { spr: 's2:p_idol14' }, cheese14: { spr: 's2:i_cheese14' }, cable15: { spr: 's2:i_cable15' }, cheese15: { spr: 's2:i_cheese15' }, flower16: { spr: 's2:i_flower16' }, cheese16: { spr: 's2:i_cheese16' }, grail17: { spr: 's2:p_grail17' }, cheese17k: { spr: 's2:i_cheese17k' }, lavender: { spr: 's2:i_lavender17' }, cheese17g: { spr: 's2:i_cheese17g' }, cheese18: { spr: 's2:i_cheese18' }
 };
 
 /* héros S2 : six vues en pied (poses fixes de repli) ; cycles LTX : marche (profils, face, dos), repos vivant et parole par vue */
@@ -46,7 +46,8 @@ export const LIFE = {
   's2:doc': { idle: 'doc_i', talk: 'doc_t' }, 's2:boy15': { idle: 'boy15_i' },
   's2:hat16': { idle: 'hat_i', talk: 'hat_t' }, 's2:potions': { idle: 'potions_i', talk: 'potions_t' }, 's2:bat16': { idle: 'bat16_i' }, 's2:owl16': { idle: 'owl16_i' },
   's2:arthur': { idle: 'arthur_i', talk: 'arthur_t' }, 's2:perceval': { idle: 'perceval_i', talk: 'perceval_t' }, 's2:karadoc': { idle: 'karadoc_i', talk: 'karadoc_t' },
-  's2:coconut': { idle: 'coconut_i', talk: 'coconut_t' }, 's2:ni': { idle: 'ni_i', talk: 'ni_t' }, 's2:bk': { idle: 'bk_i', talk: 'bk_t' }, 's2:rabbit17': { idle: 'rabbit17_i' }
+  's2:coconut': { idle: 'coconut_i', talk: 'coconut_t' }, 's2:ni': { idle: 'ni_i', talk: 'ni_t' }, 's2:bk': { idle: 'bk_i', talk: 'bk_t' }, 's2:rabbit17': { idle: 'rabbit17_i' },
+  's2:barbarian': { idle: 'barbarian_i', talk: 'barbarian_t' }
 };
 export const lifeBases = sc => [...new Set([...Object.values(HERO_LIFE).flatMap(o => Object.values(o)), ...(sc.ents || []).flatMap(e => Object.values(LIFE[e.spr] || {}))])];
 export const PRELOAD = [...Object.values(HERO2), ...Object.values(ITEMS).map(i => i.spr)];

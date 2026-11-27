@@ -117,8 +117,13 @@ FLUX, une à la fois (file calcul-lourd) : plusieurs jours de calcul, avec une p
   vrais chevaux, sainte grenade en meule ; pont du chevalier noir (le Cri ne fait que le baigner, le Wabbajack en fait un
   garde assis), flammes de l'enchanteur en confettis, lapin en dragon puis nourri d'une brioche, Graal-seau et stilton.
   Titre français du 17 : « La Table ronde » (aucun nom officiel dans le jeu).
+- Chapitre 18 (la roue de la douleur) jouable : plaine gelée (neige, vent, fumée du volcan), visage du lecteur flottant
+  dans le ciel, roue qui tremble ou tourne à l'envers sous le Cri, meule géante qui tourne seule (miettes), barbare poète,
+  lecteur qui tombe dans le livre ; pays du Néant (vortex qui tourne et aspire le paysage, marais de fondue, dragon blanc
+  en chien, vrai dragon qui passe vexé, Sheogorath crié du fond du cœur, envol à dos de dragon, Néant changé en gruyère).
+  Reste : boucles LTX du dragon blanc (2es prises en plan large en calcul ; 1res : gros plan sur la tête).
 - Objets de toute la saison dans la besace : Wabbajack, le Cri (repli générique `s2.shout.none` + onde de choc), les septims.
-- Personnages animés en boucles LTX pour les chapitres 11 à 17 (reprises quand le visage dérivait ou que le personnage tournait).
+- Personnages animés en boucles LTX pour les chapitres 11 à 18 (reprises quand le visage dérivait ou que le personnage tournait).
 ### Chaîne de production d'un chapitre (outils)
 1. Décor vide : `tools/gen_s2_decors.sh` (3 graines) → `tools/s2_assets.py decor` + `tools/s2_retro.py decor`.
 2. Personnages et objets : fiche validée détourée (`s2_assets.py sprite`), objets `tools/gen_s2_items.sh`.
@@ -131,7 +136,7 @@ FLUX, une à la fois (file calcul-lourd) : plusieurs jours de calcul, avec une p
   sprites des métamorphoses (poulet en caoutchouc à poulie, mammouth à trois têtes) ; voix de la réplique du narrateur
   sur la transition (`nar.s2up`) et des répliques écrites à la main (regards, biscuit) ; expressions du héros (8 visages,
   face et profils, en boucles de parole LTX par émotion).
-- Chapitres 18 (en calcul) à 28 sur la même chaîne.
+- Chapitres 19 à 28 sur la même chaîne.
 - Génie des indices en HD, prologue (fête de la S1 → Sheogorath), validation des décors et animations par Stéphan.
 - **Twin Peaks (22), petit homme en rouge** (validé par Stéphan) : ses 6 répliques `envers` ont leur voix retournée
   (FR/EN, livrées) ; le moteur les sous-titre toujours, en bas de l'écran façon télévision (`ENVERS` dans

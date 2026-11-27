@@ -105,6 +105,17 @@ export default {
   'hint.s2_15.horse.1': 'Le cheval ne dépasse pas douze lieues à l’heure.', 'hint.s2_15.horse.2': 'Les chevaux de chez toi grimpent partout, même les murs.', 'hint.s2_15.horse.3': 'Utilise le Wabbajack sur le cheval de la charrette.',
   'hint.s2_15.cable.1': 'Le câble doit toucher l’aiguille de l’horloge.', 'hint.s2_15.cable.2': 'Son autre bout pend au réverbère.', 'hint.s2_15.cable.3': 'Prends le câble au réverbère, puis utilise-le sur l’horloge.',
   'hint.s2_15.storm.1': 'Il ne manque qu’un orage… sur commande.', 'hint.s2_15.storm.2': 'Ta Voix sait appeler la tempête.', 'hint.s2_15.storm.3': 'Utilise le Cri sur l’horloge.',
+  /* chapitre 18 : la roue de la douleur, le pays dévoré par le Néant */
+  'n.barbarian': 'barbare', 'n.wheel18': 'roue de la douleur', 'n.s18sky': 'ciel', 'n.reader18': 'lecteur', 'n.s18chain': 'chaîne brisée', 'n.s18mountains': 'montagnes',
+  'n.luckdragon': 'dragon porte-bonheur', 'n.nothing18': 'Néant', 'n.s18swamp': 'marais de la tristesse', 'n.s18hill': 'colline', 'n.cheese18': 'gruyère',
+  'look.s18chain': 'Une vieille chaîne brisée. Quelqu’un a tiré très fort, ou très longtemps.', 'look.s18mountains': 'Des montagnes noires. Pas une seule taverne en vue.',
+  'look.wheelcheese18': 'Une meule géante qui tourne toute seule. Le premier moulin à fromage de l’histoire.', 'look.gruyere18': 'Un gruyère grand comme un pays. Le Néant n’était qu’une collection de trous.',
+  'look.s18hill': 'Une colline fleurie. Le seul coin du livre que le Néant n’a pas encore mangé.', 'look.cheese18': 'Un gruyère. Avec les trous, il pèse moins lourd. Mon dos dit merci.',
+  's18.wk.back': 'Et ça redevient comme avant. Même dans un livre, le Wabbajack a la magie courte.', 's18.leave.first': 'Le barbare ne bougera pas tant que la roue ne tourne pas.',
+  's18.nothing.far': 'Le Néant est trop loin. Il faudrait voler pour l’approcher.', 's18.shout.again': 'Il me faut un autre nom. Un qui vienne vraiment du cœur.',
+  'hint.s2_18.wheel.1': 'Le barbare ne partira pas tant que la roue ne tourne pas.', 'hint.s2_18.wheel.2': 'Pousser ne marche pas, crier non plus. Et si la roue tournait toute seule ?', 'hint.s2_18.wheel.3': 'Utilise le Wabbajack sur la roue de la douleur.',
+  'hint.s2_18b.name.1': 'Le dragon blanc ne vole pas tant que personne n’a crié un nom du fond du cœur.', 'hint.s2_18b.name.2': 'Crier, c’est ton métier. Essaie plusieurs noms : il faut celui qui vient vraiment du cœur.', 'hint.s2_18b.name.3': 'Utilise le Cri sur le dragon blanc, plusieurs fois.',
+  'hint.s2_18b.nothing.1': 'Le Néant dévore tout. Et si ce n’était qu’une affaire de trous ?', 'hint.s2_18b.nothing.2': 'Ton bâton sait boucher les trous… à sa manière.', 'hint.s2_18b.nothing.3': 'Utilise le Wabbajack sur le Néant.',
   /* chapitre 17 (version anglaise) : la route des chevaliers « Ni ! », le pont du chevalier noir, la grotte du lapin */
   'n.coconut': 'chevalier aux noix de coco', 'n.ni': 'chevalier qui dit « Ni ! »', 'n.ni2': 'chevalier qui dit « Ni ! »', 'n.bk': 'chevalier noir', 'n.rabbit17': 'lapin blanc',
   'n.grenade17': 'sainte grenade', 'n.s17castle': 'château', 'n.s17road': 'route', 'n.topiary17': 'buisson-mammouth', 'n.shrub17': 'buisson de lavande', 'n.lavender': 'lavande', 'n.guard17': 'garde',

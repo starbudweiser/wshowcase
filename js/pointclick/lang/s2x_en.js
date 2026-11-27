@@ -106,6 +106,17 @@ export default {
   'hint.s2_15.cable.1': 'The cable must touch the clock’s hand.', 'hint.s2_15.cable.2': 'Its other end hangs from the street lamp.', 'hint.s2_15.cable.3': 'Take the cable from the street lamp, then use it on the clock.',
   'hint.s2_15.storm.1': 'All that’s missing is a storm… on demand.', 'hint.s2_15.storm.2': 'Your Voice can call the storm.', 'hint.s2_15.storm.3': 'Use the Shout on the clock.',
   /* genie hints (text only in the mock-up) */
+  /* chapter 18: the wheel of pain, the country eaten by the Nothing */
+  'n.barbarian': 'barbarian', 'n.wheel18': 'wheel of pain', 'n.s18sky': 'sky', 'n.reader18': 'reader', 'n.s18chain': 'broken chain', 'n.s18mountains': 'mountains',
+  'n.luckdragon': 'luck dragon', 'n.nothing18': 'Nothing', 'n.s18swamp': 'swamp of sadness', 'n.s18hill': 'hill', 'n.cheese18': 'gruyère',
+  'look.s18chain': 'An old broken chain. Someone pulled very hard, or for a very long time.', 'look.s18mountains': 'Black mountains. Not a single tavern in sight.',
+  'look.wheelcheese18': 'A giant wheel of cheese turning all by itself. History’s first cheese mill.', 'look.gruyere18': 'A gruyère as big as a country. The Nothing was just a collection of holes.',
+  'look.s18hill': 'A flowery hill. The only corner of the book the Nothing hasn’t eaten yet.', 'look.cheese18': 'A gruyère. With the holes, it weighs less. My back says thank you.',
+  's18.wk.back': 'And it’s back to normal. Even in a book, the Wabbajack’s magic doesn’t last.', 's18.leave.first': 'The barbarian won’t move as long as the wheel isn’t turning.',
+  's18.nothing.far': 'The Nothing is too far away. I’d have to fly to get near it.', 's18.shout.again': 'I need another name. One that truly comes from the heart.',
+  'hint.s2_18.wheel.1': 'The barbarian won’t leave until the wheel turns.', 'hint.s2_18.wheel.2': 'Pushing doesn’t work, nor does shouting. What if the wheel turned by itself?', 'hint.s2_18.wheel.3': 'Use the Wabbajack on the wheel of pain.',
+  'hint.s2_18b.name.1': 'The white dragon won’t fly until someone shouts a name from the heart.', 'hint.s2_18b.name.2': 'Shouting is your job. Try several names: you need the one that truly comes from the heart.', 'hint.s2_18b.name.3': 'Use the Shout on the white dragon, several times.',
+  'hint.s2_18b.nothing.1': 'The Nothing devours everything. What if it were just a matter of holes?', 'hint.s2_18b.nothing.2': 'Your staff knows how to fill holes… in its own way.', 'hint.s2_18b.nothing.3': 'Use the Wabbajack on the Nothing.',
   /* chapter 17 (English version): the road of the knights who say "Ni!", the black knight's bridge, the rabbit's cave */
   'n.coconut': 'knight with coconuts', 'n.ni': 'knight who says "Ni!"', 'n.ni2': 'knight who says "Ni!"', 'n.bk': 'black knight', 'n.rabbit17': 'white rabbit',
   'n.grenade17': 'holy hand grenade', 'n.s17castle': 'castle', 'n.s17road': 'road', 'n.topiary17': 'mammoth hedge', 'n.shrub17': 'lavender bush', 'n.lavender': 'lavender', 'n.guard17': 'guard',

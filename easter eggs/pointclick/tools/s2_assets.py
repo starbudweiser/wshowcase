@@ -54,6 +54,9 @@ def sprite(name, src, th, flip=False):
     im = im.crop(alpha.getbbox())
     f = th / im.size[1]; im = im.resize((max(1, round(im.size[0] * f)), th), Image.LANCZOS)
     if flip: im = im.transpose(Image.FLIP_LEFT_RIGHT)
+    if VIGNETTE:   # bords fondus en ellipse (vision dans le ciel) : alpha seulement
+        a = np.asarray(im).astype(np.float32); h, w = a.shape[:2]; yy, xx = np.mgrid[0:h, 0:w]
+        a[..., 3] *= np.clip((1 - np.sqrt(((xx - w / 2) / (w / 2)) ** 2 + ((yy - h / 2) / (h / 2)) ** 2)) / 0.35, 0, 1); im = Image.fromarray(a.astype(np.uint8), 'RGBA')
     os.makedirs(os.path.join(OUT, 'spr'), exist_ok=True)
     p = os.path.join(OUT, 'spr', name + '.webp'); im.save(p, 'WEBP', quality=90, method=6); print(name, im.size, os.path.getsize(p) // 1024, 'Ko')   # WebP avec transparence : 4 fois plus léger que le PNG
 
@@ -65,7 +68,8 @@ def decor(name, src, sub=''):
 
 
 DESPILL = next((x.split('=', 1)[1] if '=' in x else 'band' for x in sys.argv if x.startswith('--despill')), None)
-a = [x for x in sys.argv[1:] if not x.startswith('--despill')]
+VIGNETTE = '--vignette' in sys.argv
+a = [x for x in sys.argv[1:] if not x.startswith('--despill') and x != '--vignette']
 if a[0] == 'sprite': sprite(a[1], a[2], int(a[3]), '--flip' in a)
 elif a[0] == 'decor': decor(a[1], a[2])
 elif a[0] == 'card': decor(a[1], a[2], 'cards')

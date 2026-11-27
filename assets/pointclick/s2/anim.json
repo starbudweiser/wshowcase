@@ -7,6 +7,14 @@
   "fps": 7.5,
   "n": 20
  },
+ "barbarian_i": {
+  "fps": 8.0,
+  "n": 24
+ },
+ "barbarian_t": {
+  "fps": 7.5,
+  "n": 20
+ },
  "bat16_i": {
   "fps": 8.0,
   "n": 16
