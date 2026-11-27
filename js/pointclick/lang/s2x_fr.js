@@ -105,6 +105,18 @@ export default {
   'hint.s2_15.horse.1': 'Le cheval ne dépasse pas douze lieues à l’heure.', 'hint.s2_15.horse.2': 'Les chevaux de chez toi grimpent partout, même les murs.', 'hint.s2_15.horse.3': 'Utilise le Wabbajack sur le cheval de la charrette.',
   'hint.s2_15.cable.1': 'Le câble doit toucher l’aiguille de l’horloge.', 'hint.s2_15.cable.2': 'Son autre bout pend au réverbère.', 'hint.s2_15.cable.3': 'Prends le câble au réverbère, puis utilise-le sur l’horloge.',
   'hint.s2_15.storm.1': 'Il ne manque qu’un orage… sur commande.', 'hint.s2_15.storm.2': 'Ta Voix sait appeler la tempête.', 'hint.s2_15.storm.3': 'Utilise le Cri sur l’horloge.',
+  /* chapitre 20 : l'enclos sous la pluie, la cuisine */
+  'n.paleo': 'paléontologue', 'n.trex': 'monstre', 'n.chicken20': 'poule géante', 'n.goat20': 'chèvre', 'n.s20fence': 'clôture cassée', 'n.amber20': 'ambre', 'n.s20hut': 'abri',
+  'n.raptors20': 'petits monstres', 'n.rolls20': 'brioches qui me fixent', 'n.s20fridge': 'frigo', 'n.s20door': 'porte battante', 'n.s20shelves': 'plans de travail', 'n.butterfly20': 'papillon', 'n.cheese20': 'meule glacée',
+  's20.hidden': '[ CACHÉ ]', 's20.stand': 'Je me relève. Je reste caché dans mon cœur.', 'look.s20hut': 'Un abri en planches. Le toit a l’air solide. Une chèvre y serait bien.',
+  'look.s20garland': 'Des guirlandes sur une clôture cassée. Le parc fête sa propre fin.', 'look.chicken20': 'Une poule grande comme une tour. Elle me regarde comme si j’avais volé ses œufs.',
+  'look.rolls20': 'Deux brioches sucrées qui me fixent. Je ne les mangerai pas. Pas tout de suite.', 'look.s20door': 'Une porte battante. Les petits monstres savent l’ouvrir. Moi aussi, heureusement.',
+  'look.s20shelves': 'Des casseroles en métal, propres comme des armes neuves.', 'look.butterfly20': 'Un papillon bleu de chez nous. Ses ailes soignent les maux de tête.', 'look.cheese20': 'Une meule glacée. Elle sent le frigo et la victoire.',
+  's20.fridge.blocked': 'Pas avec ces deux-là entre le frigo et moi.', 's20.wk.back': 'Et ça redevient comme avant. Même ici, le Wabbajack a la magie courte.',
+  'hint.s2_20.crouch.1': 'Il ne voit que ce qui bouge. Chez toi, on sait se faire discret.', 'hint.s2_20.crouch.2': 'Accroupis-toi : tout le monde sait que ça rend invisible.', 'hint.s2_20.crouch.3': 'Utilise le héros sur lui-même pour t’accroupir.',
+  'hint.s2_20.monster.1': 'Caché, tu as le temps de réfléchir à ce monstre.', 'hint.s2_20.monster.2': 'Ton bâton aime transformer les grosses bêtes en volaille.', 'hint.s2_20.monster.3': 'Utilise le Wabbajack sur le monstre.',
+  'hint.s2_20b.small.1': 'Ces deux-là savent lire : te cacher ne sert à rien.', 'hint.s2_20b.small.2': 'Les changer en quelque chose d’inoffensif. De sucré, même.', 'hint.s2_20b.small.3': 'Utilise le Wabbajack sur les petits monstres.',
+  'hint.s2_20b.fridge.1': 'Le chemin est libre.', 'hint.s2_20b.fridge.2': 'Une meule se garde au frais.', 'hint.s2_20b.fridge.3': 'Ouvre le frigo.',
   /* chapitre 19 : l'hôpital (intermède) */
   'n.house': 'médecin', 'n.board19': 'tableau blanc', 'n.mri19': 'IRM', 'n.xray19': 'radio', 'n.sandwich19': 'sandwich', 'n.marker19': 'marqueur', 'n.potion19': 'potion de guérison des maladies',
   'n.s19bed': 'lit', 'n.s19desk': 'bureau', 'n.helmet19': 'mon casque', 'n.cheese19': 'sandwich au fromage',

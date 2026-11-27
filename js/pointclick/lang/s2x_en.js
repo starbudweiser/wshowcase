@@ -106,6 +106,18 @@ export default {
   'hint.s2_15.cable.1': 'The cable must touch the clock’s hand.', 'hint.s2_15.cable.2': 'Its other end hangs from the street lamp.', 'hint.s2_15.cable.3': 'Take the cable from the street lamp, then use it on the clock.',
   'hint.s2_15.storm.1': 'All that’s missing is a storm… on demand.', 'hint.s2_15.storm.2': 'Your Voice can call the storm.', 'hint.s2_15.storm.3': 'Use the Shout on the clock.',
   /* genie hints (text only in the mock-up) */
+  /* chapter 20: the rainy paddock, the kitchen */
+  'n.paleo': 'paleontologist', 'n.trex': 'monster', 'n.chicken20': 'giant hen', 'n.goat20': 'goat', 'n.s20fence': 'broken fence', 'n.amber20': 'amber', 'n.s20hut': 'shelter',
+  'n.raptors20': 'little monsters', 'n.rolls20': 'staring sweet rolls', 'n.s20fridge': 'fridge', 'n.s20door': 'swinging door', 'n.s20shelves': 'worktops', 'n.butterfly20': 'butterfly', 'n.cheese20': 'frozen wheel',
+  's20.hidden': '[ HIDDEN ]', 's20.stand': 'I stand up. I stay hidden in my heart.', 'look.s20hut': 'A plank shelter. The roof looks sturdy. A goat would be happy up there.',
+  'look.s20garland': 'Garlands on a broken fence. The park is celebrating its own end.', 'look.chicken20': 'A hen as tall as a tower. She looks at me as if I’d stolen her eggs.',
+  'look.rolls20': 'Two sweet rolls staring at me. I won’t eat them. Not just yet.', 'look.s20door': 'A swinging door. The little monsters can open it. So can I, luckily.',
+  'look.s20shelves': 'Metal pans, as clean as brand-new weapons.', 'look.butterfly20': 'A blue butterfly from back home. Its wings cure headaches.', 'look.cheese20': 'A frozen wheel. It smells of fridge and victory.',
+  's20.fridge.blocked': 'Not with those two between me and the fridge.', 's20.wk.back': 'And it’s back to normal. Even here, the Wabbajack’s magic doesn’t last.',
+  'hint.s2_20.crouch.1': 'It only sees what moves. Back home, you know how to be discreet.', 'hint.s2_20.crouch.2': 'Crouch: everyone knows it makes you invisible.', 'hint.s2_20.crouch.3': 'Use the hero on himself to crouch.',
+  'hint.s2_20.monster.1': 'Hidden, you have time to think about that monster.', 'hint.s2_20.monster.2': 'Your staff loves turning big beasts into poultry.', 'hint.s2_20.monster.3': 'Use the Wabbajack on the monster.',
+  'hint.s2_20b.small.1': 'Those two can read: hiding is useless.', 'hint.s2_20b.small.2': 'Turn them into something harmless. Something sweet, even.', 'hint.s2_20b.small.3': 'Use the Wabbajack on the little monsters.',
+  'hint.s2_20b.fridge.1': 'The way is clear.', 'hint.s2_20b.fridge.2': 'A wheel of cheese is kept cold.', 'hint.s2_20b.fridge.3': 'Open the fridge.',
   /* chapter 19: the hospital (interlude) */
   'n.house': 'doctor', 'n.board19': 'whiteboard', 'n.mri19': 'MRI scanner', 'n.xray19': 'X-ray', 'n.sandwich19': 'sandwich', 'n.marker19': 'marker', 'n.potion19': 'cure disease potion',
   'n.s19bed': 'bed', 'n.s19desk': 'desk', 'n.helmet19': 'my helmet', 'n.cheese19': 'cheese sandwich',

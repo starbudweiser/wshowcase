@@ -126,8 +126,12 @@ FLUX, une à la fois (file calcul-lourd) : plusieurs jours de calcul, avec une p
   symptômes dessinés au tableau (« LUPUS ? »), IRM qui arrache le casque (héros tête nue, coupe en champignon), alerte au
   gyrophare quand le médecin devient aimable, sandwich « ramassé », canne en Wabbajack de poche, tableau couvert de LUPUS,
   IRM en sarcophage de draugr, radio du genou fléché ; Sheogorath noté au tableau à la fin.
+- Chapitre 20 (le seau qui tremble) jouable : enclos de nuit sous l'orage, paléontologue et monstre en boucles LTX,
+  s'accroupir (utiliser le héros sur lui-même) affiche « [ CACHÉ ] » au-dessus de lui (crochet `scene.draw` du moteur),
+  monstre changé en poule géante qui poursuit le héros, chèvre sur le toit, guirlandes, papillon d'ambre, mammouth à
+  chapeau ; cuisine en inox : petits monstres changés en brioches qui fixent le héros, meule glacée au frigo.
 - Objets de toute la saison dans la besace : Wabbajack, le Cri (repli générique `s2.shout.none` + onde de choc), les septims.
-- Personnages animés en boucles LTX pour les chapitres 11 à 19 (reprises quand le visage dérivait ou que le personnage tournait).
+- Personnages animés en boucles LTX pour les chapitres 11 à 20 (reprises quand le visage dérivait ou que le personnage tournait).
 ### Chaîne de production d'un chapitre (outils)
 1. Décor vide : `tools/gen_s2_decors.sh` (3 graines) → `tools/s2_assets.py decor` + `tools/s2_retro.py decor`.
 2. Personnages et objets : fiche validée détourée (`s2_assets.py sprite`), objets `tools/gen_s2_items.sh`.
@@ -140,7 +144,7 @@ FLUX, une à la fois (file calcul-lourd) : plusieurs jours de calcul, avec une p
   sprites des métamorphoses (poulet en caoutchouc à poulie, mammouth à trois têtes) ; voix de la réplique du narrateur
   sur la transition (`nar.s2up`) et des répliques écrites à la main (regards, biscuit) ; expressions du héros (8 visages,
   face et profils, en boucles de parole LTX par émotion).
-- Chapitres 20 à 28 sur la même chaîne.
+- Chapitres 21 à 28 sur la même chaîne.
 - Génie des indices en HD, prologue (fête de la S1 → Sheogorath), validation des décors et animations par Stéphan.
 - **Twin Peaks (22), petit homme en rouge** (validé par Stéphan) : ses 6 répliques `envers` ont leur voix retournée
   (FR/EN, livrées) ; le moteur les sous-titre toujours, en bas de l'écran façon télévision (`ENVERS` dans

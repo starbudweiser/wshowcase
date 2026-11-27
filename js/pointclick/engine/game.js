@@ -784,6 +784,7 @@ export class Game {
     [...this.ents.filter(e => e.visible !== false), ...occ].sort((a, b) => (a.y + (a.z || 0)) - (b.y + (b.z || 0))).forEach(e => (e.occ ? this.drawOcc(e.occ.polys) : this.drawEnt(e)));
     fg.filter(o => Array.isArray(o)).forEach(p => this.drawOcc([p]));
     drawFx2(this, c);
+    if (this.scene && this.scene.draw) this.scene.draw(this, c);   /* dessin propre à une scène, par-dessus les acteurs (indicateur « Caché ») */
     c.restore();
     if (!this.scene.hd) { drawWinks(this, c); drawNight(this, c); drawGlass(this, c); }
     if (this.overFx) this.overFx(c);   /* plein écran par-dessus la scène (faux écran de chargement du génie) */

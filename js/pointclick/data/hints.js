@@ -28,6 +28,8 @@ const STEPS = {
   s2_18: [['s2_18.wheel', () => false]],
   s2_18b: [['s2_18b.name', g => g.flag('flight')], ['s2_18b.nothing', () => false]],
   s2_19: [['s2_19.sandwich', () => false]],
+  s2_20: [['s2_20.crouch', g => g.flag('crouched')], ['s2_20.monster', () => false]],
+  s2_20b: [['s2_20b.small', g => g.flag('rolls')], ['s2_20b.fridge', () => false]],
   s2_15: [['s2_15.cart', g => g.flag('cartSteel')], ['s2_15.horse', g => g.flag('cartUp')], ['s2_15.cable', g => g.flag('cableOn')], ['s2_15.storm', () => false]],
   s2_12b: [['s2_12b.roll', g => g.has('sweetroll') || g.flag('traded')], ['s2_12b.cheese', g => g.flag('traded')]],
   s2_11: [['s2_11.cracker', g => g.has('cracker') || g.flag('learned')], ['s2_11.parrot', g => g.flag('learned')], ['s2_11.duel', g => g.flag('duelWon')],
