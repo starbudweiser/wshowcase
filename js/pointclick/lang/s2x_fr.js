@@ -105,6 +105,18 @@ export default {
   'hint.s2_15.horse.1': 'Le cheval ne dépasse pas douze lieues à l’heure.', 'hint.s2_15.horse.2': 'Les chevaux de chez toi grimpent partout, même les murs.', 'hint.s2_15.horse.3': 'Utilise le Wabbajack sur le cheval de la charrette.',
   'hint.s2_15.cable.1': 'Le câble doit toucher l’aiguille de l’horloge.', 'hint.s2_15.cable.2': 'Son autre bout pend au réverbère.', 'hint.s2_15.cable.3': 'Prends le câble au réverbère, puis utilise-le sur l’horloge.',
   'hint.s2_15.storm.1': 'Il ne manque qu’un orage… sur commande.', 'hint.s2_15.storm.2': 'Ta Voix sait appeler la tempête.', 'hint.s2_15.storm.3': 'Utilise le Cri sur l’horloge.',
+  /* chapitre 17 (version française) : la salle de la Table ronde, la grotte du Graal */
+  'n.arthur': 'roi', 'n.perceval': 'chevalier lent', 'n.karadoc': 'chevalier gourmand', 'n.dice17': 'dés', 'n.s17table': 'table ronde', 'n.s17door': 'porte', 'n.s17fire': 'cheminée',
+  'n.s17banners': 'bannières', 'n.sword17': 'épée dans le rocher', 'n.s17cave': 'grotte', 'n.grail17': 'Graal', 'n.s17boulder': 'rocher plat', 'n.s17trees': 'chênes', 'n.cheese17k': 'fromage de Bretagne',
+  'look.s17banquet': 'Un banquet entier sur la table ronde. Le Wabbajack a enfin compris ce qu’on attendait de lui.', 'look.s17door': 'La porte de la salle. La grotte du Graal est par là, paraît-il.',
+  'look.s17fire': 'Une grande cheminée. Il y fait plus chaud que dans toute la province de Bordeciel.', 'look.s17banners': 'Des bannières rouges. Pas un dragon dessus. Une chance, pour eux.',
+  'take.s17roll': 'Une brioche sucrée, oubliée sur la caisse. Je la garde. Chez nous, c’est presque une monnaie.', 'look.s17spoon': 'Une cuillère plantée dans une meule. Celui qui la retirera sera roi… des fromagers.',
+  's17.sword.take': 'Elle ne bouge pas d’un pouce. Il faut sans doute être roi, ou avoir mangé beaucoup de fromage.', 's17.spoon.take': 'Je préfère laisser ça à un spécialiste.',
+  'look.s17boulder': 'Un grand rocher plat. Parfait pour pique-niquer, ou pour planter une épée.', 'look.s17trees': 'De vieux chênes. Chez nous, il y aurait déjà un Parjure caché derrière.',
+  'look.grail17': 'Le Graal. Une anse, des cercles de fer… J’en ai porté des dizaines comme lui.', 'look.cheese17k': 'Un fromage de Bretagne dont personne ne connaît le nom. Il sent la mer et les chevaliers.',
+  's17.wk.back': 'Et ça redevient comme avant. Même à la Table ronde, le Wabbajack a la magie courte.',
+  'hint.s2_17k.table.1': 'Les deux chevaliers ne partiront pas le ventre vide.', 'hint.s2_17k.table.2': 'Une table ronde, c’est fait pour un banquet. Ton bâton peut le servir.', 'hint.s2_17k.table.3': 'Utilise le Wabbajack sur la table ronde, puis prends la porte.',
+  'hint.s2_17kb.grail.1': 'Le chevalier gourmand ne passe pas dans la grotte. Toi, si.', 'hint.s2_17kb.grail.2': 'La lumière au fond de la grotte, c’est le Graal.', 'hint.s2_17kb.grail.3': 'Entre dans la grotte et prends le Graal.',
   /* chapitre 16 : la grande salle, le cachot des potions */
   'n.hat16': 'chapeau parlant', 'n.bucket16': 'seau parlant', 'n.stool16': 'tabouret', 'n.owl16': 'chouette', 'n.s16candles': 'bougies flottantes', 'n.s16ceiling': 'plafond étoilé',
   'n.s16tables': 'élèves', 'n.s16high': 'table des professeurs', 'n.s16window': 'vitrail', 'n.potions': 'professeur de potions', 'n.student16': 'élève', 'n.s16cauldron': 'chaudron',

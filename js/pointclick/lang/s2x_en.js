@@ -106,6 +106,18 @@ export default {
   'hint.s2_15.cable.1': 'The cable must touch the clock’s hand.', 'hint.s2_15.cable.2': 'Its other end hangs from the street lamp.', 'hint.s2_15.cable.3': 'Take the cable from the street lamp, then use it on the clock.',
   'hint.s2_15.storm.1': 'All that’s missing is a storm… on demand.', 'hint.s2_15.storm.2': 'Your Voice can call the storm.', 'hint.s2_15.storm.3': 'Use the Shout on the clock.',
   /* genie hints (text only in the mock-up) */
+  /* chapter 17 (French version): the Round Table hall, the Grail cave */
+  'n.arthur': 'king', 'n.perceval': 'slow knight', 'n.karadoc': 'greedy knight', 'n.dice17': 'dice', 'n.s17table': 'round table', 'n.s17door': 'door', 'n.s17fire': 'fireplace',
+  'n.s17banners': 'banners', 'n.sword17': 'sword in the stone', 'n.s17cave': 'cave', 'n.grail17': 'Grail', 'n.s17boulder': 'flat boulder', 'n.s17trees': 'oaks', 'n.cheese17k': 'cheese from Brittany',
+  'look.s17banquet': 'A whole banquet on the round table. The Wabbajack finally understood what was expected of it.', 'look.s17door': 'The hall’s door. The Grail cave is that way, apparently.',
+  'look.s17fire': 'A big fireplace. It’s warmer in here than in the whole province of Skyrim.', 'look.s17banners': 'Red banners. Not a single dragon on them. Lucky them.',
+  'take.s17roll': 'A sweet roll, forgotten on the crate. I’ll keep it. Back home, it’s practically currency.', 'look.s17spoon': 'A spoon stuck in a wheel of cheese. Whoever pulls it out shall be king… of the cheesemongers.',
+  's17.sword.take': 'It won’t budge an inch. You probably have to be a king, or to have eaten a lot of cheese.', 's17.spoon.take': 'I’d rather leave that to a specialist.',
+  'look.s17boulder': 'A big flat boulder. Perfect for a picnic, or for planting a sword.', 'look.s17trees': 'Old oaks. Back home, there would already be a Forsworn hiding behind them.',
+  'look.grail17': 'The Grail. A handle, iron hoops… I’ve carried dozens just like it.', 'look.cheese17k': 'A cheese from Brittany whose name nobody knows. It smells of the sea and of knights.',
+  's17.wk.back': 'And it’s back to normal. Even at the Round Table, the Wabbajack’s magic doesn’t last.',
+  'hint.s2_17k.table.1': 'The two knights won’t leave on an empty stomach.', 'hint.s2_17k.table.2': 'A round table is made for a banquet. Your staff can serve one.', 'hint.s2_17k.table.3': 'Use the Wabbajack on the round table, then take the door.',
+  'hint.s2_17kb.grail.1': 'The greedy knight can’t fit into the cave. You can.', 'hint.s2_17kb.grail.2': 'The light at the back of the cave is the Grail.', 'hint.s2_17kb.grail.3': 'Enter the cave and take the Grail.',
   /* chapter 16: the great hall, the potions dungeon */
   'n.hat16': 'talking hat', 'n.bucket16': 'talking bucket', 'n.stool16': 'stool', 'n.owl16': 'owl', 'n.s16candles': 'floating candles', 'n.s16ceiling': 'starry ceiling',
   'n.s16tables': 'students', 'n.s16high': 'teachers’ table', 'n.s16window': 'stained-glass window', 'n.potions': 'potions master', 'n.student16': 'student', 'n.s16cauldron': 'cauldron',

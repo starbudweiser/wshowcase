@@ -108,8 +108,12 @@ FLUX, une à la fois (file calcul-lourd) : plusieurs jours de calcul, avec une p
   « RIVEBOIS » (applaudissements, feux d'artifice), puis cachot des potions (feu et braises, vapeur du chaudron, professeur
   en boucles LTX) : fleur de montagne bleue dans le chaudron (vapeur rose), fondue si on y met du fromage ; métamorphoses :
   fromages flottants, neige dans la salle, poule postale, chauve-souris, baguette-carotte. Retour dans la salle pour la fin.
+- Chapitre 17, version française (la Table ronde) jouable : salle aux torches et cheminée (braises), roi et deux
+  chevaliers en boucles LTX, banquet du Wabbajack sur la table ronde, chevalier lent brillant trois secondes (halo doré),
+  chevalier gourmand en jambon, dés en meules ; clairière de la grotte : épée dans le rocher changée en cuillère dans une
+  meule (mangée), Graal-seau lumineux au fond de la grotte, troc contre un fromage de Bretagne.
 - Objets de toute la saison dans la besace : Wabbajack, le Cri (repli générique `s2.shout.none` + onde de choc), les septims.
-- Personnages animés en boucles LTX pour les chapitres 11 à 16 (reprises quand le visage dérivait ou que le personnage tournait).
+- Personnages animés en boucles LTX pour les chapitres 11 à 17 (reprises quand le visage dérivait ou que le personnage tournait).
 ### Chaîne de production d'un chapitre (outils)
 1. Décor vide : `tools/gen_s2_decors.sh` (3 graines) → `tools/s2_assets.py decor` + `tools/s2_retro.py decor`.
 2. Personnages et objets : fiche validée détourée (`s2_assets.py sprite`), objets `tools/gen_s2_items.sh`.
@@ -122,7 +126,7 @@ FLUX, une à la fois (file calcul-lourd) : plusieurs jours de calcul, avec une p
   sprites des métamorphoses (poulet en caoutchouc à poulie, mammouth à trois têtes) ; voix de la réplique du narrateur
   sur la transition (`nar.s2up`) et des répliques écrites à la main (regards, biscuit) ; expressions du héros (8 visages,
   face et profils, en boucles de parole LTX par émotion).
-- Chapitres 17 à 28 sur la même chaîne.
+- Chapitre 17 version anglaise (Sacré Graal, en calcul), puis chapitres 18 à 28 sur la même chaîne.
 - Génie des indices en HD, prologue (fête de la S1 → Sheogorath), validation des décors et animations par Stéphan.
 - **Twin Peaks (22), petit homme en rouge** (validé par Stéphan) : ses 6 répliques `envers` ont leur voix retournée
   (FR/EN, livrées) ; le moteur les sous-titre toujours, en bas de l'écran façon télévision (`ENVERS` dans
