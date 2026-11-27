@@ -124,3 +124,4 @@ Elle ne s'active qu'avec `?lightfx` ; sans ce paramètre, rien n'est calculé.
   - Codixel réservé aux petits mouvements des secondaires ;
   - Dot et Anti-Slop écartés.
 - Pipeline de référence pour les futurs jeux : skill `jeu-point-click` et dossier modèle `/Volumes/SSD Editing/POINT AND CLICK WORKFLOW/` (`PIPELINE.md`, outils, modèles).
+- Après démonstration en rendu 2000 (sans couche / grain 480 / trame fine 960), Stéphan a choisi la **trame fine en rendu 2000** : la couche tourne dans les deux rendus, au pixel du rendu.
