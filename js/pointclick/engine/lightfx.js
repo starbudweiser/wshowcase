@@ -1,15 +1,16 @@
-/* Couche de lumière tramée façon PixelFX (essai du 27/11/2026, adoptée pour le rendu années 90 seulement), écrite pour le jeu.
-   Deux tampons à la résolution logique 480 × 270 :
+/* Couche de lumière tramée façon PixelFX (essai du 27/11/2026, adoptée le jour même), écrite pour le jeu.
+   Deux tampons, au pixel du rendu : 480 × 270 en rendu années 90, 960 × 540 en rendu 2000 (« trame fine », choisie par Stéphan) :
    - couleur (Uint32, pixels opaques jamais mélangés : les fondus passent par un tramage ordonné de Bayer 4 × 4) ;
    - lumière (Float32 RGB, additive), posée sur la scène en « lighter », avec des paliers tramés (rendu pixel, pas de dégradé lisse).
-   Les deux tampons sont agrandis sans lissage : pixels nets en rendu 2000 (canevas 960 × 540) comme en rendu 90 (480 × 270).
+   Les deux tampons sont posés sans lissage : chaque point de trame tombe sur un pixel du canevas, dans les deux rendus.
    Effets d'une scène : data/lightfx.js (torches, objet clé). Effet à phases : préparation (les pixels convergent, la lueur monte),
    action (éclat), retombée (braises qui tombent, lueur qui s'éteint en trame).
-   Activation : scènes de la saison 2 en rendu années 90 (g.s2low) qui ont des réglages ; en rendu 2000, la lueur lisse de fx2.js
-   reste seule (la trame en damier jurerait sur les décors peints). ?nolightfx coupe la couche, ?lightfx la force en rendu 2000 (essais). */
+   Activation : scènes qui ont des réglages, dans les deux rendus. ?nolightfx coupe la couche (essais) ; ?lightfx=gros garde le grain
+   480 en rendu 2000 (comparaison). */
 import { LIGHTFX } from '../data/lightfx.js';
 
-const W = 480, H = 270;
+const LW = 480, LH = 270;
+let S = 1, W = LW, H = LH;   /* S = 2 : trame fine du rendu 2000 (tampons 960 × 540) */
 const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map(v => (v + 0.5) / 16);
 const dith = (x, y) => BAYER[(y & 3) * 4 + (x & 3)];
 const rgb = hex => { const n = parseInt(hex.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
@@ -17,32 +18,34 @@ const pack = ([r, g, b]) => (255 << 24) | (b << 16) | (g << 8) | r;   /* ImageDa
 
 let st = null;
 function state() {
-  if (st) return st;
+  if (st && st.S === S) return st;
   const mk = () => { const c = document.createElement('canvas'); c.width = W; c.height = H; return c; };
   const cc = mk(), lc = mk(), cx = cc.getContext('2d'), lx = lc.getContext('2d');
   const cImg = cx.createImageData(W, H), lImg = lx.createImageData(W, H);
-  st = { cc, lc, cx, lx, cImg, lImg, col: new Uint32Array(cImg.data.buffer), light: new Float32Array(W * H * 3), parts: [], seed: 1, key: null, sceneId: null };
+  st = { S, cc, lc, cx, lx, cImg, lImg, col: new Uint32Array(cImg.data.buffer), light: new Float32Array(W * H * 3), parts: [], seed: 1, key: null, sceneId: null };
   return st;
 }
 const rnd = () => ((st.seed = (st.seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
 
-const Q = typeof location !== 'undefined' ? location.search : '', FORCE = /[?&]lightfx\b/.test(Q), OFF = /[?&]nolightfx\b/.test(Q);
-export const lightOn = g => !OFF && (g.lightfx ?? (g.s2low || FORCE));
+const Q = typeof location !== 'undefined' ? location.search : '', OFF = /[?&]nolightfx\b/.test(Q), COARSE = /[?&]lightfx=gros\b/.test(Q);
+export const lightOn = g => !OFF && (g.lightfx ?? true);
 
 /* ───── tampon couleur ───── */
-function put(x, y, c) { x |= 0; y |= 0; if (x >= 0 && y >= 0 && x < W && y < H) st.col[y * W + x] = c; }
+function put(x, y, c) { x = x * S | 0; y = y * S | 0; if (x >= 0 && y >= 0 && x < W && y < H) st.col[y * W + x] = c; }
 /* point « transparent » a (0..1) : posé seulement là où la trame le permet */
-function dot(x, y, c, a) { x |= 0; y |= 0; if (a > dith(x, y)) put(x, y, c); }
+function dot(x, y, c, a) { const X = x * S | 0, Y = y * S | 0; if (a > dith(X, Y) && X >= 0 && Y >= 0 && X < W && Y < H) st.col[Y * W + X] = c; }
 
 /* ───── tampon lumière ───── */
-function add(x, y, [r, g, b], k) { x |= 0; y |= 0; if (x < 0 || y < 0 || x >= W || y >= H) return; const i = (y * W + x) * 3, L = st.light; L[i] += r * k; L[i + 1] += g * k; L[i + 2] += b * k; }
+function add(x, y, [r, g, b], k) { x = x * S | 0; y = y * S | 0; addPx(x, y, r, g, b, k); }
+function addPx(x, y, r, g, b, k) { if (x < 0 || y < 0 || x >= W || y >= H) return; const i = (y * W + x) * 3, L = st.light; L[i] += r * k; L[i + 1] += g * k; L[i + 2] += b * k; }
 /* lueur ronde : chute en paliers (4 niveaux) tramés entre eux */
 function glow(cx, cy, r, col, k) {
+  cx *= S; cy *= S; r *= S;
   const c = rgb(col), x0 = Math.max(0, cx - r | 0), x1 = Math.min(W - 1, cx + r | 0), y0 = Math.max(0, cy - r | 0), y1 = Math.min(H - 1, cy + r | 0);
   for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
     const d = Math.hypot(x - cx, y - cy) / r; if (d >= 1) continue;
     const f = (1 - d) * (1 - d) * 4, lv = Math.floor(f + dith(x, y)) / 4;   /* palier tramé */
-    if (lv > 0) add(x, y, c, k * lv);
+    if (lv > 0) addPx(x, y, c[0], c[1], c[2], k * lv);
   }
 }
 
@@ -84,6 +87,7 @@ function stepParts(dt) {
 export function drawLightFx(g, c, dt) {
   if (!lightOn(g) || !g.scene) return;
   const conf = LIGHTFX[g.scene.id]; if (!conf) return;
+  S = !(g.lightfxCoarse ?? COARSE) && g.scene.hd && !g.s2low ? 2 : 1; W = LW * S; H = LH * S;
   state(); if (st.sceneId !== g.scene.id) { st.sceneId = g.scene.id; st.parts = []; }
   st.col.fill(0); st.light.fill(0);
   const t = g.now;
@@ -95,7 +99,7 @@ export function drawLightFx(g, c, dt) {
   for (let i = 0, j = 0; i < L.length; i += 3, j += 4) { D[j] = Math.min(255, L[i]); D[j + 1] = Math.min(255, L[i + 1]); D[j + 2] = Math.min(255, L[i + 2]); D[j + 3] = 255; }
   st.cx.putImageData(st.cImg, 0, 0); st.lx.putImageData(st.lImg, 0, 0);
   c.save(); c.imageSmoothingEnabled = false;
-  c.globalCompositeOperation = 'lighter'; c.globalAlpha = conf.lightK ?? 1; c.drawImage(st.lc, 0, 0, W, H);
-  c.globalCompositeOperation = 'source-over'; c.globalAlpha = 1; c.drawImage(st.cc, 0, 0, W, H);
+  c.globalCompositeOperation = 'lighter'; c.globalAlpha = conf.lightK ?? 1; c.drawImage(st.lc, 0, 0, LW, LH);
+  c.globalCompositeOperation = 'source-over'; c.globalAlpha = 1; c.drawImage(st.cc, 0, 0, LW, LH);
   c.restore();
 }

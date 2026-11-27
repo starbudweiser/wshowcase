@@ -1,4 +1,4 @@
-/* Réglages de la couche de lumière tramée (engine/lightfx.js, rendu années 90), scène par scène. Pour l'instant : s2_11, le quai des
+/* Réglages de la couche de lumière tramée (engine/lightfx.js : rendu 90 au grain 480, rendu 2000 en trame fine 960), scène par scène. Pour l'instant : s2_11, le quai des
    pirates (nuit). Torches : lueur (et flamme en pixels, sauf flame: false) des lanternes et fenêtres de la taverne (mêmes points que scene.fx.lights).
    `key` (objet clé qui s'illumine : préparation, éclat, retombée) est un indice visuel fort : désactivé, à réserver au génie ou à un
    mode « aide » ; exemple gardé en commentaire. */
