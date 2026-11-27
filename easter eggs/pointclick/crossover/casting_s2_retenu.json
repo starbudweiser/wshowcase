@@ -236,28 +236,28 @@
  {
   "id": "girl",
   "name": "Fille aux pouvoirs",
-  "voice_id": "clone-a5b71bdb",
-  "voice_name": "Whoopie Goldberg",
+  "voice_id": "clone-220eaf7c",
+  "voice_name": "Eleven",
   "style": "",
-  "propose": "child-7",
-  "change": true
+  "propose": "clone-220eaf7c",
+  "change": false
  },
  {
   "id": "kid",
   "name": "Garçon au talkie-walkie",
-  "voice_id": "child-38",
-  "voice_name": "Leo 39",
+  "voice_id": "clone-f9c99d1c",
+  "voice_name": "Mike",
   "style": "",
-  "propose": "child-38",
+  "propose": "clone-f9c99d1c",
   "change": false
  },
  {
   "id": "flower",
   "name": "Créature à tête de fleur",
-  "voice_id": "creature-demon-3",
-  "voice_name": "Demon 4",
+  "voice_id": "creature-gargoyle-3",
+  "voice_name": "Gargoyle 4",
   "style": "",
-  "propose": "creature-demon-3",
+  "propose": "creature-gargoyle-3",
   "change": false
  },
  {
@@ -317,28 +317,28 @@
  {
   "id": "agentm",
   "name": "L’agent",
-  "voice_id": "man-mature-medium-0",
-  "voice_name": "Felix 71",
+  "voice_id": "clone-c44d0ba3",
+  "voice_name": "Agent Smith",
   "style": "",
-  "propose": "man-mature-medium-0",
+  "propose": "clone-c44d0ba3",
   "change": false
  },
  {
   "id": "spoonkid",
   "name": "Enfant à la cuillère",
-  "voice_id": "child-34",
-  "voice_name": "Tom 35",
+  "voice_id": "child-53",
+  "voice_name": "Nina 54",
   "style": "",
-  "propose": "child-34",
+  "propose": "child-53",
   "change": false
  },
  {
   "id": "wizard",
   "name": "Magicien gris",
-  "voice_id": "man-mature-low-6",
-  "voice_name": "Noah 67",
+  "voice_id": "clone-9a720d5f",
+  "voice_name": "Gandalf",
   "style": "",
-  "propose": "man-mature-low-6",
+  "propose": "clone-9a720d5f",
   "change": false
  },
  {
@@ -353,10 +353,10 @@
  {
   "id": "halfling",
   "name": "Petit être aux pieds poilus",
-  "voice_id": "man-young-high-1",
-  "voice_name": "Gaspard 22",
+  "voice_id": "clone-dcffd33a",
+  "voice_name": "Bilbon Sacquet",
   "style": "",
-  "propose": "man-young-high-1",
+  "propose": "clone-dcffd33a",
   "change": false
  },
  {
@@ -371,10 +371,73 @@
  {
   "id": "turret",
   "name": "La tourelle",
-  "voice_id": "creature-robot-2",
-  "voice_name": "Robot 3",
+  "voice_id": "creature-robot-0",
+  "voice_name": "Robot 1",
   "style": "",
-  "propose": "creature-robot-2",
+  "propose": "creature-robot-0",
+  "change": false
+ },
+ {
+  "id": "charmer",
+  "name": "L’acteur charmeur",
+  "voice_id": "clone-72fd9962",
+  "voice_name": "Joey",
+  "style": "",
+  "propose": "clone-72fd9962",
+  "change": false
+ },
+ {
+  "id": "joker",
+  "name": "Le blagueur",
+  "voice_id": "clone-46ccca0a",
+  "voice_name": "Chandler (Friends)",
+  "style": "",
+  "propose": "clone-46ccca0a",
+  "change": false
+ },
+ {
+  "id": "nervpaleo",
+  "name": "Le paléontologue nerveux",
+  "voice_id": "clone-9d09bce5",
+  "voice_name": "Ross",
+  "style": "",
+  "propose": "clone-9d09bce5",
+  "change": false
+ },
+ {
+  "id": "singer",
+  "name": "La chanteuse à la guitare",
+  "voice_id": "clone-1aaa4b7a",
+  "voice_name": "Phoebe",
+  "style": "",
+  "propose": "clone-1aaa4b7a",
+  "change": false
+ },
+ {
+  "id": "madsci",
+  "name": "Le savant fou",
+  "voice_id": "clone-75c6df39",
+  "voice_name": "Rick",
+  "style": "",
+  "propose": "clone-75c6df39",
+  "change": false
+ },
+ {
+  "id": "grandson",
+  "name": "Le petit-fils anxieux",
+  "voice_id": "clone-f3cd50a2",
+  "voice_name": "Morty",
+  "style": "",
+  "propose": "clone-f3cd50a2",
+  "change": false
+ },
+ {
+  "id": "bluegenie",
+  "name": "La créature bleue serviable",
+  "voice_id": "creature-ghost-5",
+  "voice_name": "Ghost 6",
+  "style": "",
+  "propose": "creature-ghost-5",
   "change": false
  }
 ]

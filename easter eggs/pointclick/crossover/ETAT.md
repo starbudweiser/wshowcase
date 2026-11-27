@@ -63,6 +63,14 @@ Prototypes de rendu : https://claude.ai/artifact/Hbie6aV5LJGNajt7JZMpVR (`tools/
     (elle cachait les bottes du héros), tasses sur une desserte contre le mur.
   - Règle de Stéphan : les personnages seront animés, donc jamais un membre caché par un objet ou un autre personnage,
     ni sur les fiches ni sur les scènes.
+- Casting complété par Stéphan (27/11) : les 7 personnages de Friends et Rick et Morty, plus 8 voix changées
+  (Stranger Things : fille aux pouvoirs, garçon au talkie-walkie, créature à tête de fleur ; Matrix : l'agent, l'enfant
+  à la cuillère ; Seigneur des Anneaux : magicien, petit être ; Portal : tourelle). `casting_s2_retenu.json` à jour ;
+  leurs 100 anciennes prises mises de côté dans `work/crossover/voices_ancien_casting/`, toutes regénérées.
+- Dialogues complets des chapitres 26 (60 répliques) et 27 (50 répliques), FR/EN, `crossover/dialogues/ch26.json` et
+  `ch27.json` ; rots du savant écrits « beurp » / « urrp ». Le chiffre des mondes restants suit (26 : deux, 27 : un).
+  Voix générées (`gen_voices_s2.py 26` puis `27`), jeu expressif (4 prises) pour le paléontologue nerveux, le savant
+  et la créature bleue.
 
 ## Exigence de mise en scène (Stéphan, 24/11/2026, plus forte encore qu'en saison 1)
 « On va vers le mieux » (évolution années 90 → 2000) : les bugs restent une parodie dans les dialogues, jamais dans le

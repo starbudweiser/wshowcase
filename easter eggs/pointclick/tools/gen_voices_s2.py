@@ -23,7 +23,7 @@ only = set(sys.argv[3].split(',')) if len(sys.argv) > 3 else None
 TAKES, GOOD = 3, float(os.environ.get('GOOD', 0.86))
 NORM = 'loudnorm=I=-18:TP=-2,alimiter=limit=0.7:level=false'  # même niveau que les voix de la saison 1 (-18 LUFS par réplique)
 TONE = {'hero': 'casual, upbeat, wisecracking, cheerfully unimpressed'}   # ton de base du héros (26/11) : sarcastique, positivement blasé
-EXPR, TAKES_EXPR = {'arthur', 'paleo', 'dexter'}, 4   # jeu plus expressif (25/11) : 4 prises, on garde la plus vivante parmi les bien dites
+EXPR, TAKES_EXPR = {'arthur', 'paleo', 'dexter', 'nervpaleo', 'madsci', 'bluegenie'}, 4   # jeu plus expressif (25/11) : 4 prises, on garde la plus vivante parmi les bien dites
 def vivacite(wav):                 # variation de hauteur (demi-tons) + 0,3 × variation d'énergie (dB) : plus c'est haut, moins c'est linéaire
     import numpy as np
     x = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', wav, '-f', 's16le', '-ac', '1', '-ar', '16000', '-'], capture_output=True).stdout, np.int16) / 32768.0
