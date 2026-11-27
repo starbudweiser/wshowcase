@@ -55,7 +55,7 @@ async function reveal(g, c) {
 }
 
 export const BLINDS = {
-  rue: { id: 'blind_pot', scene: 'rue', spr: 'blind.pot', lit: 'lit.pot', gag: 'pot', sing: 'blind.sing.pot', x: 178, y: 248, at: [202, 254], exit: [150, 330] },   /* à gauche, hors de la route que prend la charrette pour repartir vers le pont */
+  rue: { id: 'blind_pot', scene: 'rue', spr: 'blind.pot', lit: 'lit.pot', gag: 'pot', sing: 'blind.sing.pot', x: 194, y: 248, at: [218, 254], exit: [150, 330] },   /* à gauche, hors de la route que prend la charrette pour repartir vers le pont */
   mill: { id: 'blind_sack', scene: 'mill', spr: 'blind.sack', lit: 'lit.sack', gag: 'sack', sing: 'blind.sing.sack', x: 318, y: 258, at: [296, 260], exit: [520, 300] },
   market: { id: 'blind_cabbage', scene: 'market', spr: 'blind.cabbage', lit: 'lit.cabbage', gag: 'cabbage', sing: 'blind.sing.cabbage', x: 402, y: 242, at: [378, 246], exit: [470, 330] },
   gate: { id: 'blind_helmet', scene: 'gate', spr: 'blind.helmet', lit: 'lit.helmet', gag: 'helmet', sing: 'blind.sing.helmet', x: 112, y: 250, at: [138, 254], exit: [-30, 300] },

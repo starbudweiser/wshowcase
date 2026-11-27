@@ -330,7 +330,7 @@ export class Game {
     if (n && (this.bubbles.length || this.locked || this.hiBusy())) { this.hushNarr(); return; }
     if (n) { const playing = n.au && !n.au.ended && !n.au.error && !n.au.paused; if (this.now > n.end && !playing) { n.b.remove(); this.narr = null; this.lastNarr = this.now; } return; }
     if (!this.started || this.titleEl || this.locked || this.coinOpen() || this.bubbles.length || this.barks.length || this.hiBusy() || this.lowBusy()) return;
-    if (!this.nq.length && this.now - this.lastAct > 45) { this.lastAct = this.now; const k = (this.scene && this.scene.idleKey && this.scene.idleKey(this)) || 'nar.' + this.st.scene + '.idle'; this.narrate(this.idleN++ % 3 === 2 || !this.T.has(k) ? 'nar.idle' : k); }
+    if (!this.nq.length && this.now - this.lastAct > 45 && this.scene && !this.cineEnd) {   /* jamais de remarque d'attente entre deux cinématiques (elle serait coupée aussitôt) */ this.lastAct = this.now; const k = (this.scene && this.scene.idleKey && this.scene.idleKey(this)) || 'nar.' + this.st.scene + '.idle'; this.narrate(this.idleN++ % 3 === 2 || !this.T.has(k) ? 'nar.idle' : k); }
     const q = this.nq[0]; if (!q || this.now < q.t || (!q.force && this.now - this.lastNarr < 8)) return; this.nq.shift();
     const text = this.T(q.key), idx = this.T.idx, b = el('div', 'pc-b pc-narr', text); b.style.color = COLORS.narr; this.ov.append(b); this.placeBubble(b, W / 2, 46);
     this.narr = { b, au: this.voicePlay(q.key, idx), end: this.now + Math.max(3, text.length * 0.065) };
@@ -345,7 +345,7 @@ export class Game {
     /* intro « Quinze ans plus tard » (intro.js) : aucune scène chargée pendant qu'elle se joue */
     this.scene = null; this.bg = null; this.ents = []; this.hero = null; this.hot = []; this.amb = null; this.night = null; this.ambId = null; snd.ambStop(); this.clearBarks(); this.hushNarr(); this.renderPanel(); this.renderLine();
     const done = await playIntro(this);
-    if (!this.alive) return;
+    if (!this.alive) return; this.lastAct = this.now;   /* l'intro n'est pas de l'inactivité du joueur */
     const go = this.goScene('rue', { intro: done ? 'cart' : true }); this.fade(0, 900); await go;
   }
   /* passe l'intro : plans dessinés (intro.js) ou arrivée de la charrette dans la rue (rue.js) */
@@ -385,7 +385,7 @@ export class Game {
     if (sc.enter) await sc.enter(this, how);
     this.save();
     this.lastAct = this.now; if (how.restored) this.narrate('nar.back', { delay: 1.5, force: true });
-    if (how.intro && sc.intro) this.run(async () => { await this.cut(() => sc.intro(this, how)); this.narrate('nar.' + id + '.enter', { force: true, delay: 1.2 }); });
+    if (how.intro && sc.intro) this.run(async () => { await this.cut(() => sc.intro(this, how)); this.lastAct = this.now; this.narrate('nar.' + id + '.enter', { force: true, delay: 1.2 }); });
   }
 
   /* ───────── API pour les scènes ───────── */
