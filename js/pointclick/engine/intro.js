@@ -90,7 +90,7 @@ export class Intro {
       const y = -Math.round(ease(clamp((t - 2.2) / 6.2, 0, 1)) * dh);
       if (bg) c.drawImage(bg, 0, y);
       const dt = (t - 0.6) / 6.5;
-      if (dt > 0 && dt < 1) { const im = D[Math.floor(t * 7) % 4]; if (im) { const k = 0.55, x = -40 + dt * 560, yy = 40 + Math.sin(dt * 5) * 6 + y * 0.6; c.save(); c.translate(Math.round(x), Math.round(yy)); c.drawImage(im, -im.width * k / 2, -im.height * k / 2, im.width * k, im.height * k); c.restore(); } }
+      if (dt > 0 && dt < 1) { const im = D[Math.floor(t * 7) % 4]; if (im) { const k = 0.55, x = -40 + dt * 560, yy = 40 + Math.sin(dt * 5) * 6 + y * 0.6; c.save(); c.translate(Math.round(x), Math.round(yy)); c.scale(-1, 1); /* vole vers la droite, tête en avant (l'image regarde à gauche) */ c.drawImage(im, -im.width * k / 2, -im.height * k / 2, im.width * k, im.height * k); c.restore(); } }
       const ct = t - 4.6; if (ct > 0 && bg) { const x = 30 + ct * 24; this.drawCart(c, x, y + 457 - Math.max(0, x - 200) * 0.05, 0.16, t); }   /* sur la route du bas du décor */
     });
     await g.fade(0, 1200);

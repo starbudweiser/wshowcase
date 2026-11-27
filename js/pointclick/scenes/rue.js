@@ -49,7 +49,7 @@ export default {
 
   async intro(g, how) {
     const hero = g.hero; if (how && how.intro === 'cart') await this.cartArrival(g);
-    await g.walkTo(196, 252); hero.front = true;
+    await g.walkTo(240, 262); hero.front = true;
     await g.say('hero', 's.intro1'); await g.say('hero', 's.intro2'); await g.say('hero', 's.intro3'); await g.say('hero', 's.intro4'); hero.front = false;
   },
 
@@ -101,8 +101,11 @@ export default {
       await go(545, 177, 26); drop(); return;
     }
     const v = sp => sp * g.persp(cart.y);   /* vitesse à l'échelle : plus lente au fond */
-    if (hen) { g.sfx('cluck'); hen.goal = [236, 258, 70]; }
-    if (guard) guard.goal = [410, 234, 40];   /* il s'écarte franchement de la route du pont */
+    /* la poule détale à gauche, hors de la route, et le garde s'écarte franchement, AVANT que la charrette ne reparte : la caisse ne
+       traverse ni l'une ni l'autre (le villageois aveugle se tient déjà à gauche de la route, blind.js) */
+    if (hen) { g.sfx('cluck'); hen.goal = [214, 238, 95]; }
+    if (guard) guard.goal = [410, 234, 40];
+    await g.wait(550); if (!on()) return;
     await go(318, 244, v(50)); if (!on()) return;
     await go(332, 220, v(50)); if (!on()) return;
     await go(342, 202, v(50)); if (!on()) return;

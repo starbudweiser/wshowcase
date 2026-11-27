@@ -28,6 +28,11 @@ Object.assign(SPR, { 'wk.boulder': 'wk_boulder', 'wk.ghost': 'wk_ghost_a', 'wk.g
   'wk.owl': 'wk_owl_a', 'wk.owl.b': 'wk_owl_b', 'wk.owl.f': 'wk_owl_f', 'wk.troll': 'wk_troll_a', 'wk.troll.b': 'wk_troll_b', 'wk.horsearmor': 'wk_horsearmor' });
 const NEWB = ['cabbage', 'helmet', 'basket', 'boot', 'mushroom', 'banner', 'partyhat'];
 NEWB.forEach(k => { SPR['blind.' + k + '2'] = 'blind_' + k + '2'; SPR['lit.' + k + '2'] = 'lit_' + k + '2'; });
+/* sprites dont le profil d'origine regarde vers la GAUCHE (tous les autres regardent à droite) : le moteur les retourne d'après
+   leur sens de marche réel à l'écran, pour qu'aucun personnage n'avance à reculons (27/11/2026) */
+export const FACE_L = new Set(['dragon.up', 'dragon.mid1', 'dragon.down', 'dragon.mid2',
+  ...['frost', 'ember', 'moss', 'gold'].flatMap(k => ['up', 'mid1', 'down', 'mid2'].map(q => k + '.' + q)),
+  'wk.leodagan', 'wk.merlin', 'wk.racer', 'wk.racer.b']);
 export const ANIM = {
   'merchant': { idle: ['merchant', 'merchant.idle2'], talk: ['merchant.talk1', 'merchant.talk2', 'merchant'], fps: { idle: 0.7, talk: 6 } },
   'guard': { idle: ['guard', 'guard.idle2'], talk: ['guard', 'guard.talk'], walk: ['guard.walkA', 'guard', 'guard.walkB', 'guard'], fps: { idle: 0.5, talk: 6, walk: 5 } },

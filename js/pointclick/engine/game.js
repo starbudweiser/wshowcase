@@ -24,7 +24,7 @@ import * as SH from '../data/sheets.js';
 import * as S2 from '../data/sheets_s2.js';
 import { CHAPTERS2 } from '../scenes/index.js';
 import { ENVERS } from '../lang/s2_meta.js';
-const { SPR, ITEMS } = SH, ANIM = SH.ANIM || {}, HERO = SH.HERO || null, SLEEP = SH.SLEEP || {};
+const { SPR, ITEMS } = SH, ANIM = SH.ANIM || {}, HERO = SH.HERO || null, SLEEP = SH.SLEEP || {}, FACE_L = SH.FACE_L || new Set();
 Object.assign(ITEMS, S2.ITEMS);
 
 export const W = 480, H = 270;
@@ -508,7 +508,7 @@ export class Game {
   async fade(to, ms = 600) { const from = this.fx.fade ? this.fx.fade.a : (to ? 0 : 1); this.fx.fade = { from, to, t0: this.now, ms: ms / 1000, a: from }; await this.until(() => !this.fx.fade || this.fx.fade.a === to); }
   /* objet lancé : de (x0,y0) vers (x1,y1) avec un arc */
   async fly(sprName, [x0, y0], [x1, y1], ms = 500, arc = 30, spin = 0, scale = 1) {
-    const e = { id: 'fly', spr: sprName, x: x0, y: y0, scale, visible: true, fly: true, rot: 0, noHot: true }; this.ents.push(e);
+    const e = { id: 'fly', spr: sprName, x: x0, y: y0, scale, visible: true, fly: true, rot: 0, noHot: true, flip: FACE_L.has(sprName) && x1 > x0 }; this.ents.push(e);   /* un dragon vole tête en avant */
     const t0 = this.now, d = ms / 1000;
     await this.until(() => { const t = Math.min(1, (this.now - t0) / d); e.x = x0 + (x1 - x0) * t; e.y = y0 + (y1 - y0) * t - Math.sin(t * Math.PI) * arc; e.rot = spin * t; return t >= 1; });
     this.ents = this.ents.filter(x => x !== e); this.chk();
@@ -735,7 +735,11 @@ export class Game {
         const st = sp * dt * (e.rawSpeed ? 1 : this.persp(e.y) / e.goalS0);
         if (d <= st) { e.x = gx; e.y = gy; e.goal = null; e.goalS0 = null; } else {
           e.x += dx / d * st; e.y += dy / d * st; e.walkD = (e.walkD || 0) + st;
-          if (ANIM[e.spr] && ANIM[e.spr].walk && d > 0.5) { e.view = e.fixView || this.viewOf(dx, dy); e.vr = Math.abs(dy) / Math.max(0.01, Math.abs(dx)); if (Math.abs(dx) > 0.3 && e.view !== 'f' && e.view !== 'b') e.flip = dx < 0; }
+          const walker = ANIM[e.spr] && ANIM[e.spr].walk;
+          if (walker && d > 0.5) { e.view = e.fixView || this.viewOf(dx, dy); e.vr = Math.abs(dy) / Math.max(0.01, Math.abs(dx)); }
+          /* il regarde où il va : profil retourné selon le sens de marche et le côté où regarde son image d'origine (FACE_L) ;
+             saison 1 : aussi les personnages à une seule image ; saison 2 : vues gauche et droite dessinées, pas de miroir */
+          if ((walker || !this.scene.hd) && !e.noTurn && d > 0.5 && Math.abs(dx) > 0.3 && e.view !== 'f' && e.view !== 'b') e.flip = (dx < 0) !== FACE_L.has(e.spr);
         }
       } else if (e.goalS0 != null) e.goalS0 = null;
     });

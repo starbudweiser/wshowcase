@@ -1,6 +1,7 @@
 /* Clins d'œil aléatoires : petites scènes animées (personnages qui traversent, poursuites, apparitions) avec dialogues doublés, puis commentaire du narrateur.
    Une scénette = des acteurs (entités temporaires) qui suivent des points de passage [temps, x, y, pose?], des répliques à date fixe, des bruitages. */
 import { snd } from './sound.js';
+import { FACE_L } from '../data/sheets.js';
 const store = { get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} } };
 
 /* points de passage : [t, x, y] ; `pose` : [t, nom de sprite] ; `bob` : rebond (saut) ; `scale` : échelle absolue ; `z` : profondeur */
@@ -87,7 +88,7 @@ function run(g, w, dt) {
     const wp = c.wp; let x = -999, y = wp[0][2], moving = false;
     if (t >= wp[0][0] && t <= wp[wp.length - 1][0]) for (let i = 0; i < wp.length - 1; i++) {
       const [t0, x0, y0] = wp[i], [t1, x1, y1] = wp[i + 1];
-      if (t >= t0 && t <= t1) { const k = t1 > t0 ? (t - t0) / (t1 - t0) : 1, ax = at(x0, r.hero), bx = at(x1, r.hero); x = ax + (bx - ax) * k; y = y0 + (y1 - y0) * k; moving = Math.abs(bx - ax) > 0.5; if (moving) e.flip = (c.dir ?? 1) * (bx - ax) < 0 ? c.dir === -1 ? false : true : c.dir === -1; break; }
+      if (t >= t0 && t <= t1) { const k = t1 > t0 ? (t - t0) / (t1 - t0) : 1, ax = at(x0, r.hero), bx = at(x1, r.hero); x = ax + (bx - ax) * k; y = y0 + (y1 - y0) * k; moving = Math.abs(bx - ax) > 0.5; break; }
     }
     if (r.lane && !c.fly && x > -900) {
       const L = r.lane, u = (x + 60) / 620, p = lanePt(L, u); x = p[0]; y = p[1];
@@ -95,6 +96,9 @@ function run(g, w, dt) {
       const fa = onScreen(L[0]) ? Math.min(1, u / 0.07) : 1, fb = onScreen(L[L.length - 1]) ? Math.min(1, (1 - u) / 0.07) : 1;
       e.alpha = 0.92 * Math.max(0, Math.min(fa, fb)); e.z = 0;
     }
+    /* il regarde où il va : sens réel à l'écran (après la voie du décor, qui peut aller de droite à gauche), et côté où regarde
+       son image d'origine (FACE_L : Léodagan, Merlin, le ptérosaure regardent à gauche) */
+    if (moving && x > -900 && e.x > -900 && Math.abs(x - e.x) > 0.02) e.flip = (x < e.x) !== FACE_L.has(e.spr);
     e.x = x; e.y = y; e.animState = moving ? 'walk' : 'idle'; e.visible = x > -900;
     if (c.hop) e.bob = Math.abs(Math.sin(t * 6)) * (moving ? c.hop : 3); else if (c.bob) e.bob = Math.sin(t * 3) * c.bob; else e.bob = 0;
     if (c.spin) e.rot = (t * 4.5) % (Math.PI * 2);
