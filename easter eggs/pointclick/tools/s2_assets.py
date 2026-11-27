@@ -1,6 +1,6 @@
 #!/usr/bin/env python3 -I
 """Saison 2 : prépare les images du jeu (pleine couleur, sans palette, densité 2 = 960 × 540).
-  sprite <nom> <source.png|jpg> <hauteur_px> [--flip]  fond magenta -> PNG détouré (bord doux), assets/pointclick/s2/spr/<nom>.webp
+  sprite <nom> <source.png|jpg> <hauteur_px> [--flip] [--despill[=all]]  fond magenta -> détouré (bord doux), assets/pointclick/s2/spr/<nom>.webp
   decor  <nom> <source>                                 -> 960 × 540 WebP, assets/pointclick/s2/<nom>.webp
   card   <nom> <source>                                 -> vignette d'ouverture 960 × 540 WebP, assets/pointclick/s2/cards/<nom>.webp
 Python de FLUX (PIL + numpy) : "~/Modèles IA/FLUX3-Klein/.venv/bin/python" tools/s2_assets.py …"""
@@ -37,7 +37,14 @@ def key(im):
     # dépollution du magenta sur les bords doux : on retire la part de fond
     m = (al > 0) & (al < 1); k = al[m][:, None]
     rgb[m] = np.clip((rgb[m] - (1 - k) * bg) / np.maximum(k, 0.25), 0, 255)
-    out = np.dstack([rgb, al * 255]).astype(np.uint8)
+    if DESPILL:   # frange rose : excès de rouge et de bleu sur le vert retiré (bande du bord, ou toute la silhouette avec --despill=all)
+        from scipy.ndimage import binary_erosion
+        solid = al > 0; zone = solid if DESPILL == 'all' else solid & ~binary_erosion(solid, iterations=4)
+        mg = np.minimum(rgb[..., 0], rgb[..., 2]) - rgb[..., 1]; fix = zone & (mg > (4 if DESPILL == 'all' else 12))
+        rgb[fix, 0] -= mg[fix] * 0.85; rgb[fix, 2] -= mg[fix] * 0.85; al[zone & (mg > 60)] *= 0.5
+        edge = solid & ~binary_erosion(solid, iterations=5); lum = rgb @ np.array([0.3, 0.59, 0.11]); dk = edge & (lum < 110)   # mèches sombres : rouge résiduel du fond plafonné
+        rgb[dk, 0] = np.minimum(rgb[dk, 0], np.maximum(rgb[dk, 1], rgb[dk, 2]) * 1.15 + 6)
+    out = np.dstack([np.clip(rgb, 0, 255), al * 255]).astype(np.uint8)
     return Image.fromarray(out, 'RGBA')
 
 
@@ -57,7 +64,8 @@ def decor(name, src, sub=''):
     p = os.path.join(d, name + '.webp'); im.save(p, quality=86, method=6); print(name, os.path.getsize(p) // 1024, 'Ko')
 
 
-a = sys.argv[1:]
+DESPILL = next((x.split('=', 1)[1] if '=' in x else 'band' for x in sys.argv if x.startswith('--despill')), None)
+a = [x for x in sys.argv[1:] if not x.startswith('--despill')]
 if a[0] == 'sprite': sprite(a[1], a[2], int(a[3]), '--flip' in a)
 elif a[0] == 'decor': decor(a[1], a[2])
 elif a[0] == 'card': decor(a[1], a[2], 'cards')

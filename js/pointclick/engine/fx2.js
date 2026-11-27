@@ -18,11 +18,13 @@ function halo(col, soft) {
   x.fillStyle = gr; x.fillRect(0, 0, 64, 64); cache.set(key, c); return c;
 }
 /* bouffée de fumée pré-rendue (dégradé gris irrégulier) */
-let smokeImg = null;
-function smoke() {
-  if (smokeImg) return smokeImg; const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d');
-  for (let i = 0; i < 7; i++) { const cx = R(22, 42), cy = R(22, 42), rr = R(12, 22), gr = x.createRadialGradient(cx, cy, 0, cx, cy, rr); gr.addColorStop(0, 'rgba(236,230,246,.5)'); gr.addColorStop(1, 'rgba(236,230,246,0)'); x.fillStyle = gr; x.fillRect(0, 0, 64, 64); }
-  return (smokeImg = c);
+
+const smokeCache = {};
+function smoke(tint) {   /* volute de fumée ; tint (#rrggbb) : vapeur colorée (potion) */
+  const k = tint || '_'; if (smokeCache[k]) return smokeCache[k]; const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d');
+  const rgb = tint ? [1, 3, 5].map(i => parseInt(tint.slice(i, i + 2), 16)).join(',') : '236,230,246';
+  for (let i = 0; i < 7; i++) { const cx = R(22, 42), cy = R(22, 42), rr = R(12, 22), gr = x.createRadialGradient(cx, cy, 0, cx, cy, rr); gr.addColorStop(0, `rgba(${rgb},.5)`); gr.addColorStop(1, `rgba(${rgb},0)`); x.fillStyle = gr; x.fillRect(0, 0, 64, 64); }
+  return (smokeCache[k] = c);
 }
 
 const WAB = ['#c77dff', '#ffd166', '#7dffb6', '#ff8fd8', '#9ad8ff'];
@@ -134,6 +136,9 @@ function emitAmbient(g, dt) {
   if (F && F.storm && g.now > (F._next || (F._next = g.now + 4))) {   /* orage : éclair lointain au hasard, flash du ciel, grondement */
     F._next = g.now + R(6, 14); g.fx.sky = { t0: g.now, a: R(0.35, 0.6) }; setTimeout(() => g.sfx('thunder', true), R(300, 1400));
   }
+  /* braises qui montent d'un feu, vapeur d'un chaudron : sources fixes du décor (taux par seconde) */
+  for (const B of (F && F.embers) || []) { B._a = (B._a || 0) + dt * (B.rate || 6); while (B._a >= 1) { B._a--; P.push({ k: 'spark', x: R(B.x - (B.w || 8), B.x + (B.w || 8)), y: B.y, vx: R(-4, 4), vy: R(-34, -16), g: -6, drag: 0.4, t: 0, life: R(0.7, 1.5), s: R(0.5, 1), col: B.col || '#ffb050', sw: R(-2.5, 2.5), tw: true }); } }
+  for (const S of (F && F.steam) || []) { S._a = (S._a || 0) + dt * (S.rate || 3); while (S._a >= 1) { S._a--; P.push({ k: 'smoke', x: R(S.x - (S.w || 14), S.x + (S.w || 14)), y: S.y, vx: R(-3, 3), vy: R(-11, -6), g: -1.5, drag: 0.35, t: 0, life: R(2, 3.2), s: R(3, 5), grow: 6, rot: R(0, 6), vr: R(-0.3, 0.3), a: S.a ?? 0.35, tint: S.col }); } }
   for (const e of g.ents) {
     const A = e.aura; if (!A || e.visible === false || !A.wisps) continue;
     if ((e._wisp = (e._wisp || 0) + dt) < 1 / A.wisps) continue; e._wisp = 0;
@@ -147,9 +152,11 @@ export function drawFxBack(g, c) {
   const F = g.scene && g.scene.fx, t = g.now; c.save(); c.globalCompositeOperation = 'lighter';
   if (F) {
     for (const L of F.lights || []) {
-      const fl = L.fl ?? 0.15, k = 1 - fl + fl * (0.55 + 0.25 * Math.sin(t * 9.1 + L.x) + 0.2 * Math.sin(t * 23.7 + L.y * 1.7));
-      const r = L.r * (L.breathe ? 1 + 0.08 * Math.sin(t * (L.breathe) + L.x) : 1);
-      c.globalAlpha = (L.a ?? 0.8) * k; c.drawImage(halo(L.col, true), L.x - r, L.y - r, r * 2, r * 2);
+      if (L.off || (L.ent && (L.ent.visible === false || L.ent.lightOff))) continue;
+      const lx = L.ent ? L.ent.x : L.x, ly = L.ent ? L.ent.y - (L.ent.bob || 0) - (L.dy || 0) : L.y;   /* L.ent : lueur attachée à un acteur qui bouge (bougie flottante) */
+      const fl = L.fl ?? 0.15, k = 1 - fl + fl * (0.55 + 0.25 * Math.sin(t * 9.1 + lx) + 0.2 * Math.sin(t * 23.7 + ly * 1.7));
+      const r = L.r * (L.breathe ? 1 + 0.08 * Math.sin(t * (L.breathe) + lx) : 1);
+      c.globalAlpha = (L.a ?? 0.8) * k; c.drawImage(halo(L.col, true), lx - r, ly - r, r * 2, r * 2);
     }
     for (const G of F.glints || []) {
       const [x0, y0, x1, y1] = G.rect; G._p = G._p || Array.from({ length: G.n || 12 }, () => ({ x: R(x0, x1), y: R(y0, y1), ph: R(0, TAU), sp: R(1.5, 3.5) }));
@@ -174,6 +181,12 @@ export function drawFx2(g, c) {
     for (const q of R2._p) { const y = (q.y + t * q.v) % 290 - 20, x = (q.x - t * q.v * 0.18) % 520; const xx = x < 0 ? x + 520 : x; c.moveTo(xx, y); c.lineTo(xx - q.l * 0.18, y + q.l); }
     c.globalAlpha = 0.8; c.stroke(); c.globalAlpha = 1;
   }
+  if (F && F.snow) {   /* neige : flocons ronds qui tombent en se balançant, deux plans de profondeur ; apparition douce depuis S.t0 */
+    const S = F.snow, n = S.n || 130; S._p = S._p || Array.from({ length: n }, (_, i) => ({ x: R(0, 480), y: R(0, 290), v: R(16, 30) * (i % 3 ? 1 : 0.55), s: i % 3 ? R(0.7, 1.4) : R(0.4, 0.75), ph: R(0, TAU), sw: R(0.6, 1.3) }));
+    const a0 = S.t0 ? Math.min(1, (t - S.t0) / 2.5) : 1; c.fillStyle = S.col || '#f4f8ff';
+    for (const q of S._p) { const y = (q.y + t * q.v) % 290 - 15, x = q.x + Math.sin(t * q.sw + q.ph) * 7; c.globalAlpha = a0 * (q.s > 0.7 ? 0.9 : 0.55); c.beginPath(); c.arc(x, y, q.s, 0, TAU); c.fill(); }
+    c.globalAlpha = 1;
+  }
   if (F && F.flies) for (const Fl of F.flies) {
     const [x0, y0, x1, y1] = Fl.rect; Fl._p = Fl._p || Array.from({ length: Fl.n || 8 }, () => ({ ax: R(x0, x1), ay: R(y0, y1), ph: R(0, TAU), sp: R(0.3, 0.7) }));
     c.globalCompositeOperation = 'lighter';
@@ -184,7 +197,7 @@ export function drawFx2(g, c) {
     c.globalCompositeOperation = 'source-over';
     for (const p of P) {   /* fumée et confettis : mélange normal */
       if (p.t < 0) continue; const u = p.t / p.life;
-      if (p.k === 'smoke') { const a = Math.min(1, p.t / 0.12) * (1 - u); c.globalAlpha = a * 0.85; c.save(); c.translate(p.x, p.y); c.rotate(p.rot); c.drawImage(smoke(), -p.s, -p.s, p.s * 2, p.s * 2); c.restore(); }
+      if (p.k === 'smoke') { const a = Math.min(1, p.t / 0.12) * (1 - u); c.globalAlpha = a * 0.85 * (p.a ?? 1); c.save(); c.translate(p.x, p.y); c.rotate(p.rot); c.drawImage(smoke(p.tint), -p.s, -p.s, p.s * 2, p.s * 2); c.restore(); }
       else if (p.k === 'conf') { c.globalAlpha = 1 - u * u; c.fillStyle = p.col; c.save(); c.translate(p.x, p.y); c.rotate(p.rot); c.scale(1, Math.cos(p.rot * 1.3)); c.fillRect(-p.s, -p.s * 0.6, p.s * 2, p.s * 1.2); c.restore(); }
     }
     c.globalCompositeOperation = 'lighter';

@@ -25,6 +25,9 @@ k indy_i $PS/c_archeo2_1.png 380 "--n=24"; k indy_t $PS/c_archeo2_1.png 380 "--n
 k snakes14_i work/s2play/items/p_snakes14_1.png 180 "--n=24 --despill=all"
 k doc_i $PS/c_doc2.png 400 "--n=24"; k doc_t $PS/c_doc2.png 400 "--n=20"
 k boy15_i work/s2play/persos/boy15_1.png 330 "--n=24"
+k hat_i $PS/c_hat.png 120 "--n=24 --despill=all"; k hat_t $PS/c_hat.png 120 "--n=20 --despill=all"
+k potions_i $PS/c_potions2.png 400 "--n=24 --despill=all"; k potions_t $PS/c_potions2.png 400 "--n=20 --despill=all"
+k bat16_i work/s2play/persos/bat16_1.png 120 "--n=16 --despill=all"; k owl16_i work/s2play/persos/owl16_1.png 260 "--n=24 --despill=all"
 k parrot_i $PS/c_parrot.png 110 "--n=24 --despill=all"; k parrot_t $PS/c_parrot.png 110 "--n=20 --despill=all"
 # --despill=all : nettoyage du rose du fond sur toute la silhouette, seulement pour qui ne porte aucun magenta ni violet
 ids=("$@"); [ ${#ids} -eq 0 ] && ids=(${(k)K})

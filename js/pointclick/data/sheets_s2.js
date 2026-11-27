@@ -19,7 +19,7 @@ export const ITEMS = {
   cracker: { spr: 's2:i_cracker' }, map: { spr: 's2:i_map' }, grog: { spr: 's2:i_grog' }, rootbeer: { spr: 's2:i_rootbeer' }, cheese_nl: { spr: 's2:i_cheese_nl' },
   sweetroll: { spr: 's2:i_sweetroll' }, cheese12: { spr: 's2:i_cheese12' },
   shout: { spr: 's2:i_shout' }, septims: { spr: 's2:i_septims' },
-  wood13: { spr: 's2:i_wood13' }, waterbucket13: { spr: 's2:i_waterbucket13' }, cheesecube: { spr: 's2:i_cheesecube' }, idol: { spr: 's2:p_idol14' }, cheese14: { spr: 's2:i_cheese14' }, cable15: { spr: 's2:i_cable15' }, cheese15: { spr: 's2:i_cheese15' }
+  wood13: { spr: 's2:i_wood13' }, waterbucket13: { spr: 's2:i_waterbucket13' }, cheesecube: { spr: 's2:i_cheesecube' }, idol: { spr: 's2:p_idol14' }, cheese14: { spr: 's2:i_cheese14' }, cable15: { spr: 's2:i_cable15' }, cheese15: { spr: 's2:i_cheese15' }, flower16: { spr: 's2:i_flower16' }, cheese16: { spr: 's2:i_cheese16' }
 };
 
 /* héros S2 : six vues en pied (poses fixes de repli) ; cycles LTX : marche (profils, face, dos), repos vivant et parole par vue */
@@ -43,7 +43,8 @@ export const LIFE = {
   's2:max': { idle: 'max_i', talk: 'max_t' }, 's2:sam': { idle: 'sam_i', talk: 'sam_t' },
   's2:villager': { idle: 'villager_i', talk: 'villager_t' }, 's2:creeper': { idle: 'creeper_i', walk: 'creeper_w' },
   's2:indy': { idle: 'indy_i', talk: 'indy_t' }, 's2:p_snakes14': { idle: 'snakes14_i' },
-  's2:doc': { idle: 'doc_i', talk: 'doc_t' }, 's2:boy15': { idle: 'boy15_i' }
+  's2:doc': { idle: 'doc_i', talk: 'doc_t' }, 's2:boy15': { idle: 'boy15_i' },
+  's2:hat16': { idle: 'hat_i', talk: 'hat_t' }, 's2:potions': { idle: 'potions_i', talk: 'potions_t' }, 's2:bat16': { idle: 'bat16_i' }, 's2:owl16': { idle: 'owl16_i' }
 };
 export const lifeBases = sc => [...new Set([...Object.values(HERO_LIFE).flatMap(o => Object.values(o)), ...(sc.ents || []).flatMap(e => Object.values(LIFE[e.spr] || {}))])];
 export const PRELOAD = [...Object.values(HERO2), ...Object.values(ITEMS).map(i => i.spr)];

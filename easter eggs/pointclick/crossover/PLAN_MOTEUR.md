@@ -103,8 +103,13 @@ FLUX, une à la fois (file calcul-lourd) : plusieurs jours de calcul, avec une p
   pas sur la pierre), charrette changée en charrette d'acier puis en cheval nordique qui grimpe à la tour, câble tendu
   jusqu'à l'horloge, le Cri appelle la foudre (trop tôt : foudre sur le banc) ; métamorphoses du savant (coiffure),
   de l'horloge (héros enfant), du panneau, de la photo (héros au seau) ; savant et garçon animés en boucles LTX.
+- Chapitre 16 (le Choixseau) jouable : grande salle (bougies flottantes qui montent et descendent, chacune avec sa lueur,
+  plafond étoilé scintillant, brouhaha), chapeau parlant en boucles LTX changé en seau qui répartit le héros assis à
+  « RIVEBOIS » (applaudissements, feux d'artifice), puis cachot des potions (feu et braises, vapeur du chaudron, professeur
+  en boucles LTX) : fleur de montagne bleue dans le chaudron (vapeur rose), fondue si on y met du fromage ; métamorphoses :
+  fromages flottants, neige dans la salle, poule postale, chauve-souris, baguette-carotte. Retour dans la salle pour la fin.
 - Objets de toute la saison dans la besace : Wabbajack, le Cri (repli générique `s2.shout.none` + onde de choc), les septims.
-- Personnages animés en boucles LTX pour les chapitres 11 à 15 (reprises quand le visage dérivait ou que le personnage tournait).
+- Personnages animés en boucles LTX pour les chapitres 11 à 16 (reprises quand le visage dérivait ou que le personnage tournait).
 ### Chaîne de production d'un chapitre (outils)
 1. Décor vide : `tools/gen_s2_decors.sh` (3 graines) → `tools/s2_assets.py decor` + `tools/s2_retro.py decor`.
 2. Personnages et objets : fiche validée détourée (`s2_assets.py sprite`), objets `tools/gen_s2_items.sh`.
@@ -117,7 +122,7 @@ FLUX, une à la fois (file calcul-lourd) : plusieurs jours de calcul, avec une p
   sprites des métamorphoses (poulet en caoutchouc à poulie, mammouth à trois têtes) ; voix de la réplique du narrateur
   sur la transition (`nar.s2up`) et des répliques écrites à la main (regards, biscuit) ; expressions du héros (8 visages,
   face et profils, en boucles de parole LTX par émotion).
-- Chapitres 16 à 28 sur la même chaîne.
+- Chapitres 17 à 28 sur la même chaîne.
 - Génie des indices en HD, prologue (fête de la S1 → Sheogorath), validation des décors et animations par Stéphan.
 - **Twin Peaks (22), petit homme en rouge** (validé par Stéphan) : ses 6 répliques `envers` ont leur voix retournée
   (FR/EN, livrées) ; le moteur les sous-titre toujours, en bas de l'écran façon télévision (`ENVERS` dans

@@ -19,6 +19,8 @@ const STEPS = {
   s2_13: [['s2_13.wood', g => g.has('wood13') || g.flag('wallOpen')], ['s2_13.wall', g => g.flag('wallOpen')], ['s2_13.stairs', () => false]],
   s2_13b: [['s2_13b.cheese', g => g.has('cheesecube')], ['s2_13b.jump', () => false]],
   s2_14: [['s2_14.pit', g => g.flag('sausages')], ['s2_14.idol', g => g.flag('idolSwap')], ['s2_14.boulder', () => false]],
+  s2_16: [['s2_16.hat', g => g.flag('sorted')]],
+  s2_16b: [['s2_16b.flower', g => g.has('flower16') || g.flag('potion')], ['s2_16b.potion', () => false]],
   s2_15: [['s2_15.cart', g => g.flag('cartSteel')], ['s2_15.horse', g => g.flag('cartUp')], ['s2_15.cable', g => g.flag('cableOn')], ['s2_15.storm', () => false]],
   s2_12b: [['s2_12b.roll', g => g.has('sweetroll') || g.flag('traded')], ['s2_12b.cheese', g => g.flag('traded')]],
   s2_11: [['s2_11.cracker', g => g.has('cracker') || g.flag('learned')], ['s2_11.parrot', g => g.flag('learned')], ['s2_11.duel', g => g.flag('duelWon')],
