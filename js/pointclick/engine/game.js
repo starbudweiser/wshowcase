@@ -34,8 +34,8 @@ Object.assign(COLORS, S2.COLORS);
 const ENV = new Set(ENVERS);   /* répliques dites à l'envers (petit homme en rouge) : toujours sous-titrées, animations à l'envers */
 /* densité d'une image : 2 pour la saison 2 (960 × 540), 1 sinon ; tailles en unités logiques (480 × 270) */
 const dn = im => (im && im.dens) || 1, iw = im => im.width / dn(im), ih = im => im.height / dn(im);
-/* saison 2 ouverte : fin de la saison 1 atteinte, ou adresse avec ?s2 (essais en local) */
-const s2Open = () => store.get('pc.s1done', false) || /[?&]s2\b/.test(location.search), s2All = () => /[?&]s2\b/.test(location.search);
+/* saison 2 ouverte : fin de la saison 1 atteinte (ou chapitre 10 atteint, pour les parties d'avant le 27/11/2026), ou adresse avec ?s2 (essais en local) */
+const s2Open = () => store.get('pc.s1done', false) || reached().includes('party') || /[?&]s2\b/.test(location.search), s2All = () => /[?&]s2\b/.test(location.search);
 class Cancel {}
 const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
@@ -279,7 +279,7 @@ export class Game {
       inGame: !!inGame, hasSave: hasSave(), page,
       resume: () => this.hideTitle(), cont: () => this.continueGame(), newGame: () => this.newGame(),
       chapters: CHAPTERS.map((x, i) => rs.includes(x.id) ? { id: x.id, label: T('ch.' + x.id), go: () => this.startAt(x) } : { id: x.id, label: (i + 1) + '. ???', locked: true }),   /* scènes pas encore atteintes : grisées, titre caché */
-      chapters2: s2Open() ? this.s2Chapters(rs) : null,
+      chapters2: s2Open() ? this.s2Chapters(rs) : null, s2Locked: !s2Open(),
       fullscreen: () => this.toggleFullscreen(),
       filter: this.scaler ? () => this.filter : null, nextFilter: () => this.setFilter(L[(L.indexOf(this.filter) + 1) % L.length], true),
       music: () => snd.musicOn !== false, setMusic: v => { this.setMusic(v); if (v && !inGame) snd.music(true, 'title'); },

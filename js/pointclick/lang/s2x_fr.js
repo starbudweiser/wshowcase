@@ -1,6 +1,6 @@
 /* Saison 2 : textes écrits à la main (noms, regards sans voix, interface, indices du génie). Les dialogues voisés sont dans s2_fr.js. */
 export default {
-  'ui.season2': 'Saison 2', 'ui.bonus': 'Bonus :', 'ui.soon': '(bientôt)',
+  'ui.season2': 'Saison 2', 'ui.season2.lock': 'Saison 2 · termine la saison 1', 'ui.bonus': 'Bonus :', 'ui.soon': '(bientôt)',
   'ui.retroOn': 'Saison 2 : rendu années 90', 'ui.retroOff': 'Saison 2 : rendu années 2000',
   's2end.title': 'À suivre…', 's2end.sub': 'Le chapitre suivant de la saison 2 est encore dans la marmite de Sheogorath.',
   'n.wabbajack': 'Wabbajack', 'look.wabbajack': 'Le bâton de Sheogorath. Il transforme n’importe quoi en n’importe quoi d’autre. Surtout en n’importe quoi.',

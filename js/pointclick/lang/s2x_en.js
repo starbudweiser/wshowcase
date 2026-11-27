@@ -1,6 +1,6 @@
 /* Season 2: hand-written texts (names, unvoiced looks, interface, genie hints). Voiced dialogue lives in s2_en.js. */
 export default {
-  'ui.season2': 'Season 2', 'ui.bonus': 'Bonus:', 'ui.soon': '(soon)',
+  'ui.season2': 'Season 2', 'ui.season2.lock': 'Season 2 · finish season 1', 'ui.bonus': 'Bonus:', 'ui.soon': '(soon)',
   'ui.retroOn': 'Season 2: 90s graphics', 'ui.retroOff': 'Season 2: 2000s graphics',
   's2end.title': 'To be continued…', 's2end.sub': 'The next chapter of season 2 is still simmering in Sheogorath’s cauldron.',
   'n.wabbajack': 'Wabbajack', 'look.wabbajack': 'Sheogorath’s staff. It turns anything into anything else. Mostly into nonsense.',
