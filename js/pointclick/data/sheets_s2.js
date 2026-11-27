@@ -1,5 +1,5 @@
 /* Saison 2 (scènes `hd` : canevas 960 × 540, coordonnées logiques 480 × 270 inchangées).
-   Sprites pleine couleur à densité 2 (1 pixel d'image = ½ unité logique = 1 pixel du canevas) : assets/pointclick/s2/spr/<nom>.png,
+   Sprites pleine couleur à densité 2 (1 pixel d'image = ½ unité logique = 1 pixel du canevas) : assets/pointclick/s2/spr/<nom>.webp (années 90 : s2/90/spr/<nom>.png),
    nommés « s2:<nom> » dans les scènes. Détourage : easter eggs/pointclick/tools/s2_assets.py. */
 
 /* couleur des bulles par personnage (id = « who » des dialogues de crossover/dialogues) */

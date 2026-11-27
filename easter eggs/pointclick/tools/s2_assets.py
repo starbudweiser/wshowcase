@@ -1,6 +1,6 @@
 #!/usr/bin/env python3 -I
 """Saison 2 : prépare les images du jeu (pleine couleur, sans palette, densité 2 = 960 × 540).
-  sprite <nom> <source.png|jpg> <hauteur_px> [--flip]  fond magenta -> PNG détouré (bord doux), assets/pointclick/s2/spr/<nom>.png
+  sprite <nom> <source.png|jpg> <hauteur_px> [--flip]  fond magenta -> PNG détouré (bord doux), assets/pointclick/s2/spr/<nom>.webp
   decor  <nom> <source>                                 -> 960 × 540 WebP, assets/pointclick/s2/<nom>.webp
   card   <nom> <source>                                 -> vignette d'ouverture 960 × 540 WebP, assets/pointclick/s2/cards/<nom>.webp
 Python de FLUX (PIL + numpy) : "~/Modèles IA/FLUX3-Klein/.venv/bin/python" tools/s2_assets.py …"""
@@ -48,7 +48,7 @@ def sprite(name, src, th, flip=False):
     f = th / im.size[1]; im = im.resize((max(1, round(im.size[0] * f)), th), Image.LANCZOS)
     if flip: im = im.transpose(Image.FLIP_LEFT_RIGHT)
     os.makedirs(os.path.join(OUT, 'spr'), exist_ok=True)
-    p = os.path.join(OUT, 'spr', name + '.png'); im.save(p, optimize=True); print(name, im.size, os.path.getsize(p) // 1024, 'Ko')
+    p = os.path.join(OUT, 'spr', name + '.webp'); im.save(p, 'WEBP', quality=90, method=6); print(name, im.size, os.path.getsize(p) // 1024, 'Ko')   # WebP avec transparence : 4 fois plus léger que le PNG
 
 
 def decor(name, src, sub=''):

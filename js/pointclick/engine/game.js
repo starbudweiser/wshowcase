@@ -126,7 +126,7 @@ export class Game {
   /* saison 2 en rendu années 90 : mêmes images converties comme celles de la saison 1 (s2/90/, tools/s2_retro.py), canevas 480 × 270 */
   get s2low() { return !!(this.s2retro && this.scene && this.scene.hd); }
   sprPath(name) {
-    if (name.startsWith('s2:')) return this.s2low ? `assets/pointclick/s2/90/spr/${name.slice(3)}.png` : `assets/pointclick/s2/spr/${name.slice(3)}.png`;
+    if (name.startsWith('s2:')) return this.s2low ? `assets/pointclick/s2/90/spr/${name.slice(3)}.png` : `assets/pointclick/s2/spr/${name.slice(3)}.webp`;
     if (name.startsWith('s2a:')) return this.s2low ? `assets/pointclick/s2/90/anim/${name.slice(4)}.png` : `assets/pointclick/s2/anim/${name.slice(4)}.webp`;
     return `assets/pointclick/spr/${SPR[name] || name}.png`;
   }

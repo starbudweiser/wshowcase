@@ -3,7 +3,7 @@
 (décors : tools/bg_pixelize.py ; personnages et objets : tools/sprites_pixelize.py), dans assets/pointclick/s2/90/.
   decor <nom> <source>   480 × 270, couleurs +12 %, contraste +5 %, 64 couleurs (coupe médiane) en tramage Floyd-Steinberg
   card  <nom> <source>   idem pour une vignette d'ouverture (s2/90/cards/<nom>.png)
-  sprites                tous les sprites HD (s2/spr/*.png) : moitié de taille, 56 couleurs sans tramage, couleurs +15 %,
+  sprites                tous les sprites HD (s2/spr/*.webp) : moitié de taille, 56 couleurs sans tramage, couleurs +15 %,
                          contraste +8 %, contour sombre d'un pixel ; même point d'ancrage (bas, centre) que la version HD
   anim <base>            images d'une animation (s2/anim/<base>/*.webp), palette commune à toute l'animation (aucun scintillement)
   all                    sprites + toutes les animations
@@ -38,15 +38,20 @@ def finish(q, al):
     return Image.fromarray(out, 'RGBA')
 
 
+def save_pal(im, dst):
+    """PNG à palette (les images n'ont que 56 couleurs + contour + transparence) : 4 à 5 fois plus léger qu'en couleurs pleines"""
+    im.quantize(colors=64, method=Image.Quantize.FASTOCTREE, dither=Image.Dither.NONE).save(dst, optimize=True)
+
+
 def sprite_file(src, dst, pal=None):
     c, a = half(Image.open(src).convert('RGBA'))
     q = c.quantize(palette=pal, dither=Image.Dither.NONE) if pal else c.quantize(colors=56, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
-    os.makedirs(os.path.dirname(dst), exist_ok=True); finish(q, a).save(dst, optimize=True)
+    os.makedirs(os.path.dirname(dst), exist_ok=True); save_pal(finish(q, a), dst)
 
 
 def sprites():
-    for f in sorted(glob.glob(os.path.join(S2, 'spr', '*.png'))):
-        sprite_file(f, os.path.join(LO, 'spr', os.path.basename(f)))
+    for f in sorted(glob.glob(os.path.join(S2, 'spr', '*.webp'))):
+        sprite_file(f, os.path.join(LO, 'spr', os.path.basename(f).replace('.webp', '.png')))
     print('sprites', len(glob.glob(os.path.join(LO, 'spr', '*.png'))))
 
 
