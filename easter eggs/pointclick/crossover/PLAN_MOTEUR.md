@@ -10,6 +10,17 @@
   effet, dessiné en pleine définition (`js/pointclick/engine/fx2.js` : lumière additive, halos, ondes de choc, éclairs,
   fumée, étincelles) : éclair du Wabbajack, métamorphoses, aura des fantômes et des créatures magiques, feux d'artifice,
   lumières vivantes du décor (lanternes, fenêtres, reflets de lune, lucioles, brume, néons…), apparitions de Sheogorath.
+- **Transition de rendu au début de la saison 2** (27/11) : la vignette du chapitre 11 s'affiche en rendu années 90
+  (480 × 270, 64 couleurs tramées, palette propre à l'image comme en saison 1), puis deux balayages lumineux font passer
+  aux couleurs puis à la définition des années 2000. **Option « Saison 2 : rendu années 90 »** dans le menu Options pour
+  jouer toute la saison en rendu années 90 (filtre WebGL de `scaler.js`, palette de 64 couleurs par scène `palette.js`).
+- **Décors vivants** (27/11) : mer qui ondule et galion qui tangue dans la première scène (vidéo LTX en boucle du décor) ;
+  chaque décor a ses mouvements (eau, feuillages, fumées, foules…).
+- **Personnages vivants dans tous les épisodes** (27/11) : jamais immobiles en attendant de parler ; repos vivant
+  (respiration, regards, gestes) et vraie parole, en boucles LTX depuis la pose validée (même image au début et à la fin),
+  plus marches LTX. Le simple étirement pendant la parole ne suffit plus.
+- **Tout monter de deux crans en qualité de réalisation : tout se joue dans les détails** (27/11) : ombres de contact,
+  éclairage du décor sur les personnages (nuit, lanternes), transitions, sons, finitions de chaque plan.
 
 ## Constat
 - **Prêt** : 19 dialogues (999 répliques, FR/EN), 1 881 voix (82 Mo, mp3 40 kb/s comme la saison 1), 19 musiques déjà

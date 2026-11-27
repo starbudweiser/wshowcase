@@ -90,10 +90,9 @@
 .pc-tm.grid .pc-ti{font-size:calc(var(--u)*10px)}
 .pc-ti.lock{color:#857a66;cursor:default}
 .pc-tm.grid.dense .pc-ti{font-size:calc(var(--u)*8.5px)}
-/* saison 2 : vignette d'ouverture d'un chapitre (illustration plein écran + titre) */
-.pc-s2card{position:absolute;inset:0;z-index:5;background:#000;opacity:0;transition:opacity .5s;cursor:pointer}
+/* saison 2 : titre de la vignette d'ouverture (l'illustration est dessinée sur le canevas) */
+.pc-s2card{position:absolute;inset:0;z-index:5;opacity:0;transition:opacity .5s;cursor:pointer}
 .pc-s2card.on{opacity:1}
-.pc-s2card img{width:100%;height:100%;object-fit:cover;display:block}
 .pc-s2card h2{position:absolute;left:0;right:0;bottom:calc(var(--u)*12px);margin:0;text-align:center;font:inherit;font-size:calc(var(--u)*17px);line-height:1;color:#ffe9a8;
   text-shadow:-1px -1px 0 #2a1408,1px -1px 0 #2a1408,-1px 1px 0 #2a1408,1px 1px 0 #2a1408,0 calc(var(--u)*1.5px) 0 #000,0 0 calc(var(--u)*8px) rgba(0,0,0,.9)}
 .pc-tm.grid .pc-ti.back{grid-column:1/-1;grid-row:-2/-1;justify-self:center}

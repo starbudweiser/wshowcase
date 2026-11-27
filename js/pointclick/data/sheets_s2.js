@@ -19,12 +19,52 @@ export const ITEMS = {
   cracker: { spr: 's2:i_cracker' }, map: { spr: 's2:i_map' }, grog: { spr: 's2:i_grog' }, rootbeer: { spr: 's2:i_rootbeer' }, cheese_nl: { spr: 's2:i_cheese_nl' }
 };
 
-/* héros S2 : six vues en pied (maquette : poses fixes ; cycles de marche LTX et expressions à venir) */
+/* héros S2 : six vues en pied (poses fixes de repli) ; cycles LTX : marche (profils, face, dos), repos vivant et parole par vue */
 export const HERO2 = { l: 's2:hero_pl', r: 's2:hero_pr', ql: 's2:hero_ql', qr: 's2:hero_qr', f: 's2:hero_f', b: 's2:hero_b' };
-export function heroFrame2(h, moving) {
-  if (h.back || h.quarter === 'qb') return HERO2.b;
-  if (h.front) return HERO2.f;
-  if (moving && !h.quarter) return h.dir === 'l' ? HERO2.l : HERO2.r;
-  return h.dir === 'l' ? HERO2.ql : HERO2.qr;   /* à l'arrêt et quand il parle : trois-quarts tourné vers son interlocuteur */
+export const HERO_LIFE = { walk: { r: 'hero_wr', l: 'hero_wl', f: 'hero_wf', b: 'hero_wb' }, idle: { ql: 'hero_iql', qr: 'hero_iqr', f: 'hero_if' }, talk: { ql: 'hero_tql', qr: 'hero_tqr', f: 'hero_tf' } };
+export function heroFrame2(g, h, moving, s) {
+  if (moving) {
+    const v = h.back || h.quarter === 'qb' ? 'b' : h.front ? 'f' : h.dir === 'l' ? 'l' : 'r', base = HERO_LIFE.walk[v], A = g.s2anim && g.s2anim[base];
+    const f = A && g.life(base, Math.floor(h.walkD / ((A.stride || 9) * s))); if (f) return f;
+    return v === 'b' ? HERO2.b : v === 'f' ? HERO2.f : HERO2[v];
+  }
+  const view = h.back ? 'b' : h.front ? 'f' : h.dir === 'l' ? 'ql' : 'qr'; if (view === 'b') return HERO2.b;
+  const f = (h.talk && g.lifeAt(HERO_LIFE.talk[view], g.now)) || g.lifeAt(HERO_LIFE.idle[view], g.now);   /* parle, sinon repos vivant */
+  return f || HERO2[view];
 }
+/* personnages : sprite de base -> boucles LTX (repos vivant, parole) ; anim.json donne le nombre d'images et la cadence */
+export const LIFE = {
+  's2:guybrush': { idle: 'guybrush_i', talk: 'guybrush_t' }, 's2:swordmaster': { idle: 'swordmaster_i', talk: 'swordmaster_t' },
+  's2:lechuck': { idle: 'lechuck2_i', talk: 'lechuck2_t' }, 's2:sheo': { idle: 'sheo_i', talk: 'sheo_t' }, 's2:parrot': { idle: 'parrot_i', talk: 'parrot_t' }
+};
+export const lifeBases = sc => [...new Set([...Object.values(HERO_LIFE).flatMap(o => Object.values(o)), ...(sc.ents || []).flatMap(e => Object.values(LIFE[e.spr] || {}))])];
 export const PRELOAD = [...Object.values(HERO2), ...Object.values(ITEMS).map(i => i.spr)];
+
+/* ombre de contact (ellipse douce) */
+let shadow = null;
+export function shadowImg() {
+  if (shadow) return shadow; shadow = document.createElement('canvas'); shadow.width = 64; shadow.height = 64; const x = shadow.getContext('2d'), g = x.createRadialGradient(32, 32, 0, 32, 32, 32);
+  g.addColorStop(0, 'rgba(8,6,14,.95)'); g.addColorStop(0.55, 'rgba(8,6,14,.5)'); g.addColorStop(1, 'rgba(8,6,14,0)'); x.fillStyle = g; x.fillRect(0, 0, 64, 64); return shadow;
+}
+/* éclairage d'un sprite par le décor : teinte d'ambiance (multiplication), puis lumière chaude d'une source (lanterne, fenêtre) qui
+   frappe le côté tourné vers elle, d'autant plus forte qu'il en est proche ; la transparence d'origine est rétablie à la fin */
+export function lit(im, L, e, [a]) {
+  const w = im.width, h = im.height; if (a.width !== w || a.height !== h) { a.width = w; a.height = h; }
+  const x = a.getContext('2d'); x.globalCompositeOperation = 'source-over'; x.globalAlpha = 1; x.clearRect(0, 0, w, h); x.drawImage(im, 0, 0);
+  if (L.tint) { x.globalCompositeOperation = 'multiply'; x.globalAlpha = L.k ?? 0.35; x.fillStyle = L.tint; x.fillRect(0, 0, w, h); }
+  for (const S of L.lamps || []) {
+    const d = Math.hypot(e.x - S.x, (e.y - S.y) * 0.8), f = Math.max(0, 1 - d / S.r); if (f <= 0) continue;
+    const toR = S.x > e.x !== !!e.flip, g = x.createLinearGradient(toR ? w : 0, 0, toR ? 0 : w, 0); g.addColorStop(0, S.col); g.addColorStop(1, 'rgba(0,0,0,0)');
+    x.globalCompositeOperation = 'soft-light'; x.globalAlpha = Math.min(1, f * (S.k ?? 0.8)); x.fillStyle = g; x.fillRect(0, 0, w, h);
+  }
+  x.globalCompositeOperation = 'destination-in'; x.globalAlpha = 1; x.drawImage(im, 0, 0); x.globalCompositeOperation = 'source-over';
+  return a;
+}
+/* masque de fondu des bords d'une zone vidéo (edges : côtés à fondre, parmi 'l', 'r', 't', 'b') */
+export function featherMask(w, h, f, edges = 'lrtb') {
+  const c = document.createElement('canvas'); c.width = w; c.height = h; const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, w, h); x.globalCompositeOperation = 'destination-out';
+  const G = (x0, y0, x1, y1, rx, ry, rw, rh) => { const g = x.createLinearGradient(x0, y0, x1, y1); g.addColorStop(0, 'rgba(0,0,0,1)'); g.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = g; x.fillRect(rx, ry, rw, rh); };
+  if (edges.includes('l')) G(0, 0, f, 0, 0, 0, f, h); if (edges.includes('r')) G(w, 0, w - f, 0, w - f, 0, f, h);
+  if (edges.includes('t')) G(0, 0, 0, f, 0, 0, w, f); if (edges.includes('b')) G(0, h, 0, h - f, 0, h - f, w, f);
+  return c;
+}

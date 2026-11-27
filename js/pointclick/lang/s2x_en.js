@@ -1,10 +1,12 @@
 /* Season 2: hand-written texts (names, unvoiced looks, interface, genie hints). Voiced dialogue lives in s2_en.js. */
 export default {
   'ui.season2': 'Season 2', 'ui.bonus': 'Bonus:', 'ui.soon': '(soon)',
+  'ui.retroOn': 'Season 2: 90s graphics', 'ui.retroOff': 'Season 2: 2000s graphics',
   's2end.title': 'To be continued…', 's2end.sub': 'The next chapter of season 2 is still simmering in Sheogorath’s cauldron.',
   'n.wabbajack': 'Wabbajack', 'look.wabbajack': 'Sheogorath’s staff. It turns anything into anything else. Mostly into nonsense.',
   'wab.none': ['The Wabbajack hiccups. Even it doesn’t know what to do with that.', 'Pfft. Sparks, and nothing else. It’s sulking.', 'The staff giggles to itself. Nothing changed, except my nerves.'],
   'wab.self': 'I’m not pointing that thing at myself. I’ve seen what it does to others.',
+  'nar.s2up': 'Sixteen million colours. Enjoy it: the budget runs out at chapter 28.',
   /* chapter 11: the pirate dock */
   'n.guybrush': 'apprentice pirate', 'n.swordmaster': 'swordmaster', 'n.parrot': 'parrot', 'n.lechuck': 'ghost captain', 'n.sheo': 'Sheogorath',
   'n.s11ship': 'ghost ship', 'n.s11sea': 'sea', 'n.s11moon': 'moon', 'n.s11tavern': 'tavern', 'n.s11barrel': 'barrel of crackers',

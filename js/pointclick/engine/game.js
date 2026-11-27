@@ -19,7 +19,7 @@ import { makeAmbient } from './ambient.js';
 import { playIntro, preloadIntro } from './intro.js';
 import { TitleArt, buildMenu } from './title.js';
 import { rubLamp } from './genie.js';
-import { updateFx2, drawFx2 } from './fx2.js';
+import { updateFx2, drawFx2, drawFxBack, twinkle } from './fx2.js';
 import * as SH from '../data/sheets.js';
 import * as S2 from '../data/sheets_s2.js';
 import { CHAPTERS2 } from '../scenes/index.js';
@@ -43,7 +43,7 @@ export class Game {
   constructor(root) {
     this.root = root; this.imgs = {}; this.st = null; this.scene = null; this.ents = []; this.hot = []; this.waiters = [];
     this.sel = null; this.hover = null; this.hoverItem = null; this.coin = null; this.press = null; this.invOpen = false; this.tok = 0; this.runTok = 0; this.locked = false; this.now = 0; this.fx = {};
-    this.wk = null; this.night = null; this.sky = null; this.lastMove = 0; this._mx = null; this._my = null; this.nq = []; this.narr = null; this.lastNarr = -99; this.lastAct = 0; this.idleN = 0; this.sayAu = null; this.voiceOn = store.get('pc.voice', true);
+    this.wk = null; this.night = null; this.sky = null; this.lastMove = 0; this._mx = null; this._my = null; this.nq = []; this.narr = null; this.lastNarr = -99; this.lastAct = 0; this.idleN = 0; this.sayAu = null; this.voiceOn = store.get('pc.voice', true); this.s2retro = store.get('pc.s2retro', false);
     this.bubbles = []; this.barks = []; this.choice = null; this.skip = false; this.alive = true; this.started = false; this.nextBlip = 0; this.mouse = [0, 0];
   }
 
@@ -54,6 +54,7 @@ export class Game {
     await Promise.all(Object.values(SPR).map(n => this.img(`assets/pointclick/spr/${n}.png`)));
     try { this.animIdx = await (await fetch('assets/pointclick/anim/index.json')).json(); } catch { this.animIdx = {}; }
     try { this.sleepIdx = await (await fetch('assets/pointclick/sleep/index.json')).json(); } catch { this.sleepIdx = {}; }
+    try { this.s2anim = await (await fetch('assets/pointclick/s2/anim.json')).json(); } catch { this.s2anim = {}; } this.s2ready = {};
     this.ro = new ResizeObserver(() => this.fit()); this.ro.observe(this.root); this.fit();
     this.last = performance.now(); const tick = t => { if (!this.alive) return; this.raf = requestAnimationFrame(tick); const dt = Math.min(0.05, (t - this.last) / 1000); this.last = t; try { this.update(dt); this.draw(); } catch (e) { console.error(e); } };
     this.raf = requestAnimationFrame(tick);
@@ -65,11 +66,11 @@ export class Game {
     if (this.titleArt) this.titleArt.setLang(l);
     if (!first) { this.renderPanel(); this.renderLine(); if (this.titleEl) { const ig = this.titleIn; this.showTitle(ig, 'opt'); } }
   }
-  img(src) { return this.imgs[src] || (this.imgs[src] = new Promise(res => { const i = new Image(); i.onload = () => { if (src.includes('/s2/')) i.dens = 2; this.imgs[src] = i; res(i); }; i.onerror = () => res(null); i.src = src; }).then(i => (this.imgs[src] = i))); }
+  img(src) { return this.imgs[src] || (this.imgs[src] = new Promise(res => { const i = new Image(); i.onload = () => { if (src.includes('/s2/') && !src.includes('/s2/90/')) i.dens = 2; this.imgs[src] = i; res(i); }; i.onerror = () => res(null); i.src = src; }).then(i => (this.imgs[src] = i))); }
   /* image d'animation d'un personnage selon son état : repos, parole, déplacement */
   /* image du héros : orientation (profil, face, dos) x état (marche, parole, repos) ; les images manquantes sont ignorées */
   heroFrame(h, moving, s) {
-    if (this.scene && this.scene.hd) return S2.heroFrame2(h, moving);
+    if (this.scene && this.scene.hd) return S2.heroFrame2(this, h, moving, s);
     if (!HERO) return h.front || h.talk ? 'hero.front' : 'hero.side';
     const ok = n => n && this.spr(n), cyc = (arr, i) => { const f = arr.filter(ok); return f.length ? f[((i % f.length) + f.length) % f.length] : null; };
     const view = h.back ? 'b' : h.front ? 'f' : 's', t = this.now;
@@ -84,7 +85,16 @@ export class Game {
   /* image d'un personnage : repos, parole, ou marche dans la vue de son déplacement (walk = profil, walkF = face, walkB = dos,
      walkQF / walkQB = trois-quarts, repli sur la vue la plus proche) ; avec A.stride, la marche avance à la distance parcourue
      (stride = pixels par image à l'échelle 1), donc les pieds ne glissent pas, quelle que soit la profondeur */
+  /* image n d'une boucle S2 prête (toutes ses images chargées), sinon null */
+  life(base, n) { const A = this.s2anim && this.s2anim[base]; if (!A || !this.s2ready[base]) return null; return `s2a:${base}/${((n % A.n) + A.n) % A.n}`; }
+  lifeAt(base, t) { const A = this.s2anim && this.s2anim[base]; return A ? this.life(base, Math.floor(t * (A.fps || 10))) : null; }
+  /* charge les images d'une boucle S2 ; elle ne joue qu'une fois complète (pas d'image manquante en cours de lecture) */
+  loadLife(base) {
+    const A = this.s2anim && this.s2anim[base]; if (!A || this.s2ready[base] !== undefined) return; this.s2ready[base] = false; const low = this.s2low;
+    Promise.all(Array.from({ length: A.n }, (_, i) => this.img(this.sprPath(`s2a:${base}/${i}`)))).then(r => { if (this.s2low === low) this.s2ready[base] = r.every(Boolean); else this.s2ready[base] = undefined; });
+  }
   frame(e) {
+    const L = S2.LIFE[e.spr]; if (L && this.scene && this.scene.hd) { const b = (e.talk && L.talk) || L.idle, f = b && this.lifeAt(b, this.now + (e.ph || 0)); return f || e.spr; }
     const A = ANIM[e.spr]; if (!A) return e.spr;
     const st = e.animState || (e.goal ? 'walk' : e.talk ? 'talk' : 'idle'), fps = (A.fps && A.fps[st]) || 3;
     let fr = A[st] || A.idle;
@@ -101,7 +111,42 @@ export class Game {
     const p = `assets/pointclick/anim/${id}_${i}.png`, im = this.imgs[p]; if (im && im.width) return im;
     this._ld = this._ld || {}; if (!this._ld[p]) { this._ld[p] = 1; Promise.resolve(this.img(p)).catch(() => {}); } return null;
   }
-  sprPath(name) { return name.startsWith('s2:') ? `assets/pointclick/s2/spr/${name.slice(3)}.png` : `assets/pointclick/spr/${SPR[name] || name}.png`; }
+  /* saison 2 en rendu années 90 : mêmes images converties comme celles de la saison 1 (s2/90/, tools/s2_retro.py), canevas 480 × 270 */
+  get s2low() { return !!(this.s2retro && this.scene && this.scene.hd); }
+  sprPath(name) {
+    if (name.startsWith('s2:')) return this.s2low ? `assets/pointclick/s2/90/spr/${name.slice(3)}.png` : `assets/pointclick/s2/spr/${name.slice(3)}.png`;
+    if (name.startsWith('s2a:')) return this.s2low ? `assets/pointclick/s2/90/anim/${name.slice(4)}.png` : `assets/pointclick/s2/anim/${name.slice(4)}.webp`;
+    return `assets/pointclick/spr/${SPR[name] || name}.png`;
+  }
+  bgPath(sc) { return 'assets/pointclick/' + (sc.hd && this.s2retro ? sc.bg.replace('s2/', 's2/90/').replace(/\.webp$/, '.png') : sc.bg); }
+  /* bascule années 90 / 2000 en cours de partie : décor et sprites de la scène rechargés dans l'autre rendu */
+  async applyLook() {
+    const sc = this.scene; if (!sc || !sc.hd) return;
+    const bg = await this.img(this.bgPath(sc)); if (bg && this.scene === sc) this.bg = bg;
+    await Promise.all([...S2.PRELOAD, ...(sc.preload || []), ...this.ents.map(e => e.spr)].filter(n => n && /^s2a?:/.test(n)).map(n => Promise.resolve(this.img(this.sprPath(n))).catch(() => {})));
+    this.s2ready = {}; S2.lifeBases(sc).forEach(b => this.loadLife(b)); this.startVideos(sc);
+  }
+  /* zones du décor animées par vidéo en boucle (mer, galion…) : HD = vidéo ; années 90 = images converties comme en saison 1 */
+  startVideos(sc) {
+    (this.vids || []).forEach(v => { v.el.pause(); v.el.removeAttribute('src'); v.el.load(); }); this.vids = [];
+    for (const V of sc.video || []) {
+      if (this.s2low) { if (V.low && this.animIdx) { this.vids.push({ V, low: true }); for (let i = 0; i < V.low.n; i++) Promise.resolve(this.img(`assets/pointclick/s2/90/anim/${V.low.id}/${i}.png`)).catch(() => {}); } continue; }
+      const v = document.createElement('video'); Object.assign(v, { muted: true, loop: true, playsInline: true, autoplay: true, preload: 'auto', src: V.src }); v.setAttribute('playsinline', ''); v.muted = true;
+      const p = v.play(); if (p && p.catch) p.catch(() => {}); this.vids.push({ V, el: v });
+    }
+  }
+  drawVideos(c) {
+    for (const o of this.vids || []) {
+      const [x, y, w, h] = o.V.rect;
+      if (o.low) { const A = o.V.low, im = this.imgs[`assets/pointclick/s2/90/anim/${A.id}/${Math.floor(this.now * (A.fps || 8)) % A.n}.png`]; if (im && im.width) c.drawImage(im, x, y, w, h); continue; }
+      const v = o.el; if (v.readyState < 2) continue;
+      const k = this.k, sc = this._vsc || (this._vsc = document.createElement('canvas')), vw = Math.round(w * k), vh = Math.round(h * k); if (sc.width !== vw || sc.height !== vh) { sc.width = vw; sc.height = vh; o.mask = null; }
+      const x2 = sc.getContext('2d'); x2.globalCompositeOperation = 'source-over'; x2.clearRect(0, 0, vw, vh);
+      const [sx, sy, sw, sh] = o.V.crop || [0, 0, v.videoWidth, v.videoHeight]; x2.drawImage(v, sx, sy, sw, sh, 0, 0, vw, vh);
+      if (o.V.feather) { if (!o.mask) o.mask = S2.featherMask(vw, vh, o.V.feather * k, o.V.edges); x2.globalCompositeOperation = 'destination-in'; x2.drawImage(o.mask, 0, 0); }
+      c.drawImage(sc, x, y, w, h);
+    }
+  }
   spr(name) { const i = name && this.imgs[this.sprPath(name)]; return i && i.width ? i : null; }
   heroStand() { return this.scene && this.scene.hd ? S2.HERO2.r : HERO ? HERO.stand : 'hero.side'; }
   /* définition du canevas : 1 = 480 × 270 (saison 1, au pixel près), 2 = 960 × 540 (saison 2) ; les coordonnées logiques ne changent pas */
@@ -227,6 +272,7 @@ export class Game {
       filter: this.scaler ? () => this.filter : null, nextFilter: () => this.setFilter(L[(L.indexOf(this.filter) + 1) % L.length], true),
       music: () => snd.musicOn !== false, setMusic: v => { this.setMusic(v); if (v && !inGame) snd.music(true, 'title'); },
       voice: () => this.voiceOn, setVoice: v => this.setVoice(v), amb: () => this.ambOn, setAmb: v => this.setAmbience(v),
+      retro: s2Open() ? () => this.s2retro : null, setRetro: v => { this.s2retro = !!v; store.set('pc.s2retro', !!v); this.applyLook(); },
       toggleLang: () => this.setLang(this.lang === 'fr' ? 'en' : 'fr'),
       ach: T('ach.menu', { n, t: BLINDS.length }), achDone: ac.done.includes('fiatlux')
     });
@@ -307,8 +353,9 @@ export class Game {
   save() { if (this.cutN > 0) { this.saveLater = true; return; } if (this.st && this.started) writeSave({ scene: this.st.scene, flags: this.st.flags, inv: this.st.inv, hero: this.hero ? { x: this.hero.x, y: this.hero.y, dir: this.hero.dir } : null }); }
   async goScene(id, how = {}) {
     const sc = (await import(`../scenes/${id}.js`)).default; this.st.scene = id;
-    const bg = await this.casseBg(id, await this.img('assets/pointclick/' + sc.bg)); this.scene = sc; this.bg = bg; this.ambNext = this.now + 4; this.wk = null; this.wkAt = Math.max(this.wkAt ?? 0, this.now + 45); this.night = null; this.sky = sc.interior || sc.hd ? null : buildSky(bg); this.lastMove = this.now;
-    if (sc.hd) await Promise.all([...S2.PRELOAD, ...(sc.preload || []), ...(sc.ents || []).map(e => e.spr)].filter(n => n && n.startsWith('s2:')).map(n => Promise.resolve(this.img(this.sprPath(n))).catch(() => {})));
+    const bg = await this.casseBg(id, await this.img(this.bgPath(sc))); this.scene = sc; this.bg = bg; this.ambNext = this.now + 4; this.wk = null; this.wkAt = Math.max(this.wkAt ?? 0, this.now + 45); this.night = null; this.sky = sc.interior || sc.hd ? null : buildSky(bg); this.lastMove = this.now;
+    if (sc.hd) { await Promise.all([...S2.PRELOAD, ...(sc.preload || []), ...(sc.ents || []).map(e => e.spr)].filter(n => n && /^s2a?:/.test(n)).map(n => Promise.resolve(this.img(this.sprPath(n))).catch(() => {})));
+      this.s2ready = {}; S2.lifeBases(sc).forEach(b => this.loadLife(b)); this.startVideos(sc); }
     this.walk = new Walk(sc.walk.map(p => p.slice()), W, H); this.fgExtra = null;
     this.hot = sc.hot || []; this.amb = makeAmbient(sc.ambient);
     await Promise.all((sc.ambient || []).filter(o => o.type === 'frames' && this.animIdx[o.id]).flatMap(o => Array.from({ length: this.animIdx[o.id].n }, (_, i) => Promise.resolve(this.img(`assets/pointclick/anim/${o.id}_${i}.png`)).catch(() => {}))));
@@ -389,12 +436,45 @@ export class Game {
     const t = el('div', 'pc-toast'); t.append(el('b', '', title), el('span', '', text)); this.stage.append(t); snd.jingle();
     setTimeout(() => t.classList.add('out'), ms); setTimeout(() => t.remove(), ms + 600);
   }
-  /* vignette d'ouverture d'un chapitre de la saison 2 : l'illustration plein écran et le titre ; un clic la passe */
-  async card(src, title) {
-    this.chk(); const d = el('div', 'pc-s2card'), im = new Image(); im.src = src; d.append(im, el('h2', '', title)); d.onpointerdown = () => { this.skip = true; };
-    this.stage.append(d); await new Promise(r => (im.complete ? r() : (im.onload = im.onerror = r)));
-    try { requestAnimationFrame(() => d.classList.add('on')); this.skip = false; const t0 = this.now; await this.until(() => this.now - t0 > 5 || (this.skip && this.now - t0 > 0.6)); this.skip = false; d.classList.remove('on'); await this.wait(500); }
-    finally { d.remove(); }
+  /* vignette d'ouverture d'un chapitre de la saison 2 : l'illustration plein écran (dessinée sur le canevas) et le titre ; un clic
+     la passe. En rendu années 90, sa version convertie comme en saison 1. o.upgrade (début de la saison 2) : elle apparaît en rendu
+     années 90, puis deux balayages lumineux la font passer aux couleurs puis à la définition des années 2000. Elle s'efface sur la scène. */
+  async card(src, title, o = {}) {
+    this.chk(); const lowSrc = src.replace('s2/cards/', 's2/90/cards/').replace(/\.webp$/, '.png'), up = o.upgrade && !this.s2low;
+    const [hi, lo] = await Promise.all([this.s2low ? null : this.img(src), this.s2low || up ? this.img(lowSrc) : null]);
+    const d = el('div', 'pc-s2card'); d.append(el('h2', '', title)); d.onpointerdown = () => { this.skip = true; };
+    this.cardFx = { im: this.s2low || up ? lo : hi, a: 0 }; this.stage.append(d);
+    try {
+      const t0 = this.now; requestAnimationFrame(() => d.classList.add('on'));
+      await this.until(() => { this.cardFx.a = Math.min(1, (this.now - t0) / 0.6); return this.cardFx.a >= 1; }); this.chk();
+      if (up && lo && hi) { await this.wait(1500); await this.upgradeRender(lo, hi); }
+      this.skip = false; const t1 = this.now; await this.until(() => this.now - t1 > (up ? 2.5 : 4.5) || (this.skip && this.now - t1 > 0.6)); this.skip = false; this.chk();
+      d.classList.remove('on'); const t2 = this.now; this.fade(0, 800);
+      await this.until(() => { this.cardFx.a = Math.max(0, 1 - (this.now - t2) / 0.8); return this.cardFx.a <= 0; });
+    } finally { d.remove(); this.cardFx = null; }
+  }
+  /* années 90 -> années 2000 : 1er balayage, les 16 millions de couleurs (même définition 480 × 270) ; 2e balayage, la définition 960 × 540 ;
+     une ligne de lumière descend en semant des étincelles */
+  async upgradeRender(lo, hi) {
+    const mid = Object.assign(document.createElement('canvas'), { width: W, height: H }), x = mid.getContext('2d'); x.imageSmoothingQuality = 'high'; x.drawImage(hi, 0, 0, W, H);
+    const C = this.cardFx; for (const [a, b] of [[lo, mid], [mid, hi]]) {
+      C.im = a; C.next = b; const t0 = this.now, dur = 1.1; this.sfx('whoosh'); let lastSp = 0;
+      await this.until(() => {
+        const u = Math.min(1, (this.now - t0) / dur), e = u * u * (3 - 2 * u); C.split = e * 1.03; C.line = Math.sin(u * Math.PI);
+        if (this.now - lastSp > 0.05 && u < 1) { lastSp = this.now; for (let i = 0; i < 3; i++) twinkle(this, Math.random() * W, C.split * H, i % 2 ? '#bfe6ff' : '#fff2c0'); }
+        return u >= 1;
+      }); this.chk();
+      C.im = b; C.next = null; C.split = 0; C.line = 0; await this.wait(a === lo ? 450 : 100);
+    }
+    this.sfx('jingle');
+  }
+  drawCard(c) {
+    const C = this.cardFx; if (!C || !C.im) return;
+    const put = im => { c.imageSmoothingEnabled = dn(im) > 1; c.drawImage(im, 0, 0, W, H); };
+    c.save(); c.globalAlpha = C.a; put(C.im);
+    if (C.next && C.split > 0) { const y = Math.min(H, C.split * H); c.save(); c.beginPath(); c.rect(0, 0, W, y); c.clip(); put(C.next); c.restore();
+      if (C.line > 0) { const g = c.createLinearGradient(0, y - 7, 0, y + 7); g.addColorStop(0, 'rgba(160,210,255,0)'); g.addColorStop(0.5, `rgba(235,248,255,${0.85 * C.line})`); g.addColorStop(1, 'rgba(160,210,255,0)'); c.globalCompositeOperation = 'lighter'; c.fillStyle = g; c.fillRect(0, y - 7, W, 14); } }
+    c.restore();
   }
   /* un aveugle a retrouvé la lumière : compte, toast, succès */
   award(id) { if (award(id)) this.toast(this.T('ach.' + id + '.title'), this.T('ach.' + id + '.text')); }
@@ -622,7 +702,8 @@ export class Game {
       h.flip = !this.scene.hd && h.dir === 'l' && !h.front && !h.back;   /* S2 : vues gauche et droite dessinées, pas de miroir */
       if (moving) h.pose = null;
       h.spr = this.heroFrame(h, moving, s);
-      if (moving) { h.bob = Math.abs(Math.sin(h.walkD / (5.2 * s) * Math.PI / 2)) * (this.spr('hero.w1') ? 0.7 : 1.2) * s; if (this.now >= (h.stepT || 0)) { snd.step(); h.stepT = this.now + 0.3; } } else h.bob = 0;
+      if (moving && this.scene.hd) { h.bob = 0; if (this.now >= (h.stepT || 0)) { snd.step(); h.stepT = this.now + 0.36; } }   /* S2 : le cycle de marche LTX porte le mouvement */
+      else if (moving) { h.bob = Math.abs(Math.sin(h.walkD / (5.2 * s) * Math.PI / 2)) * (this.spr('hero.w1') ? 0.7 : 1.2) * s; if (this.now >= (h.stepT || 0)) { snd.step(); h.stepT = this.now + 0.3; } } else h.bob = 0;
     }
     this.ents.forEach(e => {
       /* déplacement scripté : la vitesse suit la profondeur (plus lent au fond, sauf e.rawSpeed), la vue suit la direction */
@@ -664,7 +745,7 @@ export class Game {
   }
   draw() {
     this.drawUi();
-    const c = this.ctx, k = this.scene && this.scene.hd && !this.titleOn && !this.cine ? 2 : 1;
+    const c = this.ctx, k = this.scene && this.scene.hd && !this.s2low && !this.titleOn && !this.cine ? 2 : 1;
     if (k !== this.k) this.setRes(k);
     if (c) c.setTransform(this.k, 0, 0, this.k, 0, 0);
     if (c && this.titleOn && this.titleArt && !this.cine) { this.titleArt.draw(c); if (this.actx && this.now - this.ambT > 0.12) { this.ambT = this.now; this.actx.drawImage(this.cv, 0, 0, 48, 27); } if (this.scaler) this.scaler.render(); return; }
@@ -674,6 +755,7 @@ export class Game {
     if (this.bg) c.drawImage(this.bg, 0, 0, W, H);
     if (this.sky) drawSky(c, this.sky, this.now);
     if (this.amb) this.amb.forEach(a => a.draw(this, c, this.now));
+    if (this.scene.hd) { this.drawVideos(c); drawFxBack(this, c); }
     /* avant-plans du décor : { polys, y } se range en profondeur avec les acteurs (cache ce qui est derrière sa ligne de sol y,
        pas ce qui passe devant) ; un simple polygone reste devant tout le monde ; this.fgExtra : avant-plans posés par un script */
     const fg = [...(this.scene.fg || []), ...(this.fgExtra || [])], occ = fg.filter(o => !Array.isArray(o)).map(o => ({ occ: o, y: o.y, z: 0 }));
@@ -684,6 +766,7 @@ export class Game {
     if (!this.scene.hd) { drawWinks(this, c); drawNight(this, c); drawGlass(this, c); }
     if (this.overFx) this.overFx(c);   /* plein écran par-dessus la scène (faux écran de chargement du génie) */
     if (this.fx.fade) { c.fillStyle = `rgba(0,0,0,${this.fx.fade.a})`; c.fillRect(0, 0, W, H); }
+    this.drawCard(c); if (this.cardFx) drawFx2(this, c);   /* vignette par-dessus le fondu, avec ses étincelles */
     if (this.actx && this.now - this.ambT > 0.12) { this.ambT = this.now; this.actx.drawImage(this.cv, 0, 0, 48, 27); }
     if (this.scaler) this.scaler.render();
   }
@@ -692,6 +775,7 @@ export class Game {
   drawEnt(e) {
     if (e.sleepF != null) { const k = this.sleepKey(e), sh = k && this.sleepSheet(k); if (sh) return this.drawSleep(e, this.sleepIdx[k], sh); }
     const im = this.spr(this.frame(e)) || this.spr(e.spr); if (!im) return; const c = this.ctx, s = this.sc(e), w = iw(im) * s, h = ih(im) * s;
+    if (this.scene && this.scene.hd && !e.fly) return this.drawEnt2(e, im, s, w, h);
     c.save(); c.imageSmoothingEnabled = dn(im) > 1; if (e.alpha !== undefined) c.globalAlpha = e.alpha; if (e.clipY != null) { c.beginPath(); c.rect(0, 0, W, Math.round(e.clipY)); c.clip(); }   /* clipY : caché sous cette ligne (le génie qui sort de terre) */
     c.translate(Math.round(e.x), Math.round(e.y - (e.bob || 0) - (e.float ? e.float + Math.sin(this.now * 2.4) * 2 : 0)));   /* float : flotte au-dessus du sol */
     if (e.nrot) c.translate(0, Math.min(1, Math.abs(e.nrot) / 1.5708) * Math.max(0, h - w) / 2);
@@ -699,6 +783,21 @@ export class Game {
     if (e.flip) c.scale(-1, 1);
     if (e.talk) c.scale(1, 1 + 0.018 * Math.sin(this.now * 26));
     if (dn(im) > 1) c.drawImage(im, -w / 2, -h, w, h); else c.drawImage(im, Math.round(-w / 2), Math.round(-h), Math.round(w), Math.round(h)); c.restore();
+  }
+  /* acteur de la saison 2 : ombre douce au sol, puis le sprite éclairé par le décor (scene.light : teinte de nuit, lumière chaude
+     d'une lanterne selon la distance) ; e.noLight pour ce qui émet sa propre lumière (fantôme), e.noShadow pour ce qui n'est pas au sol */
+  drawEnt2(e, im, s, w, h) {
+    const c = this.ctx, a = e.alpha ?? 1, fl = e.float ? e.float + Math.sin(this.now * 2.4) * 2 : 0, low = !(dn(im) > 1);
+    if (!e.noShadow && a > 0.05) { const sh = S2.shadowImg(), rx = w * (e.float ? 0.42 : 0.36), ry = rx * 0.24; c.save(); c.globalAlpha = a * (e.float ? 0.16 : 0.42); c.imageSmoothingEnabled = true; c.drawImage(sh, e.x - rx, e.y - ry, rx * 2, ry * 2); c.restore(); }
+    let src = im, L = this.scene.light; const dyn = this.ents.filter(o => o.light && o !== e && o.visible !== false && (o.alpha ?? 1) > 0.2);
+    if (dyn.length) L = { ...(L || {}), lamps: [...((L && L.lamps) || []), ...dyn.map(o => ({ x: o.x, y: o.y - (o.float || 0), ...o.light }))] };   /* lumière portée par un personnage (fantôme) */
+    if (L && !e.noLight && !low) src = S2.lit(im, L, e, this.scratch || (this.scratch = [document.createElement('canvas'), document.createElement('canvas')]));
+    c.save(); c.imageSmoothingEnabled = !low; c.globalAlpha = a;
+    c.translate(low ? Math.round(e.x) : e.x, (low ? Math.round(e.y - (e.bob || 0) - fl) : e.y - (e.bob || 0) - fl));
+    if (e.rot) { c.translate(0, -h / 2); c.rotate(e.rot); c.translate(0, h / 2); }
+    if (e.flip) c.scale(-1, 1);
+    if (low) c.drawImage(src, Math.round(-w / 2), Math.round(-h), Math.round(w), Math.round(h)); else c.drawImage(src, -w / 2, -h, w, h);
+    c.restore();
   }
   /* image e.sleepF de la planche du coucher : cadre fixe ancré au sol (ax, ay) ; e.sleepDy l'enfonce (Nazim dans sa fosse), e.sleepClip coupe sous le rebord */
   drawSleep(e, A, sh) {

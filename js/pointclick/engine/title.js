@@ -102,6 +102,7 @@ export function buildMenu(g, o) {
       if (o.filter) add(T('ui.filter') + ' : ' + T('ui.filter.' + o.filter()), b => { o.nextFilter(); b.textContent = T('ui.filter') + ' : ' + T('ui.filter.' + o.filter()); });
       const tog = (k, get, set) => add(T(get() ? k + 'On' : k + 'Off'), b => { set(!get()); b.textContent = T(get() ? k + 'On' : k + 'Off'); });
       tog('ui.music', o.music, o.setMusic); tog('ui.voice', o.voice, o.setVoice); tog('ui.amb', o.amb, o.setAmb);
+      if (o.retro) tog('ui.retro', o.retro, o.setRetro);   /* saison 2 : rendu années 90 ou années 2000 */
       add(g.lang === 'fr' ? 'English' : 'Français', o.toggleLang);
       add(T('ui.back'), () => { page = 'main'; sel = 0; render(); }, 'back');
     } else if (page === 'chap' || page === 'chap2') {
