@@ -4,7 +4,7 @@
   "fr": "La chambre rouge",
   "en": "The red room"
  },
- "note": "Dialogues complets FR/EN (25/11/2026), sur le modèle du chapitre pilote 11. who = id du personnage dans le casting mCASTING de la saison 2 ; emo = consigne d’émotion de la réplique (anglais). Petit homme en rouge : toutes ses répliques sont jouées à l’envers au montage, SAUF c22.use.wab.redman (à l’endroit, Wabbajack). c22.use.wab.redman.hero est la seule réplique du héros jouée à l’envers. Tonalité : aucun crime évoqué, on reste dans l’étrange.",
+ "note": "Dialogues complets FR/EN (25/11/2026), sur le modèle du chapitre pilote 11. who = id du personnage dans le casting mCASTING de la saison 2 ; emo = consigne d’émotion de la réplique (anglais). Petit homme en rouge : toutes ses répliques sont jouées à l’envers au montage, SAUF c22.use.wab.redman (à l’endroit, Wabbajack). c22.use.wab.redman.hero est la seule réplique du héros jouée à l’envers. Tonalité : aucun crime évoqué, on reste dans l’étrange. Petit homme en rouge (27/11, choix de Stéphan) : ses répliques marquées « envers » sont jouées à l’envers comme dans la série (prise retournée, débit +8 %, léger écho), toujours sous-titrées, et ses animations sont jouées à l’envers aussi ; seule sa réplique sous Wabbajack (« dans le bon sens ») reste à l’endroit.",
  "lines": [
   {
    "key": "c22.wake.1",
@@ -12,7 +12,8 @@
    "emo": "strange sing-song, backwards diction",
    "ctx": "Réveil dans la chambre rouge : le petit homme danse autour du héros (réplique jouée à l’envers au montage)",
    "fr": "Hé, toi. T’es enfin réveillé.",
-   "en": "Hey, you. You’re finally awake."
+   "en": "Hey, you. You’re finally awake.",
+   "envers": true
   },
   {
    "key": "c22.wake.2",
@@ -60,7 +61,8 @@
    "emo": "sing-song, cheerful, backwards diction",
    "ctx": "Parler au petit homme (réplique jouée à l’envers au montage)",
    "fr": "Ta meule dort chez le monsieur qui a fait les rideaux.",
-   "en": "Your cheese is sleeping at the house of the man who did the curtains."
+   "en": "Your cheese is sleeping at the house of the man who did the curtains.",
+   "envers": true
   },
   {
    "key": "c22.talk.redman.2",
@@ -92,7 +94,8 @@
    "emo": "giggling, sing-song, backwards diction",
    "ctx": "Le petit homme rit (réplique jouée à l’envers au montage)",
    "fr": "Tu parles mal, mais tu parles fort.",
-   "en": "You speak badly, but you speak loudly."
+   "en": "You speak badly, but you speak loudly.",
+   "envers": true
   },
   {
    "key": "c22.use.wab.redman",
@@ -132,7 +135,8 @@
    "emo": "offended, sing-song, backwards diction",
    "ctx": "Le petit homme répète la même phrase : il revendique les rideaux (réplique jouée à l’envers au montage)",
    "fr": "Ma résidence secondaire. Les rideaux, c’est moi.",
-   "en": "My holiday home. I did the curtains."
+   "en": "My holiday home. I did the curtains.",
+   "envers": true
   },
   {
    "key": "c22.sheo.3",
@@ -364,7 +368,8 @@
    "emo": "happy, sing-song, backwards diction",
    "ctx": "Pendant la danse (réplique jouée à l’envers au montage)",
    "fr": "Il danse comme moi, mais de l’autre côté.",
-   "en": "He dances like me, only from the other side."
+   "en": "He dances like me, only from the other side.",
+   "envers": true
   },
   {
    "key": "c22.gag.hero",
@@ -380,7 +385,8 @@
    "emo": "sing-song, backwards diction",
    "ctx": "Le héros repart par les rideaux (réplique jouée à l’envers au montage)",
    "fr": "À bientôt. Ou à tout à l’heure. Ça dépend du sens.",
-   "en": "See you soon. Or a moment ago. Depends which way."
+   "en": "See you soon. Or a moment ago. Depends which way.",
+   "envers": true
   },
   {
    "key": "c22.end.hero",
