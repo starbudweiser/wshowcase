@@ -80,7 +80,7 @@ Audit en lecture seule, fait pour décider quoi reprendre des propositions (Codi
 - **Branches mortes en partie normale** (pas des bugs) :
   - `giantMet` (prairie : le héros arrive toujours avec le fromage) ;
   - `counterRoll` (café : il a déjà la brioche).
-- **Rue (chapitre 1)** : trop d'états (compteurs `tries`, `btalk`, `blocks`). Lancé jusqu'à 500 000 états ; résultat dans `work/softlock_rapport.txt`.
+- **Rue (chapitre 1)** : 170 496 états (compteurs `tries`, `btalk`, `blocks`) en 108 s, **aucun blocage**. Les autres chapitres de la S1 sont sans blocage. Rapport complet : `work/softlock_rapport.txt`.
 - **Limites** :
   - l'état interne aux modules (`let` hors de l'objet scène) n'est pas remis à zéro ;
   - les `tick()` ne sont pas joués ;
@@ -102,3 +102,15 @@ Elle ne s'active qu'avec `?lightfx` ; sans ce paramètre, rien n'est calculé.
   - très cohérent en **rendu 90** (la trame se fond dans la palette 64 couleurs) ;
   - en **rendu 2000**, la trame en damier se voit sur les décors peints : il faudrait la lueur lisse existante en 2000 et la trame en 90 seulement ;
   - l'effet à phases sur l'objet clé fonctionne, mais c'est un indice visuel fort : à réserver au génie, ou à un mode « aide ».
+
+## 8. Codixel (essai isolé, `work/essai_codixel/`)
+- `vendor/pixel.js` : copie du commit `604a9dcb`, relue avant exécution (seulement `fs` et `zlib`, pour les PNG). **Non committée.**
+- `rig_walk.cjs` : 8 os sur `s2/spr/hero_pr` (torse, tête, deux jambes en deux segments, bras en deux segments), polygones `paint` pour séparer les jambes et le bras, cycle de 12 images.
+- Comparaison avec le cycle LTX validé (`s2/anim/hero_wr`) : `compare_ltx_vs_codixel.gif`, `planche.png`, `zoom_jambes.png`.
+- **Constat** :
+  - le rig garde le dessin net et la palette exacte ;
+  - mais une seule image ne contient ni l'intérieur des jambes ni le tissu sous le bras. Au pas, il s'ouvre un vide entre les cuisses, des éclats aux coutures et un trou dans la tunique quand le bras bouge ;
+  - les bottes pivotent en bloc (pas de déroulé du pied), le genou casse « à la marionnette » et le corps ne tourne pas : marche de pantin découpé, loin du cycle LTX ;
+  - pour un héros : non ;
+  - pour un secondaire immobile (respiration, tête, bras qui fait signe, queue, ailes) : plausible, en mouvements de faible amplitude.
+- **Trouvé en passant** : l'image 3 du cycle LTX `hero_wr` a un liseré rose et une tache verte entre les bottes (reste de détourage) : `ltx_f3.png`. À vérifier côté saison 2.
