@@ -1,0 +1,79 @@
+{
+ "chapter": "20_extra",
+ "title": "Répliques d’interaction (regards, actions, Wabbajack)",
+ "note": "Répliques écrites pendant l’intégration, hors des dialogues du chapitre ; textes tirés de lang/*.js, même casting.",
+ "lines": [
+  {
+   "key": "look.butterfly20",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_20.js)",
+   "fr": "Un papillon bleu de chez nous. Ses ailes soignent les maux de tête.",
+   "en": "A blue butterfly from back home. Its wings cure headaches."
+  },
+  {
+   "key": "look.s20garland",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_20.js)",
+   "fr": "Des guirlandes sur une clôture cassée. Le parc fête sa propre fin.",
+   "en": "Garlands on a broken fence. The park is celebrating its own end."
+  },
+  {
+   "key": "look.s20hut",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_20.js)",
+   "fr": "Un abri en planches. Le toit a l’air solide. Une chèvre y serait bien.",
+   "en": "A plank shelter. The roof looks sturdy. A goat would be happy up there."
+  },
+  {
+   "key": "s20.stand",
+   "who": "hero",
+   "emo": "mildly annoyed, wry",
+   "ctx": "Interaction (s2_20.js)",
+   "fr": "Je me relève. Je reste caché dans mon cœur.",
+   "en": "I stand up. I stay hidden in my heart."
+  },
+  {
+   "key": "s20.wk.back",
+   "who": "hero",
+   "emo": "resigned, dry",
+   "ctx": "Interaction (s2_20.js)",
+   "fr": "Et ça redevient comme avant. Même ici, le Wabbajack a la magie courte.",
+   "en": "And it’s back to normal. Even here, the Wabbajack’s magic doesn’t last."
+  },
+  {
+   "key": "look.rolls20",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_20b.js)",
+   "fr": "Deux brioches sucrées qui me fixent. Je ne les mangerai pas. Pas tout de suite.",
+   "en": "Two sweet rolls staring at me. I won’t eat them. Not just yet."
+  },
+  {
+   "key": "s20.fridge.blocked",
+   "who": "hero",
+   "emo": "mildly annoyed, wry",
+   "ctx": "Interaction (s2_20b.js)",
+   "fr": "Pas avec ces deux-là entre le frigo et moi.",
+   "en": "Not with those two between me and the fridge."
+  },
+  {
+   "key": "look.s20door",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_20b.js)",
+   "fr": "Une porte battante. Les petits monstres savent l’ouvrir. Moi aussi, heureusement.",
+   "en": "A swinging door. The little monsters can open it. So can I, luckily."
+  },
+  {
+   "key": "look.s20shelves",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_20b.js)",
+   "fr": "Des casseroles en métal, propres comme des armes neuves.",
+   "en": "Metal pans, as clean as brand-new weapons."
+  }
+ ]
+}
