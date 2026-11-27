@@ -187,6 +187,10 @@ async function ambLoad(c, id) {
   if (ambCache[id]) return ambCache[id];
   const r = await fetch(`assets/pointclick/amb/${id}.mp3`); if (!r.ok) throw new Error('amb'); return (ambCache[id] = await c.decodeAudioData(await r.arrayBuffer()));
 }
+/* bruitages enregistrés (assets/pointclick/sfx/<nom>.mp3), décodés une fois : pas sur le bois du quai, etc. */
+const sfxCache = {};
+async function sfxLoad(c, n) { if (sfxCache[n]) return sfxCache[n]; const r = await fetch(`assets/pointclick/sfx/${n}.mp3`); if (!r.ok) throw new Error('sfx'); return (sfxCache[n] = await c.decodeAudioData(await r.arrayBuffer())); }
+async function sfxPlay(n, vol = 0.5, rate = 1) { const c = ensure(); if (!c) return; let b; try { b = await sfxLoad(c, n); } catch { return; } const s = c.createBufferSource(), g = c.createGain(); s.buffer = b; s.playbackRate.value = rate; g.gain.value = vol; s.connect(g).connect(master); s.start(); }
 const ONE = {
   bird: () => { const f = 2300 + Math.random() * 1800, n = 2 + (Math.random() * 4 | 0); for (let i = 0; i < n; i++) tone({ f: f * (0.9 + Math.random() * 0.3), to: f * (0.7 + Math.random() * 0.7), d: 0.06 + Math.random() * 0.04, t: i * (0.09 + Math.random() * 0.03), g: 0.022, type: 'sine' }); },
   crow: () => { for (let i = 0; i < 2 + (Math.random() * 2 | 0); i++) { tone({ f: 430, to: 290, d: 0.22, t: i * 0.34, g: 0.04, type: 'sawtooth' }); noise({ d: 0.2, f: 900, q: 1.5, g: 0.03, t: i * 0.34, type: 'bandpass' }); } },
@@ -227,6 +231,8 @@ export const snd = {
   oneshot(kind) { if (!ambOn || !ONE[kind] || !ensure()) return; ONE[kind](); },
   oneshotFor(scene, night, interior) { const l = POOL[night ? (interior ? 'nightIn' : 'night') : scene]; return l && l[Math.random() * l.length | 0]; },
   unlock: ensure,
+  /* pas enregistrés : une des n prises au hasard, hauteur légèrement variée (jamais deux pas identiques) */
+  stepFile(kind, n = 6, vol = 0.45) { sfxPlay(`step_${kind}_${Math.random() * n | 0}`, vol * (0.85 + Math.random() * 0.3), 0.92 + Math.random() * 0.16); },
   step() { noise({ d: 0.06, f: 500 + Math.random() * 300, q: 0.8, g: 0.07, type: 'lowpass' }); },
   click() { tone({ f: 900, to: 600, d: 0.04, g: 0.05, type: 'triangle' }); },
   pop() { tone({ f: 420, to: 1100, d: 0.12, g: 0.1, type: 'triangle' }); tone({ f: 1320, d: 0.16, t: 0.1, g: 0.06, type: 'sine' }); },

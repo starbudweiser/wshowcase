@@ -66,6 +66,18 @@ export function twinkle(g, x, y, col = '#ffe7a0') {
   const P = parts(g);
   for (let i = 0; i < 14; i++) P.push({ k: 'spark', x: x + R(-8, 8), y: y + R(-8, 6), vx: R(-8, 8), vy: R(-30, -10), g: 0, drag: 1, t: -R(0, 0.3), life: R(0.5, 0.9), s: R(0.6, 1.3), col, tw: true, star: true });
 }
+/* cri de dragon (« FUS RO DAH ») : ondes de choc successives qui partent vers dir (1 = droite, -1 = gauche), poussière soufflée */
+export function shout(g, x, y, dir = 1) {
+  const P = parts(g);
+  for (let k = 0; k < 4; k++) P.push({ k: 'ring', x: x + dir * k * 6, y, t: -k * 0.09, life: 0.6, r0: 3, r1: 36 + k * 10, col: k % 2 ? '#dff4ff' : '#9fd6ff' });
+  for (let i = 0; i < 40; i++) { const a = R(-0.5, 0.5) + (dir > 0 ? 0 : Math.PI), v = R(60, 160); P.push({ k: 'smoke', x: x + R(-4, 4), y: y + R(-6, 6), vx: Math.cos(a) * v, vy: Math.sin(a) * v * 0.5, g: 0, drag: 2.2, t: -R(0, 0.15), life: R(0.5, 0.9), s: R(2, 4), grow: R(6, 12), rot: R(0, TAU), vr: R(-2, 2) }); }
+}
+/* éclats de bois (caisse forcée, tonneau brisé) */
+export function splinters(g, x, y, n = 26) {
+  const P = parts(g), cols = ['#8a5a2b', '#a87440', '#6b4220', '#c9965a'];
+  for (let i = 0; i < n; i++) { const a = R(-Math.PI * 0.95, -Math.PI * 0.05), v = R(50, 120); P.push({ k: 'conf', x: x + R(-8, 8), y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, g: 260, drag: 0.8, t: 0, life: R(0.6, 1.1), s: R(0.8, 1.8), col: cols[i % cols.length], rot: R(0, TAU), vr: R(-14, 14) }); }
+  for (let i = 0; i < 8; i++) P.push({ k: 'smoke', x: x + R(-10, 10), y: y + R(-4, 2), vx: R(-10, 10), vy: R(-14, -4), g: 0, drag: 1.2, t: 0, life: R(0.6, 1), s: R(4, 7), grow: R(8, 14), rot: R(0, TAU), vr: R(-1, 1) });
+}
 /* confettis de Sheogorath : miettes de fromage et paillettes violettes qui tourbillonnent en tombant */
 export function confetti(g, x, y, n = 50) {
   const P = parts(g), cols = ['#ffd166', '#f4b942', '#c77dff', '#e9a2ff', '#ff6b6b'];

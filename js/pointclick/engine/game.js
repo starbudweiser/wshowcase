@@ -88,13 +88,19 @@ export class Game {
   /* image n d'une boucle S2 prête (toutes ses images chargées), sinon null */
   life(base, n) { const A = this.s2anim && this.s2anim[base]; if (!A || !this.s2ready[base]) return null; return `s2a:${base}/${((n % A.n) + A.n) % A.n}`; }
   lifeAt(base, t) { const A = this.s2anim && this.s2anim[base]; return A ? this.life(base, Math.floor(t * (A.fps || 10))) : null; }
+  /* repos : la boucle, puis la pose de départ tenue un moment (durée qui varie d'une fois à l'autre) : jamais un mouvement mécanique */
+  lifeIdle(base, t, seed = 0) {
+    const A = this.s2anim && this.s2anim[base]; if (!A) return null; const D = A.n / (A.fps || 10), P = D + 2.6;
+    const k = Math.floor(t / P), u = t - k * P, o = 2.4 * (((Math.sin((k + 1) * 12.9898 + seed * 78.233) * 43758.5453) % 1 + 1) % 1);   /* départ de la boucle décalé au hasard dans la période */
+    return this.life(base, u >= o && u < o + D ? Math.floor((u - o) * (A.fps || 10)) : 0);
+  }
   /* charge les images d'une boucle S2 ; elle ne joue qu'une fois complète (pas d'image manquante en cours de lecture) */
   loadLife(base) {
     const A = this.s2anim && this.s2anim[base]; if (!A || this.s2ready[base] !== undefined) return; this.s2ready[base] = false; const low = this.s2low;
     Promise.all(Array.from({ length: A.n }, (_, i) => this.img(this.sprPath(`s2a:${base}/${i}`)))).then(r => { if (this.s2low === low) this.s2ready[base] = r.every(Boolean); else this.s2ready[base] = undefined; });
   }
   frame(e) {
-    const L = S2.LIFE[e.spr]; if (L && this.scene && this.scene.hd) { const b = (e.talk && L.talk) || L.idle, f = b && this.lifeAt(b, this.now + (e.ph || 0)); return f || e.spr; }
+    const L = S2.LIFE[e.spr]; if (L && this.scene && this.scene.hd) { const t = this.now + (e.ph || 0), f = e.talk && L.talk ? this.lifeAt(L.talk, t) || this.lifeIdle(L.idle, t, e.ph) : L.idle && this.lifeIdle(L.idle, t, e.ph); return f || e.spr; }
     const A = ANIM[e.spr]; if (!A) return e.spr;
     const st = e.animState || (e.goal ? 'walk' : e.talk ? 'talk' : 'idle'), fps = (A.fps && A.fps[st]) || 3;
     let fr = A[st] || A.idle;
@@ -283,7 +289,7 @@ export class Game {
   s2Chapters(rs) {
     const T = this.T, l = this.lang === 'fr' ? 'fr' : 'en', main = CHAPTERS2.filter(c => !c.lang || c.lang === l), bonus = CHAPTERS2.filter(c => c.lang && c.lang !== l);
     const open = c => c.built && (s2All() || rs.includes(c.id) || c.id === 's2_11' || (c.bonusOf && rs.includes(c.bonusOf)));
-    return [...main, ...bonus.map(c => ({ ...c, bonus: true }))].map(c => open(c) ? { id: c.id, label: (c.bonus ? T('ui.bonus') + ' ' : '') + T('ch.' + c.id), go: () => this.startAt(c) } : { id: c.id, label: c.built ? T('ch.' + c.id).replace(/\. .*/, '. ???') : T('ch.' + c.id) + ' ' + T('ui.soon'), locked: true });
+    return [...main, ...bonus.map(c => ({ ...c, bonus: true }))].map(c => open(c) ? { id: c.id, label: (c.bonus ? T('ui.bonus') + ' ' : '') + T('ch.' + c.id), go: () => this.startAt(c) } : { id: c.id, label: (c.bonus ? T('ui.bonus') + ' ' : '') + (c.built ? T('ch.' + c.id).replace(/\. .*/, '. ???') : T('ch.' + c.id) + ' ' + T('ui.soon')), locked: true });
   }
   /* commutateur de musique (bouton ♪ du panneau et bouton du menu), préférence mémorisée */
   setMusic(on, quiet) {
@@ -702,7 +708,10 @@ export class Game {
       h.flip = !this.scene.hd && h.dir === 'l' && !h.front && !h.back;   /* S2 : vues gauche et droite dessinées, pas de miroir */
       if (moving) h.pose = null;
       h.spr = this.heroFrame(h, moving, s);
-      if (moving && this.scene.hd) { h.bob = 0; if (this.now >= (h.stepT || 0)) { snd.step(); h.stepT = this.now + 0.36; } }   /* S2 : le cycle de marche LTX porte le mouvement */
+      if (moving && this.scene.hd) {   /* S2 : le cycle LTX porte le mouvement ; un pas sonore à chaque appui (deux par cycle), selon le sol (scene.steps) */
+        h.bob = 0; const A = this.s2anim && this.s2anim[S2.HERO_LIFE.walk[h.back ? 'b' : h.front ? 'f' : h.dir === 'l' ? 'l' : 'r']], ph = A && A.stride ? Math.floor(h.walkD / (A.stride * s * A.n / 2)) : Math.floor(this.now / 0.42);
+        if (ph !== h.stepPh) { h.stepPh = ph; if (this.scene.steps) snd.stepFile(this.scene.steps, 6, 0.3 + 0.3 * s); else snd.step(); }
+      }   /* S2 : le cycle de marche LTX porte le mouvement */
       else if (moving) { h.bob = Math.abs(Math.sin(h.walkD / (5.2 * s) * Math.PI / 2)) * (this.spr('hero.w1') ? 0.7 : 1.2) * s; if (this.now >= (h.stepT || 0)) { snd.step(); h.stepT = this.now + 0.3; } } else h.bob = 0;
     }
     this.ents.forEach(e => {
@@ -766,7 +775,7 @@ export class Game {
     if (!this.scene.hd) { drawWinks(this, c); drawNight(this, c); drawGlass(this, c); }
     if (this.overFx) this.overFx(c);   /* plein écran par-dessus la scène (faux écran de chargement du génie) */
     if (this.fx.fade) { c.fillStyle = `rgba(0,0,0,${this.fx.fade.a})`; c.fillRect(0, 0, W, H); }
-    this.drawCard(c); if (this.cardFx) drawFx2(this, c);   /* vignette par-dessus le fondu, avec ses étincelles */
+    if (this.cardFx) { this.drawCard(c); drawFx2(this, c); }   /* vignette par-dessus le fondu, avec ses étincelles (redessinées devant elle) */
     if (this.actx && this.now - this.ambT > 0.12) { this.ambT = this.now; this.actx.drawImage(this.cv, 0, 0, 48, 27); }
     if (this.scaler) this.scaler.render();
   }

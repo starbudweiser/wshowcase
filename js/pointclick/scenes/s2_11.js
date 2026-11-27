@@ -2,14 +2,14 @@
    en poses fixes détourées des fiches ; parole et marche LTX à venir. Coordonnées logiques 480 × 270 (décor 960 × 540).
    Déroulé : réveil -> biscuit au perroquet (il récite les réparties) -> duel d'insultes -> carte -> caisse à la croix : le fromage ->
    le capitaine fantôme le confisque -> Wabbajack sur le grog : bière de racine -> bière au fantôme : feu d'artifice -> Sheogorath. */
-import { zap, fireworks, hit, twinkle, confetti } from '../engine/fx2.js';
+import { zap, fireworks, hit, twinkle, confetti, shout, splinters } from '../engine/fx2.js';
 import { HERO2 } from '../data/sheets_s2.js';
 import { CHAPTERS2 } from './index.js';
 
 const GAG = [['guybrush', 'c11.gag.1'], ['hero', 'c11.gag.2'], ['guybrush', 'c11.gag.3'], ['hero', 'c11.gag.4'], ['guybrush', 'c11.gag.5'], ['narr', 'c11.gag.6']];
 
 export default {
-  id: 's2_11', hd: true, bg: 's2/d_monkey.webp', music: 's2_11_pirates', amb: ['night', 0.35],
+  id: 's2_11', hd: true, bg: 's2/d_monkey.webp', music: 's2_11_pirates', amb: ['harbor', 0.4], steps: 'wood',
   persp: [160, 0.34, 270, 0.635], walkK: 1.9, blockR: [16, 6],
   /* éclairage des personnages : nuit bleutée, lanternes et fenêtres de la taverne qui réchauffent le côté tourné vers elles */
   light: { tint: '#6f86c4', k: 0.4, lamps: [{ x: 455, y: 95, r: 200, col: '#ffad5c', k: 0.95 }, { x: 349, y: 76, r: 120, col: '#ffc56e', k: 0.75 }] },
@@ -47,6 +47,9 @@ export default {
     { id: 'statue', spr: 's2:i_statue', x: 201, y: 143, scale: 0.27, hot: true, at: [205, 168], solid: false, noShadow: true },
     { id: 'grog', spr: 's2:i_grog', x: 461, y: 151, z: 60, scale: 0.29, hot: true, at: [430, 214], solid: false, noShadow: true },
     { id: 'lechuck', spr: 's2:lechuck', x: 150, y: 206, hot: false, visible: false, float: 8, alpha: 0.88, at: [196, 214], aura: { col: '#5dffa8', r: 0.62, a: 0.55, wisps: 7 }, noLight: true, light: { col: '#5dffa8', r: 140, k: 0.85 } },
+    /* métamorphoses du Wabbajack (cachées) : poulet en caoutchouc à poulie, mammouth à trois têtes */
+    { id: 'chicken11', spr: 's2:p_chicken11', x: 0, y: 0, scale: 0.3, visible: false, hot: false, noShadow: true },
+    { id: 'mammoth11', spr: 's2:p_mammoth11', x: 201, y: 143, scale: 0.34, visible: false, hot: false, noShadow: true },
     { id: 'sheo', spr: 's2:sheo', x: 300, y: 214, hot: false, visible: false, aura: { col: '#c77dff', r: 0.6, a: 0.35, wisps: 3 } }
   ],
 
@@ -142,18 +145,24 @@ export default {
       case 'grog':
         await Z(() => { if (e) { e.id = 'rootbeer'; e.spr = 's2:i_rootbeer'; g.set('grogWab'); } else { g.drop('grog'); g.give('rootbeer'); } }); g.chk();
         await g.say('hero', 'c11.wab.grog'); return;
-      case 'lechuck': if (!e || !e.visible) break;
-        await Z(() => { e.visible = false; }, at, { cols: ['#7dffb6', '#ffd166', '#ffffff', '#5dffd0'] }); g.chk(); await g.say('hero', 'c11.wk.ghost'); await g.wait(400);
+      case 'lechuck': {   /* un poulet en caoutchouc à poulie, qui file vers le gréement du navire… puis revient en capitaine */
+        if (!e || !e.visible) break; const C = g.ent('chicken11');
+        await Z(() => { e.visible = false; C.x = at[0]; C.y = at[1] + 10; C.visible = true; }, at, { cols: ['#7dffb6', '#ffd166', '#ffffff', '#5dffd0'] }); g.chk();
+        await g.say('hero', 'c11.wk.ghost'); C.visible = false; g.sfx('whoosh'); await g.fly(C.spr, [at[0], at[1] + 4], [52, 40], 700, -10, 0, C.scale); g.chk();
+        await g.wait(500); g.sfx('whoosh'); await g.fly(C.spr, [52, 40], [at[0], at[1] + 4], 600, -10, 0, C.scale); g.chk();
         await zap(g, ...at, { peak: () => { e.visible = true; }, cols: ['#7dffb6', '#5dffd0', '#ffffff'] }); await g.say('hero', 's11.wk.ghost.back'); return;
+      }
       case 'guybrush': {
         const spr = e.spr, fl = e.flip;
         await Z(() => { e.spr = h.x < e.x ? HERO2.ql : HERO2.qr; e.flip = false; }); g.chk();
         await g.say('narr', 'c11.wk.apprentice'); await g.wait(500); await zap(g, ...this.mid(g, e), { peak: () => { e.spr = spr; e.flip = fl; } }); return;
       }
-      case 'parrot': await Z(null); g.chk(); g.shake(450, 3); hit(g, ...at, '#ffd166'); await g.say('parrot', 'c11.wk.parrot'); await g.say('hero', 'c11.wk.parrot.hero'); return;
-      case 'statue':
-        await Z(() => { e.visible = false; }); g.chk(); await g.say('guybrush', 'c11.wk.statue'); await g.wait(300);
-        await zap(g, ...at, { peak: () => { e.visible = true; } }); await g.say('hero', 's11.wk.statue.back'); return;
+      case 'parrot': await Z(null); g.chk(); g.shake(600, 4); shout(g, at[0] - 6, at[1], h.x < at[0] ? -1 : 1); g.sfx('whoosh'); await g.say('parrot', 'c11.wk.parrot'); await g.say('hero', 'c11.wk.parrot.hero'); return;
+      case 'statue': {   /* un mammouth à trois têtes, vivant, sur le tonneau… le temps d'une réplique */
+        const M = g.ent('mammoth11');
+        await Z(() => { e.visible = false; M.visible = true; }); g.chk(); g.face(g.ent('guybrush').x); await g.say('guybrush', 'c11.wk.statue'); await g.wait(300);
+        await zap(g, ...at, { peak: () => { e.visible = true; M.visible = false; } }); await g.say('hero', 's11.wk.statue.back'); return;
+      }
     }
     await Z(null); g.chk(); await g.say('hero', 'wab.none');
   },
@@ -180,7 +189,7 @@ export default {
 
   /* la caisse à la croix : le fromage de Hollande… aussitôt confisqué par le capitaine fantôme */
   async crate(g) {
-    await g.say('hero', 'use.s11crate.map'); g.sfx('clang'); hit(g, 100, 252); await g.wait(300); g.set('crateOpen'); g.sfx('pop'); twinkle(g, 100, 246, '#ffd166'); g.give('cheese_nl'); await g.say('hero', 's11.crate.open');
+    await g.say('hero', 'use.s11crate.map'); g.sfx('clang'); hit(g, 100, 252); splinters(g, 100, 250); g.shake(250, 2); await g.wait(400); g.set('crateOpen'); g.sfx('pop'); twinkle(g, 100, 246, '#ffd166'); g.give('cheese_nl'); await g.say('hero', 's11.crate.open');
     const L = g.ent('lechuck'), h = g.hero; L.x = 40; L.y = 150; L.alpha = 0; L.visible = true; L.rawSpeed = true; g.shake(600, 2);
     zap(g, 36, 96, { cols: ['#7dffb6', '#5dffd0', '#d6ffe8'] });   /* le fantôme jaillit du navire */
     const t0 = g.now; const fadeIn = g.until(() => { L.alpha = Math.min(0.88, (g.now - t0) * 0.6); return L.alpha >= 0.88; });

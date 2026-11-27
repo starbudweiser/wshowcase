@@ -81,3 +81,28 @@ FLUX, une à la fois (file calcul-lourd) : plusieurs jours de calcul, avec une p
   sur le fantôme → feu d'artifice vert → fromage → Sheogorath → chapitre 12.
 - Trou du script : d'où vient le biscuit ? Proposition : sur un tonneau devant la taverne ; réplique « prendre » à
   écrire et à voiser (réplique générique en attendant).
+
+## État au 27/11/2026 (nuit)
+### Fait
+- Moteur : scènes `hd` 960 × 540 (S1 inchangée), sprites S2 à densité 2, menu « Saison 2 » (ouvert après la S1 ou avec `?s2`),
+  vignettes d'ouverture dessinées sur le canevas, transition années 90 → 2000 au début de la saison, option rendu années 90
+  (images converties par `tools/s2_retro.py`), effets `fx2.js`, ombres, éclairage du décor sur les personnages, zones de
+  décor en vidéo (`scene.video`), boucles LTX de repos / parole / marche (`assets/pointclick/s2/anim.json`), pas sonores
+  selon le sol (`scene.steps`), ambiance par scène (`scene.amb`).
+- Textes et voix de toute la saison branchés (`tools/s2_lang.py`, `tools/s2_voices_install.sh`).
+- Chapitre 11 jouable de bout en bout : décor vide, mer et galion animés, héros avec marches LTX (profils, face, dos),
+  capitaine fantôme recalculé sans halo, Wabbajack (arc, fumée, métamorphoses), duel, feux d'artifice, Sheogorath.
+### Chaîne de production d'un chapitre (outils)
+1. Décor vide : `tools/gen_s2_decors.sh` (3 graines) → `tools/s2_assets.py decor` + `tools/s2_retro.py decor`.
+2. Personnages et objets : fiche validée détourée (`s2_assets.py sprite`), objets `tools/gen_s2_items.sh`.
+3. Vie : `tools/gen_s2_life.sh` (vidéos LTX en boucle) → `tools/s2_life_extract.sh` (boucles + versions années 90) ;
+   contrôler chaque planche `work/s2play/ltx/sheet_*.jpg` (pivot du buste, sourire, franges roses).
+4. Décor animé : bande du décor en vidéo LTX (`tools/gen_s2_sea.sh` pour modèle) → `tools/s2_video.py`.
+5. Scène `js/pointclick/scenes/s2_NN.js` (points chauds, zones de marche, avant-plans, lumières, effets), marquer `built`.
+### À faire
+- Chapitre 11 : boucles de repos et parole de l'apprenti, du maître d'armes, de Sheogorath et du perroquet (en calcul) ;
+  sprites des métamorphoses (poulet en caoutchouc à poulie, mammouth à trois têtes) ; voix de la réplique du narrateur
+  sur la transition (`nar.s2up`) et des répliques écrites à la main (regards, biscuit) ; expressions du héros (8 visages,
+  face et profils, en boucles de parole LTX par émotion).
+- Chapitres 12 à 28 sur la même chaîne (12 en préparation : décors, voiture / charrette, meule géante, pelote, Sam et Max).
+- Génie des indices en HD, prologue (fête de la S1 → Sheogorath), validation des décors et animations par Stéphan.

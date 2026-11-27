@@ -29,7 +29,7 @@ export function heroFrame2(g, h, moving, s) {
     return v === 'b' ? HERO2.b : v === 'f' ? HERO2.f : HERO2[v];
   }
   const view = h.back ? 'b' : h.front ? 'f' : h.dir === 'l' ? 'ql' : 'qr'; if (view === 'b') return HERO2.b;
-  const f = (h.talk && g.lifeAt(HERO_LIFE.talk[view], g.now)) || g.lifeAt(HERO_LIFE.idle[view], g.now);   /* parle, sinon repos vivant */
+  const f = (h.talk && g.lifeAt(HERO_LIFE.talk[view], g.now)) || g.lifeIdle(HERO_LIFE.idle[view], g.now, 1);   /* parle, sinon repos vivant */
   return f || HERO2[view];
 }
 /* personnages : sprite de base -> boucles LTX (repos vivant, parole) ; anim.json donne le nombre d'images et la cadence */

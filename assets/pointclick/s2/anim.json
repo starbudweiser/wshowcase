@@ -1,12 +1,38 @@
 {
+ "hero_iql": {
+  "fps": 8.0,
+  "n": 24
+ },
+ "hero_iqr": {
+  "fps": 8.0,
+  "n": 24
+ },
+ "hero_wb": {
+  "fps": 11.52,
+  "n": 12,
+  "stride": 13.33
+ },
+ "hero_wf": {
+  "fps": 11.08,
+  "n": 12,
+  "stride": 13.33
+ },
  "hero_wl": {
-  "fps": 12.0,
+  "fps": 11.08,
   "n": 12,
   "stride": 13.33
  },
  "hero_wr": {
-  "fps": 13.09,
+  "fps": 12.52,
   "n": 12,
   "stride": 13.33
+ },
+ "lechuck2_i": {
+  "fps": 8.0,
+  "n": 24
+ },
+ "lechuck2_t": {
+  "fps": 7.5,
+  "n": 20
  }
 }

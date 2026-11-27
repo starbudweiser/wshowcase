@@ -17,6 +17,9 @@ P = os.path.abspath(os.path.join(os.path.dirname(__file__), '..')); R = os.path.
 AN = os.path.join(R, 'assets', 'pointclick', 's2', 'anim'); IDX = os.path.join(R, 'assets', 'pointclick', 's2', 'anim.json')
 
 
+DESPILL_ALL = '--despill=all' in sys.argv   # personnage sans aucun magenta (héros) : nettoyage sur toute la silhouette
+
+
 def key(a, bg=None):
     """alpha (0-1) d'après l'écart au fond magenta ; trous intérieurs d'une autre couleur que le fond bouchés ; magenta retiré des bords"""
     a = a.astype(np.float32); h, w, _ = a.shape
@@ -29,8 +32,8 @@ def key(a, bg=None):
     # bande du bord (3 px) : le flou de mouvement y mêle le magenta du fond ; on retire l'excès de rouge et de bleu sur le vert
     from scipy.ndimage import binary_erosion
     solid = al > 0.5; band = solid & ~binary_erosion(solid, iterations=3)
-    mg = np.minimum(a[..., 0], a[..., 2]) - a[..., 1]; fix = band & (mg > 12)
-    a[fix, 0] -= mg[fix] * 0.85; a[fix, 2] -= mg[fix] * 0.85; al[band & (mg > 60)] *= 0.5
+    mg = np.minimum(a[..., 0], a[..., 2]) - a[..., 1]; zone = solid if DESPILL_ALL else band; fix = zone & (mg > (4 if DESPILL_ALL else 12))
+    a[fix, 0] -= mg[fix] * 0.85; a[fix, 2] -= mg[fix] * 0.85; al[zone & (mg > 60)] *= 0.5
     return np.dstack([np.clip(a, 0, 255), al * 255]).astype(np.uint8), bg
 
 

@@ -11,6 +11,16 @@ P[i_grog]="one big wooden tankard of bubbling green pirate grog with foam spilli
 P[i_rootbeer]="one big wooden tankard of dark brown root beer with a thick creamy white foam head spilling over, iron hoops, a handle on the side. $IT"
 P[i_cheese_nl]="one whole round wheel of Dutch cheese covered in shiny red wax, one slice cut out showing the yellow cheese inside. $IT"
 P[i_statue]="one small grey carved stone statue of a monkey with three heads sitting on a little square stone base, mossy, about knee high. $IT"
+# chapitre 11 : métamorphoses du Wabbajack
+P[p_chicken11]="one yellow rubber chicken toy with a red comb and a wide open beak, a small metal pulley wheel attached to its back by a hook, as if ready to slide along a rope. $IT"
+P[p_mammoth11]="one small woolly mammoth calf with THREE heads side by side on one body, each head with its own little trunk and tusks, shaggy brown fur, standing on four legs, cute and absurd, about knee high. $IT"
+# chapitre 12
+P[i_sweetroll]="one golden glazed sweet roll bun with white icing dripping over the top, round and plump. $IT"
+P[i_cheese12]="one whole wheel of pale yellow cheese with holes, a big rabbit-shaped bite missing from its edge. $IT"
+P[p_car12]="one old 1960s black and white American police sedan car with a red rotating light on the roof, seen from the side in three-quarter view facing left, whole car visible. $IT"
+P[p_cart12]="one old medieval wooden farm cart with two big spoked wooden wheels and a wooden bench, a red rotating police light absurdly mounted on its front post, seen from the side in three-quarter view facing left, whole cart visible, no horse. $IT"
+P[p_cheesegiant]="one gigantic wheel of yellow cheese with holes standing upright on its edge, as tall as a man, with a rabbit-shaped hole bitten through its side. $IT"
+P[p_twinebuckets]="one giant ball made entirely of hundreds of old wooden buckets with iron bands stuck together into a sphere, as tall as a house, on a round concrete pedestal. $IT"
 for arg in "$@"; do
   id=${arg%%:*}; seed=${arg#*:}; [ "$seed" = "$arg" ] && seed=1
   out="work/s2play/items/${id}_${seed}.png"; [ -f "$out" ] && continue
