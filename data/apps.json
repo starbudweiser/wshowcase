@@ -203,7 +203,7 @@
    "demo": "mORTEX",
    "shots": 3,
    "download": true,
-   "version": "2.0.1",
+   "version": "2.0.3",
    "tag": {
     "fr": "Le gestionnaire de mods, version Mac.",
     "en": "The mod manager, Mac edition.",
@@ -221,7 +221,7 @@
    "demo": "mABBAJACK",
    "shots": 3,
    "download": true,
-   "version": "2.0.1",
+   "version": "2.0.4",
    "tag": {
     "fr": "Installez des listes de mods Wabbajack sur Mac.",
     "en": "Install Wabbajack mod lists on Mac.",
@@ -257,7 +257,7 @@
    "demo": "sKYCRASH",
    "shots": 3,
    "download": true,
-   "version": "2.2.0",
+   "version": "2.2.2",
    "tag": {
     "fr": "Analyse vos crash logs Skyrim et désigne le coupable.",
     "en": "Reads your Skyrim crash logs and names the culprit.",
@@ -275,7 +275,7 @@
    "demo": "nEXUSWATCH",
    "shots": 3,
    "download": true,
-   "version": "2.0.0",
+   "version": "2.0.1",
    "tag": {
     "fr": "Surveille vos pages Nexus Mods et ordonne les bugs en plan de travail.",
     "en": "Watches your Nexus Mods pages and turns bug reports into a plan.",
@@ -419,7 +419,7 @@
    "demo": "pLUGINSLENS",
    "shots": 3,
    "download": true,
-   "version": "2.0.0",
+   "version": "2.0.1",
    "tag": {
     "fr": "Éditeur de plugins .esp, .esm et .esl : parcourir, comparer, modifier.",
     "en": "Plugin editor for .esp, .esm and .esl: browse, compare, edit.",
@@ -437,7 +437,7 @@
    "demo": "hERALD",
    "shots": 0,
    "download": true,
-   "version": "1.11.2",
+   "version": "1.11.5",
    "tag": {
     "fr": "Prépare et suit vos campagnes de communication, sans rien publier à votre place.",
     "en": "Plans and tracks your communication campaigns, never posts for you.",
@@ -473,7 +473,7 @@
    "demo": "mCLEAN",
    "shots": 0,
    "download": true,
-   "version": "1.3.1",
+   "version": "1.4.0",
    "tag": {
     "fr": "La mémoire dans la barre des menus, libérée en un clic.",
     "en": "Your memory in the menu bar, freed in one click.",
@@ -491,7 +491,7 @@
    "demo": "hdCLEANER",
    "shots": 0,
    "download": true,
-   "version": "1.4.0",
+   "version": "1.7.3",
    "tag": {
     "fr": "Repère les déchets du disque et supprime ce que vous cochez.",
     "en": "Finds junk on your disk and removes what you tick.",
@@ -508,8 +508,8 @@
    "desk": false,
    "demo": "mSILENCE",
    "shots": 0,
-   "download": false,
-   "version": "",
+   "download": true,
+   "version": "1.0.0",
    "tag": {
     "fr": "Pare-feu par appli et moniteur réseau.",
     "en": "Per-app firewall and network monitor.",
@@ -527,7 +527,7 @@
    "demo": "mDESK",
    "shots": 0,
    "download": true,
-   "version": "1.0",
+   "version": "1.0.3",
    "tag": {
     "fr": "Retient où se trouvent vos icônes et vos fenêtres, écran par écran.",
     "en": "Remembers where your icons and windows sit, display by display.",
@@ -545,7 +545,7 @@
    "demo": "mSPACES",
    "shots": 0,
    "download": true,
-   "version": "1.0.0",
+   "version": "1.0.3",
    "tag": {
     "fr": "Sépare les icônes de la barre des menus en groupes.",
     "en": "Splits your menu bar icons into groups.",
@@ -563,7 +563,7 @@
    "demo": "mLINKS",
    "shots": 0,
    "download": true,
-   "version": "1.1.1",
+   "version": "1.1.5",
    "tag": {
     "fr": "Applis, dossiers, fichiers et sites à portée d'un raccourci.",
     "en": "Apps, folders, files and web addresses one shortcut away.",
@@ -581,7 +581,7 @@
    "demo": "ARCHiVES",
    "shots": 0,
    "download": true,
-   "version": "1.0.0",
+   "version": "1.0.2",
    "tag": {
     "fr": "Extrait et compresse les archives, intégré au Finder.",
     "en": "Extracts and compresses archives, built into the Finder.",
@@ -599,7 +599,7 @@
    "demo": "mBACKUP",
    "shots": 0,
    "download": true,
-   "version": "1.0.2",
+   "version": "1.1.0",
    "tag": {
     "fr": "Copies miroir planifiées de vos dossiers.",
     "en": "Scheduled mirror copies of your folders.",
@@ -617,7 +617,7 @@
    "demo": "qLOOKS",
    "shots": 0,
    "download": true,
-   "version": "1.1.0",
+   "version": "1.5.0",
    "tag": {
     "fr": "Aperçus Coup d'œil pour les formats que macOS ignore.",
     "en": "Quick Look previews for formats macOS ignores.",
@@ -634,8 +634,8 @@
    "desk": false,
    "demo": "wCLAUDE",
    "shots": 0,
-   "download": false,
-   "version": "",
+   "download": true,
+   "version": "1.4.2",
    "tag": {
     "fr": "Un navigateur que l'IA pilote pour vous.",
     "en": "A browser your AI agent can drive.",
@@ -653,7 +653,7 @@
    "demo": "MiCONE",
    "shots": 0,
    "download": true,
-   "version": "2.0.0",
+   "version": "2.1.0",
    "tag": {
     "fr": "Transforme n'importe quelle image en icône macOS.",
     "en": "Turns any image into a macOS icon.",
@@ -671,7 +671,7 @@
    "demo": "iCONIQ",
    "shots": 0,
    "download": true,
-   "version": "1.0.2",
+   "version": "1.1.2",
    "tag": {
     "fr": "Votre bibliothèque d'icônes personnelle.",
     "en": "Your personal icon library.",
@@ -689,7 +689,7 @@
    "demo": "mSIZER",
    "shots": 0,
    "download": true,
-   "version": "1.3.3",
+   "version": "1.4.0",
    "tag": {
     "fr": "Redimensionne, recadre et retouche des centaines de photos d'un coup.",
     "en": "Resize, crop and retouch hundreds of photos at once.",
@@ -706,8 +706,8 @@
    "desk": false,
    "demo": "mSTAGRAM",
    "shots": 0,
-   "download": false,
-   "version": "",
+   "download": true,
+   "version": "1.1.0",
    "tag": {
     "fr": "Instagram en version téléphone, dans un iPhone sur votre Mac.",
     "en": "Instagram's phone version, in an iPhone window on your Mac.",
@@ -724,8 +724,8 @@
    "desk": false,
    "demo": "mSTICK",
    "shots": 0,
-   "download": false,
-   "version": "",
+   "download": true,
+   "version": "1.1.2",
    "tag": {
     "fr": "Vos pense-bêtes toujours sous les yeux.",
     "en": "Your sticky notes, always in sight.",
@@ -743,7 +743,7 @@
    "demo": "qNOTES",
    "shots": 0,
    "download": true,
-   "version": "1.0.0",
+   "version": "1.0.1",
    "tag": {
     "fr": "Notes riches, rapides, toujours à portée de main.",
     "en": "Rich notes, quick and always at hand.",
@@ -761,7 +761,7 @@
    "demo": "mTAB",
    "shots": 3,
    "download": true,
-   "version": "1.0.0",
+   "version": "1.0.2",
    "tag": {
     "fr": "Le sélecteur de fenêtres de macOS : aperçus, recherche, raccourcis.",
     "en": "A window switcher for macOS: previews, search, shortcuts.",
@@ -819,7 +819,7 @@
    "demo": "engine",
    "shots": 0,
    "download": true,
-   "version": "1.0.5",
+   "version": "1.0.10",
    "tag": {
     "fr": "Vos clouds comme des disques dans le Finder.",
     "en": "Your clouds as drives in the Finder.",
@@ -837,7 +837,7 @@
    "demo": "mPDF",
    "shots": 3,
    "download": true,
-   "version": "1.1.8",
+   "version": "1.1.11",
    "tag": {
     "fr": "Un lecteur et éditeur PDF rapide et léger, pour lire d'abord et remplir vite.",
     "en": "A fast, lightweight PDF reader and editor, for reading first and filling in fast.",
@@ -854,8 +854,8 @@
    "desk": false,
    "demo": "mPIE",
    "shots": 4,
-   "download": false,
-   "version": "",
+   "download": true,
+   "version": "1.0.3",
    "tag": {
     "fr": "Un menu circulaire sous le pointeur pour lancer, basculer et piloter vos applis et votre musique.",
     "en": "A ring menu under your pointer to launch, switch and control your apps and music.",
@@ -890,8 +890,8 @@
    "desk": false,
    "demo": "kYNEDIT",
    "shots": 4,
-   "download": false,
-   "version": "",
+   "download": true,
+   "version": "1.0.1",
    "tag": {
     "fr": "Explorateur média et transcodeur rapide, export vers DaVinci Resolve.",
     "en": "Fast media browser and transcoder, export to DaVinci Resolve.",
@@ -909,7 +909,7 @@
    "demo": "mHUB",
    "shots": 1,
    "download": true,
-   "version": "1.1.2",
+   "version": "1.3.3",
    "hub": true,
    "tag": {
     "fr": "Le hub du Desktop Mac Toolkit : installe, met à jour et lance toutes les applis depuis une seule icône.",
@@ -1003,7 +1003,7 @@
    "demo": "mCASTING",
    "shots": 0,
    "download": true,
-   "version": "1.6.1",
+   "version": "2.4.9",
    "tag": {
     "fr": "Casting de voix IA en local : bibliothèque, clonage, distribution par projet, serveur MCP.",
     "en": "Local AI voice casting: voice library, cloning, per-project casting, MCP server.",
@@ -1062,7 +1062,7 @@
    "demo": "mPARLE",
    "shots": 2,
    "download": true,
-   "version": "1.0.2",
+   "version": "1.0.3",
    "tag": {
     "fr": "Traduction rapide de tout texte sélectionné : Apple Translation hors ligne, DeepL, Google ou IA locale.",
     "en": "Fast translation of any selected text: offline Apple Translation, DeepL, Google or local AI.",
@@ -1135,7 +1135,7 @@
    "demo": "TESSERaCT",
    "shots": 1,
    "download": true,
-   "version": "1.0.1",
+   "version": "1.0.2",
    "tag": {
     "fr": "Créez et lancez des machines virtuelles sur Mac Apple Silicon : macOS, Linux, Windows 11, BSD, pilotable par IA.",
     "en": "Create and run virtual machines on Apple Silicon Macs: macOS, Linux, Windows 11, BSD, drivable by AI.",
@@ -1227,7 +1227,7 @@
    "demo": "mSOUND",
    "shots": 1,
    "download": true,
-   "version": "1.3.0",
+   "version": "1.3.1",
    "tag": {
     "fr": "Convertit tes fichiers audio d’un clic droit dans le Finder, et les coupe et retouche dans un éditeur de forme d’onde.",
     "en": "Convert audio files with a right-click in the Finder, and cut and edit them in a waveform editor.",
@@ -1261,7 +1261,7 @@
    "demo": "mDOWN",
    "shots": 1,
    "download": true,
-   "version": "1.0.3",
+   "version": "1.0.4",
    "tag": {
     "fr": "Télécharge les vidéos et sons des pages web depuis la barre des menus, avec un moteur yt-dlp qui se met à jour tout seul.",
     "en": "Download videos and audio from web pages from the menu bar, with a yt-dlp engine that updates itself.",
