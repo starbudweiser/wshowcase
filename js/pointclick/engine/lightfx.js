@@ -1,12 +1,13 @@
-/* ESSAI (27/11/2026, non adopté) : couche de lumière façon PixelFX, écrite pour le jeu (aucun code repris).
+/* Couche de lumière tramée façon PixelFX (essai du 27/11/2026, adoptée pour le rendu années 90 seulement), écrite pour le jeu.
    Deux tampons à la résolution logique 480 × 270 :
    - couleur (Uint32, pixels opaques jamais mélangés : les fondus passent par un tramage ordonné de Bayer 4 × 4) ;
    - lumière (Float32 RGB, additive), posée sur la scène en « lighter », avec des paliers tramés (rendu pixel, pas de dégradé lisse).
    Les deux tampons sont agrandis sans lissage : pixels nets en rendu 2000 (canevas 960 × 540) comme en rendu 90 (480 × 270).
-   Effets d'une scène : data/lightfx_essai.js (torches, objet clé). Effet à phases : préparation (les pixels convergent, la lueur monte),
+   Effets d'une scène : data/lightfx.js (torches, objet clé). Effet à phases : préparation (les pixels convergent, la lueur monte),
    action (éclat), retombée (braises qui tombent, lueur qui s'éteint en trame).
-   Activation : adresse avec ?lightfx (ou window.pcGame.lightfx = true) ; sans cela, rien n'est calculé ni dessiné. */
-import { LIGHTFX } from '../data/lightfx_essai.js';
+   Activation : scènes de la saison 2 en rendu années 90 (g.s2low) qui ont des réglages ; en rendu 2000, la lueur lisse de fx2.js
+   reste seule (la trame en damier jurerait sur les décors peints). ?nolightfx coupe la couche, ?lightfx la force en rendu 2000 (essais). */
+import { LIGHTFX } from '../data/lightfx.js';
 
 const W = 480, H = 270;
 const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map(v => (v + 0.5) / 16);
@@ -25,7 +26,8 @@ function state() {
 }
 const rnd = () => ((st.seed = (st.seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
 
-export const lightOn = g => !!(g.lightfx ?? (g.lightfx = /[?&]lightfx\b/.test(location.search)));
+const Q = typeof location !== 'undefined' ? location.search : '', FORCE = /[?&]lightfx\b/.test(Q), OFF = /[?&]nolightfx\b/.test(Q);
+export const lightOn = g => !OFF && (g.lightfx ?? (g.s2low || FORCE));
 
 /* ───── tampon couleur ───── */
 function put(x, y, c) { x |= 0; y |= 0; if (x >= 0 && y >= 0 && x < W && y < H) st.col[y * W + x] = c; }
@@ -50,7 +52,7 @@ function torch(T, t) {
   const fl = 0.78 + 0.22 * Math.sin(t * 13 + T.x) * Math.sin(t * 7.3 + T.y);
   glow(T.x, T.y, T.r * fl, T.col || '#ffad5c', 0.55 * (T.k ?? 1));
   /* flamme en pixels : petites langues qui montent et changent de couleur en vieillissant */
-  if (rnd() < 0.9) st.parts.push({ k: 'flame', x: T.x + (rnd() - 0.5) * T.w, y: T.y + 1, vx: (rnd() - 0.5) * 3, vy: -8 - rnd() * 9, t: 0, life: 0.35 + rnd() * 0.3 });
+  if (T.flame !== false && rnd() < 0.9) st.parts.push({ k: 'flame', x: T.x + (rnd() - 0.5) * T.w, y: T.y + 1, vx: (rnd() - 0.5) * 3, vy: -8 - rnd() * 9, t: 0, life: 0.35 + rnd() * 0.3 });
 }
 /* objet clé : préparation (0 → P), action (P → P + A), retombée (→ P + A + R), puis repos jusqu'au cycle suivant */
 function keyFx(K, x, y, t, dt) {

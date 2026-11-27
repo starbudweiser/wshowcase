@@ -117,7 +117,7 @@ export default {
         break;
       case 'grog':
         if (verb === 'look') { await g.say('hero', 'c11.look.grog'); return true; }
-        if (verb === 'take' || (verb === 'use' && !item)) { twinkle(g, ...this.mid(g, e)); g.ents = g.ents.filter(x => x !== e); g.set('grogTaken'); g.sfx('pop'); g.give('grog'); return true; }
+        if (e && (verb === 'take' || (verb === 'use' && !item))) { twinkle(g, ...this.mid(g, e));   /* e absent : le grog est déjà dans la besace */ g.ents = g.ents.filter(x => x !== e); g.set('grogTaken'); g.sfx('pop'); g.give('grog'); return true; }
         break;
       case 'rootbeer':
         if (verb === 'take' || (verb === 'use' && !item)) { if (e) { twinkle(g, ...this.mid(g, e)); g.ents = g.ents.filter(x => x !== e); g.set('grogDone'); g.sfx('pop'); g.give('rootbeer'); return true; } }
