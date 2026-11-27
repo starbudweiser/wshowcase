@@ -40,7 +40,8 @@ def vivacite(wav):                 # variation de hauteur (demi-tons) + 0,3 × v
     return viv, len(f0) / max(len(loud), 1)    # (vivacité, part de trames voisées : sous 0,45 la prise est chuchotée)
 EQ = {'arthur':'highpass=f=90,equalizer=f=280:t=q:w=1:g=-3,equalizer=f=3500:t=q:w=1.2:g=3,treble=g=6:f=3000:t=s:w=0.6'}  # le Roi : voix trop sourde (25/11)
 GAIN = {'karadoc': -4}     # dB après normalisation : voix dense qui paraît trop forte à volume égal (25/11)
-def chaine(who): return ','.join(filter(None, (EQ.get(who), NORM, f'volume={GAIN[who]}dB' if who in GAIN else None)))
+ENVERS = 'areverse,atempo=1.08,apad=pad_dur=0.5,aecho=0.8:0.5:80:0.18'   # « envers » (petit homme en rouge, 27/11) : prise retournée, +8 %, léger écho
+def chaine(who, envers=False): return ','.join(filter(None, (ENVERS if envers else None, EQ.get(who), NORM, f'volume={GAIN[who]}dB' if who in GAIN else None)))
 
 cast = json.load(open(os.path.join(X, 'casting.json')))
 byname = {c['name']: c for c in cast['characters'].values()}
@@ -130,7 +131,7 @@ for n, (lang, o) in enumerate(todo, 1):
             vs = {c[0]: vivacite(c[0]) for c in ok}
             ok = [c for c in ok if vs[c[0]][1] >= 0.45] or ok              # pas de prise chuchotée s'il y en a une à pleine voix
             best = max(ok, key=lambda c: vs[c[0]][0]); viv = round(vs[best[0]][0], 2)
-        subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', best[0], '-af', chaine(o['who']), '-ac', '1', '-ar', '24000', '-b:a', '40k', os.path.join(out, lang, name)])
+        subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', best[0], '-af', chaine(o['who'], o.get('envers')), '-ac', '1', '-ar', '24000', '-b:a', '40k', os.path.join(out, lang, name)])
     for c in cands: shutil.rmtree(os.path.dirname(c[0]), ignore_errors=True)
     rep.write(json.dumps({'file': f'{lang}/{name}', 'who': o['who'], 'emo': emo, 'score': round(best[1], 3), 'takes': k + 1,
                           'vivacite': viv, 'text': o[lang], 'heard': best[2]}, ensure_ascii=False) + '\n'); rep.flush()

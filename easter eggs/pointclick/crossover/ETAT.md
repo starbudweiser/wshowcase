@@ -71,6 +71,11 @@ Prototypes de rendu : https://claude.ai/artifact/Hbie6aV5LJGNajt7JZMpVR (`tools/
   `ch27.json` ; rots du savant écrits « beurp » / « urrp ». Le chiffre des mondes restants suit (26 : deux, 27 : un).
   Voix générées (`gen_voices_s2.py 26` puis `27`), jeu expressif (4 prises) pour le paléontologue nerveux, le savant
   et la créature bleue.
+- Petit homme en rouge (Twin Peaks, 27/11) : comme dans la série, ses 6 répliques marquées `"envers": true` dans
+  `ch22.json` sont jouées à l'envers, en FR et en EN (prise retournée, débit +8 %, léger écho : `ENVERS` dans
+  `gen_voices_s2.py` ; les prises à l'endroit sont gardées dans `work/crossover/voices_redman_endroit/`). Sa réplique sous
+  Wabbajack (« dans le bon sens ») reste à l'endroit. Pour le moteur : toujours sous-titrer ses répliques `envers`, et
+  jouer ses animations à l'envers (demande de Stéphan, pour pousser le délire à fond).
 
 ## Exigence de mise en scène (Stéphan, 24/11/2026, plus forte encore qu'en saison 1)
 « On va vers le mieux » (évolution années 90 → 2000) : les bugs restent une parodie dans les dialogues, jamais dans le
