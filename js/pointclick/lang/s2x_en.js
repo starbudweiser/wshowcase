@@ -106,6 +106,21 @@ export default {
   'hint.s2_15.cable.1': 'The cable must touch the clock’s hand.', 'hint.s2_15.cable.2': 'Its other end hangs from the street lamp.', 'hint.s2_15.cable.3': 'Take the cable from the street lamp, then use it on the clock.',
   'hint.s2_15.storm.1': 'All that’s missing is a storm… on demand.', 'hint.s2_15.storm.2': 'Your Voice can call the storm.', 'hint.s2_15.storm.3': 'Use the Shout on the clock.',
   /* genie hints (text only in the mock-up) */
+  /* chapter 26: the orange-couch coffee house, the stairwell, the fridge apartment */
+  'n.charmer': 'charming actor', 'n.joker': 'joker', 'n.nervpaleo': 'nervous paleontologist', 'n.singer': 'singer with a guitar', 'n.sofa26': 'orange couch', 'n.bench26': 'tavern bench',
+  'n.s26sign': 'sign', 'n.mug26': 'big mug', 'n.bucket26': 'bucket', 'n.s26gorilla': 'gorilla painting', 'n.s26counter': 'counter', 'n.s26door': 'door', 'n.couch26': 'stuck couch',
+  'n.s26stairs': 'stairs', 'n.s26out': 'exit', 'n.fridge26': 'fridge', 'n.s26flatdoor': 'apartment door', 'n.cheese26': 'sandwich cheese wheel',
+  'sign26': 'The Ragged Flagon',
+  'look.s26door': 'The coffee house door. Across the street, the building with the fridge.', 'look.mug26': 'A mug the size of a bucket. They drink coffee here like we drink mead back home: a lot, and no questions asked.', 'look.charmer': 'A crooked smile, a sandwich in hand. He looks like he is flirting with the fridge.', 'look.joker': 'He has a joke for every silence. And he finds a lot of silences.',
+  'look.nervpaleo': 'A nervous man with a plastic dinosaur. He holds it like a lucky charm. It is not working.', 'look.singer': 'She smiles at the ceiling. The ceiling seems to answer.',
+  'look.bench26': 'A real tavern bench. Your back will remember it.', 'look.bucket26': 'A bucket. About time.', 'look.s26counter': 'A counter, a hissing coffee machine, sweet rolls under a glass dome.',
+  'look.couch26b': 'The couch made it. Now it sits in the apartment, slightly crooked.', 'look.fridge26': 'The fridge. The note says do not touch. The note does not know me.',
+  'look.s26flatdoor': 'The apartment door. We got through it, and so did the couch.', 'look.cheese26': 'The sandwich cheese wheel. A bit of lettuce on it, but I am not picky.',
+  's26.counter.take': 'A sweet roll under the dome. I take it: back home they steal mine, here I catch up.', 's26.counter.none': 'No more sweet rolls. They vanish fast here too.',
+  's26.stairs.block': 'The couch plugs the whole staircase. Not even a cat could get through.', 's26.wk.back': 'And it goes back to normal. Here too, the Wabbajack has short magic.',
+  'hint.s2_26.cheese.1': 'Ask the joker whether there is any cheese around here.', 'hint.s2_26.cheese.2': 'The only cheese wheel is in a sandwich, in the fridge across the street.', 'hint.s2_26.cheese.3': 'Talk to the joker twice, then go out through the door.',
+  'hint.s2_26b.couch.1': 'The couch is stuck, and shouting "pivot" is not enough.', 'hint.s2_26b.couch.2': 'You need to shout louder. Much louder.', 'hint.s2_26b.couch.3': 'Use the Shout on the stuck couch.',
+  'hint.s2_26c.fridge.1': 'Here, nobody shares food. But a trade is not sharing.', 'hint.s2_26c.fridge.2': 'Food for food.', 'hint.s2_26c.fridge.3': 'Give a sweet roll to the actor (there are some on the coffee house counter).',
   /* chapter 25: the bridge over the abyss, the hill with the round door */
   'n.wizard': 'grey wizard', 'n.demon': 'fire demon', 'n.crab25': 'mud crab', 'n.halfling': 'small hairy-footed fellow', 'n.ring25': 'ring', 'n.s25chasm': 'chasm',
   'n.s25bridge': 'stone bridge', 'n.hens25': 'hens', 'n.eagles25': 'eagles', 'n.cheeses25': 'table of forty wheels', 'n.s25door': 'round door', 'n.s25exit': 'way out', 'n.cheese25': 'fortieth wheel',

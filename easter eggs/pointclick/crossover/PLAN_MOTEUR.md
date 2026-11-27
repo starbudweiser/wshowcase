@@ -152,6 +152,10 @@ FLUX, une à la fois (file calcul-lourd) : plusieurs jours de calcul, avec une p
   le démon qui remonte toujours (dessiné derrière le tablier, rangé par z), Wabbajack : crabe de vase qui passe de côté,
   anneau → héros invisible sauf son casque, bâton → seau ; colline au trou rond : quarante meules, festin « menu ouvert »
   (voile, icône et compte), aigles → poules, petit être qui grandit, « pourquoi pas les aigles ? ».
+- Chapitre 26 (« Celui qui cherchait la meule », 3 scènes) : café de La Cruche percée (enseigne peinte par le moteur, traduite),
+  rires enregistrés après chaque chute (trois rires de foule de la banque de sons), cage d'escalier au canapé coincé
+  (« FUS… RO… PIVOT ! »), appartement au frigo gardé (brioche = échange), retour au café pour la chanson du fromage
+  (notes qui flottent, rime soufflée) ; Wabbajack : canapé en banc, guitare en luth, blagueur en garde, dinosaure en dragon.
 - Objets de toute la saison dans la besace : Wabbajack, le Cri (repli générique `s2.shout.none` + onde de choc), les septims.
 - Personnages animés en boucles LTX pour les chapitres 11 à 25 (reprises quand le visage dérivait ou que le personnage tournait).
 ### Chaîne de production d'un chapitre (outils)
@@ -166,7 +170,7 @@ FLUX, une à la fois (file calcul-lourd) : plusieurs jours de calcul, avec une p
   sprites des métamorphoses (poulet en caoutchouc à poulie, mammouth à trois têtes) ; voix de la réplique du narrateur
   sur la transition (`nar.s2up`) et des répliques écrites à la main (regards, biscuit) ; expressions du héros (8 visages,
   face et profils, en boucles de parole LTX par émotion).
-- Chapitres 26 à 28 sur la même chaîne.
+- Chapitres 27 et 28 sur la même chaîne.
 - Génie des indices en HD, prologue (fête de la S1 → Sheogorath), validation des décors et animations par Stéphan.
 - **Twin Peaks (22), petit homme en rouge** (validé par Stéphan) : ses 6 répliques `envers` ont leur voix retournée
   (FR/EN, livrées) ; le moteur les sous-titre toujours, en bas de l'écran façon télévision (`ENVERS` dans
