@@ -68,7 +68,7 @@ Q hero_sIdle hs_idle2.png 0 --like hero_front; Q hero_sTalk1 hs_talk1.png 0 --li
 Q hero_fWalkA hf_walkA.png 0 --like hero_front; Q hero_fWalkP hf_walkP.png 0 --like hero_front; Q hero_fWalkB hf_walkB.png 0 --like hero_front; Q hero_fBlink hf_blink.png 0 --like hero_front
 Q hero_fTalk2 hf_talk2.png 0 --like hero_front; Q hero_fShrug hf_shrug.png 0 --like hero_front; Q hero_fSurprise hf_surprise.png 0 --like hero_front
 Q hero_bStand hb_stand.png 0 --like hero_front; Q hero_bWalkA hb_walkA.png 0 --like hero_front; Q hero_bWalkB hb_walkB.png 0 --like hero_front
-Q hero_pNeutral hp_neutral.png 250 72 --fill; Q hero_pTalk hp_talk.png 0 --like hero_pNeutral --fill; Q hero_pBlink hp_blink.png 0 --like hero_pNeutral --fill; Q hero_pSleepy hp_sleepy.png 0 --like hero_pNeutral --fill
+Q hero_pNeutral hp3/base.png 250 72 --fill; Q hero_pTalk hp3/hp_talk.png 0 --like hero_pNeutral --fill; Q hero_pBlink hp3/hp_blink.png 0 --like hero_pNeutral --fill; Q hero_pSleepy hp3/hp_sleepy.png 0 --like hero_pNeutral --fill
 
 # dragons d'autres espèces (relancer après tools/gen_dragons.sh)
 Q dragon_frost_up dr_frost_up.png 72; Q dragon_ember_up dr_ember_up.png 78; Q dragon_moss_up dr_moss_up.png 66; Q dragon_gold_up dr_gold_up.png 48
@@ -80,9 +80,9 @@ Wk explorer 88; Wk buster 88; Wk kids 84; Wk barbarian 100; Wk wizard 100; Wk ha
 Wk arthur 92; Wk lancelot 94; Wk merlin 90; Wk karadoc 92; Wk perceval 90; Wk mevanwi 88; Wk guenievre 86; Wk leodagan 92; Wk seli 84; Wk tavernier 86; Wk guethenoc 84; Wk roparzh 86
 Wk ghost 58; Wk racer 46; Wk tentacle 64; Wk owl 40; Wk troll 48; Q wk_boulder wk_boulder.png 64; Q wk_owl_f wk_owl_f.png 0 --like wk_owl_a; Q wk_horsearmor wk_horsearmor.png 0 --like horse
 
-Q hero_pKnock1 hp_knock1.png 0 --like hero_pNeutral --fill; Q hero_pKnock2 hp_knock2.png 0 --like hero_pNeutral --fill
+Q hero_pKnock1 hp3/hp_knock1.png 0 --like hero_pNeutral --fill; Q hero_pKnock2 hp3/hp_knock2.png 0 --like hero_pNeutral --fill
 
-for k in Point Shrug Plead Think Wave Lean; do l=${(L)k}; Q hero_p$k hp_$l.png 0 --like hero_pNeutral --fill; Q hero_p${k}T hp_${l}_t.png 0 --like hero_pNeutral --fill; done
+for k in Point Shrug Plead Think Wave Lean; do l=${(L)k}; Q hero_p$k hp3/hp_$l.png 0 --like hero_pNeutral --fill; Q hero_p${k}T hp3/hp_${l}_t.png 0 --like hero_pNeutral --fill; done
 
 # mains du héros qui nettoient la vitre de l'écran (relancer après tools/gen_hands.sh)
 Q hand_palm hand_palm.png 330 64 --fill; for k in rag leaf duster sleeve finger breath; do Q hand_$k hand_$k.png 0 --like hand_palm --fill; done
