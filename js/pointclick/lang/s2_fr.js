@@ -372,7 +372,7 @@ export default {
   "c17g.wk.flames.2": "Bravo ! Très festif. Un peu court.",
   "c17g.end.1": "Un stilton sorti du Graal. Plus que onze mondes.",
   "c17g.end.2": "Le Graal était un seau. J’ai fait des études pour raconter ça.",
-  "ch.s2_17k": "17. Kaamelott",
+  "ch.s2_17k": "17. La Table ronde",
   "c17k.wake.1": "Hé, toi. T’es enfin réveillé. … C’est pas faux.",
   "c17k.wake.2": "On me dit ça à chaque réveil. C’est la première fois qu’on vérifie.",
   "c17k.wake.3": "Il a mis quatre secondes à tomber d’accord avec lui-même. C’est son record.",

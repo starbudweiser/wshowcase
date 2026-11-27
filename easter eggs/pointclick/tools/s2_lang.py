@@ -10,7 +10,7 @@ for f in sorted(glob.glob(os.path.join(P, 'crossover', 'dialogues', 'ch*.json'))
     cid = 's2_' + {'17_kaamelott': '17k', '17_graal': '17g'}.get(b, b)
     for l in ('fr', 'en'):
         t = d['title'][l]
-        if b == '17_kaamelott': t = 'Kaamelott' if l == 'fr' else 'The Round Table (French version)'
+        if b == '17_kaamelott': t = 'La Table ronde' if l == 'fr' else 'The Round Table (French version)'   # parodie : aucun nom officiel dans le jeu
         if b == '17_graal': t = 'Le Sacré Graal (version anglaise)' if l == 'fr' else 'The Holy Grail'
         out[l]['ch.' + cid] = f"{d['chapter']}. {t}"
         for x in d['lines']:

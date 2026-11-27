@@ -106,6 +106,23 @@ export default {
   'hint.s2_15.cable.1': 'The cable must touch the clock’s hand.', 'hint.s2_15.cable.2': 'Its other end hangs from the street lamp.', 'hint.s2_15.cable.3': 'Take the cable from the street lamp, then use it on the clock.',
   'hint.s2_15.storm.1': 'All that’s missing is a storm… on demand.', 'hint.s2_15.storm.2': 'Your Voice can call the storm.', 'hint.s2_15.storm.3': 'Use the Shout on the clock.',
   /* genie hints (text only in the mock-up) */
+  /* chapter 17 (English version): the road of the knights who say "Ni!", the black knight's bridge, the rabbit's cave */
+  'n.coconut': 'knight with coconuts', 'n.ni': 'knight who says "Ni!"', 'n.ni2': 'knight who says "Ni!"', 'n.bk': 'black knight', 'n.rabbit17': 'white rabbit',
+  'n.grenade17': 'holy hand grenade', 'n.s17castle': 'castle', 'n.s17road': 'road', 'n.topiary17': 'mammoth hedge', 'n.shrub17': 'lavender bush', 'n.lavender': 'lavender', 'n.guard17': 'guard',
+  'n.s17flames': 'smoking crag', 'n.s17bridge': 'bridge', 'n.s17stream': 'stream', 'n.s17bones': 'bones', 'n.cave17': 'cave', 'n.cheese17g': 'stilton',
+  'look.grenade17': 'A holy hand grenade, resting on a stump. The instructions fill an entire book.', 'look.s17castle': 'A castle in the distance. Someone up there shouts insults with an accent. And he has cows.',
+  'look.s17road': 'The road goes on behind the knights. They let nobody through without a shrubbery.', 'look.shrub17': 'A little lavender bush. Pretty, but not pretty enough, apparently.',
+  'look.topiary17': 'A mammoth hedge, tusks, trunk and all. I’m rather proud of myself.', 'look.lavender': 'Lavender from Whiterun. For a poison resistance potion, or just to smell nice.',
+  'look.s17flames': 'A crag that spits flames now and then. There’s surely an enchanter behind it.', 'look.s17bridge': 'A plank bridge over a stream. Well guarded.',
+  'look.s17stream': 'An icy stream. Back home, there would be salmon leaping in it.', 'look.s17bones': 'Bones everywhere in front of the cave. The rabbit has a big appetite, or a lot of dead friends.',
+  'look.guard17': 'A guard from back home, sitting down, an arrow in his knee. He’ll be telling his life story all day.', 'look.cheese17g': 'A stilton out of the Grail. It smells strong, like any self-respecting relic.',
+  's17g.road.blocked': 'They won’t move without their shrubbery.', 's17g.bridge.blocked': 'The black knight won’t let me through just like that.', 's17g.cave.blocked': 'Not with that rabbit in front of the entrance.',
+  's17g.wk.back': 'And it’s back to normal. Even here, the Wabbajack’s magic doesn’t last.',
+  'hint.s2_17g.shrub.1': 'These knights want a shrubbery. Something in your bag grows.', 'hint.s2_17g.shrub.2': 'The Whiterun lavender would make a nice start for a bush.', 'hint.s2_17g.shrub.3': 'Use the lavender on the knights who say "Ni!".',
+  'hint.s2_17g.topiary.1': 'They want a prettier one, with a little path.', 'hint.s2_17g.topiary.2': 'Your staff trims bushes… in its own way.', 'hint.s2_17g.topiary.3': 'Use the Wabbajack on the lavender bush, then take the road.',
+  'hint.s2_17gb.bk.1': 'The black knight guards the bridge, arrow in the knee or not.', 'hint.s2_17gb.bk.2': 'The Shout only gives him a bath. Change what he is instead.', 'hint.s2_17gb.bk.3': 'Use the Wabbajack on the black knight.',
+  'hint.s2_17gb.rabbit.1': 'That little rabbit is the worst beast of all. Even transformed.', 'hint.s2_17gb.rabbit.2': 'There’s one monster you know how to beat: a hungry one.', 'hint.s2_17gb.rabbit.3': 'Give the sweet roll to the rabbit.',
+  'hint.s2_17gb.grail.1': 'The cave is clear.', 'hint.s2_17gb.grail.2': 'Something shines at the back.', 'hint.s2_17gb.grail.3': 'Enter the cave and take the Grail.',
   /* chapter 17 (French version): the Round Table hall, the Grail cave */
   'n.arthur': 'king', 'n.perceval': 'slow knight', 'n.karadoc': 'greedy knight', 'n.dice17': 'dice', 'n.s17table': 'round table', 'n.s17door': 'door', 'n.s17fire': 'fireplace',
   'n.s17banners': 'banners', 'n.sword17': 'sword in the stone', 'n.s17cave': 'cave', 'n.grail17': 'Grail', 'n.s17boulder': 'flat boulder', 'n.s17trees': 'oaks', 'n.cheese17k': 'cheese from Brittany',

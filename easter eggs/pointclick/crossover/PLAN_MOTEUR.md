@@ -112,6 +112,11 @@ FLUX, une à la fois (file calcul-lourd) : plusieurs jours de calcul, avec une p
   chevaliers en boucles LTX, banquet du Wabbajack sur la table ronde, chevalier lent brillant trois secondes (halo doré),
   chevalier gourmand en jambon, dés en meules ; clairière de la grotte : épée dans le rocher changée en cuillère dans une
   meule (mangée), Graal-seau lumineux au fond de la grotte, troc contre un fromage de Bretagne.
+- Chapitre 17, version anglaise (le Sacré Graal) jouable : route des chevaliers « Ni ! » (lavande de Blancherive puis
+  buisson taillé en mammouth), château dont les vaches retombent en chèvres qui grimpent sur ses remparts, noix de coco en
+  vrais chevaux, sainte grenade en meule ; pont du chevalier noir (le Cri ne fait que le baigner, le Wabbajack en fait un
+  garde assis), flammes de l'enchanteur en confettis, lapin en dragon puis nourri d'une brioche, Graal-seau et stilton.
+  Titre français du 17 : « La Table ronde » (aucun nom officiel dans le jeu).
 - Objets de toute la saison dans la besace : Wabbajack, le Cri (repli générique `s2.shout.none` + onde de choc), les septims.
 - Personnages animés en boucles LTX pour les chapitres 11 à 17 (reprises quand le visage dérivait ou que le personnage tournait).
 ### Chaîne de production d'un chapitre (outils)
@@ -126,7 +131,7 @@ FLUX, une à la fois (file calcul-lourd) : plusieurs jours de calcul, avec une p
   sprites des métamorphoses (poulet en caoutchouc à poulie, mammouth à trois têtes) ; voix de la réplique du narrateur
   sur la transition (`nar.s2up`) et des répliques écrites à la main (regards, biscuit) ; expressions du héros (8 visages,
   face et profils, en boucles de parole LTX par émotion).
-- Chapitre 17 version anglaise (Sacré Graal, en calcul), puis chapitres 18 à 28 sur la même chaîne.
+- Chapitres 18 (en calcul) à 28 sur la même chaîne.
 - Génie des indices en HD, prologue (fête de la S1 → Sheogorath), validation des décors et animations par Stéphan.
 - **Twin Peaks (22), petit homme en rouge** (validé par Stéphan) : ses 6 répliques `envers` ont leur voix retournée
   (FR/EN, livrées) ; le moteur les sous-titre toujours, en bas de l'écran façon télévision (`ENVERS` dans

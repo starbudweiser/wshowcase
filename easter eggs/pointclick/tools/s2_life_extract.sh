@@ -10,6 +10,7 @@ ALT[hero_wr]=hero_wr2; ALT[hero_wl]=hero_wl2   # 2e prises : buste constant (1re
 ALT[hero_tqr]=hero_tqr2; ALT[hero_if]=hero_if2   # 2e prises : visage pince-sans-rire (1res : un sourire revenait)
 ALT[max_i]=max_i3; ALT[max_t]=max_t3   # 3es prises : même visage du début à la fin (1res : il devenait un lapin mignon)
 ALT[creeper_i]=creeper_i2   # 2e prise : toujours face à nous (1re : elle tournait sur elle-même)
+ALT[bk_t]=bk_t2   # 2e prise : épée immobile (1re : épée floue aux reflets verts)
 k hero_wf $HS/sel_front.png 400 "--walk --n=12 --despill=all"; k hero_wb $HS/sel_back.png 400 "--walk --n=12 --despill=all"
 k hero_iql $HS/sel_34_left.png 400 "--n=24 --despill=all"; k hero_iqr $HS/sel_34_right.png 400 "--n=24 --despill=all"; k hero_if $HS/sel_front.png 400 "--n=24 --despill=all"
 k hero_tql $HS/sel_34_left.png 400 "--n=20 --despill=all"; k hero_tqr $HS/sel_34_right.png 400 "--n=20 --despill=all"; k hero_tf $HS/sel_front.png 400 "--n=20 --despill=all"
@@ -31,6 +32,10 @@ k bat16_i work/s2play/persos/bat16_1.png 120 "--n=16 --despill=all"; k owl16_i w
 k arthur_i $PS/c_king2_2.png 400 "--n=24"; k arthur_t $PS/c_king2_2.png 400 "--n=20"
 k perceval_i $PS/c_knight_dim2_2.png 410 "--n=24"; k perceval_t $PS/c_knight_dim2_2.png 410 "--n=20"
 k karadoc_i $PS/c_knight_fat4_2.png 390 "--n=24"; k karadoc_t $PS/c_knight_fat4_2.png 390 "--n=20"
+k coconut_i $PS/c_coconut.png 400 "--n=24"; k coconut_t $PS/c_coconut.png 400 "--n=20"
+k ni_i $PS/c_ni.png 440 "--n=24 --despill=all"; k ni_t $PS/c_ni.png 440 "--n=20 --despill=all"
+k bk_i $PS/c_blackknight.png 400 "--n=24 --despill=all"; k bk_t $PS/c_blackknight.png 400 "--n=20 --despill=all"
+k rabbit17_i $PS/c_killerrabbit.png 120 "--n=24"
 k parrot_i $PS/c_parrot.png 110 "--n=24 --despill=all"; k parrot_t $PS/c_parrot.png 110 "--n=20 --despill=all"
 # --despill=all : nettoyage du rose du fond sur toute la silhouette, seulement pour qui ne porte aucun magenta ni violet
 ids=("$@"); [ ${#ids} -eq 0 ] && ids=(${(k)K})

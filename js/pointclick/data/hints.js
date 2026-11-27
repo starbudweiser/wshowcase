@@ -23,6 +23,8 @@ const STEPS = {
   s2_16b: [['s2_16b.flower', g => g.has('flower16') || g.flag('potion')], ['s2_16b.potion', () => false]],
   s2_17k: [['s2_17k.table', g => g.flag('banquet')], ['s2_17k.table', () => false]],
   s2_17kb: [['s2_17kb.grail', () => false]],
+  s2_17g: [['s2_17g.shrub', g => g.flag('shrub')], ['s2_17g.topiary', () => false]],
+  s2_17gb: [['s2_17gb.bk', g => g.flag('bkSat')], ['s2_17gb.rabbit', g => g.flag('rabbitFed')], ['s2_17gb.grail', () => false]],
   s2_15: [['s2_15.cart', g => g.flag('cartSteel')], ['s2_15.horse', g => g.flag('cartUp')], ['s2_15.cable', g => g.flag('cableOn')], ['s2_15.storm', () => false]],
   s2_12b: [['s2_12b.roll', g => g.has('sweetroll') || g.flag('traded')], ['s2_12b.cheese', g => g.flag('traded')]],
   s2_11: [['s2_11.cracker', g => g.has('cracker') || g.flag('learned')], ['s2_11.parrot', g => g.flag('learned')], ['s2_11.duel', g => g.flag('duelWon')],
