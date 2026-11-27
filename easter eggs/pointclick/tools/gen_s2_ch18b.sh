@@ -1,5 +1,0 @@
-#!/bin/zsh
-# Saison 2, chapitre 18 : envol, 2e passe avec la planche du dragon blanc et le héros en références (1re : ailes et tête de reptile).
-cd "$(dirname "$0")/.." || exit 1; PS="${PS:-work/crossover/persos}"; HS="${HS:-work/crossover/hero_s2}"
-for sd in 3 4; do out="work/s2play/items/p_ride18_$sd.png"; [ -f "$out" ] || flux-image "Exactly the same long white furry flying dragon as in the first reference picture, with NO wings at all, the same snake-like body covered in white fur and pink pearly scales and the same big happy dog-like head, flying through the air like a ribbon, seen from the side facing right; exactly the same Viking warrior as in the second reference picture, with his horned iron helmet, fur collar and blond ponytail, rides happily on the dragon's back, holding on to its fur. Single game item, hand-painted 2D point-and-click adventure game art of the early 2000s, bold dark outlines, the whole dragon visible with a margin, plain flat solid magenta background, no shadow, no text." -i $PS/c_luckdragon.png -i $HS/sel_profile_right.png -s 1280x768 --seed $(( 2010 + sd )) -o "$out"; done
-echo fini

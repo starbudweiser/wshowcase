@@ -1,5 +1,5 @@
 /* Sauvegarde automatique dans le navigateur (même magasin que le site : clé wsc.pc.save). */
-import { store } from '../../util.js';
+import { store } from '../host.js';
 const KEY = 'pc.save', VERSION = 1;
 export const hasSave = () => { const s = store.get(KEY, null); return !!(s && s.v === VERSION && s.scene); };
 export const loadSave = () => { const s = store.get(KEY, null); return s && s.v === VERSION ? s : null; };

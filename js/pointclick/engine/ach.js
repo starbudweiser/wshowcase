@@ -1,5 +1,5 @@
 /* Succès du jeu, gardés à part de la sauvegarde (ils survivent à « Nouvelle partie »). */
-import { store } from '../../util.js';
+import { store } from '../host.js';
 const KEY = 'pc.ach';
 export const BLINDS = ['rue', 'mill', 'meadow', 'market', 'gate', 'house', 'ford', 'wood', 'hall', 'party'];
 export const getAch = () => { const a = store.get(KEY, null); return a && Array.isArray(a.lit) ? a : { lit: [], done: [], reached: a && a.reached || [] }; };

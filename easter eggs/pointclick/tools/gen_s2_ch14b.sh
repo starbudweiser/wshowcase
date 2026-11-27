@@ -1,7 +1,0 @@
-#!/bin/zsh
-# Saison 2, chapitre 14 : temple, 2e passe (1re : la fosse se contournait par derrière, elle ne barrait pas le chemin de l'idole).
-cd "$(dirname "$0")/.." || exit 1
-ST="hand-painted 2000s 2D point-and-click adventure game background, painterly detailed backgrounds like classic adventure games, bold dark outlines, warm saturated colors, humorous storybook fantasy, empty scene with no people, no characters, no animals, no snakes, no logo, no watermark, no frame, no text, no letters"
-P="Inside an ancient torch-lit jungle temple hall, seen from the entrance at eye level, three depths: in the foreground, a flat stone floor where you stand, with one slightly raised square trap flagstone and a row of small dart holes in the left wall; in the middle, a deep dark rectangular sunken pit that spans the ENTIRE width of the hall from the left wall to the right wall, with no ledge and no floor beside it, so the far side can only be reached by crossing the pit; beyond the pit, in the background, a stone floor with three steps leading up to a carved altar with an empty round stone pedestal on top in the center, and high in the back wall above the altar the dark round mouth of a sloping tunnel. Vines, roots, carved walls, shafts of light from cracks in the ceiling. $ST"
-for sd in 4 5 6; do out="work/s2play/d_temple_$sd.png"; [ -f "$out" ] || flux-image "$P" -i crossover/img/r_indiana.jpg -s 1280x720 --seed $sd -o "$out"; done
-echo fini

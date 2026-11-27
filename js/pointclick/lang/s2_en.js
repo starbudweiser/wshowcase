@@ -1,4 +1,4 @@
-/* Saison 2 : textes tirés des dialogues (easter eggs/pointclick/crossover/dialogues), généré par tools/s2_lang.py : ne pas modifier à la main. */
+/* Saison 2 : textes tirés des dialogues (dev/pointclick/crossover/dialogues), généré par tools/s2_lang.py : ne pas modifier à la main. */
 export default {
   "ch.s2_11": "11. Insult swordfighting",
   "c11.wake.1": "Hey, you. You’re finally awake. You want to be a pirate too?",

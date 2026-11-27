@@ -1,5 +1,5 @@
 /* Sons et musique du jeu, entièrement synthétisés (Web Audio) : aucun fichier audio, composition originale. Respecte le réglage de son du site. */
-import { sfx } from '../../audio.js';
+import { sfx } from '../host.js';
 
 let ctx = null, master = null, musicTimer = null, musicOn = true;
 const ensure = () => {

@@ -7,10 +7,10 @@ import { COIN, drawCoin, coinSector, drawCharge, crossCursor, itemCursor, bagCan
 import { updateWinks, drawWinks } from './winks.js';
 import { updateGlass, drawGlass } from './glass.js';
 import { buildSky, drawSky, startNight, updateNight, drawNight, wakeNight, IDLE_NIGHT } from './night.js';
-import { lang } from '../../i18n.js';
+import { lang } from '../host.js';
 import { Walk, hitPoly } from './walk.js';
 import { snd } from './sound.js';
-import { store } from '../../util.js';
+import { store } from '../host.js';
 import { light, getAch, BLINDS, reach, reached, award } from './ach.js';
 import { CHAPTERS } from '../scenes/index.js';
 import { loadLang, makeT } from './lang.js';
