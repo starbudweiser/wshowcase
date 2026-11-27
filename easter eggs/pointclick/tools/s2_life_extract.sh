@@ -7,14 +7,16 @@ typeset -A K H O ALT
 k(){ K[$1]="$2"; H[$1]="$3"; O[$1]="$4"; }
 k hero_wr $HS/sel_profile_right.png 400 "--walk --n=12 --despill=all"; k hero_wl $HS/sel_profile_left.png 400 "--walk --n=12 --despill=all"
 ALT[hero_wr]=hero_wr2; ALT[hero_wl]=hero_wl2   # 2e prises : buste constant (1res : pivot entre profil et trois-quarts)
+ALT[hero_tqr]=hero_tqr2; ALT[hero_if]=hero_if2   # 2e prises : visage pince-sans-rire (1res : un sourire revenait)
 k hero_wf $HS/sel_front.png 400 "--walk --n=12 --despill=all"; k hero_wb $HS/sel_back.png 400 "--walk --n=12 --despill=all"
 k hero_iql $HS/sel_34_left.png 400 "--n=24 --despill=all"; k hero_iqr $HS/sel_34_right.png 400 "--n=24 --despill=all"; k hero_if $HS/sel_front.png 400 "--n=24 --despill=all"
 k hero_tql $HS/sel_34_left.png 400 "--n=20 --despill=all"; k hero_tqr $HS/sel_34_right.png 400 "--n=20 --despill=all"; k hero_tf $HS/sel_front.png 400 "--n=20 --despill=all"
-k guybrush_i $PS/c_guybrush_1.png 370 "--n=24"; k guybrush_t $PS/c_guybrush_1.png 370 "--n=20"
+k guybrush_i $PS/c_guybrush_1.png 370 "--n=24 --despill=all"; k guybrush_t $PS/c_guybrush_1.png 370 "--n=20 --despill=all"
 k swordmaster_i $PS/c_pirate.png 385 "--n=24"; k swordmaster_t $PS/c_pirate.png 385 "--n=20"
-k lechuck2_i work/s2play/persos/lechuck_clean_1.png 440 "--n=24"; k lechuck2_t work/s2play/persos/lechuck_clean_1.png 440 "--n=20"
+k lechuck2_i work/s2play/persos/lechuck_clean_1.png 440 "--n=24 --despill=all"; k lechuck2_t work/s2play/persos/lechuck_clean_1.png 440 "--n=20 --despill=all"
 k sheo_i $PS/c_sheo.png 400 "--n=24"; k sheo_t $PS/c_sheo.png 400 "--n=20"
-k parrot_i $PS/c_parrot.png 110 "--n=24"; k parrot_t $PS/c_parrot.png 110 "--n=20"
+k parrot_i $PS/c_parrot.png 110 "--n=24 --despill=all"; k parrot_t $PS/c_parrot.png 110 "--n=20 --despill=all"
+# --despill=all : nettoyage du rose du fond sur toute la silhouette, seulement pour qui ne porte aucun magenta ni violet
 ids=("$@"); [ ${#ids} -eq 0 ] && ids=(${(k)K})
 for b in $ids; do
   src="$V/${ALT[$b]:-$b}.mp4"

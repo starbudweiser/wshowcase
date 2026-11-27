@@ -1,4 +1,12 @@
 {
+ "guybrush_i": {
+  "fps": 8.0,
+  "n": 24
+ },
+ "guybrush_t": {
+  "fps": 7.5,
+  "n": 20
+ },
  "hero_if": {
   "fps": 8.0,
   "n": 24
@@ -48,6 +56,30 @@
   "n": 24
  },
  "lechuck2_t": {
+  "fps": 7.5,
+  "n": 20
+ },
+ "parrot_i": {
+  "fps": 8.0,
+  "n": 24
+ },
+ "parrot_t": {
+  "fps": 7.5,
+  "n": 20
+ },
+ "sheo_i": {
+  "fps": 8.0,
+  "n": 24
+ },
+ "sheo_t": {
+  "fps": 7.5,
+  "n": 20
+ },
+ "swordmaster_i": {
+  "fps": 8.0,
+  "n": 24
+ },
+ "swordmaster_t": {
   "fps": 7.5,
   "n": 20
  }

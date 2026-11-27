@@ -195,7 +195,7 @@ export default {
     const t0 = g.now; const fadeIn = g.until(() => { L.alpha = Math.min(0.88, (g.now - t0) * 0.6); return L.alpha >= 0.88; });
     g.face(L.x); await g.walkEnt('lechuck', Math.max(60, h.x - 70), Math.min(214, Math.max(186, h.y - 10)), 70); await fadeIn; g.face(L.x);
     await g.say('lechuck', 'c11.ghost.1'); await g.say('hero', 'c11.ghost.2'); await g.say('lechuck', 'c11.ghost.3'); await g.say('hero', 'c11.ghost.4');
-    await g.say('lechuck', 'c11.ghost.5'); g.sfx('whoosh'); g.drop('cheese_nl'); L.hot = true; L.at = [Math.min(440, L.x + 46), Math.max(176, Math.min(262, L.y + 8))]; g.set('ghostCame');
+    await g.say('lechuck', 'c11.ghost.5'); g.sfx('whoosh'); g.drop('cheese_nl'); L.hot = true; L.at = [Math.min(440, L.x + 64), Math.max(176, Math.min(262, L.y + 6))];   /* assez loin pour ne pas empiéter sur le fantôme */ g.set('ghostCame');
     await g.say('narr', 'c11.ghost.narr'); await g.say('hero', 's11.ghost.cheese');
   },
 
