@@ -20,6 +20,7 @@ import { playIntro, preloadIntro } from './intro.js';
 import { TitleArt, buildMenu } from './title.js';
 import { rubLamp } from './genie.js';
 import { updateFx2, drawFx2, drawFxBack, twinkle, shout } from './fx2.js';
+import { drawLightFx } from './lightfx.js';   /* ESSAI couche de lumière (?lightfx), voir data/lightfx_essai.js */
 import * as SH from '../data/sheets.js';
 import * as S2 from '../data/sheets_s2.js';
 import { CHAPTERS2 } from '../scenes/index.js';
@@ -809,6 +810,7 @@ export class Game {
     [...this.ents.filter(e => e.visible !== false), ...occ].sort((a, b) => (a.y + (a.z || 0)) - (b.y + (b.z || 0))).forEach(e => (e.occ ? this.drawOcc(e.occ.polys) : this.drawEnt(e)));
     fg.filter(o => Array.isArray(o)).forEach(p => this.drawOcc([p]));
     drawFx2(this, c);
+    drawLightFx(this, c, this.now - (this._lfxT ?? this.now)); this._lfxT = this.now;   /* ESSAI : sans ?lightfx, ne fait rien */
     if (this.scene && this.scene.draw) this.scene.draw(this, c);   /* dessin propre à une scène, par-dessus les acteurs (indicateur « Caché ») */
     c.restore();
     if (!this.scene.hd) { drawWinks(this, c); drawNight(this, c); drawGlass(this, c); }
