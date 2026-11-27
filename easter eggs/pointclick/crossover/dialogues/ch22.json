@@ -1,0 +1,402 @@
+{
+ "chapter": 22,
+ "title": {
+  "fr": "La chambre rouge",
+  "en": "The red room"
+ },
+ "note": "Dialogues complets FR/EN (25/11/2026), sur le modèle du chapitre pilote 11. who = id du personnage dans le casting mCASTING de la saison 2 ; emo = consigne d’émotion de la réplique (anglais). Petit homme en rouge : toutes ses répliques sont jouées à l’envers au montage, SAUF c22.use.wab.redman (à l’endroit, Wabbajack). c22.use.wab.redman.hero est la seule réplique du héros jouée à l’envers. Tonalité : aucun crime évoqué, on reste dans l’étrange.",
+ "lines": [
+  {
+   "key": "c22.wake.1",
+   "who": "redman",
+   "emo": "strange sing-song, backwards diction",
+   "ctx": "Réveil dans la chambre rouge : le petit homme danse autour du héros (réplique jouée à l’envers au montage)",
+   "fr": "Hé, toi. T’es enfin réveillé.",
+   "en": "Hey, you. You’re finally awake."
+  },
+  {
+   "key": "c22.wake.2",
+   "who": "hero",
+   "emo": "groggy, puzzled",
+   "ctx": "Réveil",
+   "fr": "Je n’ai rien compris, mais je connais l’air. C’est la chanson de tous mes réveils.",
+   "en": "Didn’t understand a word, but I know the tune. It’s the song of every morning I’ve ever had."
+  },
+  {
+   "key": "c22.wake.3",
+   "who": "narr",
+   "emo": "uneasy, weary",
+   "ctx": "Réveil",
+   "fr": "Rideaux rouges, sol en zigzag, un petit homme qui parle à l’envers. Je ne suis pas assez payé pour ça. Ni dans un sens ni dans l’autre.",
+   "en": "Red curtains, zigzag floor, a little man talking backwards. I’m not paid enough for this. Either way round."
+  },
+  {
+   "key": "c22.look.curtains",
+   "who": "hero",
+   "emo": "dry",
+   "ctx": "Regarder les rideaux",
+   "fr": "Des rideaux rouges du sol au plafond. Quelqu’un ici a les goûts d’un Prince daedrique.",
+   "en": "Red curtains, floor to ceiling. Someone here has the taste of a Daedric Prince."
+  },
+  {
+   "key": "c22.look.floor",
+   "who": "hero",
+   "emo": "uneasy, dry",
+   "ctx": "Regarder le sol en zigzag",
+   "fr": "Un sol en zigzag. Si on le fixe trop longtemps, c’est lui qui vous fixe.",
+   "en": "A zigzag floor. Stare at it too long and it stares back."
+  },
+  {
+   "key": "c22.look.redman",
+   "who": "hero",
+   "emo": "dry",
+   "ctx": "Regarder le petit homme",
+   "fr": "Un petit homme en costume rouge. Il danse comme un draugr qui entend de la musique pour la première fois.",
+   "en": "A little man in a red suit. He dances like a draugr hearing music for the first time."
+  },
+  {
+   "key": "c22.talk.redman.1",
+   "who": "redman",
+   "emo": "sing-song, cheerful, backwards diction",
+   "ctx": "Parler au petit homme (réplique jouée à l’envers au montage)",
+   "fr": "Ta meule dort chez le monsieur qui a fait les rideaux.",
+   "en": "Your cheese is sleeping at the house of the man who did the curtains."
+  },
+  {
+   "key": "c22.talk.redman.2",
+   "who": "hero",
+   "emo": "deadpan",
+   "ctx": "Parler au petit homme",
+   "fr": "Pas un mot de compris. Mais il avait l’air très sûr de lui.",
+   "en": "Didn’t get a word. But he sounded very sure of himself."
+  },
+  {
+   "key": "c22.use.shout.redman",
+   "who": "hero",
+   "emo": "shouting, backwards",
+   "ctx": "Le héros crie son Cri à l’envers pour se faire comprendre (mauvaise tentative)",
+   "fr": "HAD… OR… SUF !",
+   "en": "HAD… OR… SUF!"
+  },
+  {
+   "key": "c22.use.shout.redman.2",
+   "who": "hero",
+   "emo": "coughing, dry",
+   "ctx": "Le Cri à l’envers aspire au lieu de repousser",
+   "fr": "À l’envers, le Cri ne repousse pas : il aspire. J’ai avalé un bout de rideau.",
+   "en": "Backwards, the shout doesn’t push: it pulls. I swallowed a bit of curtain."
+  },
+  {
+   "key": "c22.use.shout.redman.3",
+   "who": "redman",
+   "emo": "giggling, sing-song, backwards diction",
+   "ctx": "Le petit homme rit (réplique jouée à l’envers au montage)",
+   "fr": "Tu parles mal, mais tu parles fort.",
+   "en": "You speak badly, but you speak loudly."
+  },
+  {
+   "key": "c22.use.wab.redman",
+   "who": "redman",
+   "emo": "delighted, odd, forward diction",
+   "ctx": "Wabbajack + petit homme : il parle enfin à l’endroit (exception : réplique jouée à l’endroit)",
+   "fr": "Enfin, j’entends ma voix dans le bon sens ! Ta meule est chez le monsieur aux rideaux.",
+   "en": "At last, I hear my voice the right way round! Your cheese is with the gentleman who did the curtains."
+  },
+  {
+   "key": "c22.use.wab.redman.hero",
+   "who": "hero",
+   "emo": "confused, backwards diction",
+   "ctx": "… et c’est le héros qui parle à l’envers (réplique du héros jouée à l’envers au montage)",
+   "fr": "Pourquoi ma bouche fait-elle ce bruit-là ?",
+   "en": "Why is my mouth making that noise?"
+  },
+  {
+   "key": "c22.use.wab.redman.narr",
+   "who": "narr",
+   "emo": "dry, sarcastic",
+   "ctx": "Wabbajack + petit homme",
+   "fr": "Le petit homme parle à l’endroit, le héros à l’envers. Pour une fois, je le comprends aussi mal que d’habitude.",
+   "en": "The little man talks forwards, the hero talks backwards. For once, I understand him exactly as badly as usual."
+  },
+  {
+   "key": "c22.sheo.1",
+   "who": "sheo",
+   "emo": "grand, delighted",
+   "ctx": "Sheogorath sort des rideaux",
+   "fr": "Ma résidence secondaire. Les rideaux, c’est moi.",
+   "en": "My holiday home. I did the curtains."
+  },
+  {
+   "key": "c22.sheo.2",
+   "who": "redman",
+   "emo": "offended, sing-song, backwards diction",
+   "ctx": "Le petit homme répète la même phrase : il revendique les rideaux (réplique jouée à l’envers au montage)",
+   "fr": "Ma résidence secondaire. Les rideaux, c’est moi.",
+   "en": "My holiday home. I did the curtains."
+  },
+  {
+   "key": "c22.sheo.3",
+   "who": "hero",
+   "emo": "dry",
+   "ctx": "Sheogorath et le petit homme",
+   "fr": "Visiblement, le bail est contesté.",
+   "en": "Clearly, the lease is under dispute."
+  },
+  {
+   "key": "c22.sheo.4",
+   "who": "hero",
+   "emo": "dry, surprised",
+   "ctx": "Parler à Sheogorath",
+   "fr": "Je croyais que vous habitiez les Îles Frissonnantes. Vous avez aussi une maison de campagne ?",
+   "en": "I thought you lived in the Shivering Isles. You have a country house too?"
+  },
+  {
+   "key": "c22.sheo.5",
+   "who": "sheo",
+   "emo": "whispering, then shouting",
+   "ctx": "Sheogorath fixe son prix",
+   "fr": "Les Îles, c’est pour le travail. Ici, c’est pour le café. Ta meule contre un bon café… et une part de tarte aux cerises !",
+   "en": "The Isles are for work. This place is for coffee. Your cheese for a good coffee… and a slice of cherry pie!"
+  },
+  {
+   "key": "c22.sheo.6",
+   "who": "hero",
+   "emo": "deadpan",
+   "ctx": "Parler à Sheogorath",
+   "fr": "Un Prince de la Folie qui marchande comme un aubergiste. Plus rien ne m’étonne.",
+   "en": "A Prince of Madness haggling like an innkeeper. Nothing surprises me anymore."
+  },
+  {
+   "key": "c22.look.diner",
+   "who": "hero",
+   "emo": "suspicious, dry",
+   "ctx": "De l’autre côté des rideaux : le café de la ville",
+   "fr": "Un café de bord de route, des sapins partout, une odeur de tarte. Enfin un endroit normal. Trop normal.",
+   "en": "A roadside diner, pine trees everywhere, the smell of pie. Finally a normal place. Too normal."
+  },
+  {
+   "key": "c22.talk.agent.1",
+   "who": "agent",
+   "emo": "upbeat, precise, dictating",
+   "ctx": "Parler à l’agent du FBI : il dicte dans son magnétophone",
+   "fr": "Note pour plus tard : il est onze heures, et il y a un Viking dans la forêt.",
+   "en": "Note to self: it’s eleven o’clock, and there’s a Viking in the woods."
+  },
+  {
+   "key": "c22.talk.agent.2",
+   "who": "hero",
+   "emo": "dry, correcting",
+   "ctx": "Parler à l’agent",
+   "fr": "Je ne suis pas dans la forêt. Je suis assis en face de vous.",
+   "en": "I’m not in the woods. I’m sitting right across from you."
+  },
+  {
+   "key": "c22.talk.agent.3",
+   "who": "agent",
+   "emo": "delighted, savouring",
+   "ctx": "Il goûte son café",
+   "fr": "Ce café est sacrément bon.",
+   "en": "This is a damn fine cup of coffee."
+  },
+  {
+   "key": "c22.talk.agent.4",
+   "who": "agent",
+   "emo": "enthusiastic",
+   "ctx": "Parler à l’agent",
+   "fr": "Et la tarte aux cerises, ici… Il faudra que je l’écrive dans mon rapport.",
+   "en": "And the cherry pie here… That’s going in my report."
+  },
+  {
+   "key": "c22.talk.agent.5",
+   "who": "hero",
+   "emo": "dry",
+   "ctx": "Parler à l’agent",
+   "fr": "Un homme qui parle à une boîte et ne jure que par la tarte. Il ferait un excellent jarl.",
+   "en": "A man who talks to a box and swears by pie. He’d make an excellent jarl."
+  },
+  {
+   "key": "c22.use.agent.order",
+   "who": "agent",
+   "emo": "generous, cheerful",
+   "ctx": "Le héros demande à goûter : l’agent commande pour lui",
+   "fr": "Un café noir et une part de tarte pour mon ami ! C’est pour moi.",
+   "en": "A black coffee and a slice of pie for my friend! My treat."
+  },
+  {
+   "key": "c22.use.agent.order.hero",
+   "who": "hero",
+   "emo": "pleased",
+   "ctx": "Il reçoit le café et la tarte",
+   "fr": "Un café certifié sacrément bon par un agent fédéral. Le Prince ne pourra pas refuser.",
+   "en": "Coffee certified damn fine by a federal agent. The Prince can’t say no to that."
+  },
+  {
+   "key": "c22.talk.loglady.1",
+   "who": "loglady",
+   "emo": "quiet, cryptic",
+   "ctx": "Parler à la dame à la bûche, au comptoir",
+   "fr": "Ma bûche a vu quelque chose. Elle ne veut pas en parler.",
+   "en": "My log saw something. It doesn’t want to talk about it."
+  },
+  {
+   "key": "c22.talk.loglady.2",
+   "who": "hero",
+   "emo": "understanding, dry",
+   "ctx": "Parler à la dame à la bûche",
+   "fr": "Je respecte. Mon seau non plus n’aime pas parler de ce qu’il a vu.",
+   "en": "I respect that. My bucket doesn’t like discussing what it’s seen either."
+  },
+  {
+   "key": "c22.talk.loglady.3",
+   "who": "loglady",
+   "emo": "quiet, certain",
+   "ctx": "Parler à la dame à la bûche",
+   "fr": "Les hiboux ne sont pas ce qu’ils semblent.",
+   "en": "The owls are not what they seem."
+  },
+  {
+   "key": "c22.talk.loglady.4",
+   "who": "hero",
+   "emo": "dry",
+   "ctx": "Parler à la dame à la bûche",
+   "fr": "Ici, rien n’est ce qu’il semble. Sauf la tarte.",
+   "en": "Nothing here is what it seems. Except the pie."
+  },
+  {
+   "key": "c22.use.sweetroll.sheo",
+   "who": "sheo",
+   "emo": "outraged, theatrical",
+   "ctx": "Café + brioche + Sheogorath, à la place de la tarte (mauvaise tentative)",
+   "fr": "Une brioche ? J’ai dit une tarte ! Une brioche, c’est une tarte qui a raté sa vie !",
+   "en": "A sweetroll? I said pie! A sweetroll is a pie that gave up on its dreams!"
+  },
+  {
+   "key": "c22.use.pie.sheo",
+   "who": "sheo",
+   "emo": "ecstatic, savouring",
+   "ctx": "Café + tarte + Sheogorath : il rend la meule",
+   "fr": "Noir comme mes nuits, rouge comme mes rideaux ! Tiens, mon petit, ta meule.",
+   "en": "Black as my nights, red as my curtains! Here, my boy, your cheese."
+  },
+  {
+   "key": "c22.use.pie.hero",
+   "who": "hero",
+   "emo": "satisfied, dry",
+   "ctx": "Il reçoit la meule",
+   "fr": "Une meule contre un café et une tarte. La meilleure affaire de ma vie.",
+   "en": "A wheel of cheese for a coffee and a pie. Best deal of my life."
+  },
+  {
+   "key": "c22.wk.log",
+   "who": "loglady",
+   "emo": "tender, cryptic",
+   "ctx": "Wabbajack + bûche : elle devient une meule, la dame continue de lui parler",
+   "fr": "Ma bûche est devenue fromage. Elle dit que ça ne change rien entre nous.",
+   "en": "My log has turned into cheese. It says nothing has changed between us."
+  },
+  {
+   "key": "c22.wk.log.hero",
+   "who": "hero",
+   "emo": "hesitant, dry",
+   "ctx": "Wabbajack + bûche",
+   "fr": "Je n’ose pas lui demander si je peux en couper un bout.",
+   "en": "I don’t dare ask if I can have a slice."
+  },
+  {
+   "key": "c22.wk.owls",
+   "who": "hero",
+   "emo": "dry, vindicated",
+   "ctx": "Wabbajack + hiboux : des poules",
+   "fr": "Des poules. Elle avait raison : les hiboux n’étaient pas ce qu’ils semblaient.",
+   "en": "Chickens. She was right: the owls weren’t what they seemed."
+  },
+  {
+   "key": "c22.wk.owls.loglady",
+   "who": "loglady",
+   "emo": "quiet, smug",
+   "ctx": "Wabbajack + hiboux",
+   "fr": "Je l’avais dit.",
+   "en": "I did say."
+  },
+  {
+   "key": "c22.wk.recorder",
+   "who": "agent",
+   "emo": "upbeat, dictating",
+   "ctx": "Wabbajack + magnétophone : l’agent dicte son rapport à Sheogorath",
+   "fr": "Sheogorath, il est onze heures et quart. La tarte est excellente, et je crois que les rideaux me parlent.",
+   "en": "Sheogorath, it’s a quarter past eleven. The pie is excellent, and I believe the curtains are talking to me."
+  },
+  {
+   "key": "c22.wk.recorder.hero",
+   "who": "hero",
+   "emo": "dry",
+   "ctx": "Wabbajack + magnétophone",
+   "fr": "Il dicte son rapport au Prince de la Folie. Au moins, quelqu’un va le lire.",
+   "en": "He’s dictating his report to the Prince of Madness. At least someone will read it."
+  },
+  {
+   "key": "c22.wk.pie",
+   "who": "agent",
+   "emo": "puzzled, still enthusiastic",
+   "ctx": "Wabbajack + tarte : elle parle à l’envers",
+   "fr": "Note pour le rapport : la tarte parle. À l’envers. Elle reste délicieuse.",
+   "en": "Note for the report: the pie is talking. Backwards. It remains delicious."
+  },
+  {
+   "key": "c22.wk.pie.hero",
+   "who": "hero",
+   "emo": "dry",
+   "ctx": "Wabbajack + tarte",
+   "fr": "Je ne mange rien qui ait plus de conversation que moi.",
+   "en": "I don’t eat anything with more conversation than me."
+  },
+  {
+   "key": "c22.gag.narr",
+   "who": "narr",
+   "emo": "dry, bewildered",
+   "ctx": "Sheogorath et le petit homme dansent ensemble, chacun dans un sens",
+   "fr": "Sheogorath et le petit homme dansent ensemble. L’un vers la gauche, l’autre vers la semaine dernière.",
+   "en": "Sheogorath and the little man dance together. One to the left, the other into last week."
+  },
+  {
+   "key": "c22.gag.redman",
+   "who": "redman",
+   "emo": "happy, sing-song, backwards diction",
+   "ctx": "Pendant la danse (réplique jouée à l’envers au montage)",
+   "fr": "Il danse comme moi, mais de l’autre côté.",
+   "en": "He dances like me, only from the other side."
+  },
+  {
+   "key": "c22.gag.hero",
+   "who": "hero",
+   "emo": "deadpan",
+   "ctx": "Pendant la danse",
+   "fr": "Ils vont en sens contraire et ne se marchent jamais sur les pieds. Moi, je trébuche sur des seaux.",
+   "en": "They go opposite ways and never step on each other’s toes. I trip over buckets."
+  },
+  {
+   "key": "c22.end.redman",
+   "who": "redman",
+   "emo": "sing-song, backwards diction",
+   "ctx": "Le héros repart par les rideaux (réplique jouée à l’envers au montage)",
+   "fr": "À bientôt. Ou à tout à l’heure. Ça dépend du sens.",
+   "en": "See you soon. Or a moment ago. Depends which way."
+  },
+  {
+   "key": "c22.end.hero",
+   "who": "hero",
+   "emo": "content, dry",
+   "ctx": "Fin du chapitre",
+   "fr": "Une meule de plus. Plus que six mondes.",
+   "en": "One more wheel. Only six worlds to go."
+  },
+  {
+   "key": "c22.end.narr",
+   "who": "narr",
+   "emo": "weary",
+   "ctx": "Fin du chapitre",
+   "fr": "Six. Et je ne regarderai plus jamais un sol en zigzag.",
+   "en": "Six. And I’m never looking at a zigzag floor again."
+  }
+ ]
+}

@@ -1,0 +1,394 @@
+{
+ "chapter": 23,
+ "title": {
+  "fr": "Projections",
+  "en": "Spatter"
+ },
+ "note": "Dialogues complets FR/EN (25/11/2026), sur le modèle du chapitre pilote 11. who = id du personnage dans le casting mCASTING de la saison 2 ; emo = consigne d’émotion de la réplique (anglais). Les répliques « inner voice » de l’expert sont sa voix intérieure (voix off, ton feutré). Tonalité : aucun crime montré, seulement la confiture, le plastique et les beignets.",
+ "lines": [
+  {
+   "key": "c23.wake.1",
+   "who": "dexter",
+   "emo": "sarcastic, falsely polite, amused",
+   "ctx": "Réveil sur un canapé, en plein soleil : l’expert se penche, très poli",
+   "fr": "Hé, toi. T’es enfin réveillé. Tu as de la confiture partout.",
+   "en": "Hey, you. You’re finally awake. You’ve got jam all over you."
+  },
+  {
+   "key": "c23.wake.2",
+   "who": "hero",
+   "emo": "groggy, embarrassed",
+   "ctx": "Réveil",
+   "fr": "Ce n’est pas ma confiture. Enfin, si. C’est compliqué.",
+   "en": "It’s not my jam. Well, it is. It’s complicated."
+  },
+  {
+   "key": "c23.wake.3",
+   "who": "narr",
+   "emo": "uneasy, weary",
+   "ctx": "Réveil",
+   "fr": "Plein soleil, chemise à manches courtes, sourire poli. Tout va bien. Alors pourquoi est-ce que j’ai froid ?",
+   "en": "Blazing sun, short-sleeved shirt, polite smile. Everything’s fine. So why do I feel cold?"
+  },
+  {
+   "key": "c23.wake.4",
+   "who": "dexter",
+   "emo": "dark inner voice, dry sarcasm",
+   "ctx": "Réveil : voix intérieure de l’expert",
+   "fr": "Un Viking couvert de confiture, sur mon canapé. J’ai connu des mardis plus simples.",
+   "en": "A Viking covered in jam, on my couch. I’ve had simpler Tuesdays."
+  },
+  {
+   "key": "c23.look.armour",
+   "who": "hero",
+   "emo": "dry",
+   "ctx": "Regarder son armure",
+   "fr": "Mon armure est couverte de taches rouges. Ça sent la fraise. Et le dragon.",
+   "en": "My armour is covered in red spots. It smells of strawberries. And dragon."
+  },
+  {
+   "key": "c23.look.microscope",
+   "who": "hero",
+   "emo": "dry, impressed",
+   "ctx": "Regarder le microscope",
+   "fr": "Un microscope, des lames bien alignées, des gants en latex. Il range mieux que mon inventaire.",
+   "en": "A microscope, neatly lined-up slides, latex gloves. He’s tidier than my inventory."
+  },
+  {
+   "key": "c23.look.boat",
+   "who": "hero",
+   "emo": "dry, envious",
+   "ctx": "Regarder la photo du bateau",
+   "fr": "Un bateau à moteur, sur une photo. Plus rapide qu’une charrette, et sans voleur de chevaux enchaîné à côté.",
+   "en": "A motorboat, in a photo. Faster than a cart, and no horse thief chained up next to you."
+  },
+  {
+   "key": "c23.talk.dexter.1",
+   "who": "dexter",
+   "emo": "smug, a hint of menace",
+   "ctx": "Parler à l’expert",
+   "fr": "Permets-moi. Les projections, c’est mon métier.",
+   "en": "Allow me. Spatter is my job."
+  },
+  {
+   "key": "c23.talk.dexter.2",
+   "who": "dexter",
+   "emo": "relishing every detail, darkly amused",
+   "ctx": "Il analyse les taches sur l’armure",
+   "fr": "Confiture de fraise. Projetée de bas en haut, par un gâteau… sur lequel quelque chose de très lourd s’est assis.",
+   "en": "Strawberry jam. Sprayed upwards, from a cake… that something very heavy sat on."
+  },
+  {
+   "key": "c23.talk.dexter.3",
+   "who": "dexter",
+   "emo": "proud, sinister satisfaction",
+   "ctx": "Il analyse les taches sur l’armure",
+   "fr": "Des écailles dans la crème : un dragon. Quinze trous de bougies. Un village en bois, au bord d’une rivière.",
+   "en": "Scales in the frosting: a dragon. Fifteen candle holes. A wooden village by a river."
+  },
+  {
+   "key": "c23.talk.dexter.4",
+   "who": "hero",
+   "emo": "impressed, dry",
+   "ctx": "Il a tout deviné",
+   "fr": "Rivebois, le dragon, mes quinze ans. Tout ça avec une tache. Chez nous, les gardes ne retrouvent même pas une brioche volée.",
+   "en": "Riverwood, the dragon, my fifteenth birthday. All from a stain. Back home, the guards can’t even find a stolen sweetroll."
+  },
+  {
+   "key": "c23.talk.dexter.5",
+   "who": "dexter",
+   "emo": "smug, condescending",
+   "ctx": "Parler à l’expert",
+   "fr": "Et tu cherches un fromage. Il y a des miettes de croûte sur tes gants.",
+   "en": "And you’re looking for a cheese. There are rind crumbs on your gloves."
+  },
+  {
+   "key": "c23.talk.dexter.6",
+   "who": "dexter",
+   "emo": "mock apologetic, sarcastic",
+   "ctx": "Parler à l’expert",
+   "fr": "Je n’ai pas de fromage. Seulement des beignets. J’en apporte au commissariat tous les matins.",
+   "en": "I don’t have any cheese. Only donuts. I bring some to the station every morning."
+  },
+  {
+   "key": "c23.talk.sister.1",
+   "who": "sister",
+   "emo": "brash, loud",
+   "ctx": "La sœur policière déboule dans l’appartement",
+   "fr": "Bordel, frangin, c’est qui ce Viking ?",
+   "en": "Jesus, bro, who the hell is this Viking?"
+  },
+  {
+   "key": "c23.talk.dexter.7",
+   "who": "dexter",
+   "emo": "dark inner voice, sardonic",
+   "ctx": "Voix intérieure de l’expert, à l’arrivée de sa sœur",
+   "fr": "Ma sœur. Elle jure beaucoup. C’est sa façon de dire bonjour.",
+   "en": "My sister. She swears a lot. It’s how she says hello."
+  },
+  {
+   "key": "c23.talk.sister.2",
+   "who": "hero",
+   "emo": "dry",
+   "ctx": "Parler à la sœur policière",
+   "fr": "Un aventurier. Couvert de confiture. Je peux tout expliquer, mais pas vite.",
+   "en": "An adventurer. Covered in jam. I can explain everything, just not quickly."
+  },
+  {
+   "key": "c23.talk.sister.3",
+   "who": "sister",
+   "emo": "fast, bossy",
+   "ctx": "Parler à la sœur policière",
+   "fr": "Personne ne touche à rien. Surtout pas à la confiture.",
+   "en": "Nobody touches anything. Especially not the jam."
+  },
+  {
+   "key": "c23.talk.sister.4",
+   "who": "sister",
+   "emo": "impatient, loud",
+   "ctx": "Parler à la sœur policière",
+   "fr": "Et les beignets, frangin ? C’est ton tour, toute l’équipe t’attend !",
+   "en": "And the donuts, bro? It’s your turn, the whole team is waiting!"
+  },
+  {
+   "key": "c23.look.door",
+   "who": "hero",
+   "emo": "suspicious, dry",
+   "ctx": "Regarder la porte de la petite pièce",
+   "fr": "Une porte fermée à clé. Il la regarde comme je regarde un coffre de niveau expert.",
+   "en": "A locked door. He looks at it the way I look at an expert-level chest."
+  },
+  {
+   "key": "c23.talk.dexter.door",
+   "who": "dexter",
+   "emo": "sinister, menacing smile",
+   "ctx": "Parler à l’expert de la porte",
+   "fr": "Les beignets sont dans ma petite pièce. Je l’aime bien rangée.",
+   "en": "The donuts are in my little room. I like to keep it tidy."
+  },
+  {
+   "key": "c23.use.password",
+   "who": "hero",
+   "emo": "solemn, whispering",
+   "ctx": "Le héros donne à la porte le mot de passe de la Confrérie noire de Skyrim (mauvaise tentative)",
+   "fr": "Silence, mon frère.",
+   "en": "Silence, my brother."
+  },
+  {
+   "key": "c23.use.password.dexter",
+   "who": "dexter",
+   "emo": "irritated, cold sarcasm",
+   "ctx": "Mot de passe + porte",
+   "fr": "… Pardon ? Ce n’est pas un club. C’est une pièce.",
+   "en": "… Sorry? It’s not a club. It’s a room."
+  },
+  {
+   "key": "c23.look.room",
+   "who": "hero",
+   "emo": "uneasy, firm",
+   "ctx": "L’expert ouvre la porte : la pièce est tapissée de plastique",
+   "fr": "Une pièce entièrement tapissée de plastique. Je ne rentre pas dans un endroit emballé comme un colis.",
+   "en": "A room lined entirely with plastic. I am not walking into a place wrapped like a parcel."
+  },
+  {
+   "key": "c23.look.room.dexter",
+   "who": "dexter",
+   "emo": "creepy, ominous, too sincere",
+   "ctx": "La pièce en plastique",
+   "fr": "C’est pour le ménage. J’ai horreur des taches.",
+   "en": "It’s for cleaning. I can’t stand stains."
+  },
+  {
+   "key": "c23.gag.narr",
+   "who": "narr",
+   "emo": "uneasy, dry",
+   "ctx": "Le narrateur, devant la pièce en plastique",
+   "fr": "Enfin quelqu’un de plus inquiétant que moi.",
+   "en": "Finally someone more unsettling than me."
+  },
+  {
+   "key": "c23.use.wab.room",
+   "who": "hero",
+   "emo": "relieved, pleased",
+   "ctx": "Wabbajack + pièce : une aire de pique-nique",
+   "fr": "Une aire de pique-nique ! Nappe à carreaux, panier, petits oiseaux. Là, je veux bien entrer.",
+   "en": "A picnic area! Checked tablecloth, basket, little birds. Now I’ll go in."
+  },
+  {
+   "key": "c23.use.wab.room.dexter",
+   "who": "dexter",
+   "emo": "disgusted, sarcastic",
+   "ctx": "Wabbajack + pièce",
+   "fr": "C’est… très gai. Je n’aime pas quand c’est gai.",
+   "en": "It’s… very cheerful. I don’t like cheerful."
+  },
+  {
+   "key": "c23.use.box",
+   "who": "hero",
+   "emo": "dry",
+   "ctx": "Il prend la boîte de beignets sur la nappe",
+   "fr": "Une boîte de beignets. Douze trous, pas un seul fromage.",
+   "en": "A box of donuts. Twelve holes, not a single cheese."
+  },
+  {
+   "key": "c23.use.sweetroll.sister",
+   "who": "sister",
+   "emo": "offended, loud",
+   "ctx": "Brioche + sœur policière (mauvaise tentative)",
+   "fr": "Une brioche ? C’est pas un beignet, ça ! Y a même pas de trou !",
+   "en": "A sweetroll? That’s not a donut! It doesn’t even have a hole!"
+  },
+  {
+   "key": "c23.use.sweetroll.hero",
+   "who": "hero",
+   "emo": "offended",
+   "ctx": "Brioche + sœur policière",
+   "fr": "C’est justement ce qui la rend précieuse. Il ne manque rien.",
+   "en": "That’s exactly what makes it precious. Nothing’s missing."
+  },
+  {
+   "key": "c23.use.wab.donuts",
+   "who": "hero",
+   "emo": "satisfied",
+   "ctx": "Wabbajack + boîte de beignets : une meule",
+   "fr": "Une meule ! Ronde comme un beignet, mais pleine. C’est ça, le progrès.",
+   "en": "A wheel of cheese! Round like a donut, but solid. That’s progress."
+  },
+  {
+   "key": "c23.use.wab.donuts.narr",
+   "who": "narr",
+   "emo": "dry, mock-solemn",
+   "ctx": "Wabbajack + boîte de beignets",
+   "fr": "Des beignets changés en fromage. Quelque part, un commissariat entier vient de perdre la foi.",
+   "en": "Donuts turned into cheese. Somewhere, an entire police station just lost its faith."
+  },
+  {
+   "key": "c23.station.sister",
+   "who": "sister",
+   "emo": "outraged, loud",
+   "ctx": "Au commissariat, l’expert pose la meule sur la table des collègues",
+   "fr": "Une meule de fromage ? Où sont les beignets, frangin ?!",
+   "en": "A wheel of cheese? Where are the donuts, bro?!"
+  },
+  {
+   "key": "c23.station.dexter",
+   "who": "dexter",
+   "emo": "dark inner voice, bitter irony",
+   "ctx": "Voix intérieure de l’expert, devant les collègues déçus",
+   "fr": "Douze collègues déçus. Je ne me suis jamais senti aussi normal.",
+   "en": "Twelve disappointed colleagues. I’ve never felt so normal."
+  },
+  {
+   "key": "c23.station.hero",
+   "who": "hero",
+   "emo": "dry",
+   "ctx": "Le héros récupère la meule",
+   "fr": "Je la prends, c’est pour une fondue. Demain, revenez aux beignets.",
+   "en": "I’ll take that, it’s for a fondue. Tomorrow, go back to donuts."
+  },
+  {
+   "key": "c23.wk.slides",
+   "who": "dexter",
+   "emo": "intrigued, darkly amused",
+   "ctx": "Wabbajack + lames de microscope : des tranches de fromage",
+   "fr": "Mes lames de microscope sont devenues des tranches de fromage. L’échantillon est… savoureux.",
+   "en": "My microscope slides turned into cheese slices. The sample is… delicious."
+  },
+  {
+   "key": "c23.wk.slides.hero",
+   "who": "hero",
+   "emo": "dry",
+   "ctx": "Wabbajack + lames de microscope",
+   "fr": "Enfin une preuve qu’on peut manger.",
+   "en": "Finally, evidence you can eat."
+  },
+  {
+   "key": "c23.wk.dexter",
+   "who": "hero",
+   "emo": "amused",
+   "ctx": "Wabbajack + expert : une boîte de beignets",
+   "fr": "L’expert est devenu une boîte de beignets. Il a l’air plus détendu comme ça.",
+   "en": "The analyst turned into a box of donuts. He looks more relaxed like that."
+  },
+  {
+   "key": "c23.wk.dexter.sister",
+   "who": "sister",
+   "emo": "confused, loud",
+   "ctx": "Wabbajack + expert",
+   "fr": "Frangin ? … T’as l’air plus sucré que d’habitude.",
+   "en": "Bro? … You look glazed."
+  },
+  {
+   "key": "c23.wk.sister",
+   "who": "sister",
+   "emo": "furious, fast, shouting",
+   "ctx": "Wabbajack + sœur policière : elle jure en langue des dragons",
+   "fr": "Joor Zah Frul ! Yol Toor Shul ! Fus Ro Dah, frangin !",
+   "en": "Joor Zah Frul! Yol Toor Shul! Fus Ro Dah, bro!"
+  },
+  {
+   "key": "c23.wk.sister.hero",
+   "who": "hero",
+   "emo": "impressed",
+   "ctx": "Wabbajack + sœur policière",
+   "fr": "Elle vient de traiter son frère de « mortel ». Chez les dragons, c’est la pire des insultes.",
+   "en": "She just called her brother “mortal.” To a dragon, that’s the worst insult there is."
+  },
+  {
+   "key": "c23.wk.boat",
+   "who": "dexter",
+   "emo": "sardonic, menacing undertone",
+   "ctx": "Wabbajack + photo du bateau : une barque nordique",
+   "fr": "Mon bateau est devenu une barque. Il faudra ramer. Ça occupe les mains.",
+   "en": "My boat became a rowboat. I’ll have to row. Keeps the hands busy."
+  },
+  {
+   "key": "c23.wk.boat.hero",
+   "who": "hero",
+   "emo": "dry",
+   "ctx": "Wabbajack + bateau",
+   "fr": "Il y a la même au bord de toutes les rivières de chez moi. Personne ne sait à qui elle est.",
+   "en": "There’s one just like it by every river back home. Nobody knows who it belongs to."
+  },
+  {
+   "key": "c23.end.sheo",
+   "who": "sheo",
+   "emo": "delighted, manic",
+   "ctx": "Le visage de Sheogorath apparaît dans le seau-portail",
+   "fr": "Bravo, mon petit ! Une meule, et pas une goutte de confiture sur le tapis !",
+   "en": "Well done, my boy! A cheese, and not a drop of jam on the carpet!"
+  },
+  {
+   "key": "c23.end.dexter",
+   "who": "dexter",
+   "emo": "impressed, unsettled, dark chuckle",
+   "ctx": "L’expert découvre Sheogorath",
+   "fr": "Enfin quelqu’un de plus inquiétant que moi.",
+   "en": "Finally someone more unsettling than me."
+  },
+  {
+   "key": "c23.end.sheo.2",
+   "who": "sheo",
+   "emo": "flattered, giggling",
+   "ctx": "Sheogorath répond",
+   "fr": "Merci ! On ne me le dit jamais assez.",
+   "en": "Thank you! People don’t say it nearly enough."
+  },
+  {
+   "key": "c23.end.narr",
+   "who": "narr",
+   "emo": "offended",
+   "ctx": "Le narrateur reconnaît sa réplique",
+   "fr": "Hé, c’était ma réplique.",
+   "en": "Hey, that was my line."
+  },
+  {
+   "key": "c23.end.hero",
+   "who": "hero",
+   "emo": "content, dry",
+   "ctx": "Fin du chapitre",
+   "fr": "Une meule de plus. Plus que cinq mondes.",
+   "en": "One more wheel. Only five worlds to go."
+  }
+ ]
+}
