@@ -1,0 +1,63 @@
+{
+ "chapter": "23_extra",
+ "title": "Répliques d’interaction (regards, actions, Wabbajack)",
+ "note": "Répliques écrites pendant l’intégration, hors des dialogues du chapitre ; textes tirés de lang/*.js, même casting.",
+ "lines": [
+  {
+   "key": "look.dexter",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_23.js)",
+   "fr": "Chemise à manches courtes, sourire poli, gants en latex. Il range ses lames comme d’autres rangent leurs trophées.",
+   "en": "Short-sleeved shirt, polite smile, latex gloves. He arranges his slides the way others arrange trophies."
+  },
+  {
+   "key": "look.sister",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_23.js)",
+   "fr": "Sa sœur, policière. Elle jure plus vite qu’un garde ne dit « flèche dans le genou ».",
+   "en": "His sister, a police officer. She swears faster than a guard says “arrow in the knee”."
+  },
+  {
+   "key": "look.picnic23",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_23.js)",
+   "fr": "Une aire de pique-nique dans un placard. Je m’y installerais bien pour la saison prochaine.",
+   "en": "A picnic spot in a closet. I’d gladly settle here next season."
+  },
+  {
+   "key": "look.slidescheese23",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_23.js)",
+   "fr": "Des tranches de fromage bien alignées. Un échantillon que je validerais.",
+   "en": "Neatly lined-up slices of cheese. A sample I would approve."
+  },
+  {
+   "key": "look.s23sofa",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_23.js)",
+   "fr": "Le canapé où je me suis réveillé. Il y a une trace de confiture en forme de Bordeciel.",
+   "en": "The sofa I woke up on. There is a jam stain shaped like Skyrim."
+  },
+  {
+   "key": "look.s23window",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_23.js)",
+   "fr": "Des palmiers, du soleil. Il fait trop chaud pour une armure en fourrure.",
+   "en": "Palm trees, sunshine. Far too hot for fur armour."
+  },
+  {
+   "key": "s23.wk.back",
+   "who": "hero",
+   "emo": "resigned, dry",
+   "ctx": "Interaction (s2_23.js)",
+   "fr": "Et ça redevient comme avant. Même ici, le Wabbajack a la magie courte.",
+   "en": "And it’s back to normal. Even here, the Wabbajack’s magic doesn’t last."
+  }
+ ]
+}

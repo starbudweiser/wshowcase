@@ -1,0 +1,111 @@
+{
+ "chapter": "17_kaamelott_extra",
+ "title": "Répliques d’interaction (regards, actions, Wabbajack)",
+ "note": "Répliques écrites pendant l’intégration, hors des dialogues du chapitre ; textes tirés de lang/*.js, même casting.",
+ "lines": [
+  {
+   "key": "look.s17banquet",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_17k.js)",
+   "fr": "Un banquet entier sur la table ronde. Le Wabbajack a enfin compris ce qu’on attendait de lui.",
+   "en": "A whole banquet on the round table. The Wabbajack finally understood what was expected of it."
+  },
+  {
+   "key": "look.sweetroll",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_17k.js)",
+   "fr": "Une brioche sucrée. Dans tous les mondes, quelqu’un finit par me la voler.",
+   "en": "A sweet roll. In every world, someone ends up stealing it from me."
+  },
+  {
+   "key": "take.s17roll",
+   "who": "hero",
+   "emo": "casual, sly",
+   "ctx": "Interaction (s2_17k.js)",
+   "fr": "Une brioche sucrée, oubliée sur la caisse. Je la garde. Chez nous, c’est presque une monnaie.",
+   "en": "A sweet roll, forgotten on the crate. I’ll keep it. Back home, it’s practically currency."
+  },
+  {
+   "key": "look.s17door",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_17k.js)",
+   "fr": "La porte de la salle. La grotte du Graal est par là, paraît-il.",
+   "en": "The hall’s door. The Grail cave is that way, apparently."
+  },
+  {
+   "key": "look.s17fire",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_17k.js)",
+   "fr": "Une grande cheminée. Il y fait plus chaud que dans toute la province de Bordeciel.",
+   "en": "A big fireplace. It’s warmer in here than in the whole province of Skyrim."
+  },
+  {
+   "key": "look.s17banners",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_17k.js)",
+   "fr": "Des bannières rouges. Pas un dragon dessus. Une chance, pour eux.",
+   "en": "Red banners. Not a single dragon on them. Lucky them."
+  },
+  {
+   "key": "s17.wk.back",
+   "who": "hero",
+   "emo": "resigned, dry",
+   "ctx": "Interaction (s2_17k.js)",
+   "fr": "Et ça redevient comme avant. Même à la Table ronde, le Wabbajack a la magie courte.",
+   "en": "And it’s back to normal. Even at the Round Table, the Wabbajack’s magic doesn’t last."
+  },
+  {
+   "key": "look.s17spoon",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_17kb.js)",
+   "fr": "Une cuillère plantée dans une meule. Celui qui la retirera sera roi… des fromagers.",
+   "en": "A spoon stuck in a wheel of cheese. Whoever pulls it out shall be king… of the cheesemongers."
+  },
+  {
+   "key": "s17.spoon.take",
+   "who": "hero",
+   "emo": "pleased, upbeat",
+   "ctx": "Interaction (s2_17kb.js)",
+   "fr": "Je préfère laisser ça à un spécialiste.",
+   "en": "I’d rather leave that to a specialist."
+  },
+  {
+   "key": "s17.sword.take",
+   "who": "hero",
+   "emo": "pleased, upbeat",
+   "ctx": "Interaction (s2_17kb.js)",
+   "fr": "Elle ne bouge pas d’un pouce. Il faut sans doute être roi, ou avoir mangé beaucoup de fromage.",
+   "en": "It won’t budge an inch. You probably have to be a king, or to have eaten a lot of cheese."
+  },
+  {
+   "key": "look.s17boulder",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_17kb.js)",
+   "fr": "Un grand rocher plat. Parfait pour pique-niquer, ou pour planter une épée.",
+   "en": "A big flat boulder. Perfect for a picnic, or for planting a sword."
+  },
+  {
+   "key": "look.s17trees",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_17kb.js)",
+   "fr": "De vieux chênes. Chez nous, il y aurait déjà un Parjure caché derrière.",
+   "en": "Old oaks. Back home, there would already be a Forsworn hiding behind them."
+  },
+  {
+   "key": "look.grail17",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_17kb.js)",
+   "fr": "Le Graal. Une anse, des cercles de fer… J’en ai porté des dizaines comme lui.",
+   "en": "The Grail. A handle, iron hoops… I’ve carried dozens just like it."
+  }
+ ]
+}

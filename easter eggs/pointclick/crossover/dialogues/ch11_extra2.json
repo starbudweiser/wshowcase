@@ -1,0 +1,39 @@
+{
+ "chapter": "11_extra2",
+ "title": "Répliques d’interaction (regards, actions, Wabbajack)",
+ "note": "Répliques écrites pendant l’intégration, hors des dialogues du chapitre ; textes tirés de lang/*.js, même casting.",
+ "lines": [
+  {
+   "key": "look.swordmaster",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_11.js)",
+   "fr": "Le maître d’armes. Un nez à ouvrir les huîtres et une langue à ouvrir les plaies.",
+   "en": "The swordmaster. A nose to open oysters and a tongue to open wounds."
+  },
+  {
+   "key": "look.statue",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_11.js)",
+   "fr": "Une statue de singe à trois têtes. Le sculpteur ne savait pas s’arrêter.",
+   "en": "A three-headed monkey statue. The sculptor didn’t know when to stop."
+  },
+  {
+   "key": "look.lechuck",
+   "who": "hero",
+   "emo": "dry, amused observation",
+   "ctx": "Interaction (s2_11.js)",
+   "fr": "Un capitaine fantôme. Barbe noire, peau verte, haleine de cale. Il garde mon fromage.",
+   "en": "A ghost captain. Black beard, green skin, bilge breath. He’s keeping my cheese."
+  },
+  {
+   "key": "look.sheo",
+   "who": "hero",
+   "emo": "wary, wry",
+   "ctx": "Interaction (s2_11.js)",
+   "fr": "Sheogorath, chez lui. Il a l’air d’attendre son café depuis l’ère Merethique.",
+   "en": "Sheogorath, at home. He looks like he’s been waiting for his coffee since the Merethic Era."
+  }
+ ]
+}
