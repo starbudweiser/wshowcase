@@ -295,6 +295,8 @@ export class Game {
     const open = c => c.built && (s2All() || rs.includes(c.id) || c.id === 's2_11' || (c.bonusOf && rs.includes(c.bonusOf)));
     return [...main, ...bonus.map(c => ({ ...c, bonus: true }))].map(c => open(c) ? { id: c.id, label: (c.bonus ? T('ui.bonus') + ' ' : '') + T('ch.' + c.id), go: () => this.startAt(c) } : { id: c.id, label: (c.bonus ? T('ui.bonus') + ' ' : '') + (c.built ? T('ch.' + c.id).replace(/\. .*/, '. ???') : T('ch.' + c.id) + ' ' + T('ui.soon')), locked: true });
   }
+  /* musique remplacée le temps d'un gag (le gyrophare qui joue l'air de chez le héros) ; null = retour à celle de la scène */
+  musicOverride(id) { snd.music(snd.musicOn !== false, id || (this.scene && (this.scene.music || this.scene.id))); }
   /* commutateur de musique (bouton ♪ du panneau et bouton du menu), préférence mémorisée */
   setMusic(on, quiet) {
     snd.musicOn = !!on; store.set('pc.music', !!on); if (!quiet) snd.music(!!on);
@@ -538,13 +540,13 @@ export class Game {
   /* centre d'une zone cliquable (rectangle ou polygone) : sert à tourner le héros vers elle */
   center(h) { if (h.rect) return { cx: (h.rect[0] + h.rect[2]) / 2, cy: (h.rect[1] + h.rect[3]) / 2 }; const p = h.poly || [], n = p.length || 1; return { cx: p.reduce((a, q) => a + q[0], 0) / n, cy: p.reduce((a, q) => a + q[1], 0) / n }; }
   /* obstacles mobiles pour la recherche de chemin : les personnages et objets posés au sol */
-  blockers() { return this.ents.filter(e => !e.isHero && e.visible !== false && !e.noHot && !e.nhide && e.solid !== false && e.hot).map(e => [e.x, e.y, ...(this.scene.blockR || [9, 4])]); }
+  blockers() { return this.ents.filter(e => !e.isHero && e.visible !== false && !e.noHot && !e.nhide && e.solid !== false && e.hot).map(e => [e.x, e.y, ...(e.block || this.scene.blockR || [9, 4])]); }   /* e.block : emprise au sol d'un grand objet (voiture, charrette) */
 
   /* ───────── actions ───────── */
   pick(x, y) {
     for (const a of this.amb || []) if (a.hit && a.hit(x, y)) return { id: a.id, name: 'n.' + a.id };
     const es = this.ents.filter(e => e.visible !== false && e.hot && !e.noHot).sort((a, b) => b.y - a.y);
-    for (const e of es) { const r = e.hit || this.entRect(e); if (r && x >= r[0] && x <= r[2] && y >= r[1] && y <= r[3]) return { id: e.id, name: 'n.' + e.id, at: e.at || [e.x, e.y + 4], isEnt: true, cx: e.x, cy: e.y - 24 }; }
+    for (const e of es) { const r = e.hit || this.entRect(e); if (r && x >= r[0] && x <= r[2] && y >= r[1] && y <= r[3]) return { id: e.id, name: e.name || 'n.' + e.id, at: e.at || [e.x, e.y + 4], isEnt: true, cx: e.x, cy: e.y - 24 }; }
     for (let i = this.hot.length - 1; i >= 0; i--) { const h = this.hot[i], r = h.rect; if (r ? (x >= r[0] && x <= r[2] && y >= r[1] && y <= r[3]) : hitPoly(x, y, h.poly)) return { id: h.id, name: 'n.' + h.id, at: h.at, dir: h.dir, ...this.center(h) }; }
     return null;
   }

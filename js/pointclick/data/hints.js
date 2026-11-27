@@ -15,6 +15,8 @@ const STEPS = {
   hall: [['hall.anvil', g => g.has('anvil') || g.flag('followerGone')], ['hall.follower', g => g.flag('followerGone')], ['hall.exit', () => false]],
   party: [['party.finale', g => g.flag('lit')]],
   /* saison 2 */
+  s2_12: [['s2_12.car', g => g.flag('carWab')]],
+  s2_12b: [['s2_12b.roll', g => g.has('sweetroll') || g.flag('traded')], ['s2_12b.cheese', g => g.flag('traded')]],
   s2_11: [['s2_11.cracker', g => g.has('cracker') || g.flag('learned')], ['s2_11.parrot', g => g.flag('learned')], ['s2_11.duel', g => g.flag('duelWon')],
     ['s2_11.crate', g => g.flag('crateOpen')], ['s2_11.grog', g => g.has('rootbeer') || g.flag('ghostGone')], ['s2_11.ghost', g => g.flag('ghostGone')]],
 };

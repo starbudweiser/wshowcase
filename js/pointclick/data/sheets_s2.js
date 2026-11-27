@@ -16,7 +16,8 @@ export const COLORS = {
 /* objets de la saison 2 (icône de besace et curseur) ; noms `n.<id>` dans lang/s2x_*.js */
 export const ITEMS = {
   wabbajack: { spr: 's2:i_wabbajack' },
-  cracker: { spr: 's2:i_cracker' }, map: { spr: 's2:i_map' }, grog: { spr: 's2:i_grog' }, rootbeer: { spr: 's2:i_rootbeer' }, cheese_nl: { spr: 's2:i_cheese_nl' }
+  cracker: { spr: 's2:i_cracker' }, map: { spr: 's2:i_map' }, grog: { spr: 's2:i_grog' }, rootbeer: { spr: 's2:i_rootbeer' }, cheese_nl: { spr: 's2:i_cheese_nl' },
+  sweetroll: { spr: 's2:i_sweetroll' }, cheese12: { spr: 's2:i_cheese12' }
 };
 
 /* héros S2 : six vues en pied (poses fixes de repli) ; cycles LTX : marche (profils, face, dos), repos vivant et parole par vue */
@@ -35,7 +36,8 @@ export function heroFrame2(g, h, moving, s) {
 /* personnages : sprite de base -> boucles LTX (repos vivant, parole) ; anim.json donne le nombre d'images et la cadence */
 export const LIFE = {
   's2:guybrush': { idle: 'guybrush_i', talk: 'guybrush_t' }, 's2:swordmaster': { idle: 'swordmaster_i', talk: 'swordmaster_t' },
-  's2:lechuck': { idle: 'lechuck2_i', talk: 'lechuck2_t' }, 's2:sheo': { idle: 'sheo_i', talk: 'sheo_t' }, 's2:parrot': { idle: 'parrot_i', talk: 'parrot_t' }
+  's2:lechuck': { idle: 'lechuck2_i', talk: 'lechuck2_t' }, 's2:sheo': { idle: 'sheo_i', talk: 'sheo_t' }, 's2:parrot': { idle: 'parrot_i', talk: 'parrot_t' },
+  's2:max': { idle: 'max_i', talk: 'max_t' }, 's2:sam': { idle: 'sam_i', talk: 'sam_t' }
 };
 export const lifeBases = sc => [...new Set([...Object.values(HERO_LIFE).flatMap(o => Object.values(o)), ...(sc.ents || []).flatMap(e => Object.values(LIFE[e.spr] || {}))])];
 export const PRELOAD = [...Object.values(HERO2), ...Object.values(ITEMS).map(i => i.spr)];
