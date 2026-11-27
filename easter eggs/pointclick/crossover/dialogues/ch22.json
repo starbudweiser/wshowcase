@@ -111,7 +111,8 @@
    "emo": "confused, backwards diction",
    "ctx": "… et c’est le héros qui parle à l’envers (réplique du héros jouée à l’envers au montage)",
    "fr": "Pourquoi ma bouche fait-elle ce bruit-là ?",
-   "en": "Why is my mouth making that noise?"
+   "en": "Why is my mouth making that noise?",
+   "envers": true
   },
   {
    "key": "c22.use.wab.redman.narr",
