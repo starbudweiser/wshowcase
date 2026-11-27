@@ -1,0 +1,10 @@
+#!/bin/zsh
+# Saison 2, chapitre 13 : haut de la tour, 2e passe (1re : la plateforme semblait posée au sol, sans impression de hauteur).
+cd "$(dirname "$0")/.." || exit 1
+ST="hand-painted 2000s 2D point-and-click adventure game background, painterly detailed backgrounds like classic adventure games, bold dark outlines, warm saturated colors, humorous storybook fantasy, empty scene with no people, no characters, no animals, no creatures, no logo, no watermark, no frame, no text, no letters"
+P="Dizzying high view from the very top of a very tall tower built of grey stone cubes: in the foreground, the flat square top platform of the tower with low crenellated stone block battlements fills the lower third of the picture, an empty small stone pedestal in its middle; beyond the battlements, a sheer drop: far, far below, a tiny blocky world seen from high above, miniature cubic trees, tiny cubic hills, a thin river of blue blocks, a small round stone well and tiny square fields, all very small and far down; square clouds floating at the same height as the tower, blue sky, a square yellow sun. Strong sense of height and vertigo. $ST"
+for sd in 4 5 6; do out="work/s2play/d_mine_b_$sd.png"; [ -f "$out" ] || flux-image "$P" -i work/s2play/d_mine_a_1.png -s 1280x720 --seed $sd -o "$out"; done
+IT="single game item, hand-painted 2D point-and-click adventure game art of the early 2000s, detailed painterly shading, bold dark outlines, saturated colors, the whole object visible with a margin, plain flat solid magenta background, no shadow, no text, no letters"
+D="one open arched doorway in a wall of grey stone cubes, freshly blown open with ragged broken block edges and rubble cubes on the ground; through the opening, a staircase of big grey stone cube steps is clearly visible inside the tower, climbing from the bottom right up to the upper left, lit by a little daylight, seen from the front. $IT"
+for sd in 2 3; do out="work/s2play/items/p_doorway13_$sd.png"; [ -f "$out" ] || flux-image "$D" -s 768x768 --seed $sd -o "$out"; done
+echo fini

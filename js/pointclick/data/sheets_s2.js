@@ -17,13 +17,16 @@ export const COLORS = {
 export const ITEMS = {
   wabbajack: { spr: 's2:i_wabbajack' },
   cracker: { spr: 's2:i_cracker' }, map: { spr: 's2:i_map' }, grog: { spr: 's2:i_grog' }, rootbeer: { spr: 's2:i_rootbeer' }, cheese_nl: { spr: 's2:i_cheese_nl' },
-  sweetroll: { spr: 's2:i_sweetroll' }, cheese12: { spr: 's2:i_cheese12' }
+  sweetroll: { spr: 's2:i_sweetroll' }, cheese12: { spr: 's2:i_cheese12' },
+  shout: { spr: 's2:i_shout' }, septims: { spr: 's2:i_septims' },
+  wood13: { spr: 's2:i_wood13' }, waterbucket13: { spr: 's2:i_waterbucket13' }, cheesecube: { spr: 's2:i_cheesecube' }
 };
 
 /* héros S2 : six vues en pied (poses fixes de repli) ; cycles LTX : marche (profils, face, dos), repos vivant et parole par vue */
 export const HERO2 = { l: 's2:hero_pl', r: 's2:hero_pr', ql: 's2:hero_ql', qr: 's2:hero_qr', f: 's2:hero_f', b: 's2:hero_b' };
 export const HERO_LIFE = { walk: { r: 'hero_wr', l: 'hero_wl', f: 'hero_wf', b: 'hero_wb' }, idle: { ql: 'hero_iql', qr: 'hero_iqr', f: 'hero_if' }, talk: { ql: 'hero_tql', qr: 'hero_tqr', f: 'hero_tf' } };
 export function heroFrame2(g, h, moving, s) {
+  if (h.forceSpr) return h.forceSpr;   /* forme imposée par une scène (héros en cubes du chapitre 13) */
   if (moving) {
     const v = h.back || h.quarter === 'qb' ? 'b' : h.front ? 'f' : h.dir === 'l' ? 'l' : 'r', base = HERO_LIFE.walk[v], A = g.s2anim && g.s2anim[base];
     const f = A && g.life(base, Math.floor(h.walkD / ((A.stride || 9) * s))); if (f) return f;
@@ -37,7 +40,8 @@ export function heroFrame2(g, h, moving, s) {
 export const LIFE = {
   's2:guybrush': { idle: 'guybrush_i', talk: 'guybrush_t' }, 's2:swordmaster': { idle: 'swordmaster_i', talk: 'swordmaster_t' },
   's2:lechuck': { idle: 'lechuck2_i', talk: 'lechuck2_t' }, 's2:sheo': { idle: 'sheo_i', talk: 'sheo_t' }, 's2:parrot': { idle: 'parrot_i', talk: 'parrot_t' },
-  's2:max': { idle: 'max_i', talk: 'max_t' }, 's2:sam': { idle: 'sam_i', talk: 'sam_t' }
+  's2:max': { idle: 'max_i', talk: 'max_t' }, 's2:sam': { idle: 'sam_i', talk: 'sam_t' },
+  's2:villager': { idle: 'villager_i', talk: 'villager_t' }, 's2:creeper': { idle: 'creeper_i', walk: 'creeper_w' }
 };
 export const lifeBases = sc => [...new Set([...Object.values(HERO_LIFE).flatMap(o => Object.values(o)), ...(sc.ents || []).flatMap(e => Object.values(LIFE[e.spr] || {}))])];
 export const PRELOAD = [...Object.values(HERO2), ...Object.values(ITEMS).map(i => i.spr)];
@@ -61,6 +65,14 @@ export function lit(im, L, e, [a]) {
   }
   x.globalCompositeOperation = 'destination-in'; x.globalAlpha = 1; x.drawImage(im, 0, 0); x.globalCompositeOperation = 'source-over';
   return a;
+}
+/* recoloration d'un sprite : mode « color » (teinte et saturation imposées, luminosité d'origine gardée), transparence rétablie */
+export function tinted(im, col, k, b) {
+  const w = im.width, h = im.height; if (b.width !== w || b.height !== h) { b.width = w; b.height = h; }
+  const x = b.getContext('2d'); x.globalCompositeOperation = 'source-over'; x.globalAlpha = 1; x.clearRect(0, 0, w, h); x.drawImage(im, 0, 0);
+  x.globalCompositeOperation = 'color'; x.globalAlpha = k; x.fillStyle = col; x.fillRect(0, 0, w, h);
+  x.globalCompositeOperation = 'destination-in'; x.globalAlpha = 1; x.drawImage(im, 0, 0); x.globalCompositeOperation = 'source-over';
+  return b;
 }
 /* masque de fondu des bords d'une zone vidéo (edges : côtés à fondre, parmi 'l', 'r', 't', 'b') */
 export function featherMask(w, h, f, edges = 'lrtb') {

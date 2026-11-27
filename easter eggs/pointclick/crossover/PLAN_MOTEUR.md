@@ -92,6 +92,12 @@ FLUX, une à la fois (file calcul-lourd) : plusieurs jours de calcul, avec une p
 - Textes et voix de toute la saison branchés (`tools/s2_lang.py`, `tools/s2_voices_install.sh`).
 - Chapitre 11 jouable de bout en bout : décor vide, mer et galion animés, héros avec marches LTX (profils, face, dos),
   capitaine fantôme recalculé sans halo, Wabbajack (arc, fumée, métamorphoses), duel, feux d'artifice, Sheogorath.
+- Chapitre 12 (Sam & Max) jouable : route du désert puis attraction (voiture → charrette, gyrophare musical, lapin calme,
+  chien loup-garou, pelote de seaux, meule géante cachée derrière la pelote, brioche de l'échoppe).
+- Chapitre 13 (monde en cubes) jouable : pied de la tour (créature verte qui fait sauter le mur, soleil rond, mouton
+  qui change de couleur, paysage en fromage), haut de la tour (héros en cubes, meule cubique), saut amorti par le seau d'eau.
+- Objets de toute la saison dans la besace : Wabbajack, le Cri (repli générique `s2.shout.none` + onde de choc), les septims.
+- Personnages animés en boucles LTX pour les chapitres 11 à 13 (reprises quand le visage dérivait ou que le personnage tournait).
 ### Chaîne de production d'un chapitre (outils)
 1. Décor vide : `tools/gen_s2_decors.sh` (3 graines) → `tools/s2_assets.py decor` + `tools/s2_retro.py decor`.
 2. Personnages et objets : fiche validée détourée (`s2_assets.py sprite`), objets `tools/gen_s2_items.sh`.
@@ -104,7 +110,7 @@ FLUX, une à la fois (file calcul-lourd) : plusieurs jours de calcul, avec une p
   sprites des métamorphoses (poulet en caoutchouc à poulie, mammouth à trois têtes) ; voix de la réplique du narrateur
   sur la transition (`nar.s2up`) et des répliques écrites à la main (regards, biscuit) ; expressions du héros (8 visages,
   face et profils, en boucles de parole LTX par émotion).
-- Chapitres 12 à 28 sur la même chaîne (12 en préparation : décors, voiture / charrette, meule géante, pelote, Sam et Max).
+- Chapitres 14 à 28 sur la même chaîne.
 - Génie des indices en HD, prologue (fête de la S1 → Sheogorath), validation des décors et animations par Stéphan.
 - **Twin Peaks (22), petit homme en rouge** (validé par Stéphan) : ses 6 répliques `envers` ont leur voix retournée
   (FR/EN, livrées) ; le moteur les sous-titre toujours, en bas de l'écran façon télévision (`ENVERS` dans

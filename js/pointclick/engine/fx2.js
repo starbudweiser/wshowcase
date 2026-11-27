@@ -72,6 +72,23 @@ export function shout(g, x, y, dir = 1) {
   for (let k = 0; k < 4; k++) P.push({ k: 'ring', x: x + dir * k * 6, y, t: -k * 0.09, life: 0.6, r0: 3, r1: 36 + k * 10, col: k % 2 ? '#dff4ff' : '#9fd6ff' });
   for (let i = 0; i < 40; i++) { const a = R(-0.5, 0.5) + (dir > 0 ? 0 : Math.PI), v = R(60, 160); P.push({ k: 'smoke', x: x + R(-4, 4), y: y + R(-6, 6), vx: Math.cos(a) * v, vy: Math.sin(a) * v * 0.5, g: 0, drag: 2.2, t: -R(0, 0.15), life: R(0.5, 0.9), s: R(2, 4), grow: R(6, 12), rot: R(0, TAU), vr: R(-2, 2) }); }
 }
+/* explosion (la créature verte contre le mur) : flash, ondes de choc, gerbe d'étincelles, gros nuage de fumée, blocs projetés */
+export function explode(g, x, y, debris = ['#8d8d8d', '#6f6f6f', '#a8a8a8', '#4f9a3c']) {
+  const P = parts(g);
+  P.push({ k: 'flash', x, y, t: 0, life: 0.45, r0: 10, r1: 110, col: '#ffd27a' }, { k: 'flash', x, y, t: 0, life: 0.25, r0: 6, r1: 60, col: '#ffffff' });
+  for (let k = 0; k < 3; k++) P.push({ k: 'ring', x, y, t: -k * 0.07, life: 0.6, r0: 6, r1: 70 + k * 25, col: k ? '#ffb45a' : '#ffffff' });
+  for (let i = 0; i < 60; i++) { const a = R(0, TAU), v = R(60, 190); P.push({ k: 'spark', x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 30, g: 140, drag: 1.4, t: 0, life: R(0.4, 0.9), s: R(0.8, 1.8), col: i % 3 ? '#ffb347' : '#fff1b0' }); }
+  for (let i = 0; i < 30; i++) { const a = R(-Math.PI, 0), v = R(70, 170); P.push({ k: 'conf', x: x + R(-10, 10), y: y + R(-10, 10), vx: Math.cos(a) * v, vy: Math.sin(a) * v, g: 300, drag: 0.6, t: 0, life: R(0.8, 1.4), s: R(1.6, 3.4), col: debris[i % debris.length], rot: R(0, TAU), vr: R(-10, 10) }); }
+  for (let i = 0; i < 26; i++) { const a = R(0, TAU), d = R(0, 18); P.push({ k: 'smoke', x: x + Math.cos(a) * d, y: y + Math.sin(a) * d, vx: Math.cos(a) * R(10, 40), vy: Math.sin(a) * R(6, 20) - 14, g: -6, drag: 1, t: -R(0, 0.12), life: R(1.4, 2.4), s: R(10, 18), grow: R(16, 30), rot: R(0, TAU), vr: R(-0.8, 0.8) }); }
+  g.sfx('clang'); g.sfx('whoosh'); g.shake(700, 6);
+}
+/* éclaboussure (chute dans une flaque) : gouttes bleues projetées en couronne, onde au sol, brume */
+export function splash(g, x, y) {
+  const P = parts(g); P.push({ k: 'ring', x, y, t: 0, life: 0.5, r0: 4, r1: 34, col: '#bfe6ff' }, { k: 'ring', x, y, t: -0.1, life: 0.6, r0: 2, r1: 24, col: '#7fc8ff' });
+  for (let i = 0; i < 44; i++) { const a = R(-Math.PI * 0.95, -Math.PI * 0.05), v = R(40, 120); P.push({ k: 'spark', x: x + R(-8, 8), y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, g: 260, drag: 0.6, t: 0, life: R(0.5, 0.9), s: R(0.8, 1.6), col: i % 2 ? '#9ad8ff' : '#e6f6ff' }); }
+  for (let i = 0; i < 10; i++) P.push({ k: 'smoke', x: x + R(-12, 12), y: y + R(-4, 2), vx: R(-14, 14), vy: R(-10, -2), g: 0, drag: 1.2, t: 0, life: R(0.6, 1), s: R(5, 8), grow: R(8, 14), rot: R(0, TAU), vr: R(-1, 1) });
+  g.sfx('whoosh');
+}
 /* éclats de bois (caisse forcée, tonneau brisé) */
 export function splinters(g, x, y, n = 26) {
   const P = parts(g), cols = ['#8a5a2b', '#a87440', '#6b4220', '#c9965a'];

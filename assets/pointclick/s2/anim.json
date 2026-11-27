@@ -1,4 +1,13 @@
 {
+ "creeper_i": {
+  "fps": 8.0,
+  "n": 24
+ },
+ "creeper_w": {
+  "fps": 10.29,
+  "n": 12,
+  "stride": 11.0
+ },
  "guybrush_i": {
   "fps": 8.0,
   "n": 24
@@ -96,6 +105,14 @@
   "n": 24
  },
  "swordmaster_t": {
+  "fps": 7.5,
+  "n": 20
+ },
+ "villager_i": {
+  "fps": 8.0,
+  "n": 24
+ },
+ "villager_t": {
   "fps": 7.5,
   "n": 20
  }

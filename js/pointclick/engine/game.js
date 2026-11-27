@@ -19,7 +19,7 @@ import { makeAmbient } from './ambient.js';
 import { playIntro, preloadIntro } from './intro.js';
 import { TitleArt, buildMenu } from './title.js';
 import { rubLamp } from './genie.js';
-import { updateFx2, drawFx2, drawFxBack, twinkle } from './fx2.js';
+import { updateFx2, drawFx2, drawFxBack, twinkle, shout } from './fx2.js';
 import * as SH from '../data/sheets.js';
 import * as S2 from '../data/sheets_s2.js';
 import { CHAPTERS2 } from '../scenes/index.js';
@@ -103,7 +103,9 @@ export class Game {
   }
   frame(e) {
     const L = S2.LIFE[e.spr]; if (L && this.scene && this.scene.hd) {   /* e.rev (petit homme en rouge) : toutes ses boucles à l'envers, sauf e.fwd (sous Wabbajack) */
-      const t = this.now + (e.ph || 0), r = (e.rev || e.revLine) && !e.fwd, f = e.talk && L.talk ? this.lifeAt(L.talk, t, r) || this.lifeIdle(L.idle, t, e.ph, r) : L.idle && this.lifeIdle(L.idle, t, e.ph, r); return f || e.spr;
+      const t = this.now + (e.ph || 0), r = (e.rev || e.revLine) && !e.fwd;
+      if (e.goal && L.walk) { const w = this.lifeAt(L.walk, t, r); if (w) return w; }   /* en marche : sa boucle de marche */
+      const f = e.talk && L.talk ? this.lifeAt(L.talk, t, r) || this.lifeIdle(L.idle, t, e.ph, r) : L.idle && this.lifeIdle(L.idle, t, e.ph, r); return f || e.spr;
     }
     const A = ANIM[e.spr]; if (!A) return e.spr;
     const st = e.animState || (e.goal ? 'walk' : e.talk ? 'talk' : 'idle'), fps = (A.fps && A.fps[st]) || 3;
@@ -673,6 +675,10 @@ export class Game {
   }
   async fallback(verb, tg, item) {
     const T = this.T; let k;
+    if (item === 'shout' && this.scene && this.scene.hd) {   /* le Cri sur ce qui n'y réagit pas : l'onde part quand même */
+      const e = this.ent(tg.id), h = this.hero, x = e ? e.x : tg.cx ?? h.x + 40, y = e ? e.y - 30 : tg.cy ?? h.y - 40; this.face(x); shout(this, h.x + (h.dir === 'l' ? -14 : 14), h.y - 50, h.dir === 'l' ? -1 : 1); this.shake(400, 3);
+      await this.say('hero', [`use.shout.${tg.id}`, 's2.shout.none'].find(x2 => T.has(x2))); return;
+    }
     if (verb === 'look') k = ['look.' + tg.id, 'def.look'];
     else if (verb === 'take') k = tg.isItem ? ['def.takeItem'] : ['take.' + tg.id, 'def.take'];
     else if (verb === 'talk') k = ['talk.' + tg.id, 'def.talk'];
@@ -807,7 +813,9 @@ export class Game {
     if (!e.noShadow && a > 0.05) { const sh = S2.shadowImg(), rx = w * (e.float ? 0.42 : 0.36), ry = rx * 0.24; c.save(); c.globalAlpha = a * (e.float ? 0.16 : 0.42); c.imageSmoothingEnabled = true; c.drawImage(sh, e.x - rx, e.y - ry, rx * 2, ry * 2); c.restore(); }
     let src = im, L = this.scene.light; const dyn = this.ents.filter(o => o.light && o !== e && o.visible !== false && (o.alpha ?? 1) > 0.2);
     if (dyn.length) L = { ...(L || {}), lamps: [...((L && L.lamps) || []), ...dyn.map(o => ({ x: o.x, y: o.y - (o.float || 0), ...o.light }))] };   /* lumière portée par un personnage (fantôme) */
-    if (L && !e.noLight && !low) src = S2.lit(im, L, e, this.scratch || (this.scratch = [document.createElement('canvas'), document.createElement('canvas')]));
+    const scr = this.scratch || (this.scratch = [document.createElement('canvas'), document.createElement('canvas')]);
+    if (L && !e.noLight && !low) src = S2.lit(im, L, e, scr);
+    if (e.tint) src = S2.tinted(src, e.tint, e.tintK ?? 0.75, scr[1]);   /* couleur imposée (mouton du Wabbajack), luminosité gardée */
     c.save(); c.imageSmoothingEnabled = !low; c.globalAlpha = a;
     c.translate(low ? Math.round(e.x) : e.x, (low ? Math.round(e.y - (e.bob || 0) - fl) : e.y - (e.bob || 0) - fl));
     if (e.rot) { c.translate(0, -h / 2); c.rotate(e.rot); c.translate(0, h / 2); }

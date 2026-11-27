@@ -14,6 +14,9 @@ P[i_statue]="one small grey carved stone statue of a monkey with three heads sit
 # chapitre 11 : métamorphoses du Wabbajack
 P[p_chicken11]="one yellow rubber chicken toy with a red comb and a wide open beak, a small metal pulley wheel attached to its back by a hook, as if ready to slide along a rope. $IT"
 P[p_mammoth11]="one small woolly mammoth calf with THREE heads side by side on one body, each head with its own little trunk and tusks, shaggy brown fur, standing on four legs, cute and absurd, about knee high. $IT"
+# objets de la besace de toute la saison : le Cri (la Voix) et la bourse de septims
+P[i_shout]="one glowing blue circle of ancient carved dragon claw-scratch runes, three slashing angular marks inside a round stone medallion, crackling with bright blue magical energy and wind swirls, no readable letters. $IT"
+P[i_septims]="one small brown leather coin purse tied with a string, a few shiny gold coins spilling out of it. $IT"
 # chapitre 12
 P[i_sweetroll]="one golden glazed sweet roll bun with white icing dripping over the top, round and plump. $IT"
 P[i_cheese12]="one whole wheel of pale yellow cheese with holes, a big rabbit-shaped bite missing from its edge. $IT"
