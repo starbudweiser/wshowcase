@@ -144,6 +144,14 @@
   "fps": 7.5,
   "n": 20
  },
+ "hero_bucket_i": {
+  "fps": 8.0,
+  "n": 24
+ },
+ "hero_bucket_t": {
+  "fps": 7.5,
+  "n": 20
+ },
  "hero_if": {
   "fps": 8.0,
   "n": 24

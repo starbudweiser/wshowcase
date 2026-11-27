@@ -34,3 +34,6 @@ echo fini
 l hero_bucket_i "the Nordic warrior of the image with an old wooden bucket stuck upside down on his head over his eyes." "he stays in place, alive and relieved: breathes, his shoulders relax, he shifts his weight, the bucket stays on his head, then he comes back to the starting pose." 3 work/s2play/persos/hero_bucket_1.png 3031
 l hero_bucket_t "the Nordic warrior of the image with an old wooden bucket stuck upside down on his head over his eyes." "he talks in place: the mouth opens and closes clearly under the bucket as if speaking a line, one hand gestures, the bucket stays on his head, then he comes back to the starting pose." 2.5 work/s2play/persos/hero_bucket_1.png 3032
 echo fini2
+# 2e prise du repos du héros au seau (1re : il pivotait de côté, genoux pliés)
+l hero_bucket_i2 "the Nordic warrior of the image with an old wooden bucket stuck upside down on his head over his eyes, standing straight." "he stays in place and keeps facing the same direction the whole time, he never turns: only breathes slowly, his chest rises and falls, his hands relax, the bucket stays on his head, then he comes back to the starting pose." 3 work/s2play/persos/hero_bucket_1.png 3033
+echo fini3
