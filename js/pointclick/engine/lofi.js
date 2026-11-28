@@ -33,13 +33,42 @@ export function lofiChain(c) {
   load(c).then(ok => { if (ok) { const q = new AudioWorkletNode(c, 'pc-adpcm', { outputChannelCount: [2] }); a2.connect(q); q.connect(r1); } else a2.connect(r1); });
   return { input: a1, output: r2 };
 }
-/* branche l'élément audio sur la chaîne « années 90 » ; vol = volume des voix. Sans Web Audio : lecture normale. */
-export function lofi(a, vol) {
+/* voix étouffée d'un aveugle, selon ce qu'il a sur la tête (28/11, Stéphan) : coupe des aigus, résonance de l'objet
+   et, pour les objets durs et creux, petit écho en peigne (la voix qui tourne dans la marmite, le casque, la botte…) */
+const MUFFLE = {
+  pot:      { lp: 1100, pk: [650, 9, 4],   comb: [[0.006, 0.6, 0.55], [0.019, 0.35, 0.3]], g: 1.0 },   /* marmite en fonte : caverneuse, écho métallique */
+  helmet:   { hp: 300, lp: 3000, pk: [1800, 8, 5], comb: [[0.004, 0.55, 0.5]], g: 0.95 },          /* casque de fer : métal fin, nasillard */
+  boot:     { lp: 900,  pk: [350, 8, 3],   comb: [[0.005, 0.45, 0.4]], g: 1.0 },                     /* vieille botte : tube de cuir */
+  cabbage:  { lp: 900,  pk: [400, 4, 2],   comb: [[0.002, 0.2, 0.2]], g: 0.95 },                     /* chou : feuilles épaisses, humides */
+  basket:   { lp: 2400, pk: [1200, 3, 2],  comb: [[0.003, 0.3, 0.25]], g: 1.0 },                     /* panier d'osier : ajouré, à peine étouffé */
+  partyhat: { lp: 2000, pk: [1400, 6, 4],  comb: [[0.0025, 0.35, 0.3]], g: 1.0 },                    /* cône de tissu peint : petit son de cornet */
+  mushroom: { lp: 1000, pk: [280, 6, 2],   g: 0.95 },                                                /* chapeau de champignon : mou, sourd */
+  sack:     { lp: 700,  g: 0.85 },                                                                   /* sac de toile : très étouffé, sans écho */
+  hat:      { lp: 550,  g: 0.8 },                                                                    /* toque de fourrure : la plus sourde */
+  banner:   { lp: 1600, g: 0.95 },                                                                   /* bannière de tissu : léger voile */
+};
+export function muffleChain(c, kind) {
+  const m = MUFFLE[kind]; if (!m) return null;
+  const input = c.createGain(), output = c.createGain(); output.gain.value = m.g; let last = input;
+  const f = (type, freq, gain = 0, q = 0.707) => { const b = c.createBiquadFilter(); b.type = type; b.frequency.value = freq; b.gain.value = gain; b.Q.value = q; last.connect(b); last = b; };
+  if (m.hp) f('highpass', m.hp); f('lowpass', m.lp); f('lowpass', m.lp); if (m.pk) f('peaking', m.pk[0], m.pk[1], m.pk[2]);
+  last.connect(output);
+  for (const [t, fb, wet] of m.comb || []) {   /* écho en peigne : retard court rebouclé */
+    const d = c.createDelay(0.1), k = c.createGain(), w = c.createGain(); d.delayTime.value = t; k.gain.value = fb; w.gain.value = wet;
+    last.connect(d); d.connect(k); k.connect(d); d.connect(w); w.connect(output);
+  }
+  return { input, output };
+}
+/* branche l'élément audio sur la chaîne « années 90 » (sauf noLofi : saison 2) et, pour un aveugle, sur son étouffement ;
+   vol = volume des voix. Sans Web Audio : lecture normale. */
+export function lofi(a, vol, kind, noLofi) {
   const c = ensure(); if (!c) return false;
   try {
-    const src = c.createMediaElementSource(a), ch = lofiChain(c), g = c.createGain();
-    g.gain.value = vol; a.volume = 1;
-    src.connect(ch.input); ch.output.connect(g); g.connect(c.destination);
+    const src = c.createMediaElementSource(a), g = c.createGain(), mu = kind ? muffleChain(c, kind) : null;
+    g.gain.value = vol; a.volume = 1; let last = src;
+    if (mu) { last.connect(mu.input); last = mu.output; }
+    if (!noLofi) { const ch = lofiChain(c); last.connect(ch.input); last = ch.output; }
+    last.connect(g); g.connect(c.destination);
     return true;
   } catch { return false; }
 }

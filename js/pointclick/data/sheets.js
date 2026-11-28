@@ -32,7 +32,7 @@ NEWB.forEach(k => { SPR['blind.' + k + '2'] = 'blind_' + k + '2'; SPR['lit.' + k
    leur sens de marche réel à l'écran, pour qu'aucun personnage n'avance à reculons (27/11/2026) */
 export const FACE_L = new Set(['dragon.up', 'dragon.mid1', 'dragon.down', 'dragon.mid2',
   ...['frost', 'ember', 'moss', 'gold'].flatMap(k => ['up', 'mid1', 'down', 'mid2'].map(q => k + '.' + q)),
-  'wk.leodagan', 'wk.merlin', 'wk.racer', 'wk.racer.b']);
+  'wk.racer', 'wk.racer.b']);   /* Léodagan et Merlin regardent à droite (retirés le 28/11 : ils marchaient à reculons) */
 export const ANIM = {
   'merchant': { idle: ['merchant', 'merchant.idle2'], talk: ['merchant.talk1', 'merchant.talk2', 'merchant'], fps: { idle: 0.7, talk: 6 } },
   'guard': { idle: ['guard', 'guard.idle2'], talk: ['guard', 'guard.talk'], walk: ['guard.walkA', 'guard', 'guard.walkB', 'guard'], fps: { idle: 0.5, talk: 6, walk: 5 } },

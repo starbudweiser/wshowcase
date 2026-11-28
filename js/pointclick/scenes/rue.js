@@ -120,7 +120,8 @@ export default {
   },
   /* parapet du pont : calque tiré du décor lui-même (poteaux et lisses sombres, les jours entre eux restent transparents) ;
      il se dessine devant la charrette quand elle roule sur le tablier */
-  fenceEnt(g) {
+  fenceEnt(g) { try { return this.fenceMake(g); } catch { return null; } },   /* sans vrai décor (vérificateur anti-blocage) : pas de calque */
+  fenceMake(g) {
     const bg = g.bg; if (!bg || !bg.width) return null;
     const P = [[344, 172], [480, 163], [480, 194], [344, 199]], X0 = 344, Y0 = 163, X1 = 480, Y1 = 199;
     const c = document.createElement('canvas'); c.width = X1 - X0; c.height = Y1 - Y0; const x = c.getContext('2d');
@@ -209,7 +210,13 @@ export default {
   },
   async bridge(g) {
     if (!g.flag('guardmoved')) { await g.cut(async () => { const n = g.count('blocks'); await g.say('guard', n === 1 ? 's.bridge1' : 's.bridge2'); await g.say('hero', n === 1 ? 's.bridge1h' : 's.bridge2h'); }); return; }
-    await g.cut(async () => { await g.say('hero', 's.cross'); await g.walkTo(470, 196); await g.fade(1, 800); setTimeout(() => g.goScene('mill', { intro: true }), 0); });
+    /* 28/11 : il passait devant le parapet, sur l'eau ; il prend maintenant le tablier comme la charrette, derrière le calque du parapet */
+    await g.cut(async () => {
+      await g.say('hero', 's.cross'); await g.walkTo(350, 200);
+      const fence = this.fenceEnt(g); if (fence) g.ents.push(fence);
+      await g.walkEnt('hero', 372, 189); await g.walkEnt('hero', 430, 185); const f = g.fade(1, 900); await g.walkEnt('hero', 500, 181); await f;
+      setTimeout(() => g.goScene('mill', { intro: true }), 0);
+    });
   },
   async giveHoney(g) {
     g.hero.front = false; await g.say('hero', 's.guard.give1'); g.drop('honey'); g.sfx('coin');

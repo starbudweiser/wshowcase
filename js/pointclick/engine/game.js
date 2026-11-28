@@ -317,9 +317,11 @@ export class Game {
   hiBusy() { return Game.playing(this.sayAu) || (this.night && this.night.say && Game.playing(this.night.say.au)); }
   lowBusy() { return (this.narr && Game.playing(this.narr.au)) || this.barks.some(k => Game.playing(k.au)); }
   hushNarr() { const n = this.narr; if (n) { n.b.remove(); if (n.au) n.au.pause(); this.narr = null; this.lastNarr = this.now; } }
-  voicePlay(key, idx) {
+  voicePlay(key, idx, who) {
     if (!this.voiceOn || !key || key[0] === '=') return null;
-    try { const a = new Audio(`assets/pointclick/voice/${this.lang === 'fr' ? 'fr' : 'en'}/${key}${idx >= 0 ? '.v' + idx : ''}.mp3`); a.volume = this.vvol ?? 0.95; if (!(this.scene && this.scene.hd)) lofi(a, this.vvol ?? 0.95);   /* saison 1 : son « années 90 » (lofi.js) */ a.play().catch(() => {}); return a; } catch { return null; }
+    if (who && who.startsWith('blind_') && /^blind\.(talk\.n|wow\d)$/.test(key)) key += '@' + who.slice(6);   /* une seule voix par aveugle : sa propre prise (tools/voices_manifest.mjs) */
+    try { const a = new Audio(`assets/pointclick/voice/${this.lang === 'fr' ? 'fr' : 'en'}/${key}${idx >= 0 ? '.v' + idx : ''}.mp3`); a.volume = this.vvol ?? 0.95; const hd = !!(this.scene && this.scene.hd), bl = who && who.startsWith('blind_') && this.ent(who), kind = bl && /^blind\./.test(bl.spr || '') ? who.slice(6) : null;
+      if (!hd || kind) lofi(a, this.vvol ?? 0.95, kind, hd);   /* saison 1 : son « années 90 » (lofi.js) ; aveugle encore coiffé de son objet : voix étouffée selon l'objet */ a.play().catch(() => {}); return a; } catch { return null; }
   }
   /* le narrateur : commentaires sarcastiques qui ne bloquent jamais le jeu (file d'attente, un seul à la fois) */
   narrate(key, o = {}) {
@@ -431,7 +433,7 @@ export class Game {
     const env = ENV.has(key);   /* dite à l'envers : sous-titre façon télévision en bas de l'écran, toujours affiché, et le personnage s'anime à l'envers */
     if (env) { b.classList.add('pc-sub'); this.placeBubble(b, W / 2, H - 8); } else { const [ax, ay] = (this.cinePos && this.cinePos[who]) || (e ? this.headPos(e) : [W / 2, 40]); this.placeBubble(b, ax, ay); }
     if (e) { e.talk = who; e.revLine = env && !e.isHero; }   /* le héros dit sa réplique à l'envers (voix retournée) mais s'anime à l'endroit */
-    const au = this.voicePlay(key, key[0] === '=' ? -1 : this.T.idx); this.sayAu = au;
+    const au = this.voicePlay(key, key[0] === '=' ? -1 : this.T.idx, who); this.sayAu = au;
     this.skip = false; const t0 = this.now, end = t0 + Math.max(1.7, text.length * 0.06); this.sayT0 = t0;
     const talking = () => au && !au.ended && !au.error && !au.paused && this.voiceOn;
     await this.until(() => (this.now >= end && !talking()) || (this.skip && this.now - t0 > 0.6)); this.skip = false; if (au) au.pause(); this.sayAu = null;
@@ -447,7 +449,7 @@ export class Game {
   bark(who, key, ms = 2800, force = false) {
     const e = this.ent(who); if (!e || (this.locked && !force) || this.titleEl || this.coinOpen() || this.hiBusy() || this.lowBusy() || this.narr) return;
     const b = el('div', 'pc-b', this.T(key)); b.style.color = COLORS[who] || '#fff'; this.ov.append(b);
-    const [ax, ay] = this.headPos(e); this.placeBubble(b, ax, ay); const au = this.voicePlay(key, this.T.idx), bk = { b, who, end: this.now + ms / 1000, au }; this.barks.push(bk); if (au) au.addEventListener('loadedmetadata', () => { bk.end = Math.max(bk.end, this.now + au.duration + 0.2); });
+    const [ax, ay] = this.headPos(e); this.placeBubble(b, ax, ay); const au = this.voicePlay(key, this.T.idx, who), bk = { b, who, end: this.now + ms / 1000, au }; this.barks.push(bk); if (au) au.addEventListener('loadedmetadata', () => { bk.end = Math.max(bk.end, this.now + au.duration + 0.2); });
   }
   clearBarks() { this.barks.forEach(k => { k.b.remove(); if (k.au) k.au.pause(); }); this.barks = []; }
   toast(title, text, ms = 4200) {

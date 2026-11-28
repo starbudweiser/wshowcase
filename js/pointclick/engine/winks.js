@@ -97,7 +97,7 @@ function run(g, w, dt) {
       e.alpha = 0.92 * Math.max(0, Math.min(fa, fb)); e.z = 0;
     }
     /* il regarde où il va : sens réel à l'écran (après la voie du décor, qui peut aller de droite à gauche), et côté où regarde
-       son image d'origine (FACE_L : Léodagan, Merlin, le ptérosaure regardent à gauche) */
+       son image d'origine (FACE_L : le ptérosaure regarde à gauche) */
     if (moving && x > -900 && e.x > -900 && Math.abs(x - e.x) > 0.02) e.flip = (x < e.x) !== FACE_L.has(e.spr);
     e.x = x; e.y = y; e.animState = moving ? 'walk' : 'idle'; e.visible = x > -900;
     if (c.hop) e.bob = Math.abs(Math.sin(t * 6)) * (moving ? c.hop : 3); else if (c.bob) e.bob = Math.sin(t * 3) * c.bob; else e.bob = 0;
