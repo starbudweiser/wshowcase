@@ -1,5 +1,6 @@
 /* Sons et musique du jeu, entièrement synthétisés (Web Audio) : aucun fichier audio, composition originale. Respecte le réglage de son du site. */
 import { sfx } from '../host.js';
+import { lofiChain } from './lofi.js';
 
 let ctx = null, master = null, musicTimer = null, musicOn = true;
 const ensure = () => {
@@ -30,13 +31,14 @@ function noise({ d = 0.2, f = 1200, q = 1, g = 0.1, t = 0, type = 'bandpass' }) 
 
 
 /* ───────── musique : instruments synthétisés, pistes originales d'esprit nordique (chœurs d'hommes, cuivres graves, cordes, tambours de guerre) ───────── */
-let musicIn = null, wanted = 'rue', cur = null;
+let musicIn = null, musicLofi = null, wanted = 'rue', cur = null;
 const impulse = (c, sec, decay) => { const n = Math.floor(c.sampleRate * sec), b = c.createBuffer(2, n, c.sampleRate); for (let k = 0; k < 2; k++) { const d = b.getChannelData(k); for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, decay); } return b; };
 function musicBus() {
   const c = ensure(); if (musicIn || !c) return;
   musicIn = c.createGain(); musicIn.gain.value = 1;
   const dry = c.createGain(), wet = c.createGain(), cv = c.createConvolver(); dry.gain.value = 0.85; wet.gain.value = 0.55; cv.buffer = impulse(c, 3.2, 2.4);
   musicIn.connect(dry).connect(master); musicIn.connect(cv).connect(wet).connect(master);
+  const L = lofiChain(c); musicLofi = L.input; L.output.connect(musicIn);   /* une seule chaîne pour toutes les pistes de la saison 1 */
 }
 const envG = (c, out, t, a, d, g) => { const e = c.createGain(); e.gain.setValueAtTime(0.0001, t); e.gain.exponentialRampToValueAtTime(g, t + Math.min(a, d * 0.45)); e.gain.setValueAtTime(g, t + Math.max(d - 0.35, d * 0.55)); e.gain.exponentialRampToValueAtTime(0.0001, t + d); e.connect(out); return e; };
 const osc = (c, type, f, t, d, det = 0) => { const o = c.createOscillator(); o.type = type; o.frequency.value = f; o.detune.value = det; o.start(t); o.stop(t + d + 0.1); return o; };
@@ -165,7 +167,8 @@ function startTrack(id) {
   if (!TRACKS[id] && !(id in FILES)) id = 'rue';
   if (cur && cur.id === id && (musicTimer || cur.file)) return;
   stopTrack(); musicBus(); const c = ctx; if (!c) return;
-  const bus = c.createGain(); bus.gain.setValueAtTime(0.0001, c.currentTime); bus.gain.linearRampToValueAtTime(1, c.currentTime + 1.2); bus.connect(musicIn);
+  const bus = c.createGain(); bus.gain.setValueAtTime(0.0001, c.currentTime); bus.gain.linearRampToValueAtTime(1, c.currentTime + 1.2);
+  bus.connect(/^s2_/.test(id) ? musicIn : musicLofi);   /* saison 1 (titre et intro compris) : même son « années 90 » que les voix (lofi.js) */
   if (id in FILES) {
     const o = cur = { id, bus, file: true };
     fileBuf(id).then(b => { if (cur !== o) return; const s = o.src = c.createBufferSource(); s.buffer = b; s.loop = true; const g = c.createGain(); g.gain.value = FILES[id]; s.connect(g).connect(bus); s.start(); })

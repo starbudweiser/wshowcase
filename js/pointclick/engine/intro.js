@@ -8,7 +8,7 @@ const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const ease = t => (t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t));
 const DIR = 'assets/pointclick/intro/';
 /* fichiers de l'intro ; les portraits du héros sont ceux du jeu (spr/hero_p*.png) */
-const FILES = ['p1', 'p2', 'rail', 'prop_grass', 'prop_rock', 'prop_fence', 'prop_pine', 'comp_s', 'thief_s',
+const FILES = ['p1', 'p1_fg', 'p2', 'rail', 'prop_grass', 'prop_rock', 'prop_fence', 'prop_pine', 'comp_s', 'thief_s',
   'comp_back1', 'comp_back2', 'comp_back3', 'comp_back4', 'thief_cu1', 'thief_cu2', 'thief_cu3', 'thief_cu4', 'thief_cu5'];
 
 /* flou : réduction puis agrandissement lissé (marche partout, sans ctx.filter) */
@@ -91,7 +91,7 @@ export class Intro {
       if (bg) c.drawImage(bg, 0, y);
       const dt = (t - 0.6) / 6.5;
       if (dt > 0 && dt < 1) { const im = D[Math.floor(t * 7) % 4]; if (im) { const k = 0.55, x = -40 + dt * 560, yy = 40 + Math.sin(dt * 5) * 6 + y * 0.6; c.save(); c.translate(Math.round(x), Math.round(yy)); c.scale(-1, 1); /* vole vers la droite, tête en avant (l'image regarde à gauche) */ c.drawImage(im, -im.width * k / 2, -im.height * k / 2, im.width * k, im.height * k); c.restore(); } }
-      const ct = t - 4.6; if (ct > 0 && bg) { const x = 30 + ct * 24; this.drawCart(c, x, y + 457 - Math.max(0, x - 200) * 0.05, 0.16, t); }   /* sur la route du bas du décor */
+      const ct = t - 4.6; if (ct > 0 && bg) { const x = 30 + ct * 24; this.drawCart(c, x, y + 457 - Math.max(0, x - 200) * 0.05, 0.16, t); if (this.im.p1_fg) c.drawImage(this.im.p1_fg, 0, y); }   /* sur la route du bas du décor, derrière les sapins du premier plan (p1_fg, tools/intro_fg.py) */
     });
     await g.fade(0, 1200);
     await g.wait(900); this.caption(g.T('intro.card').replace('. ', '.<br>')); g.voicePlay('intro.card', -1);

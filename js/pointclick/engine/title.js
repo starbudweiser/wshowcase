@@ -1,5 +1,5 @@
 /* Écran titre « Le Seau de Rivebois » : tableau de nuit (assets/pointclick/title/bg.png) animé sur le canevas (neige, étoiles, aurore,
-   fenêtres du village, dragon qui passe à l'envers), logo par langue qui tombe puis brille, menu HTML (souris, flèches + Entrée, Échap).
+   fenêtres du village, dragon qui passe), logo par langue qui tombe puis brille, menu HTML (souris, flèches + Entrée, Échap).
    Images : tools/intro_build.py (titre). */
 import { snd } from './sound.js';
 
@@ -56,11 +56,11 @@ export class TitleArt {
     for (const s of this.stars) { const a = 0.35 + 0.65 * Math.max(0, Math.sin(t * s.f + s.ph)); c.fillStyle = `rgba(255,255,240,${a})`; c.fillRect(Math.round(s.x), Math.round(s.y), 1, 1); }
     /* fenêtres du village */
     if (this.lights) { c.save(); c.globalCompositeOperation = 'lighter'; c.globalAlpha = 0.18 + 0.14 * Math.sin(t * 2.3) * Math.sin(t * 0.7 + 1); c.drawImage(this.lights, 0, 0); c.restore(); }
-    /* un dragon traverse le ciel… à l'envers (on ne corrige pas les bugs, on les célèbre) */
+    /* un dragon traverse le ciel, tête en avant (l'image regarde à gauche : retournée quand il va à droite) ; plus à l'envers (27/11, Stéphan) */
     const d = this.dragon;
     if (d) {
       const nm = d.sp === 'dragon' ? 'dragon' : d.sp, frames = ['up', 'mid1', 'down', 'mid2'].map(q => this.g.spr(nm + '.' + q)), im = frames[Math.floor(t * 8) % 4];
-      if (im) { const p = d.t / 9, x = d.dir > 0 ? -40 + p * (W + 80) : W + 40 - p * (W + 80), y = d.y + Math.sin(p * 9) * 5; c.save(); c.translate(Math.round(x), Math.round(y)); c.scale(d.dir > 0 ? -d.k : d.k, -d.k); c.drawImage(im, -im.width / 2, -im.height / 2); c.restore(); }
+      if (im) { const p = d.t / 9, x = d.dir > 0 ? -40 + p * (W + 80) : W + 40 - p * (W + 80), y = d.y + Math.sin(p * 9) * 5; c.save(); c.translate(Math.round(x), Math.round(y)); c.scale(d.dir > 0 ? -d.k : d.k, d.k); c.drawImage(im, -im.width / 2, -im.height / 2); c.restore(); }
     }
     /* neige */
     c.fillStyle = 'rgba(240,246,255,0.85)'; for (const f of this.snow) c.fillRect(Math.round(f.x), Math.round(f.y), f.s, f.s);
